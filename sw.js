@@ -1,7 +1,8 @@
-const CACHE_NAME = 'marche-saison-cache';
+const CACHE_NAME = 'marche-saison-cache-v2';
 const assetsToCache = [
-  'index.html',
-  'manifest.json'
+  './',
+  './index.html',
+  './manifest.json'
 ];
 
 // Installation du cache
@@ -29,7 +30,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
         fetch(event.request)
             .then((response) => {
-                // 1. Si on a internet : on télécharge la dernière version depuis Netlify
+                // 1. Si on a internet : on télécharge la dernière version depuis GitHub
                 // et on met le cache à jour silencieusement en arrière-plan.
                 const responseClone = response.clone();
                 caches.open(CACHE_NAME).then((cache) => {

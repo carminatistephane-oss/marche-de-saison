@@ -1,5 +1,5 @@
 <!-- ==================================================================== -->
-<!-- APPLICATION MARCHÉ DE SAISON - VERSION 5.60 PWA                      -->
+<!-- APPLICATION MARCHÉ DE SAISON - VERSION 5.61 PWA                      -->
 <!-- MÉMO : POUR AFFICHER LA NOUVELLE VERSION -> A MODIFIER EN BAS (JS)   -->
 <!-- const APP_VERSION = "5.60"                                           -->
 <!-- ==================================================================== -->
@@ -988,11 +988,11 @@ function initData() {
 </script>
 
 <script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('sw.js').catch(err => { console.log('Service Worker non enregistré: ', err); });
-        });
-    }
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(err => { console.log('Service Worker erreur', err); });
+    });
+  }
 </script>
 </body>
 </html>

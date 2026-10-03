@@ -1,8 +1,8 @@
 {
   "name": "Marché de Saison",
   "short_name": "MarchéSaison",
-  "start_url": "/index.html",
-  "scope": "/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#F5F2EB",
   "theme_color": "#D4A373",
