@@ -1,0 +1,998 @@
+<!-- ==================================================================== -->
+<!-- APPLICATION MARCHÉ DE SAISON - VERSION 5.60 PWA                      -->
+<!-- MÉMO : POUR AFFICHER LA NOUVELLE VERSION -> A MODIFIER EN BAS (JS)   -->
+<!-- const APP_VERSION = "5.60"                                           -->
+<!-- ==================================================================== -->
+   
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Marché de Saison</title>
+<!-- Lien vers le Manifest pour l'installation sur mobile/PC -->
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#D4A373">
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Nunito:wght@400;600;700&display=swap');
+
+
+    /* ======================================================== */
+    /* DESIGN ÉPURÉ - CENTRAGE ET DÉFILEMENT NATUREL            */
+    /* ======================================================== */
+    html, body {
+        background-color: var(--bg-main);
+        margin: 0;
+        padding: 0;
+        /* On laisse la fenêtre gérer le défilement, c'est vital pour le menu fixe ! */
+        font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+        color: var(--text-main);
+        -webkit-font-smoothing: antialiased;
+    }
+
+    :root {
+        --bg-main: #F5F2EB; 
+        --bg-card: #FAF7F2;
+        --accent: #D4A373; 
+        --accent-dark: #A06A42;
+        --text-main: #4A4A4A;
+        --text-title: #2C3E50;
+        --text-muted: #8D99AE;
+        --border-color: #F0EAE1;
+        
+        --printemps-grad: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+        --printemps-txt: #2E7D32;
+        --ete-grad: linear-gradient(135deg, #FFF8E1 0%, #FFECB3 100%);
+        --ete-txt: #F57F17;
+        --automne-grad: linear-gradient(135deg, #FBE9E7 0%, #FFCCBC 100%);
+        --automne-txt: #D84315;
+        --hiver-grad: linear-gradient(135deg, #E3F2FD 0%, #BBDEFB 100%);
+        --hiver-txt: #1565C0;
+    }
+
+    #app {
+        width: 100%;
+        max-width: 500px; /* Largeur d'un grand smartphone */
+        margin: 0 auto; /* Centre la colonne si tu agrandis la fenêtre sur PC */
+        min-height: 100vh; /* Permet à la page de descendre naturellement */
+        
+        padding: 20px 25px; /* Marge augmentée pour laisser la plante déborder à gauche */
+        box-sizing: border-box;
+        
+        background-color: var(--bg-main);
+        background-image: radial-gradient(circle at top right, rgba(212, 163, 115, 0.05), transparent 400px);
+        position: relative;
+        
+        /* LE SECRET : Aucun "overflow" ici pour ne plus jamais couper tes images ! */
+    }
+
+   /* Le petit secret : sur petit écran (mobile), on repasse en plein écran classique */
+/* Le petit secret : sur petit écran (mobile), on repasse en plein écran classique */
+    @media (max-width: 480px) {
+        html, body { 
+            background-color: var(--bg-main); 
+            display: block !important; 
+            height: auto !important;
+            min-height: 100vh;
+        }
+        #app { 
+            width: 100%; 
+            max-width: 100%;
+            height: auto !important;
+            max-height: none !important; 
+            overflow: visible !important; 
+            border-radius: 0; 
+            box-shadow: none; 
+            margin: 0;
+            padding: 15px 10px; 
+        }
+        
+        .sticky-header {
+            margin: -15px -10px 0 -10px; 
+        }
+
+        ::-webkit-scrollbar {
+            display: none; 
+        }
+        * {
+            scrollbar-width: none; 
+        }
+
+        /* 🚨 ANTI-DÉBORDEMENT CIBLÉ POUR PETITS ÉCRANS 🚨 */
+        .header-accueil h1 {
+            font-size: 2.2rem !important; 
+            white-space: normal !important; 
+        }
+        .boutons-double-container {
+            gap: 5px !important; 
+            width: 100% !important;
+        }
+        .saison-btn, .bouton-moitie {
+        padding: 12px 5px !important; 
+        min-width: 0 !important; 
+        white-space: normal !important; 
+        overflow-wrap: break-word !important; /* Coupe plus intelligemment */
+        word-break: normal !important; /* Enlève la coupure agressive */
+        font-size: 0.85rem !important; /* Réduit un poil la police pour que tout rentre */
+        box-sizing: border-box !important; 
+    }
+    }
+
+    .header-accueil { text-align: center; padding: 25px 10px 15px 10px; margin-bottom: 15px; }
+    .header-accueil h1 { margin: 0; font-family: 'Playfair Display', serif; font-size: 2.8rem; color: var(--text-title); line-height: 1.1; white-space: nowrap; text-shadow: 2px 4px 8px rgba(0,0,0,0.08), -1px -1px 0px rgba(255,255,255,1); }
+    .header-accueil p { font-family: 'Playfair Display', serif; font-style: italic; color: var(--accent); font-size: 1.2rem; margin-top: 10px; }
+
+    /* CHAMP DE RECHERCHE */
+    .search-box-container { position: relative; max-width: 420px; margin: 0 auto 25px auto; }
+    .search-input { width: 100%; background-color: #FFFFFF; border: 1px solid var(--border-color); color: var(--text-main); padding: 14px 20px 14px 45px; border-radius: 20px; font-size: 1.05rem; font-family: 'Nunito', sans-serif; box-shadow: 0 4px 12px rgba(0,0,0,0.04); box-sizing: border-box; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%238D99AE%22%20d%3D%22M15.5%2014h-.79l-.28-.27A6.471%206.471%200%200%200%2016%209.5%206.5%206.5%200%201%200%209.5%2016c1.61%200%203.09-.59%204.23-1.57l.27.28v.79l5%204.99L20.49%2019l-4.99-5zm-6%200C7.01%2014%205%2011.99%205%209.5S7.01%205%209.5%205%2014%207.01%2014%209.5%2011.99%2014%209.5%2014z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: 15px 50%; background-size: 20px auto; transition: all 0.2s ease; }
+    .search-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(212, 163, 115, 0.2); }
+    .search-results { position: absolute; top: 100%; left: 0; right: 0; background-color: #FFFFFF; border-radius: 16px; margin-top: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-height: 280px; overflow-y: auto; z-index: 100; display: none; border: 1px solid var(--border-color); }
+    .search-result-item { padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #F7F5F0; cursor: pointer; font-weight: 600; font-size: 0.95rem; }
+    .search-result-item:last-child { border-bottom: none; }
+    .search-result-item:hover { background-color: #F9F7F2; }
+
+    /* EN-TÊTE FIXE */
+    .sticky-header { position: -webkit-sticky; position: sticky; top: 0; background-color: rgba(245, 242, 235, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 999; padding: 15px 10px 10px 10px; margin: -20px -15px 0 -15px; border-bottom: 1px solid rgba(0,0,0,0.05); box-shadow: 0 4px 15px -5px rgba(0,0,0,0.08); }
+    .header-list { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; }
+    
+    .btn { background-color: #ffffff; color: #4A4A4A; border: 1px solid var(--border-color); padding: 10px 14px; border-radius: 12px; font-size: 0.9rem; font-family: 'Nunito', sans-serif; font-weight: 700; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.02); transition: all 0.2s ease; white-space: nowrap; }
+    .btn:active { transform: translateY(2px); box-shadow: 0 2px 3px rgba(0,0,0,0.04); }
+    .btn-primary { background: linear-gradient(135deg, #D4A373 0%, #BC8A5F 100%); color: white; border: none; box-shadow: 0 6px 12px rgba(212, 163, 115, 0.3); }
+    
+    .btn-icon { background-color: #ffffff; color: #4A4A4A; border: 1px solid var(--border-color); width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.02); transition: all 0.2s ease; padding: 0; }
+    .btn-icon:active { transform: translateY(2px); box-shadow: 0 2px 3px rgba(0,0,0,0.04); }
+    .btn-icon.btn-danger { background-color: #FFF0F0; color: #D32F2F; border: 1px solid #FFCDCD; }
+
+    .menu-saisons { display: flex; flex-direction: column; gap: 15px; padding: 5px 0 20px 0; align-items: center; }
+    .saison-btn { width: 100%; max-width: 420px; padding: 18px 20px; border-radius: 20px; text-align: center; font-family: 'Nunito', sans-serif; cursor: pointer; border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 12px 24px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.04), inset 0 2px 0px rgba(255,255,255,0.6); transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s; }
+    .saison-btn:active, .bouton-moitie:active { transform: scale(0.97) translateY(2px); box-shadow: 0 4px 8px rgba(0,0,0,0.04), inset 0 3px 6px rgba(0,0,0,0.05); }
+    
+    .season-title { display: grid; grid-template-columns: 1fr 160px 1fr; align-items: center; width: 100%; font-size: 1.25rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; text-shadow: 0px 1px 2px rgba(255,255,255,0.8); line-height: 1.2; }
+    .season-title .emoji-left { text-align: right; display:flex; justify-content:flex-end; align-items:center; }
+    .season-title .texte { text-align: center; }
+    .season-title .emoji-right { text-align: left; display:flex; justify-content:flex-start; align-items:center; }
+    
+    .svg-automne { width: 1.15em; height: 1.15em; fill: var(--accent-dark); filter: drop-shadow(0px 1px 1px rgba(255,255,255,0.8)); }
+    
+    .header-list-title-container { display: flex; justify-content: center; align-items: center; flex: 1; gap: 8px; }
+    .header-list-title-container h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.1rem, 4vw, 1.4rem); color: var(--text-title); margin: 0; text-align: center; line-height: 1.2; }
+    .header-list-title-container .emoji-header { font-size: 1.15rem; display: flex; align-items: center; }
+    
+    .saison-btn-count { font-size: 0.8rem; font-weight: 600; opacity: 0.85; margin-top: 4px; letter-spacing: 0.5px; }
+    
+    .saison-btn.printemps { background: var(--printemps-grad); color: var(--printemps-txt); }
+    .saison-btn.ete { background: var(--ete-grad); color: var(--ete-txt); }
+    .saison-btn.automne { background: var(--automne-grad); color: var(--automne-txt); }
+    .saison-btn.hiver { background: var(--hiver-grad); color: var(--hiver-txt); }
+
+    .boutons-double-container { display: flex; justify-content: space-between; gap: 15px; width: 100%; max-width: 420px; }
+    .bouton-moitie { flex: 1; padding: 15px 5px; border-radius: 20px; text-align: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 12px 24px rgba(0,0,0,0.06), 0 4px 8px rgba(0,0,0,0.04), inset 0 2px 0px rgba(255,255,255,0.6); transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s; display: flex; flex-direction: column; justify-content: center; font-family: 'Nunito', sans-serif; }
+    
+    .twin-title { display: flex; justify-content: center; align-items: center; gap: 6px; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    .twin-title .texte { line-height: 1.2; }
+    .twin-title .emoji { font-size: 1.1rem; display: flex; align-items: center; }
+    
+    .recommande { background: linear-gradient(135deg, #FDF0B9 0%, #A3E4D7 100%); color: #2C3E50; }
+    .feculents { background: linear-gradient(135deg, #FDFBFB 0%, #EBEDEE 100%); color: #4A4A4A; }
+
+    /* FILTRES */
+    .filter-container { display: flex; flex-direction: column; gap: 8px; margin-top: 5px; }
+    .filter-row { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; }
+    .type-switcher { display: inline-flex; background-color: #E6E0D5; padding: 4px; border-radius: 30px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); margin: 0 auto; }
+    .type-tab { background-color: transparent; border: none; color: var(--text-muted); padding: 6px 12px; border-radius: 24px; font-size: 0.78rem; font-weight: 700; font-family: 'Nunito', sans-serif; cursor: pointer; transition: all 0.25s ease; }
+    .type-tab.active { background-color: var(--text-title); color: #ffffff; box-shadow: 0 4px 10px rgba(44, 62, 80, 0.2); }
+    .filter-btn { background-color: #ffffff; border: 1px solid var(--border-color); color: var(--text-muted); padding: 5px 8px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; font-family: 'Nunito', sans-serif; white-space: nowrap; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.02); transition: all 0.3s ease; }
+    .filter-btn.active { background-color: var(--text-title); border-color: var(--text-title); color: #ffffff; box-shadow: 0 6px 14px rgba(44, 62, 80, 0.2); transform: translateY(-1px); }
+
+    /* CARDS */
+    .cards-container { display: flex; flex-direction: column; gap: 65px; padding-bottom: 50px; margin-top: 15px; }
+    .card { background-color: var(--bg-card); border-radius: 28px; border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 16px 40px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.02); padding: 65px 15px 25px 15px; margin-top: 50px; position: relative; z-index: 1; transition: box-shadow 0.5s ease, transform 0.3s ease; }
+    .card.highlight { box-shadow: 0 0 0 4px #D4A373, 0 16px 40px rgba(212, 163, 115, 0.3); transform: scale(1.02); }
+    
+    .card-top-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 0; z-index: 5; }
+    .card-top-left { position: absolute; left: 20%; top: 0; transform: translate(-50%, -50%); z-index: 5; }
+    .card-top-center { position: absolute; left: 50%; top: 0; transform: translate(-50%, -50%); z-index: 6; }
+    .card-top-right { position: absolute; right: 20%; top: 0; transform: translate(50%, -50%); display: flex; gap: 8px; z-index: 7; }
+    
+    .card-photo-round { width: 100px; height: 100px; border-radius: 50%; background-color: #FFFFFF; border: 4px solid #FFFFFF; box-shadow: 0 8px 16px rgba(0,0,0,0.1); position: relative; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; color: #D1D5DB; }
+    .card-photo-round img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+    .tolerance-badge { position: absolute; top: 22%; left: 6%; transform: translate(-50%, -50%); background: transparent; border: none; display: flex; align-items: center; justify-content: center; font-size: 30px; filter: drop-shadow(0 8px 12px rgba(0,0,0,0.35)) drop-shadow(0 3px 4px rgba(0,0,0,0.25)); z-index: 10; transition: transform 0.2s ease; }
+    .card:hover .tolerance-badge { transform: translate(-50%, -50%) scale(1.1); }
+    
+    .category-badge { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; padding: 5px 10px; border-radius: 20px; background-color: #FFF; border: 1px solid; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    .card-title-elegant { font-family: 'Playfair Display', serif; font-size: 2.3rem; font-weight: 700; color: var(--text-title); text-align: center; margin: 0 0 25px 0; letter-spacing: -0.5px; text-shadow: 2px 3px 5px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.05); }
+    
+    .grid-props { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .prop-box { background-color: #F3EFE6; border: 1px solid #F0F0F0; padding: 15px; border-radius: 15px; text-align: left; }
+    .prop-box.notes { background-color: #FFFBF5; border-color: #F4E8D1; }
+    .prop-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1.5px; font-weight: 800; }
+    .prop-value { font-size: 1.05rem; font-weight: 600; color: var(--text-main); line-height: 1.5; }
+
+    /* MODAL FORM */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--bg-main); z-index: 1000; overflow-y: auto; padding: 20px; box-sizing: border-box; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-size: 0.85rem; color: var(--text-title); text-transform: uppercase; margin-bottom: 8px; font-weight: 800; letter-spacing: 1px; }
+    .form-control { width: 100%; background-color: #ffffff; border: 1px solid var(--border-color); color: var(--text-main); padding: 16px; border-radius: 14px; font-size: 1.05rem; font-family: 'Nunito', sans-serif; box-sizing: border-box; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); }
+    .form-control:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(212, 163, 115, 0.2); }
+    select.form-control { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%238D99AE%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E"); background-repeat: no-repeat; background-position: right 15px top 50%; background-size: 12px auto; }
+    textarea.form-control { resize: vertical; min-height: 100px; }
+    .form-actions { display: flex; gap: 15px; margin-top: 35px; padding-bottom: 50px; }
+    .form-actions .btn { flex: 1; padding: 18px; font-size: 1.1rem; border-radius: 14px; }
+    
+    .file-upload-wrapper { display: flex; flex-direction: column; gap: 10px; align-items: center; background-color: #fff; padding: 20px; border-radius: 14px; border: 2px dashed #D4A373; }
+    .file-upload-wrapper img { border-radius: 50%; width: 100px; height: 100px; object-fit: cover; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    
+    .backup-section { margin: 20px auto 0 auto; padding: 20px 0 0 0; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; max-width: 420px; width: 100%; }
+    .btn-backup { background-color: #F8F9FA; color: #4A4A4A; border: 1px solid #E9ECEF; padding: 12px 20px; border-radius: 12px; font-size: 0.9rem; font-family: 'Nunito', sans-serif; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .btn-backup:active { transform: translateY(2px); }
+    .version-display { font-family: 'Nunito', sans-serif; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); }
+
+    /* ======================================================== */
+    /* BULLE IPHONE - STYLES                                    */
+    /* ======================================================== */
+    #ios-install-prompt {
+        display: none; 
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #ffffff;
+        border: 2px solid #D4A373;
+        border-radius: 12px;
+        padding: 15px 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        width: 85%;
+        max-width: 350px;
+        text-align: center;
+        z-index: 9999;
+        font-size: 0.9em;
+        color: #333;
+    }
+
+    #ios-install-prompt strong {
+        color: #D4A373;
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .close-ios-btn {
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #999;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<div id="app">
+    <div id="view-home">
+        <div class="header-accueil">
+            <h1>Marché de Saison</h1>
+            <p>Harmonie & Digestion</p>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 20px;">
+            <button id="install-btn" style="display: none; background: linear-gradient(135deg, #D4A373 0%, #BC8A5F 100%); color: white; border: none; padding: 12px 24px; border-radius: 16px; cursor: pointer; font-weight: bold; font-size: 1rem; box-shadow: 0 6px 16px rgba(212, 163, 115, 0.4); font-family: 'Nunito', sans-serif; align-items: center; gap: 8px; margin: 0 auto;">📲 Installer l'application</button>
+        </div>
+
+        <div class="search-box-container">
+            <input type="text" id="global-search" class="search-input" placeholder="Rechercher un aliment (ex: chou, carotte...)" oninput="handleSearch(event, 'search-results', 'global-search')">
+            <div id="search-results" class="search-results"></div>
+        </div>
+
+        <div class="menu-saisons" id="home-menu-saisons"></div>
+        
+        <div class="backup-section">
+            <button class="btn-backup" onclick="exportData()">💾 Sauvegarder</button>
+            <span class="version-display"></span>
+            <button class="btn-backup" onclick="document.getElementById('import-file').click()">📂 Restaurer</button>
+            <input type="file" id="import-file" style="display:none" accept=".json" onchange="importData(event)">
+        </div>
+    </div>
+
+    <div id="view-list" style="display: none;">
+        <div class="sticky-header">
+            <div class="header-list">
+                <button class="btn" onclick="goHome()">← Retour</button>
+                <div class="header-list-title-container" id="saison-title-container"></div>
+                <button class="btn btn-primary" onclick="openForm()">+ Ajouter</button>
+            </div>
+            <div class="filter-container" id="filter-container"></div>
+            <div class="search-box-container" style="margin-top: 12px; margin-bottom: 0px;">
+                <input type="text" id="list-search" class="search-input" placeholder="Rechercher un aliment..." oninput="handleSearch(event, 'list-search-results', 'list-search')">
+                <div id="list-search-results" class="search-results"></div>
+            </div>
+        </div>
+        <div class="cards-container" id="cards-container"></div>
+    </div>
+</div>
+
+<div id="modal-form" class="modal">
+    <div class="header-list">
+        <button class="btn" onclick="closeForm()">Annuler</button>
+        <h1 id="form-title" style="font-size: 1.6rem;">Fiche</h1>
+        <div></div>
+    </div>
+    
+    <input type="hidden" id="f-id">
+    
+    <div class="form-group">
+        <label>Nom de l'aliment</label>
+        <input type="text" id="f-nom" class="form-control" placeholder="Ex: Carotte">
+    </div>
+
+    <div class="form-group">
+        <label>Photo</label>
+        <div class="file-upload-wrapper">
+            <img id="f-image-preview" src="" alt="Aperçu" style="display:none;">
+            <input type="file" id="f-image-file" accept="image/*" style="width: 100%;">
+            <input type="hidden" id="f-image-base64">
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label>Type</label>
+        <select id="f-type" class="form-control">
+            <option value="Légume">Légume / Secs</option>
+            <option value="Fruit">Fruit</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Saison</label>
+        <select id="f-saison" class="form-control">
+            <option value="Printemps">Printemps</option>
+            <option value="Été">Été</option>
+            <option value="Automne">Automne</option>
+            <option value="Hiver">Hiver</option>
+            <option value="Féculents Légumineux">Féculents Légumineux</option>
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label>Tolérance</label>
+        <select id="f-tolerance" class="form-control">
+            <option value="🟢 Très conseillé">🟢 Très conseillé</option>
+            <option value="🟡 Moyen">🟡 Moyen</option>
+            <option value="🔴 À proscrire">🔴 Proscrire</option>
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <label>Avantage</label>
+        <textarea id="f-avantage" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label>Inconvénient</label>
+        <textarea id="f-inconvenient" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label>Préparation recommandée</label>
+        <textarea id="f-preparation" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <label>Idées Recettes / Notes</label>
+        <textarea id="f-recettes" class="form-control"></textarea>
+    </div>
+    <div class="form-actions">
+        <button class="btn btn-primary" onclick="saveFiche()">Enregistrer la fiche</button>
+    </div>
+</div>
+
+<!-- ======================================================== -->
+<!-- BULLE IPHONE - HTML (Pour ton fils !)                    -->
+<!-- ======================================================== -->
+<div id="ios-install-prompt">
+    <span class="close-ios-btn" onclick="document.getElementById('ios-install-prompt').style.display='none'">&times;</span>
+    <strong>🍎 Installation sur iPhone</strong>
+    Pour installer cette application, touchez l'icône Partager (le carré avec la flèche vers le haut) en bas de l'écran, puis choisissez <b>"Sur l'écran d'accueil"</b>.
+</div>
+
+<script>
+    // ========================================================
+    // AFFICHAGE NOUVELLE VERSION POUR FORCER LE CACHE
+    // ========================================================
+    const APP_VERSION = "5.60";
+    document.querySelector('.version-display').textContent = "v" + APP_VERSION;
+
+    const svgAutomne = `<svg class="svg-automne" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M495.6 200.7c-9.6-13-26.6-17.7-41.5-11.4l-68.5 28.6 15.6-70.5c3.3-15-4.4-30.4-18.4-36.8-13.8-6.3-30.2-2.1-39 9.8l-52.6 71.3-1.6-96.2c-.3-16.1-13.2-29.2-29.3-29.5h-8.7c-16.1.3-29 13.4-29.3 29.5l-1.6 96.2-52.6-71.3c-8.8-11.9-25.2-16.1-39-9.8-14 6.4-21.7 21.8-18.4 36.8l15.6 70.5-68.5-28.6c-14.9-6.3-31.9-1.6-41.5 11.4-9.6 13.1-6.9 31 6.3 41l61.5 46.5-54.6 37.8c-12.8 8.9-17 26.1-9.9 40 7 13.7 23.3 19.3 37.6 12.8l78.7-35.8-12.8 58.1c-3.4 15.6 5 31.4 19.5 37.5 14.3 6.1 31.1 1 39.8-11.8l38.2-56.4v75.1c0 15.8 12.8 28.6 28.6 28.6h9c15.8 0 28.6-12.8 28.6-28.6v-75.1l38.2 56.4c8.7 12.8 25.5 17.9 39.8 11.8 14.5-6.1 22.9-21.9 19.5-37.5l-12.8-58.1 78.7 35.8c14.3 6.5 30.6.9 37.6-12.8 7.1-13.9 2.9-31.1-9.9-40l-54.6-37.8 61.5-46.5c13.1-10 15.8-27.9 6.2-41z"/></svg>`;
+
+    const defaultData = [
+        /* PRINTEMPS */
+        { id: 1, nom: "Pointes d'asperges", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Printemps", avantage: "Tendres et savoureuses.", inconvenient: "La tige est remplie de fils coriaces.", preparation: "Couper uniquement les pointes (5-7 cm max), bien les cuire. Jeter les tiges.", recettes: "" },
+        { id: 2, nom: "Épinard", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Printemps", avantage: "Riches en nutriments.", inconvenient: "Peuvent accélérer brutalement le transit.", preparation: "Retirer les tiges, hacher finement les feuilles, cuire fondus à la poêle.", recettes: "" },
+        { id: 3, nom: "Laitue", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Printemps", avantage: "Alternative aux crudités.", inconvenient: "Crue, elle irrite l'intestin enflammé.", preparation: "La manger cuite ! (braisée ou en velouté) pour casser la cellulose.", recettes: "" },
+        { id: 4, nom: "Petits pois", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Printemps", avantage: "Aucun.", inconvenient: "La petite pellicule autour du pois ne se digère pas du tout.", preparation: "À éviter.", recettes: "" },
+        { id: 5, nom: "Radis", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Printemps", avantage: "Aucun.", inconvenient: "Se mange cru, fibres dures, piquant, irrite la muqueuse.", preparation: "À éviter.", recettes: "" },
+        { id: 31, nom: "Pak-choi", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Printemps", avantage: "Feuilles tendres et digestes.", inconvenient: "Les côtes blanches sont un peu fibreuses.", preparation: "Séparer le vert des côtes, émincer finement et cuire longuement.", recettes: "Fondue de pak-choi au bouillon." },
+        { id: 101, nom: "Pois mange-tout", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Printemps", avantage: "Aucun.", inconvenient: "Enveloppe filandreuse et cosses dures.", preparation: "À éviter.", recettes: "" },
+        { id: 120, nom: "Fraises", type: "Fruit", image: "", tolerance: "🔴 À proscrire", saison: "Printemps", avantage: "Aucun.", inconvenient: "Petits pépins sur la peau.", preparation: "À éviter.", recettes: "" },
+        { id: 210, nom: "Artichaut", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Printemps", avantage: "Cœur très tendre et riche en minéraux.", inconvenient: "Peut fermenter légèrement.", preparation: "Ne manger que le fond bien cuit.", recettes: "" },
+        { id: 211, nom: "Fèves", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Printemps", avantage: "Aucun.", inconvenient: "Peau épaisse, très fermentescible et lourde à digérer.", preparation: "À éviter.", recettes: "" },
+        { id: 212, nom: "Rhubarbe", type: "Fruit", image: "", tolerance: "🟡 Moyen", saison: "Printemps", avantage: "Stimule le transit en douceur.", inconvenient: "Fibres dures et très forte acidité.", preparation: "Peler soigneusement les fils, bien cuire en compote avec un peu de douceur.", recettes: "" },
+        { id: 213, nom: "Cerises", type: "Fruit", image: "", tolerance: "🔴 À proscrire", saison: "Printemps", avantage: "Aucun.", inconvenient: "Peau épaisse, fermente très rapidement, effet laxatif.", preparation: "À éviter.", recettes: "" },
+        { id: 214, nom: "Mâche", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Printemps", avantage: "Feuilles beaucoup plus tendres que les autres salades.", inconvenient: "Crue, elle peut irriter si l'intestin est enflammé.", preparation: "Très bien mâcher ou faire fondre en velouté.", recettes: "" },
+        { id: 215, nom: "Cresson", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Printemps", avantage: "Très nutritif.", inconvenient: "Tiges fibreuses et coriaces.", preparation: "Consommer uniquement en velouté très finement mixé.", recettes: "" },
+        { id: 216, nom: "Ail des ours", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Printemps", avantage: "Aucun.", inconvenient: "Même famille que l'ail : forte fermentation, gaz, irritant.", preparation: "À éviter.", recettes: "" },
+        { id: 217, nom: "Navet nouveau", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Printemps", avantage: "Beaucoup plus doux, tendre et digeste que le navet d'hiver.", inconvenient: "Aucun si bien cuit.", preparation: "Peler et cuire à l'eau ou à la vapeur.", recettes: "" },
+        { id: 218, nom: "Pomme de terre primeur", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Printemps", avantage: "Amidon jeune très digeste, chair fondante.", inconvenient: "La petite pellicule (peau).", preparation: "Gratter la peau, cuire à l'eau ou vapeur.", recettes: "" },
+        { id: 219, nom: "Carottes nouvelle", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Printemps", avantage: "Très riche en pectine, ultra fondante.", inconvenient: "Aucun.", preparation: "Laver, couper et cuire à la vapeur.", recettes: "" },
+
+        /* ÉTÉ */
+        { id: 6, nom: "Courgettes", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Été", avantage: "Chair très digeste et riche en eau.", inconvenient: "La peau et les pépins irritent.", preparation: "Peler impérativement, retirer le cœur avec les pépins, cuire fondante.", recettes: "Velouté de courgettes (sans peau)." },
+        { id: 7, nom: "Aubergine", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Été", avantage: "Chair fondante.", inconvenient: "La peau et les nombreuses graines sont redoutables.", preparation: "Peler à vif, épépiner le plus possible, cuire très longtemps.", recettes: "Caviar d'aubergine très doux." },
+        { id: 8, nom: "Haricots verts", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Été", avantage: "Apport en fibres solubles modéré.", inconvenient: "Les fils et les gros grains irritent.", preparation: "Choisir uniquement des extra-fins, cuire très tendres.", recettes: "" },
+        { id: 9, nom: "Tomate", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Été", avantage: "Riche en eau.", inconvenient: "La peau et les pépins se logent dans les diverticules.", preparation: "Émonder, presser pour vider les pépins.", recettes: "" },
+        { id: 10, nom: "Fenouil", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Été", avantage: "Ses huiles essentielles calment les spasmes.", inconvenient: "Extrêmement fibreux.", preparation: "Émincer à la mandoline, retirer le cœur dur, cuire braisée.", recettes: "" },
+        { id: 11, nom: "Maïs", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Été", avantage: "Aucun.", inconvenient: "L'enveloppe jaune traverse le tube digestif intacte.", preparation: "À éviter absolument.", recettes: "" },
+        { id: 12, nom: "Poivron", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Été", avantage: "Aucun.", inconvenient: "Peau très dure à digérer, pépins dangereux.", preparation: "À éviter.", recettes: "" },
+        { id: 13, nom: "Concombre", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Été", avantage: "Aucun.", inconvenient: "Graines dures, se consomme cru.", preparation: "À éviter.", recettes: "" },
+        { id: 14, nom: "Céleri-branche", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Été", avantage: "Aucun.", inconvenient: "Longs fils solides.", preparation: "À éviter.", recettes: "" },
+        { id: 33, nom: "Haricots mungo germes", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Été", avantage: "Apport de fraîcheur.", inconvenient: "La petite coque peut irriter.", preparation: "Bien les cuire à la poêle.", recettes: "" },
+        { id: 34, nom: "Haricots rouges", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Été", avantage: "Aucun.", inconvenient: "Peau épaisse et forte fermentation.", preparation: "À éviter.", recettes: "" },
+        { id: 35, nom: "Haricots blancs", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Été", avantage: "Riches en protéines végétales.", inconvenient: "Enveloppe dure.", preparation: "Les consommer sans leur peau, écrasés.", recettes: "" },
+        { id: 102, nom: "Côtes de bettes", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Été", avantage: "Vitamines si bien préparé.", inconvenient: "Côtes très filandreuses.", preparation: "Ne garder que le vert tendre.", recettes: "" },
+        { id: 108, nom: "Pimientos de Padrón", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Été", avantage: "Aucun.", inconvenient: "Peau dure et pépins.", preparation: "À éviter.", recettes: "" },
+        { id: 110, nom: "Avocat", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Été", avantage: "Graisses saines et texture ultra-fondante.", inconvenient: "Riche en calories.", preparation: "Consommer bien mûr, nature ou écrasé.", recettes: "Crème d'avocat." },
+        { id: 111, nom: "Banane", type: "Fruit", image: "", tolerance: "🟢 Très conseillé", saison: "Été", avantage: "Douce, riche en potassium.", inconvenient: "Préférer bien mûre.", preparation: "Consommer mûre, écrasée.", recettes: "" },
+        { id: 118, nom: "Myrtilles", type: "Fruit", image: "", tolerance: "🔴 À proscrire", saison: "Été", avantage: "Aucun.", inconvenient: "Petits pépins.", preparation: "À éviter.", recettes: "" },
+        { id: 119, nom: "Framboises", type: "Fruit", image: "", tolerance: "🔴 À proscrire", saison: "Été", avantage: "Aucun.", inconvenient: "Petits akènes durs.", preparation: "À éviter.", recettes: "" },
+        { id: 121, nom: "Mûres", type: "Fruit", image: "", tolerance: "🔴 À proscrire", saison: "Été", avantage: "Aucun.", inconvenient: "Gros pépins durs.", preparation: "À éviter.", recettes: "" },
+        { id: 123, nom: "Melon", type: "Fruit", image: "", tolerance: "🟢 Très conseillé", saison: "Été", avantage: "Chair tendre et hydratante.", inconvenient: "Cœur avec les pépins.", preparation: "Retirer les pépins.", recettes: "" },
+        { id: 124, nom: "Pastèque", type: "Fruit", image: "", tolerance: "🟢 Très conseillé", saison: "Été", avantage: "Très riche en eau, très douce.", inconvenient: "Pépins noirs.", preparation: "Retirer les pépins.", recettes: "" },
+        { id: 125, nom: "Pêches", type: "Fruit", image: "", tolerance: "🟡 Moyen", saison: "Été", avantage: "Juteux et sucré.", inconvenient: "Peau duveteuse.", preparation: "Peler à vif, éliminer le noyau.", recettes: "" },
+        { id: 126, nom: "Pêches plates", type: "Fruit", image: "", tolerance: "🟡 Moyen", saison: "Été", avantage: "Chair douce.", inconvenient: "Peau à retirer.", preparation: "Peler soigneusement.", recettes: "" },
+        { id: 127, nom: "Nectarines", type: "Fruit", image: "", tolerance: "🟡 Moyen", saison: "Été", avantage: "Variété savoureuse.", inconvenient: "Peau lisse ferme.", preparation: "Peler la peau.", recettes: "" },
+        { id: 128, nom: "Nectarines plates", type: "Fruit", image: "", tolerance: "🟡 Moyen", saison: "Été", avantage: "Chair parfumée.", inconvenient: "Peau ferme.", preparation: "Peler avant consommation.", recettes: "" },
+        { id: 129, nom: "Abricots", type: "Fruit", image: "", tolerance: "🟡 Moyen", saison: "Été", avantage: "Apport en nutriments.", inconvenient: "Peau duveteuse et acidité.", preparation: "Peler ou cuire en compote.", recettes: "" },
+        { id: 131, nom: "Reines-claudes", type: "Fruit", image: "", tolerance: "🔴 À proscrire", saison: "Été", avantage: "Aucun.", inconvenient: "Peau dure et acide.", preparation: "À éviter.", recettes: "" },
+        { id: 133, nom: "Mangue", type: "Fruit", image: "", tolerance: "🟢 Très conseillé", saison: "Été", avantage: "Chair onctueuse sans pépins.", inconvenient: "Fibres longues possibles.", preparation: "Éplucher, éliminer le noyau.", recettes: "" },
+        { id: 134, nom: "Papaye", type: "Fruit", image: "", tolerance: "🟢 Très conseillé", saison: "Été", avantage: "Contient de la papaïne.", inconvenient: "Pépins noirs au centre.", preparation: "Retirer les pépins.", recettes: "" },
+        { id: 136, nom: "Ananas", type: "Fruit", image: "", tolerance: "🟢 Très conseillé", saison: "Été", avantage: "Aucun.", inconvenient: "Fibres dures et acidité.", preparation: "À éviter.", recettes: "" },
+        { id: 137, nom: "Gombo", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Été", avantage: "Son mucilage est un pansement exceptionnel pour la muqueuse intestinale.", inconvenient: "Sa texture gluante peut surprendre.", preparation: "Laver, couper les extrémités et cuire en ragoût ou à la vapeur.", recettes: "" },
+
+        /* AUTOMNE */
+        { id: 15, nom: "Courge Butternut", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Automne", avantage: "Texture veloutée, fibres douces.", inconvenient: "Peau épaisse.", preparation: "Peler, évider les graines, cuire au four ou en soupe.", recettes: "Soupe de butternut." },
+        { id: 16, nom: "Potiron", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Automne", avantage: "Très doux pour les intestins.", inconvenient: "Graines irritantes.", preparation: "Peler soigneusement, faire en velouté.", recettes: "" },
+        { id: 21, nom: "Navet", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Automne", avantage: "Racine fondante.", inconvenient: "Tendance à fermenter.", preparation: "Peler, cuire à l'eau.", recettes: "" },
+        { id: 23, nom: "Carottes", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Automne", avantage: "Fibres douces (pectine).", inconvenient: "Aucun.", preparation: "Peler, couper en rondelles, bien cuire.", recettes: "Carottes fondantes." },
+        { id: 24, nom: "Pomme de terre", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Automne", avantage: "Amidon doux, sans résidus.", inconvenient: "La peau est dure.", preparation: "Peler systématiquement, écraser en purée.", recettes: "Purée maison." },
+        { id: 25, nom: "Patate douce", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Automne", avantage: "Nutritive, très bien tolérée.", inconvenient: "Légèrement plus fibreuse.", preparation: "Peler, cuire longuement.", recettes: "" },
+        { id: 26, nom: "Betterave rouge", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Automne", avantage: "Fibres très douces.", inconvenient: "Colore les selles.", preparation: "Acheter sous vide ou cuire longuement.", recettes: "" },
+        { id: 105, nom: "Chanterelles", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Automne", avantage: "Goût boisé.", inconvenient: "Chair dense.", preparation: "Hacher menu, cuire longuement.", recettes: "" },
+        { id: 106, nom: "Chou rouge", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Automne", avantage: "Aucun.", inconvenient: "Fibres dures et fermentescibles.", preparation: "À éviter.", recettes: "" },
+        { id: 107, nom: "Chou chinois", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Automne", avantage: "Plus digeste que les autres choux.", inconvenient: "Peut causer des gaz.", preparation: "Cuire longuement en soupe.", recettes: "" },
+        { id: 109, nom: "Pleurotes", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Automne", avantage: "Saveur agréable.", inconvenient: "Texture spongieuse.", preparation: "Hacher finement et bien cuire.", recettes: "" },
+        { id: 112, nom: "Pommes Jazz Gala", type: "Fruit", image: "", tolerance: "🟢 Très conseillé", saison: "Automne", avantage: "Riches en pectine.", inconvenient: "Peau et pépins.", preparation: "Peler impérativement, cuire en compote.", recettes: "Compote maison." },
+        { id: 113, nom: "Poires", type: "Fruit", image: "", tolerance: "🟢 Très conseillé", saison: "Automne", avantage: "Chair fondante.", inconvenient: "Peau granuleuse.", preparation: "Peler soigneusement, consommer pochée.", recettes: "Poire pochée." },
+        { id: 122, nom: "Raisins", type: "Fruit", image: "", tolerance: "🔴 À proscrire", saison: "Automne", avantage: "Aucun.", inconvenient: "Peau épaisse et pépins.", preparation: "À éviter.", recettes: "" },
+        { id: 130, nom: "Pruneaux", type: "Fruit", image: "", tolerance: "🟢 Très conseillé", saison: "Automne", avantage: "Régulateur naturel du transit.", inconvenient: "Peau résistante.", preparation: "Consommer en purée.", recettes: "Purée de pruneaux." },
+        { id: 135, nom: "Figue", type: "Fruit", image: "", tolerance: "🔴 À proscrire", saison: "Automne", avantage: "Aucun.", inconvenient: "Petits grains durs.", preparation: "À éviter.", recettes: "" },
+        { id: 220, nom: "Coing", type: "Fruit", image: "", tolerance: "🟢 Très conseillé", saison: "Automne", avantage: "Pectine pure, excellent pansement intestinal.", inconvenient: "Immangeable cru.", preparation: "Cuire longuement en gelée ou compote lisse.", recettes: "" },
+        { id: 221, nom: "Châtaigne marron", type: "Fruit", image: "", tolerance: "🟡 Moyen", saison: "Automne", avantage: "Sans gluten, nourrissant.", inconvenient: "Farineux, peut être lourd à digérer.", preparation: "En purée lisse ou potage.", recettes: "" },
+
+        /* HIVER */
+        { id: 17, nom: "Panais", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Hiver", avantage: "Racine douce, alternative à la pdt.", inconvenient: "Cœur parfois dur.", preparation: "Peler, retirer le cœur, cuire en purée.", recettes: "" },
+        { id: 18, nom: "Blanc de poireau", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Hiver", avantage: "Partie tendre et savoureuse.", inconvenient: "Le vert est trop fibreux.", preparation: "Jeter le vert, émincer finement le blanc.", recettes: "Fondue de poireaux." },
+        { id: 19, nom: "Céleri-rave", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Hiver", avantage: "Bon goût de bouillon.", inconvenient: "Texture filandreuse.", preparation: "Peler très épais, mixer finement en potage.", recettes: "" },
+        { id: 20, nom: "Endive", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Hiver", avantage: "Pratique en hiver.", inconvenient: "Crue, elle est indigeste.", preparation: "Retirer le cône amer, cuire braisée.", recettes: "" },
+        { id: 22, nom: "Chou vert frisé", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Hiver", avantage: "Aucun.", inconvenient: "Fermente énormément.", preparation: "À éviter totalement.", recettes: "" },
+        { id: 27, nom: "Champignons de Paris", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Hiver", avantage: "Donnent de la saveur.", inconvenient: "Chair spongieuse.", preparation: "Peler le chapeau, hacher menu, bien cuire.", recettes: "" },
+        { id: 28, nom: "Brocoli", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Hiver", avantage: "Aucun.", inconvenient: "Sommités fermentescibles.", preparation: "À éviter.", recettes: "" },
+        { id: 29, nom: "Chou-fleur", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Hiver", avantage: "Aucun.", inconvenient: "Très fermentescible.", preparation: "À éviter.", recettes: "" },
+        { id: 30, nom: "Oignon ail", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Hiver", avantage: "Bon goût.", inconvenient: "Provoquent gaz et spasmes forts.", preparation: "Ne pas les manger.", recettes: "" },
+        { id: 32, nom: "Chou kale", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Hiver", avantage: "Aucun.", inconvenient: "Feuilles extrêmement coriaces.", preparation: "À éviter.", recettes: "" },
+        { id: 103, nom: "Choux de Bruxelles", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Hiver", avantage: "Aucun.", inconvenient: "Extrêmement fermentescible.", preparation: "À éviter.", recettes: "" },
+        { id: 104, nom: "Poireaux", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Hiver", avantage: "Blanc fondant une fois cuit.", inconvenient: "Le vert est trop fibreux.", preparation: "Utiliser uniquement le blanc.", recettes: "Fondue douce." },
+        { id: 114, nom: "Oranges", type: "Fruit", image: "", tolerance: "🟡 Moyen", saison: "Hiver", avantage: "Vitamine C.", inconvenient: "Acidité et membranes.", preparation: "Jus filtré ou quartiers à vif.", recettes: "" },
+        { id: 115, nom: "Clémentines", type: "Fruit", image: "", tolerance: "🟡 Moyen", saison: "Hiver", avantage: "Faciles à portionner.", inconvenient: "Peaux transparentes.", preparation: "Bien peler.", recettes: "" },
+        { id: 116, nom: "Mandarines", type: "Fruit", image: "", tolerance: "🟡 Moyen", saison: "Hiver", avantage: "Goût prononcé.", inconvenient: "Présence de pépins.", preparation: "Retirer pépins et peaux.", recettes: "" },
+        { id: 117, nom: "Pamplemousse", type: "Fruit", image: "", tolerance: "🟡 Moyen", saison: "Hiver", avantage: "Rafraîchissant.", inconvenient: "Très acide et amertume.", preparation: "Jus filtré.", recettes: "" },
+        { id: 132, nom: "Kiwi", type: "Fruit", image: "", tolerance: "🔴 À proscrire", saison: "Hiver", avantage: "Aucun.", inconvenient: "Pépins noirs et poils.", preparation: "À éviter.", recettes: "" },
+        { id: 222, nom: "Topinambour", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Hiver", avantage: "Aucun.", inconvenient: "Extrêmement riche en inuline, gaz sévères et douleurs.", preparation: "À éviter absolument.", recettes: "" },
+        
+        /* FÉCULENTS LÉGUMINEUX */
+        { id: 36, nom: "Lentilles corail", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Féculents Légumineux", avantage: "Sans enveloppe irritante, très digestes.", inconvenient: "Aucun si bien cuites.", preparation: "Cuire jusqu'à obtention d'une purée fondante.", recettes: "Dahl de lentilles corail." },
+        { id: 37, nom: "Lentilles noires", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Féculents Légumineux", avantage: "Aucun.", inconvenient: "Petites peaux dures.", preparation: "À éviter.", recettes: "" },
+        { id: 38, nom: "Lentilles vertes", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Féculents Légumineux", avantage: "Aucun.", inconvenient: "Peau dure et fibres agressives.", preparation: "À éviter.", recettes: "" },
+        { id: 200, nom: "Couscous", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Féculents Légumineux", avantage: "Rapide à préparer.", inconvenient: "Contient du gluten.", preparation: "Gonfler à l'eau bouillante.", recettes: "" },
+        { id: 201, nom: "Boulgour", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Féculents Légumineux", avantage: "Riche en fibres.", inconvenient: "Contient du gluten.", preparation: "Cuire à l'eau ou bouillon.", recettes: "" },
+        { id: 202, nom: "Sarrasin", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Féculents Légumineux", avantage: "Sans gluten, riche en nutriments.", inconvenient: "Goût prononcé.", preparation: "Rincer et cuire à l'eau.", recettes: "" },
+        { id: 203, nom: "Orge perlé", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Féculents Légumineux", avantage: "Bon pour les potages.", inconvenient: "Contient du gluten.", preparation: "Cuisson longue.", recettes: "" },
+        { id: 204, nom: "Riz", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Féculents Légumineux", avantage: "Très digeste, sans gluten.", inconvenient: "Aucun.", preparation: "Rincer avant cuisson.", recettes: "" },
+        { id: 205, nom: "Polenta", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Féculents Légumineux", avantage: "Doux pour l'intestin.", inconvenient: "Aucun.", preparation: "Cuire dans l'eau ou bouillon.", recettes: "" },
+        { id: 206, nom: "Toor dal", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Féculents Légumineux", avantage: "Protéines végétales.", inconvenient: "Peut fermenter.", preparation: "Bien tremper et cuire longuement.", recettes: "" },
+        { id: 207, nom: "Quinoa", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Féculents Légumineux", avantage: "Protéines complètes.", inconvenient: "Saponine irritante si mal rincé.", preparation: "Bien rincer à l'eau claire avant cuisson.", recettes: "" },
+        { id: 208, nom: "Bolet séché", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Féculents Légumineux", avantage: "Très parfumé.", inconvenient: "Fibres dures.", preparation: "Réhydrater longuement avant cuisson.", recettes: "" },
+        { id: 209, nom: "Morille séchée", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Féculents Légumineux", avantage: "Saveur exceptionnelle.", inconvenient: "Toxique crue.", preparation: "Réhydrater et cuire impérativement.", recettes: "" },
+        { id: 223, nom: "Pâtes", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Féculents Légumineux", avantage: "Rapide et énergétique.", inconvenient: "Contient du gluten, digestion parfois lourde.", preparation: "Préférer une cuisson 'al dente' pour un index glycémique plus bas et une meilleure digestion.", recettes: "" },
+        { id: 224, nom: "Nouilles de riz", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Féculents Légumineux", avantage: "Sans gluten, texture très douce et légère pour le système digestif.", inconvenient: "Aucun.", preparation: "Cuire quelques minutes à l'eau frémissante.", recettes: "Idéal pour préparer un délicieux Pad Thaï maison." }
+    ];
+
+    let legumes = [];
+    let currentSaison = "";
+    let currentTolFilter = "all";
+    let currentTypeFilter = "all";
+
+    /* FONCTION POUR ENLEVER LES ACCENTS */
+    function removeAccents(str) {
+        return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    /* FONCTION D'AUTO-DÉTECTION DES EXTENSIONS D'IMAGES */
+    function tryNextExt(img, basePath) {
+        const exts = ['webp', 'png', 'jpeg', 'avif', 'jfif'];
+        let idx = parseInt(img.getAttribute('data-ext-idx') || '0');
+        if (idx < exts.length) {
+            img.src = basePath + '.' + exts[idx];
+            img.setAttribute('data-ext-idx', idx + 1);
+        } else {
+            img.onerror = null;
+            img.outerHTML = '🌱'; // Affiche la petite feuille si aucune image n'est trouvée
+        }
+    }
+
+function initData() {
+        const STORAGE_KEY = 'marche_saison_data';
+        const VERSION_KEY = 'marche_saison_version';
+        const savedVersion = localStorage.getItem(VERSION_KEY);
+        const storedData = localStorage.getItem(STORAGE_KEY);
+
+        if (storedData && savedVersion === APP_VERSION) {
+            legumes = JSON.parse(storedData);
+        } else {
+            let loadedData = storedData ? JSON.parse(storedData) : [];
+            loadedData.forEach(item => { if (item.saison === "Féculents & Secs") item.saison = "Féculents Légumineux"; });
+            
+            /* --- NOUVEAU CODE DE NETTOYAGE AUTOMATIQUE --- */
+            const nomsASupprimer = [
+                "Artichaut (fonds)", "Carotte", "Carotte nouvelle", "Maïs doux",
+                "Épinards frais", "Endive (Chicon)", "Chou vert / frisé",
+                "Oignon / Ail", "Châtaigne / Marron", "Pommes (Jazz, Gala...)",
+                "Riz (Basmati, Carolina, Baldo)", "Lentilles noires (Beluga)",
+                "Haricots mungo (germes)"
+            ];
+            // On filtre les données pour ne garder que ce qui n'est PAS dans la liste à supprimer
+            loadedData = loadedData.filter(item => !nomsASupprimer.includes(item.nom));
+            /* --------------------------------------------- */
+            
+            defaultData.forEach(defItem => {
+                const existingIndex = loadedData.findIndex(item => item.nom.toLowerCase() === defItem.nom.toLowerCase());
+                if (existingIndex === -1) {
+                    loadedData.push(defItem);
+                } else {
+                    loadedData[existingIndex].saison = defItem.saison;
+                    loadedData[existingIndex].type = defItem.type;
+                }
+            });
+            legumes = loadedData;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(legumes));
+            localStorage.setItem(VERSION_KEY, APP_VERSION);
+        }
+        renderHomeCounts();
+    }
+
+    function saveToLocal() {
+        localStorage.setItem('marche_saison_data', JSON.stringify(legumes));
+        localStorage.setItem('marche_saison_version', APP_VERSION);
+        renderHomeCounts();
+    }
+
+    function exportData() {
+        const dataStr = JSON.stringify(legumes);
+        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(dataBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'sauvegarde_marche_saison.json';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    function importData(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const importedData = JSON.parse(e.target.result);
+                if (Array.isArray(importedData)) {
+                    legumes = importedData;
+                    saveToLocal();
+                    alert("✅ Données restaurées avec succès !");
+                    renderHomeCounts();
+                    if(document.getElementById('view-list').style.display === 'block') { renderCards(); }
+                } else { alert("❌ Fichier invalide."); }
+            } catch (error) { alert("❌ Erreur de lecture."); }
+        };
+        reader.readAsText(file);
+    }
+
+    function renderHomeCounts() {
+        const menuContainer = document.getElementById('home-menu-saisons');
+        if (!menuContainer) return;
+        const countRecommandes = legumes.filter(l => l.tolerance.includes("🟢") || l.tolerance.includes("🟡")).length;
+        const countPrintemps = legumes.filter(l => l.saison === "Printemps").length;
+        const countEte = legumes.filter(l => l.saison === "Été").length;
+        const countAutomne = legumes.filter(l => l.saison === "Automne").length;
+        const countHiver = legumes.filter(l => l.saison === "Hiver").length;
+        const countFeculents = legumes.filter(l => l.saison === "Féculents Légumineux").length;
+
+        menuContainer.innerHTML = `
+            <button class="saison-btn printemps" onclick="openSaison('Printemps')">
+                <div class="season-title"><span class="emoji-left">🌼</span><span class="texte">Printemps</span><span class="emoji-right">🌼</span></div>
+                <div class="saison-btn-count">${countPrintemps} aliments</div>
+            </button>
+            <button class="saison-btn ete" onclick="openSaison('Été')">
+                <div class="season-title"><span class="emoji-left">☀️</span><span class="texte">Été</span><span class="emoji-right">☀️</span></div>
+                <div class="saison-btn-count">${countEte} aliments</div>
+            </button>
+            <button class="saison-btn automne" onclick="openSaison('Automne')">
+                <div class="season-title"><span class="emoji-left">${svgAutomne}</span><span class="texte">Automne</span><span class="emoji-right">${svgAutomne}</span></div>
+                <div class="saison-btn-count">${countAutomne} aliments</div>
+            </button>
+            <button class="saison-btn hiver" onclick="openSaison('Hiver')">
+                <div class="season-title"><span class="emoji-left">❄️</span><span class="texte">Hiver</span><span class="emoji-right">❄️</span></div>
+                <div class="saison-btn-count">${countHiver} aliments</div>
+            </button>
+            <div class="boutons-double-container">
+                <button class="bouton-moitie recommande" onclick="openSaison('Recommandés')">
+                    <div class="twin-title"><span class="emoji">✨</span><span class="texte">Recommandés</span><span class="emoji">✨</span></div>
+                    <div class="saison-btn-count">${countRecommandes} éléments</div>
+                </button>
+                <button class="bouton-moitie feculents" onclick="openSaison('Féculents Légumineux')">
+                    <div class="twin-title"><span class="emoji">🌾</span><span class="texte">Féculents<br>Légumineux</span><span class="emoji">🌾</span></div>
+                    <div class="saison-btn-count">${countFeculents} éléments</div>
+                </button>
+            </div>
+        `;
+    }
+
+    function handleSearch(event, resultsBoxId = 'search-results', inputId = 'global-search') {
+        // La recherche devient "insensible aux accents"
+        const query = removeAccents(event.target.value.toLowerCase().trim());
+        const resultsBox = document.getElementById(resultsBoxId);
+        resultsBox.innerHTML = '';
+        if (query.length === 0) { resultsBox.style.display = 'none'; return; }
+        
+        // On compare le nom de l'aliment sans accents avec la recherche sans accents
+        const matches = legumes.filter(l => removeAccents(l.nom.toLowerCase()).includes(query));
+        
+        if (matches.length === 0) {
+            resultsBox.innerHTML = '<div style="padding: 12px 18px; color: #8D99AE; text-align: center;">Aucun aliment trouvé</div>';
+            resultsBox.style.display = 'block'; return;
+        }
+        matches.forEach(item => {
+            const div = document.createElement('div'); div.className = 'search-result-item';
+            div.innerHTML = `<span>🥕 ${item.nom}</span> <span style="font-size:0.8rem; color:#8D99AE;">${item.saison}</span>`;
+            div.onclick = function() {
+                resultsBox.style.display = 'none'; document.getElementById(inputId).value = '';
+                openSaisonAndFocus(item.saison, item.id);
+            };
+            resultsBox.appendChild(div);
+        });
+        resultsBox.style.display = 'block';
+    }
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.search-box-container')) {
+            const box1 = document.getElementById('search-results');
+            const box2 = document.getElementById('list-search-results');
+            if (box1) box1.style.display = 'none';
+            if (box2) box2.style.display = 'none';
+        }
+    });
+
+    function openSaison(saison) {
+        currentSaison = saison; currentTolFilter = 'all'; currentTypeFilter = 'all'; 
+        document.getElementById('view-home').style.display = 'none';
+        document.getElementById('view-list').style.display = 'block';
+        const titleEl = document.getElementById('saison-title-container');
+        if(saison === "Recommandés") titleEl.innerHTML = `<span class="emoji-header">✨</span><h1>Recommandés</h1><span class="emoji-header">✨</span>`;
+        else if(saison === "Printemps") titleEl.innerHTML = `<span class="emoji-header">🌼</span><h1>Printemps</h1><span class="emoji-header">🌼</span>`;
+        else if(saison === "Été") titleEl.innerHTML = `<span class="emoji-header">☀️</span><h1>Été</h1><span class="emoji-header">☀️</span>`;
+        else if(saison === "Automne") titleEl.innerHTML = `<span class="emoji-header">${svgAutomne}</span><h1>Automne</h1><span class="emoji-header">${svgAutomne}</span>`;
+        else if(saison === "Hiver") titleEl.innerHTML = `<span class="emoji-header">❄️</span><h1>Hiver</h1><span class="emoji-header">❄️</span>`;
+        else if(saison === "Féculents Légumineux") titleEl.innerHTML = `<span class="emoji-header">🌾</span><h1>Féculents<br>Légumineux</h1><span class="emoji-header">🌾</span>`;
+        else titleEl.innerHTML = `<h1>${saison}</h1>`;
+        renderCards();
+    }
+
+    function openSaisonAndFocus(saison, alimentId) {
+        openSaison(saison);
+        setTimeout(() => {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                const editBtn = card.querySelector(`button[onclick*="openForm(${alimentId})"]`);
+                if (editBtn) {
+                    scrollToFirstCard(card);
+                    card.classList.add('highlight');
+                    setTimeout(() => card.classList.remove('highlight'), 2000);
+                }
+            });
+        }, 150);
+    }
+
+    function scrollToFirstCard(targetCard = null) {
+        setTimeout(() => {
+            const cardToScroll = targetCard || document.querySelector('.card');
+            if (cardToScroll) {
+                const headerHeight = document.querySelector('.sticky-header').offsetHeight;
+                const elementPosition = cardToScroll.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerHeight - 65;
+                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+            }
+        }, 50);
+    }
+
+    function goHome() {
+        document.getElementById('view-list').style.display = 'none';
+        document.getElementById('view-home').style.display = 'block';
+        renderHomeCounts();
+    }
+
+    function setTolFilter(tol) {
+        currentTolFilter = tol;
+        if(document.getElementById('view-list').style.display === 'block') { renderCards(); scrollToFirstCard(); }
+    }
+
+    function setTypeFilter(typeVal) {
+        currentTypeFilter = typeVal;
+        if(document.getElementById('view-list').style.display === 'block') { renderCards(); scrollToFirstCard(); }
+    }
+
+    function renderCards() {
+        const container = document.getElementById('cards-container'); container.innerHTML = '';
+        let baseList = legumes;
+        if (currentSaison === "Recommandés") baseList = legumes.filter(l => l.tolerance.includes("🟢") || l.tolerance.includes("🟡"));
+        else baseList = legumes.filter(l => l.saison === currentSaison);
+
+        let listForTolCounts = [...baseList];
+        if (currentTypeFilter !== 'all') listForTolCounts = listForTolCounts.filter(l => (l.type || 'Légume') === currentTypeFilter);
+        const countConseilles = listForTolCounts.filter(l => l.tolerance.includes("🟢")).length;
+        const countMoyens = listForTolCounts.filter(l => l.tolerance.includes("🟡")).length;
+        const countProscrire = listForTolCounts.filter(l => l.tolerance.includes("🔴")).length;
+
+        let listForTypeCounts = [...baseList];
+        if (currentTolFilter !== 'all') listForTypeCounts = listForTypeCounts.filter(l => l.tolerance.includes(currentTolFilter));
+        const countTous = listForTypeCounts.length;
+        const countLegumes = listForTypeCounts.filter(l => (l.type || 'Légume') === 'Légume').length;
+        const countFruits = listForTypeCounts.filter(l => l.type === 'Fruit').length;
+
+        const filterContainer = document.getElementById('filter-container');
+        filterContainer.innerHTML = `
+            <div class="filter-row" style="margin-bottom: 6px;">
+                <div class="type-switcher">
+                    <button class="type-tab ${currentTypeFilter === 'all' ? 'active' : ''}" onclick="setTypeFilter('all')">🥗 Tous (${countTous})</button>
+                    <button class="type-tab ${currentTypeFilter === 'Légume' ? 'active' : ''}" onclick="setTypeFilter('Légume')">🥕 Lég./Féculents (${countLegumes})</button>
+                    <button class="type-tab ${currentTypeFilter === 'Fruit' ? 'active' : ''}" onclick="setTypeFilter('Fruit')">🍎 Fruits (${countFruits})</button>
+                </div>
+            </div>
+            <div class="filter-row">
+                <button class="filter-btn tol-btn ${currentTolFilter === 'all' ? 'active' : ''}" onclick="setTolFilter('all')">Tous</button>
+                <button class="filter-btn tol-btn ${currentTolFilter === '🟢' ? 'active' : ''}" onclick="setTolFilter('🟢')">🟢 Conseillés (${countConseilles})</button>
+                <button class="filter-btn tol-btn ${currentTolFilter === '🟡' ? 'active' : ''}" onclick="setTolFilter('🟡')">🟡 Moyens (${countMoyens})</button>
+                ${currentSaison !== "Recommandés" ? `<button class="filter-btn tol-btn ${currentTolFilter === '🔴' ? 'active' : ''}" onclick="setTolFilter('🔴')">🔴 Proscrire (${countProscrire})</button>` : ''}
+            </div>
+        `;
+
+        let filtered = [...baseList];
+        if (currentTypeFilter !== 'all') filtered = filtered.filter(l => (l.type || 'Légume') === currentTypeFilter);
+        if (currentTolFilter !== 'all') filtered = filtered.filter(l => l.tolerance.includes(currentTolFilter));
+        
+        if (filtered.length === 0) {
+            container.innerHTML = '<p style="text-align:center; color:#8D99AE; font-size: 1.1rem; margin-top:40px;">Aucun élément ne correspond à ce filtre.</p>';
+            return;
+        }
+
+        const ordreSaisons = { "Printemps": 1, "Été": 2, "Automne": 3, "Hiver": 4, "Féculents Légumineux": 5 };
+        filtered.sort((a, b) => {
+            const ordreA = ordreSaisons[a.saison] || 99;
+            const ordreB = ordreSaisons[b.saison] || 99;
+            if (ordreA !== ordreB) return ordreA - ordreB;
+            return a.nom.localeCompare(b.nom);
+        });
+
+        filtered.forEach(leg => {
+            const card = document.createElement('div'); card.className = 'card';
+            let cardBgColor = "#FAF7F2"; let cardBorderColor = "#E2D9CC";
+            if(leg.saison === "Printemps") { cardBgColor = "#D9EDDB"; cardBorderColor = "#A6D2A9"; }
+            else if(leg.saison === "Été") { cardBgColor = "#FFF1C5"; cardBorderColor = "#F3D068"; }
+            else if(leg.saison === "Automne") { cardBgColor = "#FFE5D9"; cardBorderColor = "#F2B89E"; }
+            else if(leg.saison === "Hiver") { cardBgColor = "#D6E8FD"; cardBorderColor = "#9CC5EE"; }
+            else if(leg.saison === "Féculents Légumineux") { cardBgColor = "#F2F4F8"; cardBorderColor = "#BAC6D5"; }
+            card.style.backgroundColor = cardBgColor; card.style.borderColor = cardBorderColor;
+            
+            let tolColor = "#e9ecef"; let tolEmoji = "🟢";
+            if(leg.tolerance.includes("🟢")) { tolColor = "#2E7D32"; tolEmoji = "🟢"; }
+            else if(leg.tolerance.includes("🟡")) { tolColor = "#F57F17"; tolEmoji = "🟡"; }
+            else if(leg.tolerance.includes("🔴")) { tolColor = "#C62828"; tolEmoji = "🔴"; }
+
+            // GESTION INTELLIGENTE DES IMAGES 
+            let imgSrc = leg.image;
+            let imgTag = "";
+
+            if (imgSrc && imgSrc.startsWith("data:image")) {
+                imgTag = `<img src="${imgSrc}" alt="${leg.nom}" onerror="this.onerror=null; this.outerHTML='🌱';">`;
+            } else {
+                let cleanName = removeAccents(leg.nom.toLowerCase())
+                    .replace(/['']/g, "_")                            
+                    .replace(/[^a-z0-9]/g, "_")                        
+                    .replace(/_+/g, "_");                              
+                
+                let basePath = `images/${cleanName}`;
+                imgTag = `<img src="${basePath}.jpg" alt="${leg.nom}" onerror="tryNextExt(this, '${basePath}')">`;
+            }
+
+            let badgeType = ''; let badgeColor = '';
+            if (leg.type === 'Fruit') { badgeType = '🍎 FRUIT'; badgeColor = '#E91E63'; }
+            else if (leg.saison === 'Féculents Légumineux') { badgeType = '🌾 FÉCULENT'; badgeColor = '#A06A42'; }
+            else { badgeType = '🥗 LÉGUME'; badgeColor = '#2E7D32'; }
+
+            card.innerHTML = `
+                <div class="card-top-overlay">
+                    <div class="card-top-left">
+                        <div class="card-photo-round" style="border-color: ${tolColor};">
+                            ${imgTag}
+                            <div class="tolerance-badge">${tolEmoji}</div>
+                        </div>
+                    </div>
+                    <div class="card-top-center"><span class="category-badge" style="color: ${badgeColor}; border-color: ${badgeColor};">${badgeType}</span></div>
+                    <div class="card-top-right">
+                        <button class="btn-icon" onclick="openForm(${leg.id})" title="Éditer">✏️</button>
+                        <button class="btn-icon btn-danger" onclick="deleteFiche(${leg.id})" title="Supprimer">🗑️</button>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <h2 class="card-title-elegant">${leg.nom}</h2>
+                    <div class="grid-props">
+                        <div class="prop-box"><div class="prop-label">Avantage</div><div class="prop-value normal-text">${leg.avantage || '-'}</div></div>
+                        <div class="prop-box"><div class="prop-label">Inconvénient</div><div class="prop-value normal-text">${leg.inconvenient || '-'}</div></div>
+                        <div class="prop-box"><div class="prop-label">Conseil de Préparation</div><div class="prop-value normal-text">${leg.preparation || '-'}</div></div>
+                        <div class="prop-box notes"><div class="prop-label" style="color: #D84315;">Idées Recettes / Notes</div><div class="prop-value normal-text">${leg.recettes || '<em>Aucune note enregistrée.</em>'}</div></div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    document.getElementById('f-image-file').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const img = new Image();
+            img.onload = function() {
+                const canvas = document.createElement('canvas');
+                const MAX_WIDTH = 300; const MAX_HEIGHT = 300;
+                let width = img.width; let height = img.height;
+                let minSide = Math.min(width, height);
+                let sx = (width - minSide) / 2; let sy = (height - minSide) / 2;
+                canvas.width = MAX_WIDTH; canvas.height = MAX_HEIGHT;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, MAX_WIDTH, MAX_HEIGHT);
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
+                document.getElementById('f-image-base64').value = dataUrl;
+                document.getElementById('f-image-preview').src = dataUrl;
+                document.getElementById('f-image-preview').style.display = 'block';
+            }
+            img.src = event.target.result;
+        }
+        reader.readAsDataURL(file);
+    });
+
+    function openForm(id = null) {
+        document.getElementById('modal-form').style.display = 'block';
+        document.getElementById('f-image-file').value = ""; 
+        if (id) {
+            document.getElementById('form-title').textContent = "MODIFIER LA FICHE";
+            const leg = legumes.find(l => l.id === id);
+            document.getElementById('f-id').value = leg.id;
+            document.getElementById('f-nom').value = leg.nom;
+            document.getElementById('f-image-base64').value = leg.image || "";
+            if(leg.image && leg.image.startsWith('data:image')) {
+                document.getElementById('f-image-preview').src = leg.image;
+                document.getElementById('f-image-preview').style.display = 'block';
+            } else { document.getElementById('f-image-preview').style.display = 'none'; }
+            document.getElementById('f-type').value = leg.type || 'Légume';
+            document.getElementById('f-saison').value = leg.saison;
+            document.getElementById('f-tolerance').value = leg.tolerance;
+            document.getElementById('f-avantage').value = leg.avantage;
+            document.getElementById('f-inconvenient').value = leg.inconvenient;
+            document.getElementById('f-preparation').value = leg.preparation;
+            document.getElementById('f-recettes').value = leg.recettes;
+        } else {
+            document.getElementById('form-title').textContent = "NOUVELLE FICHE";
+            document.getElementById('f-id').value = ""; document.getElementById('f-nom').value = "";
+            document.getElementById('f-image-base64').value = ""; document.getElementById('f-image-preview').style.display = 'none';
+            document.getElementById('f-type').value = 'Légume';
+            document.getElementById('f-saison').value = (currentSaison === "Recommandés" || currentSaison === "") ? "Printemps" : currentSaison;
+            document.getElementById('f-tolerance').value = "🟢 Très conseillé";
+            document.getElementById('f-avantage').value = ""; document.getElementById('f-inconvenient').value = "";
+            document.getElementById('f-preparation').value = ""; document.getElementById('f-recettes').value = "";
+        }
+    }
+
+    function closeForm() { document.getElementById('modal-form').style.display = 'none'; }
+
+    function saveFiche() {
+        const id = document.getElementById('f-id').value;
+        const nom = document.getElementById('f-nom').value.trim();
+        if(!nom) { alert("Le nom est obligatoire."); return; }
+        const newData = {
+            nom: nom, type: document.getElementById('f-type').value, image: document.getElementById('f-image-base64').value,
+            saison: document.getElementById('f-saison').value, tolerance: document.getElementById('f-tolerance').value,
+            avantage: document.getElementById('f-avantage').value, inconvenient: document.getElementById('f-inconvenient').value,
+            preparation: document.getElementById('f-preparation').value, recettes: document.getElementById('f-recettes').value
+        };
+        if (id) {
+            const index = legumes.findIndex(l => l.id == id);
+            legumes[index] = { ...legumes[index], ...newData };
+        } else {
+            const newId = legumes.length > 0 ? Math.max(...legumes.map(l => l.id)) + 1 : 1;
+            legumes.push({ id: newId, ...newData });
+        }
+        saveToLocal(); closeForm();
+        if(document.getElementById('view-list').style.display === 'block') renderCards();
+    }
+
+    function deleteFiche(id) {
+        if(confirm("Voulez-vous vraiment supprimer cet élément ?")) {
+            legumes = legumes.filter(l => l.id !== id); saveToLocal(); renderCards();
+        }
+    }
+
+    // ========================================================
+    // SCRIPT DE DÉTECTION POUR L'IPHONE
+    // ========================================================
+    function detectAndShowIOSPrompt() {
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        
+        if (isIOS && !isStandalone) {
+            document.getElementById('ios-install-prompt').style.display = 'block';
+        }
+    }
+
+    window.addEventListener('load', detectAndShowIOSPrompt);
+
+    initData();
+</script>
+
+<script>
+    let deferredPrompt;
+    const installBtn = document.getElementById('install-btn');
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault(); deferredPrompt = e; installBtn.style.display = 'flex';
+    });
+    installBtn.addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') { console.log('Utilisateur a accepté l\'installation'); }
+        deferredPrompt = null; installBtn.style.display = 'none';
+    });
+    window.addEventListener('appinstalled', () => {
+        installBtn.style.display = 'none'; console.log('PWA installée avec succès');
+    });
+</script>
+
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('sw.js').catch(err => { console.log('Service Worker non enregistré: ', err); });
+        });
+    }
+</script>
+</body>
+</html>
