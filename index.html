@@ -1,5 +1,5 @@
 <!-- ================================================================================= -->
-<!-- APPLICATION MARCHÉ DE SAISON - VERSION 5.61 PWA                                   -->
+<!-- APPLICATION MARCHÉ DE SAISON - VERSION 5.62 PWA                                   -->
 <!-- MÉMO : POUR AFFICHER LA NOUVELLE VERSION -> A MODIFIER EN BAS DE CETTE PAGE(JS)   -->
 <!-- const APP_VERSION = "5.61"                                                        -->
 <!-- ================================================================================= -->
@@ -25,9 +25,11 @@
     /* DESIGN ÉPURÉ - CENTRAGE ET DÉFILEMENT NATUREL            */
     /* ======================================================== */
     html, body {
-        background-color: var(--bg-main);
-        margin: 0;
-        padding: 0;
+    width: 100%;
+    overflow-x: hidden;
+    background-color: var(--bg-main);
+    margin: 0;
+    padding: 0;
         /* On laisse la fenêtre gérer le défilement, c'est vital pour le menu fixe ! */
         font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
         color: var(--text-main);
@@ -527,8 +529,8 @@
         return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     }
 
-    /* FONCTION D'AUTO-DÉTECTION DES EXTENSIONS D'IMAGES */
-    function tryNextExt(img, basePath) {
+    /* FONCTION D'AUTO-DÉTECTION DES EXTENSIONS (VERSION BLINDÉE) */
+function tryNextExt(img, basePath) {
     const exts = ['webp', 'png', 'jpeg', 'avif', 'jfif'];
     let idx = parseInt(img.getAttribute('data-ext-idx'), 10) || 0;
     if (idx < exts.length) {
@@ -536,7 +538,7 @@
         img.setAttribute('data-ext-idx', idx + 1);
     } else {
         img.onerror = null;
-        img.outerHTML = '🌱'; // Affiche la petite feuille si aucune image n'est trouvée
+        img.outerHTML = '🌱'; // Affiche la petite feuille si vraiment aucune image n'existe
     }
 }
 
@@ -825,13 +827,13 @@ function initData() {
                 imgTag = `<img src="${imgSrc}" alt="${leg.nom}" onerror="this.onerror=null; this.outerHTML='🌱';">`;
             } else {
                 let cleanName = removeAccents(leg.nom.toLowerCase())
-                    .replace(/['']/g, "_")                            
-                    .replace(/[^a-z0-9]/g, "_")                        
-                    .replace(/_+/g, "_");                              
-                
-                let basePath = `images/${cleanName}`;
-                imgTag = `<img src="${basePath}.jpg" alt="${leg.nom}" onerror="tryNextExt(this, '${basePath}')">`;
-            }
+    .trim()
+    .replace(/['']/g, "_")
+    .replace(/[^a-z0-9]/g, "_")
+    .replace(/_+/g, "_");
+
+let basePath = `images/${cleanName}`;
+let imgTag = `<img src="${basePath}.jpg" alt="${leg.nom}" data-ext-idx="0" onerror="tryNextExt(this, '${basePath}')">`;
 
             let badgeType = ''; let badgeColor = '';
             if (leg.type === 'Fruit') { badgeType = '🍎 FRUIT'; badgeColor = '#E91E63'; }
@@ -994,5 +996,8 @@ function initData() {
     });
   }
 </script>
+</body>
+</html>
+
 </body>
 </html>
