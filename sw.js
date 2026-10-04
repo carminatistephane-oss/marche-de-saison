@@ -1,50 +1,47 @@
-// ATTENTION : À chaque fois que tu modifies ton code HTML/CSS/JS, 
-// tu DOIS changer ce nom (ex: passer à 'r6-carnet-v6' puis v7, etc.)
-// Sinon, les téléphones garderont l'ancienne version en mémoire !
-const CACHE_NAME = 'r6-carnet-v44se.js'; 
-
-// On ajoute les icônes locales pour qu'elles soient dispo hors-ligne
-const urlsToCache = [
+const CACHE_NAME = 'marche-saison-cache-v2';
+const assetsToCache = [
   './',
   './index.html',
-  './manifest.json',
-  './icn-192.png',
-  './icn-512.png'
+  './manifest.json'
 ];
 
-// 1. Étape d'installation : On télécharge tout et on met en cache
+// Installation du cache
 self.addEventListener('install', event => {
-  self.skipWaiting(); // Force le nouveau Service Worker à s'activer immédiatement
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(urlsToCache);
-    })
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(assetsToCache))
+      .then(() => self.skipWaiting())
   );
 });
 
-// 2. Étape d'activation : TRÈS IMPORTANT pour nettoyer le passé
-// Supprime les vieux caches (ex: supprime la v4 quand la v5 est installée)
+// Activation et nettoyage des anciens caches
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(cacheNames => {
+    caches.keys().then(keys => {
       return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('Ancien cache supprimé :', cacheName);
-            return caches.delete(cacheName);
-          }
-        })
+        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
       );
-    })
+    }).then(() => self.clients.claim())
   );
 });
 
-// 3. Étape d'utilisation (Fetch) : On sert le hors-ligne
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(response => {
-      // Si on a le fichier en cache, on le donne. Sinon, on va le chercher sur internet.
-      return response || fetch(event.request);
-    })
-  );
+// Interception des requêtes pour le mode hors-ligne
+self.addEventListener('fetch', (event) => {
+    event.respondWith(
+        fetch(event.request)
+            .then((response) => {
+                // 1. Si on a internet : on télécharge la dernière version depuis GitHub
+                // et on met le cache à jour silencieusement en arrière-plan.
+                const responseClone = response.clone();
+                caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, responseClone);
+                });
+                return response;
+            })
+            .catch(() => {
+                // 2. Si on est hors-ligne (en forêt ou mode avion) : 
+                // on affiche la version sauvegardée dans le cache.
+                return caches.match(event.request);
+            })
+    );
 });
