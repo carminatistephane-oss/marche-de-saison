@@ -1,4 +1,4 @@
-const CACHE_NAME = 'marche-saison-cache-v5';
+const CACHE_NAME = 'marche-saison-cache-v6';
 const assetsToCache = [
   './',
   './index.html',
