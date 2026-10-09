@@ -1,8 +1,14 @@
-const CACHE_NAME = 'marche-saison-cache-v7';
+const CACHE_NAME = 'marche-saison-cache-v8'; // J'ai passé en v8 pour forcer la mise à jour
 const assetsToCache = [
   './',
   './index.html',
-  './manifest.json'
+  './manifest.json',
+  './logo.png',
+  './icon.png',
+  './icn-192.png',
+  './icn-512.png',
+  './icnn-192.png',
+  './icnn-512.png'
 ];
 
 // Installation du cache
