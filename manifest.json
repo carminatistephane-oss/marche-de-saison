@@ -1,6 +1,6 @@
 {
-  "name": "Marché de Saison",
-  "short_name": "MarchéSaison",
+  "name": "Le Petit Marché de mon Estomac",
+  "short_name": "Petit Marché",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
