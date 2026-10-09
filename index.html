@@ -1,5 +1,5 @@
 <!-- ========================================================== -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 8.05  -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 8.06  -->
 <!-- INCLUT : MODIF. LOGO DE LA PAGE D'ACCUEIL                  -->
 <!-- ========================================================== -->
 
@@ -22,10 +22,14 @@
     html {
         scrollbar-gutter: stable;
         overflow-x: hidden;
+        overscroll-behavior: none; /* Coupe l'effet élastique du navigateur */
     }
 
     body {
         width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden; /* Bloque le glissement horizontal */
+        overscroll-behavior: none; /* Coupe l'effet élastique du navigateur */
         background-color: var(--bg-main);
         margin: 0;
         padding: 0;
@@ -812,7 +816,7 @@
 
 <script>
     // ========================================================
-    const APP_VERSION = "8.05";
+    const APP_VERSION = "8.06";
     document.querySelector('.version-display').textContent = "v" + APP_VERSION;
 
     const svgAutomne = `<svg class="svg-automne" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><path d="M495.6 200.7c-9.6-13-26.6-17.7-41.5-11.4l-68.5 28.6 15.6-70.5c3.3-15-4.4-30.4-18.4-36.8-13.8-6.3-30.2-2.1-39 9.8l-52.6 71.3-1.6-96.2c-.3-16.1-13.2-29.2-29.3-29.5h-8.7c-16.1.3-29 13.4-29.3 29.5l-1.6 96.2-52.6-71.3c-8.8-11.9-25.2-16.1-39-9.8-14 6.4-21.7 21.8-18.4 36.8l15.6 70.5-68.5-28.6c-14.9-6.3-31.9-1.6-41.5 11.4-9.6 13.1-6.9 31 6.3 41l61.5 46.5-54.6 37.8c-12.8 8.9-17 26.1-9.9 40 7 13.7 23.3 19.3 37.6 12.8l78.7-35.8-12.8 58.1c-3.4 15.6 5 31.4 19.5 37.5 14.3 6.1 31.1 1 39.8-11.8l38.2-56.4v75.1c0 15.8 12.8 28.6 28.6 28.6h9c15.8 0 28.6-12.8 28.6-28.6v-75.1l38.2 56.4c8.7 12.8 25.5 17.9 39.8 11.8 14.5-6.1 22.9-21.9 19.5-37.5l-12.8-58.1 78.7 35.8c14.3 6.5 30.6.9 37.6-12.8 7.1-13.9 2.9-31.1-9.9-40l-54.6-37.8 61.5-46.5c13.1-10 15.8-27.9 6.2-41z"/></svg>`;
