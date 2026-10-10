@@ -1,4 +1,4 @@
-const CACHE_NAME = 'marche-saison-cache-v9.03'; // J'ai passé en v9.03 pour forcer la mise à jour
+const CACHE_NAME = 'marche-saison-cache-v9.04'; // J'ai passé en v9.04 pour forcer la mise à jour
 const assetsToCache = [
   './',
   './index.html',
