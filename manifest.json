@@ -1,7 +1,7 @@
 {
   "name": "Le Petit Marché de mon Estomac",
   "short_name": "Petit Marché",
-  "start_url": "./",
+  "start_url": "./app.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#F5F2EB",
