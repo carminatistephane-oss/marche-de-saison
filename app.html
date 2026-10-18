@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.00 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.01 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MOSE SOMBRE - METHODE GENIE -->
@@ -934,7 +934,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.00</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.01</div>
             <!-- =================================== -->
             
             <div class="profils-section">
@@ -1421,7 +1421,7 @@
 <!-- ========================================== -->
 <script>
     // ========================================================
-    const APP_VERSION = "11.00";
+    const APP_VERSION = "11.01";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
 	
 	// === GESTION DU MODE SOMBRE (ÉDITION NOCTURNE) ===
@@ -1513,6 +1513,7 @@ const defaultData = [
     { id: 401, nom: "Salade Pommée", soustitre: "", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Printemps", fodmap: "Bas", fructose: "Bas", fibres: "Solubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Feuilles très tendres et riches en eau, n'irrite pas les intestins.", inconvenient: "En excès, l'eau des crudités peut parfois accélérer le transit.", preparation: "Bien laver, retirer le trognon et les côtes centrales épaisses. Bien mâcher.", notes: "", recettesList: [] },
     { id: 402, nom: "Feuille de Chêne", soustitre: "", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Printemps", fodmap: "Bas", fructose: "Bas", fibres: "Solubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Texture extrêmement souple et fondante, idéale pour les intestins fragiles.", inconvenient: "Se flétrit très vite après achat.", preparation: "Consommer fraîche, laver délicatement, assaisonnement léger.", notes: "", recettesList: [] },
     { id: 403, nom: "Roquette", soustitre: "", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Printemps", fodmap: "Bas", fructose: "Bas", fibres: "Insolubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fibreuse", avantage: "Apporte beaucoup de goût avec une très petite quantité.", inconvenient: "Goût poivré, tiges parfois fibreuses et irritantes si mal mâchées.", preparation: "Retirer les tiges. Privilégier les jeunes pousses très tendres ou hacher finement.", notes: "", recettesList: [] },
+	{ id: 1024, nom: "Pois mange-tout", soustitre: "Pois gourmands", type: "Légume", image: "", tolerance: "🟡 Moyen", saison: "Printemps", fodmap: "Haut", fructose: "Bas", fibres: "Insolubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Croquant et riche en vitamines. Plus digeste que les petits pois classiques car les grains sont très jeunes.", inconvenient: "La cosse extérieure contient des fils fibreux et peut fermenter légèrement dans l'intestin.", preparation: "Indispensable d'équeuter et de retirer les deux fils latéraux avant cuisson. Cuisson rapide à la vapeur douce ou sauté minute.", notes: "", recettesList: [] },
 
     /* ÉTÉ */
     { id: 6, nom: "Courgettes", soustitre: "", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Été", fodmap: "Bas", fructose: "Bas", fibres: "Solubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Chair très digeste et riche en eau.", inconvenient: "La peau et les pépins irritent.", preparation: "Peler impérativement, retirer le cœur avec les pépins, cuire fondante.", notes: "", recettesList: [{nom: "Velouté de courgettes sans peau", url: ""}] },
