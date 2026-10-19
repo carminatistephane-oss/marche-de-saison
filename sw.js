@@ -1,9 +1,9 @@
 // ========================================================
 // SERVICE WORKER - LE PETIT MARCHÉ DE MON ESTOMAC
-// VERSION DU CACHE : v11.04 (À incrémenter à chaque mise à jour !)
+// VERSION DU CACHE : v11.05 (À incrémenter à chaque mise à jour !)
 // ========================================================
 
-const CACHE_NAME = 'marche-cache-v11.04';
+const CACHE_NAME = 'marche-cache-v11.05';
 
 // Fichiers vitaux à stocker pour que l'app fonctionne 100% hors-ligne
 const URLS_A_METTRE_EN_CACHE = [

@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.04 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.05 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -936,7 +936,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.04</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.05</div>
             <!-- =================================== -->
             
             <div class="profils-section">
@@ -1423,7 +1423,7 @@
 <!-- ========================================== -->
 <script>
     // ========================================================
-    const APP_VERSION = "11.04"; // (ou 11.03)
+    const APP_VERSION = "11.05"; // (ou 11.03)
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -3584,7 +3584,12 @@ function demasquerFiche(id) {
     hidden = hidden.filter(hiddenId => hiddenId !== id);
     localStorage.setItem('marche_saison_hidden', JSON.stringify(hidden));
     renderCards();
-    ouvrirModalFichesMasquees(); // Rafraîchit la modale
+    ouvrirModalFichesMasquees(); // Rafraîchit la fenêtre
+    
+    // NOUVEAU : Rafraîchit le QR code si la modale est ouverte
+    if (document.getElementById('qr-modal').style.display === 'block') {
+        ouvrirQrModal(); 
+    }
 }
 
 function supprimerDefinitif(id) {
