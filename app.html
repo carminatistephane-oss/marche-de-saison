@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.01 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.02 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MOSE SOMBRE - METHODE GENIE -->
@@ -934,7 +934,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.01</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.02</div>
             <!-- =================================== -->
             
             <div class="profils-section">
@@ -1421,8 +1421,9 @@
 <!-- ========================================== -->
 <script>
     // ========================================================
-    const APP_VERSION = "11.01";
+    const APP_VERSION = "11.02"; // (ou 11.01)
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
+    let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
 	// === GESTION DU MODE SOMBRE (ÉDITION NOCTURNE) ===
     function toggleDarkMode() {
@@ -3018,9 +3019,9 @@ function renderCards() {
         
         if (id) {
             const index = legumes.findIndex(l => l.id == id);
-            legumes[index] = { ...legumes[index], ...newData };
+            legumes[index] = { ...legumes[index], ...newData, lastUpdated: Date.now() };
         } else {
-            legumes.push({ id: legumes.length > 0 ? Math.max(...legumes.map(l => l.id)) + 1 : 1, ...newData });
+            legumes.push({ id: legumes.length > 0 ? Math.max(...legumes.map(l => l.id)) + 1 : 1, ...newData, lastUpdated: Date.now() });
         }
         
         saveToLocal(); closeForm();
@@ -3149,6 +3150,8 @@ function ouvrirQrModal() {
         if (Array.isArray(legumes)) {
             legumes.forEach(l => {
                 if (!l || !l.nom) return;
+				// --- C'EST ICI LA LIGNE MAGIQUE POUR NE PRENDRE QUE LES NOUVEAUTÉS ---
+                if (l.lastUpdated && l.lastUpdated <= dateDerniereSync) return;
                 
                 // On cherche l'aliment d'origine PAR SON NOM (insensible à la casse et aux accents)
                 const nomClean = removeAccents(l.nom.toLowerCase().trim());
@@ -3310,6 +3313,7 @@ function importerLienManuel() {
                 });
 
                 saveToLocal();
+				localStorage.setItem('marche_derniere_sync', Date.now());
                 renderHomeCounts();
                 if (document.getElementById('view-list').style.display === 'block') renderCards();
 

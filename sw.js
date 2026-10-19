@@ -3,7 +3,7 @@
 // VERSION DU CACHE : v11.01 (À incrémenter à chaque mise à jour !)
 // ========================================================
 
-const CACHE_NAME = 'marche-cache-v11.01';
+const CACHE_NAME = 'marche-cache-v11.02';
 
 // Fichiers vitaux à stocker pour que l'app fonctionne 100% hors-ligne
 const URLS_A_METTRE_EN_CACHE = [
