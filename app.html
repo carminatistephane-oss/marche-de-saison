@@ -1,11 +1,12 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.07 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.08 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
 <!-- MAJ PARTAGE QR CODE PAR LIEN DE MOBILE A PC -->
 <!-- OPTION PARTAGE QR CODE PAR SELECTIONS ET INDIVIDUEL PAR FICHE -->
 <!-- CHANGEMENT TERMES DE TOLORENCE A VOLONTE - A LIMITER - A EVITER -->
+<!-- RENDRE LE BADGE PROFIF DIGESTIF CLICABLE -->
 <!-- ========================================================= -->
 
 <!DOCTYPE html>
@@ -937,13 +938,13 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.07</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.08</div>
             <!-- =================================== -->
             
             <div class="profils-section">
-                <div class="profils-header" onclick="toggleProfils()">
+                <div class="profils-header" style="cursor: default;">
                     <h2 class="profils-title">Identifiez votre profil digestif</h2>
-                    <svg id="profils-chevron" class="profils-chevron" viewBox="0 0 24 24" width="28" height="28">
+                    <svg id="profils-chevron" class="profils-chevron" viewBox="0 0 24 24" width="32" height="32">
                         <path d="M7 10l5 5 5-5z"/>
                     </svg>
                 </div>
@@ -963,9 +964,9 @@
             <button id="btn-install" class="btn-install-pwa">📱 Installer l'application</button>
         </div>
 
-        <div class="search-box-container">
+        <div class="search-box-container" style="margin-top: 0px;">
 			
-            <div id="home-profil-badge" class="active-profil-badge">Profil : 🟢 Neutre</div>
+            <div id="home-profil-badge" class="active-profil-badge" onclick="toggleProfils()" style="cursor: pointer;">Profil : 🟢 Neutre</div>
             <input type="text" id="global-search" class="search-input" placeholder="Rechercher un aliment..." oninput="handleSearch(event, 'search-results', 'global-search')">
             <div id="search-results" class="search-results"></div>
         </div>
@@ -1430,7 +1431,7 @@
 <!-- ========================================== -->
 <script>
     // ========================================================
-    const APP_VERSION = "11.07";
+    const APP_VERSION = "11.08";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
