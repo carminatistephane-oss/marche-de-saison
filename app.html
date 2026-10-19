@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.05 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.06 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -936,7 +936,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.05</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.06</div>
             <!-- =================================== -->
             
             <div class="profils-section">
@@ -1423,7 +1423,7 @@
 <!-- ========================================== -->
 <script>
     // ========================================================
-    const APP_VERSION = "11.05"; // (ou 11.03)
+    const APP_VERSION = "11.06";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -3287,18 +3287,23 @@ function dessinerInterfacePilules() {
 
 // Bascule une pilule avec BLOCAGE DE SÉCURITÉ À 8 FICHES MAX
 function basculerPiluleQr(idOuNom) {
-    const index = selectionFichesIds.indexOf(idOuNom);
+    // Conversion en chaîne de caractères pour être sûr que ça corresponde
+    const idString = String(idOuNom);
+    const index = selectionFichesIds.findIndex(id => String(id) === idString);
+    
     if (index > -1) {
-        // Décocher est toujours autorisé
+        // Décocher : si c'est déjà coché, on l'enlève
         selectionFichesIds.splice(index, 1);
     } else {
-        // Tentative de cocher : LE GARDE-FOU SE DÉCLENCHE SI DÉJÀ À 8 !
+        // Cocher : si c'est pas coché, on l'ajoute (avec la sécurité des 8 max)
         if (selectionFichesIds.length >= MAX_FICHES_PAR_QR) {
-            alert(`⚠️ Limite de confort atteinte (${MAX_FICHES_PAR_QR} fiches max) !\n\nPour garantir que le QR Code se flashe en 1 seconde chrono par n'importe quel appareil photo, chaque voyage est limité à ${MAX_FICHES_PAR_QR} fiches.\n\nEnvoyez d'abord ce premier lot, puis cochez les suivantes pour le voyage suivant !`);
+            alert(`⚠️ Limite de ${MAX_FICHES_PAR_QR} fiches max. Décochez-en une pour en ajouter une autre !`);
             return;
         }
-        selectionFichesIds.push(idOuNom);
+        selectionFichesIds.push(idString);
     }
+    
+    // Une fois la liste mise à jour, on redessine tout
     dessinerInterfacePilules();
 }
 
