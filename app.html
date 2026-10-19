@@ -1,10 +1,11 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.06 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.07 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
 <!-- MAJ PARTAGE QR CODE PAR LIEN DE MOBILE A PC -->
-<!-- OPTION PARTAGE QR CODE PAR SELECTION ET INDIVIDUEL PAR FICHE -->
+<!-- OPTION PARTAGE QR CODE PAR SELECTIONS ET INDIVIDUEL PAR FICHE -->
+<!-- CHANGEMENT TERMES DE TOLORENCE A VOLONTE - A LIMITER - A EVITER -->
 <!-- ========================================================= -->
 
 <!DOCTYPE html>
@@ -936,7 +937,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.06</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.07</div>
             <!-- =================================== -->
             
             <div class="profils-section">
@@ -1098,16 +1099,15 @@
             <option value="Condiments">Condiments & Épices</option>
             <option value="Boissons">Boissons & Douceurs</option>
         </select>
-        </select>
     </div>
     
     <div class="form-group">
         <label>Tolérance Digestive</label>
         <select id="f-tolerance" class="form-control">
-            <option value="🟢 Très conseillé">🟢 Très conseillé (Tolérés)</option>
-            <option value="🟡 Moyen">🟡 Moyen (À modérer)</option>
-            <option value="🔴 À proscrire">🔴 Proscrire (Irritant/Fibres dures)</option>
-        </select>
+    <option value="🟢 À volonté">🟢 À volonté (Au quotidien)</option>
+    <option value="🟡 À limiter">🟡 À limiter</option>
+    <option value="🟠 À éviter">🟠 À éviter</option>
+</select>
     </div>
 
     <div style="background-color: #FFFDF8; border: 1px solid var(--border-color); padding: 15px; border-radius: 14px; margin-bottom: 20px;">
@@ -1259,11 +1259,18 @@
         <h3 style="margin-top:0; color: #2C3E50; text-align: center;">📖 Mode d'emploi</h3>
         <div class="modal-body" style="font-size: 0.85rem;">
           
-          <!-- 1. Profil -->
-          <div style="background: #F4F6F8; border-left: 4px solid #4A90E2; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
-            <p style="color: #2C3E50; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0;">1. Sélection du Profil Digestif</p>
-            <p style="margin: 0; color: #555; line-height: 1.4;">Le moteur de l'application adapte l'affichage à votre métabolisme. Déployez le menu pour choisir un profil unique (Neutre) ou croisez plusieurs sensibilités simultanément (ex : Acidité + Irritable). Validez via l'icône ✅ pour que l'affichage s'ajuste instantanément et masque ou signale les aliments incompatibles.</p>
-          </div>
+        <!-- 1. Profil -->
+		<div style="background: #F4F6F8; border-left: 4px solid #4A90E2; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+			<p style="color: #4A90E2; font-weight: 800; font-size: 0.95rem; margin: 0 0 8px 0;">1. Sélection du Profil Digestif</p>
+  
+			<p style="margin: 0 0 8px 0; color: #555; line-height: 1.4;">Le moteur de l'application adapte l'affichage à votre métabolisme :</p>
+  
+			<ul style="margin: 0; padding-left: 20px; color: #555; line-height: 1.4;">
+				<li style="margin-bottom: 6px;"><strong>Choix du profil :</strong> Déployez le menu pour choisir un profil unique (Neutre) ou croisez plusieurs sensibilités simultanément (ex : Acidité + Irritable).</li>
+				<li style="margin-bottom: 6px;"><strong>Validation :</strong> Validez via l'icône ✅ pour que l'affichage s'ajuste instantanément.</li>
+				<li style="margin-bottom: 0;"><strong>Filtrage automatique :</strong> Seuls les aliments <strong>🟢 Pastille Verte</strong> et <strong>🟡 Pastille Jaune</strong> seront visibles. Les aliments incompatibles <strong>🟠 Pastille Orange</strong> seront masqués.</li>
+			</ul>
+		</div>
 
           <!-- 2. Couleurs et Filtres -->
           <div style="background: #FDF2E9; border-left: 4px solid #D4A373; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
@@ -1272,7 +1279,7 @@
             <ul style="padding-left: 15px; margin: 0 0 10px 0; color: #555;">
               <li><strong>🟢 Pastille Verte :</strong> Aliment hautement digeste, parfaitement compatible avec votre profil actuel.</li>
               <li><strong>🟡 Pastille Jaune :</strong> Attention, aliment à consommer avec modération selon votre propre seuil de tolérance.</li>
-              <li><strong>🔴 Pastille Rouge :</strong> Aliment problématique, fortement déconseillé par rapport aux sensibilités que vous avez cochées.</li>
+              <li><strong>🟠 Pastille Orange :</strong> Aliment problématique, fortement déconseillé par rapport aux sensibilités que vous avez cochées.</li>
             </ul>
             <p style="margin: 0 0 5px 0; font-weight: bold; color: #4A4A4A;">Comprendre les Filtres et Caractéristiques :</p>
             <ul style="padding-left: 15px; margin: 0; color: #555; line-height: 1.4;">
@@ -1324,21 +1331,21 @@
             <p style="margin: 0; color: #555; line-height: 1.4;"><strong>Ajouter ou retirer un favori :</strong> Il vous suffit de cliquer sur le petit cœur affiché en haut à droite de chaque fiche d'aliment. Le cœur devient rouge lorsqu'il est sélectionné et se synchronise instantanément avec votre compteur d'accueil.</p>
           </div>
 
-          <!-- 7. Sauvegarde, Restauration & Partage -->
+          <!-- 7. Sauvegarde, Partage & Synchronisation QR -->
           <div style="background: #EFEBE9; border-left: 4px solid #795548; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
-            <p style="color: #4E342E; font-weight: 800; font-size: 0.95rem; margin: 0 0 8px 0;">7. Sauvegarde, Restauration & Partage 💾📱</p>
-            <p style="margin: 0 0 8px 0; color: #555; line-height: 1.4;">Vos données sont précieuses et restent stockées exclusivement sur votre appareil. Dans les <strong>Paramètres ⚙️</strong>, 3 outils vous permettent de les protéger et de les synchroniser facilement :</p>
+            <p style="color: #4E342E; font-weight: 800; font-size: 0.95rem; margin: 0 0 8px 0;">7. Sauvegarde & Partage intelligent 💾📱</p>
+            <p style="margin: 0 0 8px 0; color: #555; line-height: 1.4;">Vos personnalisations (notes, recettes, nouvelles fiches) sont précieuses. Voici comment les gérer :</p>
             
             <ul style="padding-left: 15px; margin: 0; color: #555; line-height: 1.5;">
-              <li style="margin-bottom: 8px;">
-                <strong>💾 Sauvegarde (Partage 2 clics) :</strong> Crée une copie de sécurité intégrale (fichier <code>.json</code>) contenant toute votre base : vos fiches personnelles, vos recettes, vos notes et vos favoris. Sur smartphone, vous pouvez vous l'envoyer par e-mail, WhatsApp ou l'enregistrer dans vos fichiers. À faire régulièrement et indispensable avant de changer de téléphone !
+              <li style="margin-bottom: 6px;"><strong>💾 Sauvegarde complète :</strong> Exportez tout votre marché en un fichier <code>.json</code>. C'est la solution idéale pour migrer vers un nouveau téléphone.</li>
+              <li style="margin-bottom: 6px;"><strong>📱 Partage express par QR Code :</strong> 
+                <ul>
+                  <li><strong>Partage direct :</strong> Cliquez sur l'icône 📱 sur une fiche pour générer un QR Code unique pour cet aliment. Flashez-le avec un autre appareil pour transférer instantanément vos notes/recettes.</li>
+                  <li><strong>Partage groupé :</strong> Dans <em>Paramètres > Partager par QR Code</em>, sélectionnez plusieurs fiches via les pilules vertes. Le système gère les doublons automatiquement et fusionne vos notes sans jamais écraser celles de vos amis.</li>
+                  <li><strong>Limites :</strong> Pour garantir une lecture instantanée, chaque partage est limité à 8 fiches. Si vous avez plus de nouveautés, envoyez-les en plusieurs "voyages".</li>
+                </ul>
               </li>
-              <li style="margin-bottom: 8px;">
-                <strong>📂 Restaurer (.json) :</strong> Permet de réinstaller une sauvegarde précédente. Cliquez sur le bouton, sélectionnez votre fichier <code>.json</code> et l'application récupère l'intégralité de vos données personnalisées en une fraction de seconde.
-              </li>
-              <li style="margin-bottom: 2px;">
-                <strong>📱 Partager par QR Code (Express) :</strong> Transfère vos nouveautés (nouvelles fiches créées, notes et recettes ajoutées) d'un appareil à l'autre sans aucun fichier ! Affichez le QR Code sur un écran (ex : PC), visez-le avec l'appareil photo d'un autre appareil (téléphone ou tablette), touchez le lien pour ouvrir l'application et validez l'importation automatique en un clic.
-              </li>
+              <li style="margin-bottom: 6px;"><strong>🔄 Réparation intelligente :</strong> Vous avez supprimé une fiche officielle par erreur ? Le bouton "Restaurer les fiches de base" dans les Paramètres récupère les fiches manquantes sans toucher à vos données personnelles !</li>
             </ul>
           </div>
 
@@ -1423,7 +1430,7 @@
 <!-- ========================================== -->
 <script>
     // ========================================================
-    const APP_VERSION = "11.06";
+    const APP_VERSION = "11.07";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -1816,7 +1823,7 @@ const defaultData = [
     /* BOISSONS & DOUCEURS */
    { id: 934, nom: "Infusions & Tisanes", soustitre: "Verveine, Tilleul, Camomille, Mélisse, Rooibos, Fenouil...", type: "Boisson Chaude", image: "", tolerance: "🟢 Très conseillé", saison: "Boissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Sans théine ni caféine. Hydrate, apaise les muqueuses digestives et calme les spasmes.", inconvenient: "Attention à la menthe poivrée en cas de reflux gastrique et aux tisanes de fruits rouges/hibiscus (acides).", preparation: "Infusion de 5 à 7 min dans une eau chaude. Boire tiède plutôt que brûlant pour protéger l'œsophage.", notes: "", recettesList: [] },
     { id: 935, nom: "Thé vert nature", soustitre: "", type: "Boisson Chaude", image: "", tolerance: "🟢 Très conseillé", saison: "Boissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Antioxydant doux.", inconvenient: "Aucun.", preparation: "Infusion légère.", notes: "", recettesList: [] },
-    { id: 936, nom: "Thé vert Parfumé", soustitre: "Menthe, Jasmin, Agrumes, Pêche, Fruits rouges, Gingembre...", type: "Boisson Chaude", image: "", tolerance: "🟡 Moyen", saison: "Boissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Acide", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Moins excitant que le café, antioxydant et très varié en saveurs.", inconvenient: "Les arômes ajoutés (agrumes, menthe forte, essences) peuvent irriter un estomac sensible ou stimuler le reflux.", preparation: "Infusion douce et courte (2 min max) avec une eau à 75-80°C. Ne jamais utiliser d'eau bouillante.", notes: "", recettesList: [] },,
+    { id: 936, nom: "Thé vert Parfumé", soustitre: "Menthe, Jasmin, Agrumes, Pêche, Fruits rouges, Gingembre...", type: "Boisson Chaude", image: "", tolerance: "🟡 Moyen", saison: "Boissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Acide", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Moins excitant que le café, antioxydant et très varié en saveurs.", inconvenient: "Les arômes ajoutés (agrumes, menthe forte, essences) peuvent irriter un estomac sensible ou stimuler le reflux.", preparation: "Infusion douce et courte (2 min max) avec une eau à 75-80°C. Ne jamais utiliser d'eau bouillante.", notes: "", recettesList: [] },
     { id: 953, nom: "Thé noir", soustitre: "Earl Grey, Ceylan, Darjeeling, Breakfast...", type: "Boisson Chaude", image: "", tolerance: "🟡 Moyen", saison: "Boissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Acide", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Riche en théaflavines antioxydantes, stimulant plus diffus que le café.", inconvenient: "Les tanins et la théine stimulent l'acidité gastrique et peuvent favoriser les brûlures d'estomac.", preparation: "Infusion courte (2 à 3 min max) dans une eau à 85-90°C pour éviter de sur-extraire les tanins amers et agressifs. À éviter à jeun.", notes: "", recettesList: [] },
 	{ id: 937, nom: "Café", soustitre: "Moulu, En Capsules, Soluble", type: "Boisson Chaude", image: "", tolerance: "🔴 À proscrire", saison: "Boissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Acide", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Aucun.", inconvenient: "Relâche le sphincter cardial et déclenche des brûlures gastriques.", preparation: "À éviter.", notes: "", recettesList: [] },
     { id: 938, nom: "Thé froid Ice Tea", soustitre: "", type: "Boisson Froide", image: "", tolerance: "🟡 Moyen", saison: "Boissons", fodmap: "Bas", fructose: "Haut", fibres: "Sans", cg: "Moyen", acidite: "Acide", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Sans bulles.", inconvenient: "Acidifié et sucré.", preparation: "À modérer.", notes: "", recettesList: [] },
@@ -2158,7 +2165,7 @@ const content = document.getElementById('profils-content');
     if (currentProfil === 'neutre') return baseList;
     
     return baseList.filter(l => {
-        if (l.tolerance.includes("🔴")) return false;
+        if (l.tolerance.includes("🟠") || l.tolerance.includes("🔴")) return false;
         
         if (currentProfil.includes('estomac')) {
             if (l.acidite === "Acide" || l.graisses === "Gras") return false;
@@ -2646,7 +2653,7 @@ function renderCards() {
         };
 
         const ctType = {};
-        const ctTol = {'🟢':0, '🟡':0, '🔴':0};
+        const ctTol = {'🟢':0, '🟡':0, '🟠':0};
         const ctFodmap = {'Bas':0, 'Haut':0};
         const ctFibre = {'Solubles':0, 'Insolubles':0, 'Sans':0};
         const ctCg = {'Bas':0, 'Moyen':0, 'Élevé':0};
@@ -2662,9 +2669,9 @@ function renderCards() {
             if (!ctType[t]) ctType[t] = 0;
             if (matchesAllBut(l, 'type')) ctType[t]++;
             if (matchesAllBut(l, 'tol')) {
-                if (l.tolerance.includes('🟢')) ctTol['🟢']++;
-                if (l.tolerance.includes('🟡')) ctTol['🟡']++;
-                if (l.tolerance.includes('🔴')) ctTol['🔴']++;
+                if (l.tolerance.includes("🟢")) ctTol['🟢']++;
+                if (l.tolerance.includes("🟡")) ctTol['🟡']++;
+                if (l.tolerance.includes("🟠")) ctTol['🟠']++;
             }
             if (matchesAllBut(l, 'fodmap') && l.fodmap) ctFodmap[l.fodmap]++;
             if (matchesAllBut(l, 'fibre') && l.fibres) ctFibre[l.fibres]++;
@@ -2776,9 +2783,9 @@ function renderCards() {
         advancedFiltersHtml += `
             <div class="filter-row" style="margin-top: 6px; width: 100%;">
                 <button class="filter-btn tol-btn ${currentTolFilter === 'all' ? 'active' : ''}" onclick="setFilter('tol','all')">Tous</button>
-                <button class="filter-btn tol-btn ${currentTolFilter === '🟢' ? 'active' : ''}" onclick="setFilter('tol','🟢')">🟢 Tolérés (${ctTol['🟢']})</button>
-                <button class="filter-btn tol-btn ${currentTolFilter === '🟡' ? 'active' : ''}" onclick="setFilter('tol','🟡')">🟡 Moyen (${ctTol['🟡']})</button>
-                ${currentProfil === 'neutre' ? `<button class="filter-btn tol-btn ${currentTolFilter === '🔴' ? 'active' : ''}" onclick="setFilter('tol','🔴')">🔴 Proscrire (${ctTol['🔴']})</button>` : ''}
+                <button class="filter-btn tol-btn ${currentTolFilter === '🟢' ? 'active' : ''}" onclick="setFilter('tol','🟢')">🟢 À volonté (${ctTol['🟢']})</button>
+                <button class="filter-btn tol-btn ${currentTolFilter === '🟡' ? 'active' : ''}" onclick="setFilter('tol','🟡')">🟡 À limiter (${ctTol['🟡']})</button>
+               ${currentProfil === 'neutre' ? `<button class="filter-btn tol-btn ${currentTolFilter === '🟠' ? 'active' : ''}" onclick="setFilter('tol','🟠')">🟠 À éviter (${ctTol['🟠']})</button>` : ''}
             </div>
         </div>`;
         filterContainer.innerHTML = `
@@ -2816,8 +2823,7 @@ function renderCards() {
             card.style.borderColor = bgColors[leg.saison]?.[1] || "#E2D9CC";
             
             let tolColor = leg.tolerance.includes("🟢") ? "#2E7D32" : (leg.tolerance.includes("🟡") ? "#F57F17" : "#C62828");
-            let tolEmoji = leg.tolerance.includes("🟢") ? "🟢" : (leg.tolerance.includes("🟡") ? "🟡" : "🔴");
-
+			let tolEmoji = leg.tolerance.includes("🟢") ? "🟢" : (leg.tolerance.includes("🟡") ? "🟡" : "🟠");
             let imgTag = (leg.image && leg.image.startsWith("data:image")) ? `<img src="${leg.image}" alt="${leg.nom}">` : `<img src="images/${removeAccents(leg.nom.toLowerCase()).trim().replace(/['']/g, "_").replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "")}.webp" data-ext-idx="0" onerror="tryNextExt(this, 'images/${removeAccents(leg.nom.toLowerCase()).trim().replace(/['']/g, "_").replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "")}')">`;
 
             const badges = { 
@@ -3671,6 +3677,26 @@ function restaurerFichesDefaut() {
         alert("✨ Votre base est déjà complète !\nAucune fiche officielle ne manque à l'appel.");
     }
 }
+
+// === MISE À JOUR DOUCE DES LABELS (À LANCER 1 SEULE FOIS) ===
+    function normaliserTolerances() {
+        let aChange = false;
+        legumes.forEach(l => {
+            if (l.tolerance.includes("Très conseillé") || l.tolerance.includes("Tolérés")) {
+                l.tolerance = "🟢 À volonté"; aChange = true;
+            } else if (l.tolerance.includes("Moyen")) {
+                l.tolerance = "🟡 À limiter"; aChange = true;
+            } else if (l.tolerance.includes("proscrire")) {
+                l.tolerance = "🟠 À éviter"; aChange = true;
+            }
+        });
+        if (aChange) {
+            saveToLocal();
+            console.log("Labels mis à jour en douceur !");
+        }
+    }
+    // Lancer la normalisation au chargement
+    normaliserTolerances();
 
 </script>
 
