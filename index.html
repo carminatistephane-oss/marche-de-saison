@@ -90,32 +90,33 @@
             max-width: 500px;
         }
 
-        /* ====== BOUTON DE LANCEMENT ====== */
+        /* ====== BOUTON CHIC & COMPACT ====== */
         .btn-launch {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             background: linear-gradient(135deg, #D4A373 0%, #BC8A5F 100%);
             color: #ffffff;
             text-decoration: none;
-            padding: 18px 36px;
+            padding: 10px 22px; /* Fin et élégant */
             border-radius: 25px;
-            font-size: 1.15rem;
+            font-size: 0.85rem; /* Texte fin */
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            box-shadow: 0 10px 25px rgba(212, 163, 115, 0.4);
-            transition: all 0.25s ease;
-            box-sizing: border-box;
-            width: 100%;
-            max-width: 380px;
-            margin-bottom: 50px;
+            white-space: nowrap; /* INTERDICTION de couper sur deux lignes ! */
+            box-shadow: 0 4px 12px rgba(212, 163, 115, 0.35);
+            transition: all 0.2s ease;
         }
 
         .btn-launch:hover {
             transform: translateY(-2px);
-            box-shadow: 0 14px 30px rgba(212, 163, 115, 0.5);
+            box-shadow: 0 6px 16px rgba(212, 163, 115, 0.45);
+        }
+
+        .btn-launch:active {
+            transform: scale(0.96);
         }
 
         /* ====== GALERIE DE CAPTURES (NOUVEAU !) ====== */
@@ -292,11 +293,7 @@
         Votre guide nutritionnel personnalisé au rythme des saisons. Une approche bienveillante et clinique conçue pour apaiser votre digestion au quotidien.
     </p>
 
-    <!-- BOUTON D'ACCÈS -->
-    <a href="app.html" class="btn-launch">
-        <span>🌿 Lancer l'Application</span>
-    </a>
-
+    
     <!-- ============================================== -->
     <!-- NOUVELLE GALERIE D'APERÇUS (VOS 4 CAPTURES)   -->
     <!-- ============================================== -->
@@ -340,21 +337,11 @@
     <div class="features-grid">
         
         <div class="feature-card">
-            <div class="feature-icon">🌼</div>
-            <div>
-                <h3 class="feature-title">Rythme des Saisons</h3>
-                <p class="feature-text">
-                    Plus de 335 aliments répertoriés selon leur saisonnalité pour consommer des produits frais, riches en micronutriments et faciles à broyer pour l'estomac.
-                </p>
-            </div>
-        </div>
-
-        <div class="feature-card">
             <div class="feature-icon">🧬</div>
             <div>
                 <h3 class="feature-title">Filtres Cliniques Croisés</h3>
                 <p class="feature-text">
-                    Filtrez instantanément vos aliments selon vos besoins : <strong>Acidité/RGO</strong>, <strong>Lactose</strong>, <strong>Gluten</strong> ou <strong>Intestin Irritable (FODMAPs)</strong>.
+                    <strong>Sélection multiple :</strong> Croisez vos besoins <strong>(ex: Acidité + Gluten ou Lactose + Irritable)</strong> pour filtrer instantanément vos aliments. L'application masque ou signale les incompatibilités selon votre métabolisme.
                 </p>
             </div>
         </div>
@@ -379,33 +366,75 @@
             </div>
         </div>
 
+<!-- NOUVELLE BOÎTE : PERSONNALISATION -->
+        <div class="feature-card">
+            <div class="feature-icon">🛠️</div>
+            <div>
+                <h3 class="feature-title">Personnalisation Totale</h3>
+                <p class="feature-text">
+                    Gérez vos <strong>Favoris</strong> ❤️, masquez les fiches inutiles 👁️, ajoutez vos propres <strong>notes</strong> et liez vos <strong>recettes</strong> préférées directement sur chaque aliment.
+                </p>
+            </div>
+        </div>
+
+        <!-- NOUVELLE BOÎTE : RUBRIQUE AIDE -->
+        <div class="feature-card">
+            <div class="feature-icon">📖</div>
+            <div>
+                <h3 class="feature-title">Guide d'utilisation</h3>
+                <p class="feature-text">
+                    Besoin d'aide ? Un guide complet est disponible à tout moment directement dans le menu <em>"Aide"</em> en haut de l'application.
+                </p>
+            </div>
+        </div>
+
     </div>
 
-    <!-- GUIDE D'INSTALLATION -->
+    <!-- GUIDE D'INSTALLATION DÉTAILLÉ -->
     <div class="install-box">
-        <h3>📱 Installer comme une application</h3>
+        <h3>📱 Installation & Accès</h3>
         
+        
+        <!-- BOUTON D'ACCÈS COMPACT & CENTRÉ -->
+        <div style="text-align: center; margin-bottom: 22px;">
+            <a href="app.html" class="btn-launch">
+                <span>🌿 Lancer l'Application</span>
+            </a>
+        </div>
+
+		<div class="install-step">
+            <span style="font-size: 1.2rem;">💾</span>
+            <span>Une fois l'application ouverte, si un bouton <strong>"Installer l'Application"</strong> apparaît en haut, cliquez dessus.</span>
+        </div>
+				
         <div class="install-step">
-            <span class="step-num">🍏</span>
+            <span><strong>Si le bouton m'apparaît pas  :</strong></span><br>
+        </div>
+		        
+        <div class="install-step">
+            <span style="font-size: 1.2rem;">🍎</span>
             <span><strong>Sur iPhone (Safari) :</strong> Touchez l'icône Partager ⎋ puis choisissez <em>« Sur l'écran d'accueil »</em>.</span>
         </div>
         
         <div class="install-step">
-            <span class="step-num">🤖</span>
+            <span style="font-size: 1.2rem;">🤖</span>
             <span><strong>Sur Android (Chrome) :</strong> Touchez les trois petits points ⋮ en haut puis choisissez <em>« Installer l'application »</em>.</span>
         </div>
-    </div>
 
-    <!-- PIED DE PAGE -->
-    <footer>
+        <div class="install-step">
+            <img src="icon.png" alt="Icône" style="width: 22px; height: 22px; border-radius: 6px;">
+            <span>Fermez votre navigateur et lancez l'application directement depuis la <strong>nouvelle icône</strong> sur votre page d'accueil.</span>
+        </div>
+    </div> <!-- ICI ON FERME LA BOÎTE BEIGE, C'EST LE DIV LE PLUS IMPORTANT -->
+
+        <!-- PIED DE PAGE (En dehors de la boîte) -->
+    <footer style="text-align: center; font-size: 0.75rem; color: var(--text-muted); line-height: 1.6; padding-bottom: 30px;">
         <p>
-            <strong>Le Petit Marché de mon Estomac • Version 10.5</strong><br>
+            <strong>Le Petit Marché de mon Estomac • Version 11.02</strong><br>
             Conçu avec passion en Suisse • Outil d'information diététique autonome.<br>
             <em>Ne remplace pas un avis médical ou le suivi d'un diététicien.</em>
         </p>
     </footer>
-
-</div>
 
 </body>
 </html>
