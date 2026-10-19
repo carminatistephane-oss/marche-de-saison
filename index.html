@@ -144,23 +144,25 @@
         .screenshot-card {
             background: #FAF7F2;
             border: 1px solid var(--border-color);
-            border-radius: 22px;
-            padding: 14px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+            border-radius: 24px;
+            padding: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.04);
             text-align: center;
             transition: transform 0.3s ease;
+            overflow: hidden; /* Coupe les bavures */
         }
 
         .screenshot-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-4px); /* On garde votre belle animation ! */
         }
 
         .screenshot-img {
             width: 100%;
             height: auto;
-            border-radius: 14px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
             display: block;
+            box-shadow: none !important;
+            /* LE RABOT MAGIQUE : coupe les 3 pixels extérieurs pour effacer les traits de capture ! */
+            clip-path: inset(3px round 16px);
         }
 
         .screenshot-caption {
@@ -297,7 +299,7 @@
     <!-- ============================================== -->
     <!-- NOUVELLE GALERIE D'APERÇUS (VOS 4 CAPTURES)   -->
     <!-- ============================================== -->
-    <h2 class="section-title">Découvrez l'Interface</h2>
+    <h2 class="section-title">Présentation l'Interface</h2>
 
     <div class="gallery-grid">
         
