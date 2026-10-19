@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.03 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.04 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -936,7 +936,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.03</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.04</div>
             <!-- =================================== -->
             
             <div class="profils-section">
@@ -1423,7 +1423,7 @@
 <!-- ========================================== -->
 <script>
     // ========================================================
-    const APP_VERSION = "11.02"; // (ou 11.03)
+    const APP_VERSION = "11.04"; // (ou 11.03)
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -3013,11 +3013,12 @@ function renderCards() {
         const newData = {
             nom: nom, soustitre: soustitre, type: document.getElementById('f-type').value, image: document.getElementById('f-image-base64').value,
             saison: document.getElementById('f-saison').value, tolerance: document.getElementById('f-tolerance').value,
+            dejaEnvoye: false,
             fodmap: document.getElementById('f-fodmap').value, fibres: document.getElementById('f-fibres').value, cg: document.getElementById('f-cg').value,
             acidite: document.getElementById('f-acidite').value, graisses: document.getElementById('f-graisses').value, gluten: document.getElementById('f-gluten').value,
             lactose: document.getElementById('f-lactose').value, fructose: document.getElementById('f-fructose').value, texture: document.getElementById('f-texture').value,
             avantage: document.getElementById('f-avantage').value, inconvenient: document.getElementById('f-inconvenient').value,
-            preparation: document.getElementById('f-preparation').value, notes: document.getElementById('f-notes').value, recettesList: recettesList 
+            preparation: document.getElementById('f-preparation').value, notes: document.getElementById('f-notes').value, recettesList: recettesList
         };
         
         if (id) {
@@ -3131,10 +3132,11 @@ async function sauvegarderDonnees() {
 // Variable globale pour retenir le lien de partage généré
 let lienPartageActif = "";
 
-// === SYSTÈME COMPLET D'ÉMISSION QR : PILULES, HISTORIQUE & PARTAGE DIRECT ===
+// === SYSTÈME COMPLET D'ÉMISSION QR : GARDE-FOU 8 FICHES MAX & TAMPON INDIVIDUEL ===
 let fichesAEnvoyerGlobal = [];
 let selectionFichesIds = [];
 let forcerToutHistorique = false;
+const MAX_FICHES_PAR_QR = 8; // La limite d'or pour un flash ultra-rapide
 
 function ouvrirQrModal(idFicheUnique = null) {
     let modalSettings = document.getElementById('modal-settings');
@@ -3152,7 +3154,7 @@ function ouvrirQrModal(idFicheUnique = null) {
     if (btnCopier) btnCopier.style.display = 'none';
 
     try {
-        // CAS A : PARTAGE DIRECT D'UNE SEULE FICHE DEPUIS LA CARTE (BOUTON 📱)
+        // CAS A : PARTAGE DIRECT D'UNE SEULE FICHE (BOUTON 📱 SUR LA CARTE)
         if (idFicheUnique) {
             const fiche = legumes.find(l => l.id == idFicheUnique);
             if (fiche) {
@@ -3176,22 +3178,24 @@ function ouvrirQrModal(idFicheUnique = null) {
             }
         }
 
-        // CAS B : PARTAGE GLOBAL AVEC PILULES DE SÉLECTION
+        // CAS B : SCAN DES FICHES EN ATTENTE D'ENVOI
         fichesAEnvoyerGlobal = [];
-        const dateDerniereSync = forcerToutHistorique ? 0 : (parseInt(localStorage.getItem('marche_derniere_sync'), 10) || 0);
 
         legumes.forEach(l => {
             if (!l || !l.nom) return;
             const nomClean = removeAccents(l.nom.toLowerCase().trim());
             const d = defaultData.find(item => item && item.nom && removeAccents(item.nom.toLowerCase().trim()) === nomClean);
 
+            let estModifie = false;
+            let paquet = null;
+
             if (!d) {
-                // Nouvel aliment créé de A à Z
-                let item = { ...l };
-                delete item.image;
-                fichesAEnvoyerGlobal.push(item);
+                // Nouvel aliment inventé par l'utilisateur
+                estModifie = true;
+                paquet = { ...l };
+                delete paquet.image;
             } else {
-                // Fiche officielle avec notes ou recettes
+                // Fiche officielle avec vos notes ou recettes personnalisées
                 const notePerso = (l.notes || "").trim();
                 const noteOrigine = (d.notes || "").trim();
                 const aNote = notePerso.length > 0 && notePerso !== noteOrigine && notePerso !== "À venir...";
@@ -3200,16 +3204,20 @@ function ouvrirQrModal(idFicheUnique = null) {
                 const recettesOrigine = JSON.stringify(d.recettesList || []);
                 const aRecette = (l.recettesList && l.recettesList.length > 0) && (recettesPerso !== recettesOrigine);
 
-                const estRecent = !l.lastUpdated || l.lastUpdated > dateDerniereSync;
-
-                if ((aNote || aRecette) && estRecent) {
-                    fichesAEnvoyerGlobal.push({
+                if (aNote || aRecette) {
+                    estModifie = true;
+                    paquet = {
                         id: l.id,
                         nom: l.nom,
                         notes: l.notes || "",
                         recettesList: l.recettesList || []
-                    });
+                    };
                 }
+            }
+
+            // Filtre du tampon
+            if (estModifie && (forcerToutHistorique || l.dejaEnvoye !== true)) {
+                fichesAEnvoyerGlobal.push(paquet);
             }
         });
 
@@ -3218,8 +3226,8 @@ function ouvrirQrModal(idFicheUnique = null) {
             if (statusText) {
                 statusText.innerHTML = `
                     <div style="background: #FFFDF8; border: 2px dashed #D4A373; border-radius: 16px; padding: 15px; margin: 10px auto; max-width: 280px; text-align:center;">
-                        <div style="font-weight: 800; color: #2C3E50; margin-bottom: 6px;">✨ Aucune nouveauté en attente</div>
-                        <div style="color: #666; font-size: 0.8rem; margin-bottom: 12px;">Vos fiches ont déjà été envoyées.</div>
+                        <div style="font-weight: 800; color: #2C3E50; margin-bottom: 6px;">✨ Aucune fiche en attente</div>
+                        <div style="color: #666; font-size: 0.8rem; margin-bottom: 12px;">Toutes vos personnalisations ont déjà été transmises.</div>
                         <button type="button" onclick="forcerRenvoyerToutHistorique()" style="padding: 6px 12px; font-size: 0.75rem; background: #FFF; border: 1px solid var(--accent); color: var(--accent-dark); border-radius: 12px; cursor: pointer; font-weight:800;">↺ Inclure tout l'historique</button>
                     </div>
                 `;
@@ -3228,8 +3236,9 @@ function ouvrirQrModal(idFicheUnique = null) {
             return;
         }
 
-        // Par défaut : toutes les fiches en attente sont cochées
-        selectionFichesIds = fichesAEnvoyerGlobal.map(f => f.id || f.nom);
+        // COCHAGE AUTOMATIQUE INTELLIGENT :
+        // Coche au maximum les 8 premières fiches pour garantir un QR Code parfait !
+        selectionFichesIds = fichesAEnvoyerGlobal.slice(0, MAX_FICHES_PAR_QR).map(f => f.id || f.nom);
         dessinerInterfacePilules();
 
     } catch (err) {
@@ -3237,10 +3246,12 @@ function ouvrirQrModal(idFicheUnique = null) {
     }
 }
 
-// Dessine les pilules cliquables et génère le QR code en direct
+// Dessine les pilules cliquables avec le compteur (X / 8 max)
 function dessinerInterfacePilules() {
     let statusText = document.getElementById('qr-status-text');
     const fichesSelectionnees = fichesAEnvoyerGlobal.filter(f => selectionFichesIds.includes(f.id || f.nom));
+    const totalCoches = fichesSelectionnees.length;
+    const couleurCompteur = totalCoches >= MAX_FICHES_PAR_QR ? '#D84315' : '#2E7D32';
 
     let pilulesHTML = fichesAEnvoyerGlobal.map(f => {
         const identifiant = f.id || f.nom;
@@ -3253,7 +3264,9 @@ function dessinerInterfacePilules() {
     }).join(' ');
 
     let actionsHTML = `
-        <div style="font-size:0.8rem; color:#666; margin-bottom:6px; text-align:center;"><strong>Touchez pour choisir ce que vous envoyez :</strong></div>
+        <div style="font-size:0.8rem; color:#666; margin-bottom:6px; text-align:center;">
+            <strong>Sélectionnez vos fiches (<span style="color:${couleurCompteur}; font-weight:800;">${totalCoches} / ${MAX_FICHES_PAR_QR} max</span>) :</strong>
+        </div>
         <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:4px; margin-bottom:10px; max-height:100px; overflow-y:auto; padding:2px;">${pilulesHTML}</div>
         <div style="display:flex; gap:6px; justify-content:center; margin-bottom:10px;">
             <button type="button" onclick="validerEnvoiTermine()" style="background:#E8F5E9; border:1px solid #A5D6A7; color:#2E7D32; font-weight:800; font-size:0.72rem; padding:6px 10px; border-radius:12px; cursor:pointer;">✅ Marquer sélection envoyée</button>
@@ -3272,12 +3285,18 @@ function dessinerInterfacePilules() {
     afficherQrPourPaquet(fichesSelectionnees);
 }
 
-// Bascule une pilule (cocher/décocher) et régénère le QR en direct
+// Bascule une pilule avec BLOCAGE DE SÉCURITÉ À 8 FICHES MAX
 function basculerPiluleQr(idOuNom) {
     const index = selectionFichesIds.indexOf(idOuNom);
     if (index > -1) {
+        // Décocher est toujours autorisé
         selectionFichesIds.splice(index, 1);
     } else {
+        // Tentative de cocher : LE GARDE-FOU SE DÉCLENCHE SI DÉJÀ À 8 !
+        if (selectionFichesIds.length >= MAX_FICHES_PAR_QR) {
+            alert(`⚠️ Limite de confort atteinte (${MAX_FICHES_PAR_QR} fiches max) !\n\nPour garantir que le QR Code se flashe en 1 seconde chrono par n'importe quel appareil photo, chaque voyage est limité à ${MAX_FICHES_PAR_QR} fiches.\n\nEnvoyez d'abord ce premier lot, puis cochez les suivantes pour le voyage suivant !`);
+            return;
+        }
         selectionFichesIds.push(idOuNom);
     }
     dessinerInterfacePilules();
@@ -3314,25 +3333,39 @@ function afficherQrPourPaquet(paquetFiches) {
         }
     } catch (e) {
         console.error("Erreur QR:", e);
-        if (container) container.innerHTML = '<div style="color:#D32F2F; font-size:0.8rem; text-align:center;">⚠️ Trop de fiches sélectionnées d\'un coup pour le QR Code. Décochez-en quelques-unes !</div>';
+        if (container) container.innerHTML = '<div style="color:#D32F2F; font-size:0.8rem; text-align:center;">⚠️ Trop de données. Décochez 1 ou 2 fiches !</div>';
     }
 }
 
 // Valide l'envoi pour vider la file d'attente
 function validerEnvoiTermine() {
-    localStorage.setItem('marche_derniere_sync', Date.now());
+    if (!selectionFichesIds || selectionFichesIds.length === 0) {
+        alert("⚠️ Aucune fiche n'est sélectionnée !");
+        return;
+    }
+
+    let nbMarques = 0;
+    selectionFichesIds.forEach(idOuNom => {
+        const index = legumes.findIndex(l => (l.id == idOuNom) || (removeAccents(l.nom.toLowerCase().trim()) === removeAccents(String(idOuNom).toLowerCase().trim())));
+        if (index > -1) {
+            legumes[index].dejaEnvoye = true;
+            nbMarques++;
+        }
+    });
+
+    saveToLocal();
     forcerToutHistorique = false;
-    alert("✅ C'est noté !\n\nCes fiches ont été marquées comme envoyées.\nLe prochain QR Code ne contiendra que vos futures nouveautés !");
+    alert(`✅ C'est noté !\n\n${nbMarques} fiche(s) cochée(s) ont été marquées comme transmises.\nElles sont retirées de la file d'attente.`);
     fermerQrModal();
 }
 
-// Recharge tout l'historique sans limite de date
+// Recharge tout l'historique sans filtre de tampon
 function forcerRenvoyerToutHistorique() {
     forcerToutHistorique = true;
     ouvrirQrModal();
 }
 
-// Déclencheur direct depuis le bouton 📱 d'une fiche
+// Partage direct depuis le bouton 📱 d'une fiche
 function partagerFicheDirect(idFiche) {
     ouvrirQrModal(idFiche);
 }
