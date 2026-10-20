@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.09 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.10 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -939,7 +939,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.09</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.10</div>
             <!-- =================================== -->
             
             <div class="profils-section">
@@ -1433,7 +1433,7 @@
 <!-- ========================================== -->
 <script>
     // ========================================================
-    const APP_VERSION = "11.09";
+    const APP_VERSION = "11.10";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -1464,20 +1464,34 @@
 	
 	// === GESTION DES NOUVELLES FENÊTRES (MODALES) ===
 function openPopup(id) {
-    const modal = document.getElementById(id);
-    if (modal) {
-        modal.classList.remove('hidden');
-        // Remet l'ascenseur tout en haut à chaque ouverture !
-        const corpsFenetre = modal.querySelector('.modal-body');
-        if (corpsFenetre) corpsFenetre.scrollTop = 0;
+        const modal = document.getElementById(id);
+        if (modal) {
+            modal.classList.remove('hidden');
+            const corpsFenetre = modal.querySelector('.modal-body');
+            if (corpsFenetre) corpsFenetre.scrollTop = 0;
+            // NOUVEAU : On crée une étape d'historique pour la fenêtre
+            if (window.location.hash !== '#modal') history.pushState({ vue: 'modal' }, '', '#modal');
+        }
     }
-}
-function closePopup(id) { document.getElementById(id).classList.add('hidden'); }
+    
+    function closePopup(id) { 
+        document.getElementById(id).classList.add('hidden'); 
+        // NOUVEAU : On nettoie l'historique si on ferme avec la croix
+        if (window.location.hash === '#modal') history.back();
+    }
 
-// Connecter les clics de la barre du haut
-document.getElementById('btn-about').addEventListener('click', () => openPopup('modal-about'));
-document.getElementById('btn-help').addEventListener('click', () => openPopup('modal-help'));
-document.getElementById('btn-settings').addEventListener('click', () => openPopup('modal-settings'));
+    // Connecter les clics de la barre du haut
+    document.getElementById('btn-about').addEventListener('click', () => openPopup('modal-about'));
+    document.getElementById('btn-help').addEventListener('click', () => openPopup('modal-help'));
+    document.getElementById('btn-settings').addEventListener('click', () => openPopup('modal-settings'));
+
+    // Fermer en cliquant à côté de la fenêtre blanche
+    window.addEventListener('click', (event) => {
+        if (event.target.classList.contains('modal-overlay')) {
+            event.target.classList.add('hidden');
+            if (window.location.hash === '#modal') history.back();
+        }
+    });
 
 // Fermer en cliquant à côté de la fenêtre blanche
 window.addEventListener('click', (event) => {
@@ -3022,6 +3036,9 @@ function renderCards() {
     }
 
     function openForm(id = null) {
+        // NOUVEAU : On crée une étape d'historique pour le formulaire
+        if (window.location.hash !== '#modal') history.pushState({ vue: 'modal' }, '', '#modal');
+        
         document.getElementById('modal-form').style.display = 'block';
         document.getElementById('f-image-file').value = ""; 
         document.getElementById('recettes-container').innerHTML = ""; 
@@ -3078,7 +3095,11 @@ function renderCards() {
         updateFormAttributes();
     }
 
-    function closeForm() { document.getElementById('modal-form').style.display = 'none'; }
+    function closeForm() { 
+        document.getElementById('modal-form').style.display = 'none'; 
+        // NOUVEAU : On nettoie l'historique quand on annule ou qu'on enregistre
+        if (window.location.hash === '#modal') history.back();
+    }
 
     function saveFiche() {
         const id = document.getElementById('f-id').value;
