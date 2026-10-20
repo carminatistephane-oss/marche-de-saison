@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.08 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.09 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -7,6 +7,7 @@
 <!-- OPTION PARTAGE QR CODE PAR SELECTIONS ET INDIVIDUEL PAR FICHE -->
 <!-- CHANGEMENT TERMES DE TOLORENCE A VOLONTE - A LIMITER - A EVITER -->
 <!-- RENDRE LE BADGE PROFIF DIGESTIF CLICABLE -->
+<!-- RETOUR AVEC TOUCHE MOBILE - NOUVELLE STRUCTURE FILTRE ACTIF -->
 <!-- ========================================================= -->
 
 <!DOCTYPE html>
@@ -938,7 +939,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.08</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.09</div>
             <!-- =================================== -->
             
             <div class="profils-section">
@@ -1058,10 +1059,11 @@
                 <option value="Poulet">Poulet</option>
                 <option value="Dinde">Dinde</option>
                 <option value="Canard">Canard</option>
+				<option value="Lapin">Lapin</option>
                 <option value="Cheval">Cheval</option>
                 <option value="Agneau">Agneau</option>
                 <option value="Gibier">Gibier</option>
-                <option value="Abat">Abats</option>
+				<option value="Abat">Abats</option>
                 <option value="Charcuterie">Charcuterie</option>
             </optgroup>
             <optgroup label="Produits de la mer">
@@ -1431,7 +1433,7 @@
 <!-- ========================================== -->
 <script>
     // ========================================================
-    const APP_VERSION = "11.08";
+    const APP_VERSION = "11.09";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -1713,7 +1715,7 @@ const defaultData = [
     { id: 852, nom: "Saucisson neuchâtelois", soustitre: "", type: "Porc", image: "", tolerance: "🔴 À proscrire", saison: "Viandes", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Acide", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Aucun.", inconvenient: "Spécialité très riche en graisses saturées, favorise le reflux.", preparation: "À éviter.", notes: "", recettesList: [] },
     { id: 853, nom: "Saucisse au Foie", soustitre: "", type: "Porc", image: "", tolerance: "🔴 À proscrire", saison: "Viandes", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Aucun.", inconvenient: "Mélange de porc, foie et graisses, très difficile pour le transit.", preparation: "À éviter.", notes: "", recettesList: [] },
     { id: 854, nom: "Foie de volaille", soustitre: "", type: "Abat", image: "", tolerance: "🟡 Moyen", saison: "Viandes", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Riche en fer et plus digeste que le Boeuf.", inconvenient: "Goût fort, reste un abat de filtration.", preparation: "Sauté rapidement, rosé à cœur.", notes: "", recettesList: [] },
-    { id: 961, nom: "Lapin Rable Cuisse", soustitre: "", type: "Viande", image: "", tolerance: "🟢 Très conseillé", saison: "Viandes", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Viande blanche ultra-maigre.", inconvenient: "Aucun.", preparation: "À la moutarde douce ou mijoté.", notes: "", recettesList: [] },
+    { id: 961, nom: "Lapin Rable Cuisse", soustitre: "", type: "Lapin", image: "", tolerance: "🟢 Très conseillé", saison: "Viandes", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Viande blanche ultra-maigre.", inconvenient: "Aucun.", preparation: "À la moutarde douce ou mijoté.", notes: "", recettesList: [] },
     { id: 962, nom: "Caille Coquelet", soustitre: "", type: "Poulet", image: "", tolerance: "🟢 Très conseillé", saison: "Viandes", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Protéines délicates.", inconvenient: "Petits os.", preparation: "Dégraissé et cuit à cœur.", notes: "", recettesList: [] },
     { id: 963, nom: "Tofu ferme nature", soustitre: "", type: "Légumineuse", image: "", tolerance: "🟢 Très conseillé", saison: "Viandes", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Protéine végétale excellente, sans fibres ni lactose.", inconvenient: "Peu de goût seul.", preparation: "Poêlé avec un peu de sauce soja.", notes: "", recettesList: [] },
 
@@ -1820,6 +1822,9 @@ const defaultData = [
     { id: 932, nom: "Bouillon de volaille", soustitre: "Sans Ail", type: "Épices", image: "", tolerance: "🟢 Très conseillé", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Pansement et hydratant.", inconvenient: "Aucun.", preparation: "En fond de sauce ou soupe.", notes: "", recettesList: [] },
     { id: 933, nom: "Bouillon de Boeuf", soustitre: "Dégraissé", type: "Épices", image: "", tolerance: "🟢 Très conseillé", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Reminéralisant.", inconvenient: "À condition d'avoir écumé tout le gras de cuisson.", preparation: "Bouillon clair.", notes: "", recettesList: [] },
 	{ id: 952, nom: "Fruits secs", soustitre: "Abricots, dattes, raisins...", type: "Graines & Fruits secs", image: "", tolerance: "🔴 À proscrire", saison: "Condiments", fodmap: "Haut", fructose: "Haut", fibres: "Insolubles", cg: "Moyen", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Énergétique et riche en minéraux.", inconvenient: "S'ils sont mangés secs, ils agissent comme des éponges et provoquent des ballonnements violents.", preparation: "Très irritants secs : à faire tremper dans l'eau tiède ou à cuire en compote impérativement !", notes: "", recettesList: [] },
+	{ id: 1025, nom: "Condiment liquide", soustitre: "Maggi, Knorr, Mirador...", type: "Condiment", image: "", tolerance: "🔴 À proscrire", saison: "Condiments", fodmap: "Haut", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Acide", graisses: "Maigre", lactose: "Sans", gluten: "Avec", texture: "Fondante", avantage: "Donne un goût umami puissant.", inconvenient: "Produit ultra-transformé. Contient souvent du gluten (blé), des exhausteurs de goût et des extraits d'oignon/ail (FODMAPs).", preparation: "À éviter en cas d'intestin irritable.", notes: "", recettesList: [] },
+    { id: 1026, nom: "Condiment en poudre", soustitre: "Aromat, Mirador...", type: "Condiment", image: "", tolerance: "🔴 À proscrire", saison: "Condiments", fodmap: "Haut", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Avec", gluten: "Sans", texture: "Fondante", avantage: "Exhausteur de goût très populaire.", inconvenient: "Contient très souvent du lactose, de l'oignon/ail en poudre (FODMAPs) et des graisses végétales.", preparation: "À éviter. Préférer le sel et les herbes pures.", notes: "", recettesList: [] },
+	
 	
     /* BOISSONS & DOUCEURS */
    { id: 934, nom: "Infusions & Tisanes", soustitre: "Verveine, Tilleul, Camomille, Mélisse, Rooibos, Fenouil...", type: "Boisson Chaude", image: "", tolerance: "🟢 Très conseillé", saison: "Boissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Sans théine ni caféine. Hydrate, apaise les muqueuses digestives et calme les spasmes.", inconvenient: "Attention à la menthe poivrée en cas de reflux gastrique et aux tisanes de fruits rouges/hibiscus (acides).", preparation: "Infusion de 5 à 7 min dans une eau chaude. Boire tiède plutôt que brûlant pour protéger l'œsophage.", notes: "", recettesList: [] },
@@ -1895,7 +1900,7 @@ const defaultData = [
         }
     };
 
-    const groupViandes = ["Boeuf", "Veau", "Porc", "Poulet", "Dinde", "Canard", "Cheval", "Agneau", "Gibier", "Abat", "Charcuterie", "Viande"];
+    const groupViandes = ["Boeuf", "Veau", "Porc", "Poulet", "Dinde", "Canard", "Lapin", "Cheval", "Agneau", "Gibier", "Abat", "Charcuterie", "Viande"];
     const groupPoissons = ["Poisson", "Crustacé"];
     const groupLaitages = ["Lait", "Yaourt / Séré", "Crème / Beurre", "Fromage frais", "Fromage pâte molle", "Fromage pâte mi-dure", "Fromage pâte dure", "oeuf", "Laitage"];
 
@@ -2156,33 +2161,36 @@ const content = document.getElementById('profils-content');
     }
     
 
-    function getSafeLegumes() {
-    let hiddenIds = getFichesMasquees();
-    let baseList = legumes.filter(l => !hiddenIds.includes(l.id));
+    // NOUVEAU : Fonction qui juge si un aliment est incompatible avec le profil clinique actif
+    function isClinicallyBad(l, profil) {
+        if (!profil || profil === 'neutre') return false;
+        let bad = false;
+        if (profil.includes('estomac') && (l.acidite === "Acide" || l.graisses === "Gras")) bad = true;
+        if (profil.includes('lactose') && (l.lactose === "Avec" || l.fructose === "Haut")) bad = true;
+        if (profil.includes('gluten') && l.gluten === "Avec") bad = true;
+        if (profil.includes('colon') && (l.fodmap === "Haut" || l.fibres === "Insolubles")) bad = true;
+        return bad;
+    }
 
-    // Si on consulte les favoris, on affiche TOUS les favoris sans les masquer selon le profil
-    if (currentSaison === 'Favoris') return baseList;
+    function getSafeLegumes(includeAvoided = false) {
+        let hiddenIds = getFichesMasquees();
+        let baseList = legumes.filter(l => !hiddenIds.includes(l.id));
 
-    if (currentProfil === 'neutre') return baseList;
-    
-    return baseList.filter(l => {
-        if (l.tolerance.includes("🟠") || l.tolerance.includes("🔴")) return false;
+        if (currentSaison === 'Favoris') return baseList;
+        if (currentProfil === 'neutre') return baseList;
         
-        if (currentProfil.includes('estomac')) {
-            if (l.acidite === "Acide" || l.graisses === "Gras") return false;
-        }
-        if (currentProfil.includes('lactose')) {
-            if (l.lactose === "Avec" || l.fructose === "Haut") return false;
-        }
-        if (currentProfil.includes('gluten')) {
-            if (l.gluten === "Avec") return false;
-        }
-        if (currentProfil.includes('colon')) {
-            if (l.fodmap === "Haut" || l.fibres === "Insolubles") return false;
-        }
-        return true;
-    });
-}
+        return baseList.filter(l => {
+            const badUniv = l.tolerance.includes("🔴") || l.tolerance.includes("🟠");
+            const badClin = isClinicallyBad(l, currentProfil);
+
+            if (!includeAvoided) {
+                // Pour les compteurs de l'accueil : on cache strictement tout ce qui est mauvais
+                if (badUniv || badClin) return false;
+            }
+            // Si includeAvoided est vrai (quand on est dans la liste), on garde TOUT pour pouvoir les ranger dans "À éviter"
+            return true;
+        });
+    }
 
    function removeAccents(str) { return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/oe/g, "oe").replace(/æ/g, "ae"); }
 
@@ -2545,6 +2553,9 @@ const content = document.getElementById('profils-content');
         document.getElementById('view-list').style.display = 'block';
         window.scrollTo(0, 0); 
         
+        // NOUVEAU : On ajoute une étape dans l'historique du téléphone
+        history.pushState({ vue: 'liste' }, '', '#saison');
+        
         const titleEl = document.getElementById('saison-title-container');
         const titres = { "Recommandés": "✨", "Printemps": "🌼", "Été": "☀", "Automne": svgAutomne, "Hiver": "❄", "Féculents": "🌾", "Légumineuses": "🫘", "Viandes": "🥩", "Poissons": "🐟", "Laitages": "🧀", "Condiments": "🌿", "Boissons": "☕" };
         
@@ -2558,6 +2569,14 @@ const content = document.getElementById('profils-content');
 
     function openSaisonAndFocus(saison, alimentId) {
         openSaison(saison);
+        
+        // NOUVEAU : Si l'aliment cherché est "À éviter", on bascule le filtre automatiquement pour l'afficher !
+        const aliment = legumes.find(l => l.id === alimentId);
+        if (aliment && (aliment.tolerance.includes('🔴') || aliment.tolerance.includes('🟠') || isClinicallyBad(aliment, currentProfil))) {
+            currentTolFilter = '🟠'; 
+            renderCards(); // On redessine avec le bon filtre
+        }
+
         setTimeout(() => {
             const cards = document.querySelectorAll('.card');
             cards.forEach(card => {
@@ -2583,11 +2602,39 @@ const content = document.getElementById('profils-content');
     }
 
     function goHome() {
+        // 1. On force l'affichage de l'accueil IMMÉDIATEMENT pour un bouton ultra-réactif
         document.getElementById('view-list').style.display = 'none';
         document.getElementById('view-home').style.display = 'block';
         window.scrollTo(0, 0); 
         renderHomeCounts();
+
+        // 2. On nettoie l'URL proprement en arrière-plan pour le bouton natif du téléphone
+        if (window.location.hash === '#saison') {
+            history.back();
+        }
     }
+
+    // NOUVEAU : Écouteur du bouton retour natif (téléphone/navigateur)
+    window.addEventListener('popstate', function(event) {
+        // 1. Sécurité : on ferme toutes les fenêtres superposées (modales) si elles sont ouvertes
+        if (typeof closeForm === 'function') closeForm();
+        if (typeof closeProfilModal === 'function') closeProfilModal();
+        if (typeof fermerQrModal === 'function') fermerQrModal();
+        if (typeof fermerModalFichesMasquees === 'function') fermerModalFichesMasquees();
+        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.add('hidden'));
+
+        // 2. Gestion de l'affichage principal
+        if (window.location.hash !== '#saison') {
+            // Retour à l'accueil
+            document.getElementById('view-list').style.display = 'none';
+            document.getElementById('view-home').style.display = 'block';
+            renderHomeCounts();
+        } else {
+            // Retour sur la liste
+            document.getElementById('view-home').style.display = 'none';
+            document.getElementById('view-list').style.display = 'block';
+        }
+    });
 
     function setFilter(type, val) {
         if(type === 'type') {
@@ -2619,10 +2666,10 @@ function renderCards() {
         const container = document.getElementById('cards-container'); 
         container.innerHTML = '';
         
-        const safeLegumes = getSafeLegumes();
+        // NOUVEAU : On demande à récupérer TOUS les aliments (même les "À éviter") pour pouvoir les filtrer
+        const safeLegumes = getSafeLegumes(true); 
         let baseList = [];
         
-        // NOUVEAU : La page "Adaptés" (Recommandés) charge toute la base
         if (currentSaison === "Recommandés") {
             baseList = safeLegumes; 
         } else if (currentSaison === "Favoris") {
@@ -2633,12 +2680,17 @@ function renderCards() {
         }
 
         const matchesAllBut = (l, skipCat) => {
+            const badUniv = l.tolerance.includes("🔴") || l.tolerance.includes("🟠");
+            const badClin = isClinicallyBad(l, currentProfil);
+            const isAvoid = badUniv || badClin; // Vrai si l'aliment est mauvais de base OU mauvais pour le profil
+
             if (skipCat !== 'type' && currentTypeFilters.length > 0 && !currentTypeFilters.includes(l.type || 'Légume')) return false;
             
-            // NOUVEAU : On gère l'affichage magique des couleurs pour la page "Adaptés"
             if (skipCat !== 'tol') {
-                if (currentTolFilter !== 'all' && !l.tolerance.includes(currentTolFilter)) return false;
-                if (currentTolFilter === 'all' && currentSaison === 'Recommandés' && l.tolerance.includes('🔴')) return false;
+                if (currentTolFilter === 'all' && isAvoid) return false; // On cache les mauvais du "Tous"
+                if (currentTolFilter === '🟢' && (isAvoid || !l.tolerance.includes('🟢'))) return false;
+                if (currentTolFilter === '🟡' && (isAvoid || !l.tolerance.includes('🟡'))) return false;
+                if (currentTolFilter === '🟠' && !isAvoid) return false; // Le bouton Orange affiche TOUS les mauvais
             }
             
             if (skipCat !== 'fodmap' && currentFodmapFilter !== 'all' && l.fodmap !== currentFodmapFilter) return false;
@@ -2670,9 +2722,16 @@ function renderCards() {
             if (!ctType[t]) ctType[t] = 0;
             if (matchesAllBut(l, 'type')) ctType[t]++;
             if (matchesAllBut(l, 'tol')) {
-                if (l.tolerance.includes("🟢")) ctTol['🟢']++;
-                if (l.tolerance.includes("🟡")) ctTol['🟡']++;
-                if (l.tolerance.includes("🟠")) ctTol['🟠']++;
+                const badUniv = l.tolerance.includes("🔴") || l.tolerance.includes("🟠");
+                const badClin = isClinicallyBad(l, currentProfil);
+                
+                if (badUniv || badClin) {
+                    ctTol['🟠']++; // Si c'est mauvais, ça va dans le compteur Orange
+                } else if (l.tolerance.includes("🟢")) {
+                    ctTol['🟢']++;
+                } else if (l.tolerance.includes("🟡")) {
+                    ctTol['🟡']++;
+                }
             }
             if (matchesAllBut(l, 'fodmap') && l.fodmap) ctFodmap[l.fodmap]++;
             if (matchesAllBut(l, 'fibre') && l.fibres) ctFibre[l.fibres]++;
@@ -2718,20 +2777,20 @@ function renderCards() {
         
         const typeEmojis = {
             'Fruit': '🍎', 'Légume': '🥕', 'Féculent': '🌾', 'Légumineuse': '🫘',
-            'Boeuf': '🥩', 'Veau': '🥩', 'Porc': '🥓', 'Poulet': '🍗', 'Dinde': '🦃', 'Canard': '🦆', 
+            'Boeuf': '🥩', 'Veau': '🥩', 'Porc': '🥓', 'Poulet': '🍗', 'Dinde': '🦃', 'Canard': '🦆', 'Lapin': '🐇',
             'Cheval': '🐎', 'Agneau': '🐑', 'Gibier': '🦌', 'Abat': '🫀', 'Charcuterie': '🍖',
             'Poisson': '🐟', 'Crustacé': '🦐', 
             'Lait': '🥛', 'Yaourt / Séré': '🥣', 'Crème / Beurre': '🧈', 'Fromage frais': '🧀', 'Fromage pâte molle': '🧀', 'Fromage pâte mi-dure': '🧀', 'Fromage pâte dure': '🧀', 'oeuf': '🥚',
             'Huile & Vinaigre': '🫙', 'Graines & Fruits secs': '🥜', 'Épices': '🌿',
             'Boisson Chaude': '☕', 'Boisson Froide': '🍹', 'Douceur': '🍪',
-            'Condiment': '🌿', 'Boisson': '☕'
+            'Condiment': '🌿', 'Boisson': '☕', 'Viande': '🥩'
         };
 
         if (typesAvailable > 1) {
             const ordreLogique = [
                 "Légume", "Fruit", 
                 "Féculent", "Légumineuse", 
-                "Boeuf", "Veau", "Porc", "Poulet", "Dinde", "Canard", "Cheval", "Agneau", "Gibier", "Abat", "Charcuterie", 
+                "Boeuf", "Veau", "Porc", "Poulet", "Dinde", "Canard", "Lapin", "Cheval", "Agneau", "Gibier", "Abat", "Charcuterie", "Viande",
                 "Poisson", "Crustacé", 
                 "Lait", "Yaourt / Séré", "Crème / Beurre", "Fromage frais", "Fromage pâte molle", "Fromage pâte mi-dure", "Fromage pâte dure", "oeuf", "Laitage",
                 "Huile & Vinaigre", "Graines & Fruits secs", "Épices", "Condiment", 
@@ -2759,18 +2818,22 @@ function renderCards() {
 
         let advancedFiltersHtml = `<div id="advanced-filters-panel" class="advanced-filters-panel" style="display: ${window.isFilterPanelOpen ? 'flex' : 'none'};">`;
         
-        if (typesAvailable > 1) {
-            advancedFiltersHtml += `<div class="type-switcher" style="margin-bottom: 12px; width: 100%;">
-                <div class="type-tab-top">
-                    <button class="type-tab ${currentTypeFilters.length === 0 ? 'active' : ''}" style="max-width: 180px; padding: 6px 20px;" onclick="setFilter('type','all')">🥗 Tous (${countTotal})</button>
+        // 1. LES PASTILLES DE TOLÉRANCE EN PREMIER (En haut)
+        advancedFiltersHtml += `
+            <div style="background-color: rgba(141, 153, 174, 0.1); border-radius: 16px; padding: 12px 5px; margin-bottom: 8px; width: 100%; box-sizing: border-box;">
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-bottom: 10px; text-align: center;">Aliments Adaptés</div>
+                <div class="filter-row" style="width: 100%;">
+                    <button class="filter-btn tol-btn ${currentTolFilter === 'all' ? 'active' : ''}" onclick="setFilter('tol','all')">Tous</button>
+                    <button class="filter-btn tol-btn ${currentTolFilter === '🟢' ? 'active' : ''}" onclick="setFilter('tol','🟢')">🟢 À volonté (${ctTol['🟢']})</button>
+                    <button class="filter-btn tol-btn ${currentTolFilter === '🟡' ? 'active' : ''}" onclick="setFilter('tol','🟡')">🟡 À limiter (${ctTol['🟡']})</button>
                 </div>
-                ${currentTypeFilters.length === 1 && !hasSeenMultiSelectHint ? `<div style="width: 100%; text-align: center; overflow: hidden; animation: hintFadeInOut 4.5s forwards ease;"><span style="background-color: rgba(212, 163, 115, 0.15); color: var(--accent-dark); padding: 5px 12px; border-radius: 12px; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.3px; display: inline-block;">💡 Vous pouvez en sélectionner d'autres</span></div>` : ''}
-                <div class="type-tab-bottom">${typesHtml}</div>
-            </div>`;
-            
-            if (currentTypeFilters.length === 1) hasSeenMultiSelectHint = true;
-        }
-        
+            </div>
+            <div class="filter-row" style="margin-bottom: 15px; width: 100%;">
+                <button class="filter-btn tol-btn ${currentTolFilter === '🟠' ? 'active' : ''}" onclick="setFilter('tol','🟠')" style="border-color: #FFCDCD; color: #D32F2F; background-color: ${currentTolFilter === '🟠' ? '#FFF0F0' : '#FFFFFF'}; font-size: 0.75rem;">🟠 À éviter (${ctTol['🟠']})</button>
+            </div>
+        `;
+
+        // 2. LA MATRICE CLINIQUE AU MILIEU
         if (showFodmap) advancedFiltersHtml += `<select class="filter-btn" style="background-color: ${currentFodmapFilter !== 'all' ? 'var(--text-title)' : '#fff'}; color: ${currentFodmapFilter !== 'all' ? '#fff' : 'var(--text-main)'};" onchange="setFilter('fodmap', this.value)"><option value="all">FODMAPs</option><option value="Bas" ${currentFodmapFilter === 'Bas' ? 'selected' : ''}>Bas 🟢 (${ctFodmap['Bas']})</option><option value="Haut" ${currentFodmapFilter === 'Haut' ? 'selected' : ''}>Haut 🔴 (${ctFodmap['Haut']})</option></select>`;
         if (showFibres) advancedFiltersHtml += `<select class="filter-btn" style="background-color: ${currentFibreFilter !== 'all' ? 'var(--text-title)' : '#fff'}; color: ${currentFibreFilter !== 'all' ? '#fff' : 'var(--text-main)'};" onchange="setFilter('fibre', this.value)"><option value="all">Fibres</option><option value="Solubles" ${currentFibreFilter === 'Solubles' ? 'selected' : ''}>Solubles 🟢 (${ctFibre['Solubles']})</option><option value="Insolubles" ${currentFibreFilter === 'Insolubles' ? 'selected' : ''}>Insolubles 🔴 (${ctFibre['Insolubles']})</option><option value="Sans" ${currentFibreFilter === 'Sans' ? 'selected' : ''}>Sans ⚪ (${ctFibre['Sans']})</option></select>`;
         if (showCg) advancedFiltersHtml += `<select class="filter-btn" style="background-color: ${currentCgFilter !== 'all' ? 'var(--text-title)' : '#fff'}; color: ${currentCgFilter !== 'all' ? '#fff' : 'var(--text-main)'};" onchange="setFilter('cg', this.value)"><option value="all">Glycémie (CG)</option><option value="Bas" ${currentCgFilter === 'Bas' ? 'selected' : ''}>Bas 🟢 (${ctCg['Bas']})</option><option value="Moyen" ${currentCgFilter === 'Moyen' ? 'selected' : ''}>Moyen 🟡 (${ctCg['Moyen']})</option><option value="Élevé" ${currentCgFilter === 'Élevé' ? 'selected' : ''}>Élevé 🔴 (${ctCg['Élevé']})</option></select>`;
@@ -2780,15 +2843,23 @@ function renderCards() {
         if (showLactose) advancedFiltersHtml += `<select class="filter-btn" style="background-color: ${currentLactoseFilter !== 'all' ? 'var(--text-title)' : '#fff'}; color: ${currentLactoseFilter !== 'all' ? '#fff' : 'var(--text-main)'};" onchange="setFilter('lactose', this.value)"><option value="all">Lactose</option><option value="Sans" ${currentLactoseFilter === 'Sans' ? 'selected' : ''}>Sans 🟢 (${ctLactose['Sans']})</option><option value="Avec" ${currentLactoseFilter === 'Avec' ? 'selected' : ''}>Avec 🔴 (${ctLactose['Avec']})</option></select>`;
         if (showGraisses) advancedFiltersHtml += `<select class="filter-btn" style="background-color: ${currentGraisseFilter !== 'all' ? 'var(--text-title)' : '#fff'}; color: ${currentGraisseFilter !== 'all' ? '#fff' : 'var(--text-main)'};" onchange="setFilter('graisse', this.value)"><option value="all">Graisses</option><option value="Maigre" ${currentGraisseFilter === 'Maigre' ? 'selected' : ''}>Maigre 🟢 (${ctGraisse['Maigre']})</option><option value="Gras" ${currentGraisseFilter === 'Gras' ? 'selected' : ''}>Gras 🔴 (${ctGraisse['Gras']})</option></select>`;
         if (showTexture) advancedFiltersHtml += `<select class="filter-btn" style="background-color: ${currentTextureFilter !== 'all' ? 'var(--text-title)' : '#fff'}; color: ${currentTextureFilter !== 'all' ? '#fff' : 'var(--text-main)'};" onchange="setFilter('texture', this.value)"><option value="all">Dureté de chair</option><option value="Fondante" ${currentTextureFilter === 'Fondante' ? 'selected' : ''}>Fondante 🟢 (${ctTexture['Fondante']})</option><option value="Ferme" ${currentTextureFilter === 'Ferme' ? 'selected' : ''}>Ferme 🟡 (${ctTexture['Ferme']})</option><option value="Fibreuse" ${currentTextureFilter === 'Fibreuse' ? 'selected' : ''}>Fibreuse 🔴 (${ctTexture['Fibreuse']})</option></select>`;
-        
-        advancedFiltersHtml += `
-            <div class="filter-row" style="margin-top: 6px; width: 100%;">
-                <button class="filter-btn tol-btn ${currentTolFilter === 'all' ? 'active' : ''}" onclick="setFilter('tol','all')">Tous</button>
-                <button class="filter-btn tol-btn ${currentTolFilter === '🟢' ? 'active' : ''}" onclick="setFilter('tol','🟢')">🟢 À volonté (${ctTol['🟢']})</button>
-                <button class="filter-btn tol-btn ${currentTolFilter === '🟡' ? 'active' : ''}" onclick="setFilter('tol','🟡')">🟡 À limiter (${ctTol['🟡']})</button>
-               ${currentProfil === 'neutre' ? `<button class="filter-btn tol-btn ${currentTolFilter === '🟠' ? 'active' : ''}" onclick="setFilter('tol','🟠')">🟠 À éviter (${ctTol['🟠']})</button>` : ''}
-            </div>
-        </div>`;
+
+        // 3. LE GROS BLOC DES TYPES D'ALIMENTS À LA FIN (En bas)
+        if (typesAvailable > 1) {
+            advancedFiltersHtml += `
+            <div class="type-switcher" style="margin-top: 12px; margin-bottom: 6px; width: 100%;">
+                <div class="type-tab-top">
+                    <button class="type-tab ${currentTypeFilters.length === 0 ? 'active' : ''}" style="max-width: 180px; padding: 6px 20px;" onclick="setFilter('type','all')">🥗 Tous (${countTotal})</button>
+                </div>
+                ${currentTypeFilters.length === 1 && !hasSeenMultiSelectHint ? `<div style="width: 100%; text-align: center; overflow: hidden; animation: hintFadeInOut 4.5s forwards ease;"><span style="background-color: rgba(212, 163, 115, 0.15); color: var(--accent-dark); padding: 5px 12px; border-radius: 12px; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.3px; display: inline-block;">💡 Vous pouvez en sélectionner d'autres</span></div>` : ''}
+                <div class="type-tab-bottom">${typesHtml}</div>
+            </div>`;
+            
+            if (currentTypeFilters.length === 1) hasSeenMultiSelectHint = true;
+        }
+
+        advancedFiltersHtml += `</div>`; // Fermeture du panneau
+
         filterContainer.innerHTML = `
             <div class="filter-controls-wrapper">
                 <button id="btn-toggle-filters" class="btn-toggle-filters ${window.isFilterPanelOpen ? 'open' : ''}" onclick="toggleAdvancedFilters()">
@@ -2823,8 +2894,13 @@ function renderCards() {
             card.style.backgroundColor = bgColors[leg.saison]?.[0] || "#FAF7F2";
             card.style.borderColor = bgColors[leg.saison]?.[1] || "#E2D9CC";
             
-            let tolColor = leg.tolerance.includes("🟢") ? "#2E7D32" : (leg.tolerance.includes("🟡") ? "#F57F17" : "#C62828");
-			let tolEmoji = leg.tolerance.includes("🟢") ? "🟢" : (leg.tolerance.includes("🟡") ? "🟡" : "🟠");
+            const badUniv = leg.tolerance.includes("🔴") || leg.tolerance.includes("🟠");
+            const badClin = isClinicallyBad(leg, currentProfil);
+            const isAvoid = badUniv || badClin;
+
+            // Si l'aliment est incompatible avec le profil, on force sa pastille en Orange !
+            let tolColor = isAvoid ? "#C62828" : (leg.tolerance.includes("🟢") ? "#2E7D32" : "#F57F17");
+            let tolEmoji = isAvoid ? "🟠" : (leg.tolerance.includes("🟢") ? "🟢" : "🟡");
             let imgTag = (leg.image && leg.image.startsWith("data:image")) ? `<img src="${leg.image}" alt="${leg.nom}">` : `<img src="images/${removeAccents(leg.nom.toLowerCase()).trim().replace(/['']/g, "_").replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "")}.webp" data-ext-idx="0" onerror="tryNextExt(this, 'images/${removeAccents(leg.nom.toLowerCase()).trim().replace(/['']/g, "_").replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "")}')">`;
 
             const badges = { 
