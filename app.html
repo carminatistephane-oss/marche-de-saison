@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.10 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.11 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -939,7 +939,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.10</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.11</div>
             <!-- =================================== -->
             
             <div class="profils-section">
@@ -1433,7 +1433,7 @@
 <!-- ========================================== -->
 <script>
     // ========================================================
-    const APP_VERSION = "11.10";
+    const APP_VERSION = "11.11";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -2474,8 +2474,8 @@ const content = document.getElementById('profils-content');
             return; 
         }
         
-        // Recherche dans le nom OU dans le sous-titre
-        const matches = getSafeLegumes().filter(l => 
+        // NOUVEAU : On ajoute "true" pour forcer la recherche à inclure les aliments "À éviter"
+        const matches = getSafeLegumes(true).filter(l => 
             removeAccents(l.nom.toLowerCase()).includes(query) || 
             (l.soustitre && removeAccents(l.soustitre.toLowerCase()).includes(query))
         );
