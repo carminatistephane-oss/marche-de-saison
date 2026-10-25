@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.02 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.03 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -1146,7 +1146,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.02</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.03</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -1807,7 +1807,7 @@
 <!-- ========================================== -->
 <script>
     // ========================================================
-    const APP_VERSION = "12.02";
+    const APP_VERSION = "12.03";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -4236,7 +4236,7 @@ function afficherQrPourPaquet(paquetFiches) {
         lienPartageActif = urlFinale;
         if (btnCopier) btnCopier.style.display = 'block';
 
-        let qr = qrcode(0, 'M');
+        let qr = qrcode(0, 'L');
         qr.addData(urlFinale);
         qr.make();
 
@@ -4745,90 +4745,6 @@ async function voirDetailRecetteTheMealDB(idMeal, vientDeLaFiche = false) {
     }
 }
 
-// Ouvre le détail complet avec ingrédients analysés individuellement (Image 4) !
-async function voirDetailRecetteTheMealDB(idMeal) {
-    const detailZone = document.getElementById('rec-detail-contenu');
-    detailZone.innerHTML = "<div style='text-align:center; padding: 20px;'>⏳ Analyse des ingrédients en cours...</div>";
-
-    document.getElementById('rec-vue-liste').style.display = 'none';
-    document.getElementById('rec-vue-detail').style.display = 'block';
-
-    const btnTrad = document.getElementById('btn-traduire-recette');
-    if (btnTrad) {
-        btnTrad.innerText = "🌐 Traduire";
-        btnTrad.disabled = false;
-        btnTrad.style.borderColor = "var(--accent)";
-        btnTrad.style.color = "var(--accent-dark)";
-    }
-
-    try {
-        const rep = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeal}`);
-        const data = await rep.json();
-        const meal = data.meals[0];
-        recetteTheMealDBEnCours = meal;
-
-        // Analyse clinique de la recette
-        const analyse = analyserCliniqueRecette(meal, currentProfil);
-
-        // Anti-doublon pour le bouton enregistrer
-        const dejaEnregistree = alimentRecetteActif?.recettesList?.some(r => r.idMeal == idMeal || r.nom === meal.strMeal);
-        const btnSave = document.getElementById('btn-enregistrer-recette');
-        if (btnSave) btnSave.style.display = dejaEnregistree ? 'none' : 'block';
-
-        // Construction des ingrédients avec les pastilles de couleur individuelles (Image 4) !
-        let ingredientsHTML = "";
-        for (let i = 1; i <= 20; i++) {
-            const ing = meal[`strIngredient${i}`];
-            const qte = meal[`strMeasure${i}`];
-            if (ing && ing.trim().length > 0) {
-                const ingClean = ing.toLowerCase().trim();
-                const nomFR = dicoAnglaisVersFrancais[ingClean];
-                let puce = "🟢";
-                let alerteTexte = "";
-
-                if (nomFR) {
-                    const alimentBase = legumes.find(l => removeAccents(l.nom.toLowerCase()).includes(nomFR));
-                    if (alimentBase && isClinicallyBad(alimentBase, currentProfil)) {
-                        puce = "🟠";
-                        alerteTexte = ` <span style="font-size:0.75rem; color:#D84315; font-weight:800;">(Non adapté ${currentProfil ? currentProfil.toUpperCase() : ''})</span>`;
-                    }
-                }
-
-                ingredientsHTML += `<li style="margin-bottom: 5px; color: ${puce === '🟠' ? '#D84315' : 'var(--text-main)'};">
-                    ${puce} <strong>${qte ? qte.trim() : ''}</strong> ${ing.trim()}${alerteTexte}
-                </li>`;
-            }
-        }
-
-        // Bandeau de verdict en haut
-        let bannerBg = analyse.statut === '🟢' ? 'rgba(46,125,50,0.12)' : (analyse.statut === '🟡' ? 'rgba(245,127,23,0.12)' : 'rgba(198,40,40,0.12)');
-        let bannerColor = analyse.statut === '🟢' ? '#1B5E20' : (analyse.statut === '🟡' ? '#E65100' : '#B71C1C');
-
-        detailZone.innerHTML = `
-            <img src="${meal.strMealThumb}" alt="${meal.strMeal}" style="width: 100%; height: 160px; object-fit: cover; border-radius: 12px; margin-bottom: 12px;">
-            <div style="text-align: center; margin-bottom: 12px;">
-                <span style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.78rem; background: ${bannerBg}; color: ${bannerColor}; border: 1.5px solid ${bannerColor};">
-                    ${analyse.verdict} • PROFIL : ${currentProfil ? currentProfil.toUpperCase() : 'NEUTRE'}
-                </span>
-            </div>
-            <h4 id="rec-titre-detail" style="margin: 0 0 12px 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.25rem; text-align: center;">${meal.strMeal}</h4>
-            
-            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">🛒 Ingrédients analysés :</div>
-            <ul id="rec-ingredients-detail" style="font-size: 0.85rem; margin: 0 0 16px 0; padding-left: 10px; list-style: none;">
-                ${ingredientsHTML}
-            </ul>
-
-            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">👨‍🍳 Instructions :</div>
-            <p id="rec-instructions-detail" style="font-size: 0.85rem; color: var(--text-main); line-height: 1.45; white-space: pre-line; margin: 0;">${meal.strInstructions}</p>
-        `;
-
-        const modal = document.getElementById('modal-recipe-search');
-        if (modal) modal.style.display = 'block';
-
-    } catch (e) {
-        detailZone.innerHTML = `<div style="text-align: center; color: #D32F2F;">Impossible de charger la recette.</div>`;
-    }
-}
 
 // Enregistrement avec statut clinique conservé (Image 5)
 function enregistrerRecetteTheMealDB() {
