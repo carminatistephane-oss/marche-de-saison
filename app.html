@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 11.11 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.00 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -382,7 +382,7 @@
     .filter-row { display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; }
     
     .advanced-filters-panel {
-        display: none; 
+        display: flex;
         flex-wrap: wrap;
         justify-content: center;
         align-content: flex-start;
@@ -390,11 +390,25 @@
         padding-top: 8px;
         padding-bottom: 15px;
         width: 100%;
-        max-height: 75vh;
+        max-height: 85vh;
+        opacity: 1;
         overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-gutter: stable;
+        transition: max-height 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.4s ease, padding 0.5s ease;
         scrollbar-width: thin;
         scrollbar-color: rgba(212, 163, 115, 0.5) transparent;
     }
+	
+	.advanced-filters-panel.collapsed {
+    max-height: 0 !important;
+    opacity: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+}
+	
     .advanced-filters-panel::-webkit-scrollbar { width: 5px; }
     .advanced-filters-panel::-webkit-scrollbar-track { background: transparent; }
     .advanced-filters-panel::-webkit-scrollbar-thumb { background: rgba(212, 163, 115, 0.5); border-radius: 10px; }
@@ -404,9 +418,23 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 10px;
-        margin: 0 auto 10px auto;
+        gap: 8px;
         width: 100%;
+        max-width: 420px;
+        margin: 0 auto;
+    }
+    .btn-prep-cru, .btn-prep-cuit {
+        flex: 0 0 75px !important;
+        width: 75px !important;
+        text-align: center !important;
+        padding: 6px 0 !important;
+        font-size: 0.72rem !important;
+        box-sizing: border-box !important;
+    }
+    .btn-toggle-filters {
+        padding: 7px 12px !important;
+        font-size: 0.72rem !important;
+        white-space: nowrap !important;
     }
     
     .btn-toggle-filters {
@@ -429,6 +457,22 @@
         transition: all 0.2s ease;
         margin: 0;
     }
+	
+	/* Animation douce pour le bloc Types d'aliments */
+    .type-switcher-container {
+        width: 100%;
+        max-height: 500px;
+        opacity: 1;
+        overflow: hidden;
+        transition: max-height 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease, margin 0.3s ease;
+    }
+    .type-switcher-container.collapsed {
+        max-height: 0 !important;
+        opacity: 0 !important;
+        margin: 0 !important;
+        pointer-events: none !important;
+    }
+	
     .btn-toggle-filters:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.05); transform: translateY(-1px); }
     .btn-toggle-filters.open { background-color: var(--text-title); color: #ffffff; }
     .btn-toggle-filters svg { width: 14px; height: 14px; fill: currentColor; transition: transform 0.3s ease; }
@@ -474,6 +518,64 @@
     
     .filter-btn { background-color: #ffffff; border: 1px solid #D1C7B8; color: var(--text-main); padding: 7px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; font-family: 'Nunito', sans-serif; white-space: nowrap; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.04); transition: all 0.3s ease; }
     .filter-btn.active { background-color: var(--text-title); border-color: var(--text-title); color: #ffffff; box-shadow: 0 6px 14px rgba(44, 62, 80, 0.2); transform: translateY(-1px); }
+	
+	/* ====== NOUVEAU CADRE TOLÉRANCE SOBRE ====== */
+    .tolerance-box-cadre {
+        background-color: #EDE8DE;
+        border-radius: 22px;
+        padding: 14px 10px;
+        margin-bottom: 12px;
+        width: 100%;
+        box-sizing: border-box;
+        box-shadow: inset 0 2px 6px rgba(0,0,0,0.03);
+    }
+    .tolerance-box-title {
+        font-size: 0.72rem;
+        color: var(--accent-dark);
+        text-transform: uppercase;
+        font-weight: 800;
+        letter-spacing: 1.2px;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    .tol-badge-count {
+        display: inline-block;
+        background-color: rgba(0,0,0,0.06);
+        color: var(--text-main);
+        font-size: 0.72rem;
+        font-weight: 800;
+        padding: 2px 7px;
+        border-radius: 12px;
+        margin-left: 4px;
+        line-height: 1.2;
+    }
+    .tol-btn.active .tol-badge-count {
+        background-color: rgba(255,255,255,0.25);
+        color: #FFFFFF;
+    }
+    .tol-divider-subtle {
+        border-top: 1px dashed #D6CEC1;
+        margin: 12px 15px 10px 15px;
+    }
+    .tol-btn-avoid {
+        background-color: #FAF6F0 !important;
+        border: 1px solid #E8D5C8 !important;
+        color: #B5603F !important;
+    }
+    .tol-btn-avoid.active {
+        background: linear-gradient(135deg, #D47A53 0%, #B5603F 100%) !important;
+        color: #FFFFFF !important;
+        border-color: #B5603F !important;
+        box-shadow: 0 4px 10px rgba(181, 96, 63, 0.25) !important;
+    }
+    .tol-btn-avoid .tol-badge-count {
+        background-color: rgba(181, 96, 63, 0.12);
+        color: #B5603F;
+    }
+    .tol-btn-avoid.active .tol-badge-count {
+        background-color: rgba(255,255,255,0.3);
+        color: #FFFFFF;
+    }
 
     .cards-container { display: flex; flex-direction: column; gap: 25px; padding-bottom: 50px; margin-top: 25px; } 
     .card { background-color: var(--bg-card); border-radius: 28px; border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 16px 40px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.02); padding: 65px 15px 25px 15px; margin-top: 50px; position: relative; z-index: 1; transition: box-shadow 0.5s ease, transform 0.3s ease; }
@@ -482,12 +584,13 @@
     .card-top-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 0; z-index: 5; }
     .card-top-left { position: absolute; left: 20%; top: 0; transform: translate(-50%, -50%); z-index: 5; }
     .card-top-center { position: absolute; left: 50%; top: 0; transform: translate(-50%, -50%); z-index: 6; }
+    .card-top-prep { position: absolute; left: 73%; top: 0; transform: translate(-50%, -50%); z-index: 6; }
     
     .card-photo-round { width: 100px; height: 100px; border-radius: 50%; background-color: #FFFFFF; border: 4px solid #FFFFFF; box-shadow: 0 8px 16px rgba(0,0,0,0.1); position: relative; box-sizing: border-box; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; color: #D1D5DB; }
     .card-photo-round img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
     .tolerance-badge { position: absolute; top: 22%; left: 6%; transform: translate(-50%, -50%); background: transparent; border: none; display: flex; align-items: center; justify-content: center; font-size: 30px; filter: drop-shadow(0 8px 12px rgba(0,0,0,0.35)) drop-shadow(0 3px 4px rgba(0,0,0,0.25)); z-index: 10; transition: transform 0.2s ease; }
     
-    .category-badge { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; padding: 5px 10px; border-radius: 20px; background-color: #FFF; border: 1px solid; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    .category-badge { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; padding: 4px 8px; border-radius: 20px; background-color: #FFF; border: 1px solid; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
     
     .tag-badge { background-color: #F0EAE1; color: var(--text-title); font-size: 0.6rem; font-weight: 800; padding: 3px 6px; border-radius: 8px; letter-spacing: 0.3px; text-transform: uppercase; border: 1px solid #E2D9CC; display: inline-flex; align-items: center; gap: 3px; }
 
@@ -909,6 +1012,108 @@
     body.dark-mode .modal-body p[style*="#4E342E"] { color: #BCAAA4 !important; } /* Brun clair */
 	body.dark-mode .modal-body p[style*="#006064"] { color: #4DD0E1 !important; } /* Cyan néon pour le point 8 */
     body.dark-mode .modal-body p[style*="#311B92"] { color: #B39DDB !important; } /* Indigo pastel pour le point 9 */
+
+/* ======================================================== */
+    /* NOUVELLES COULEURS & STYLES : MODE CRU / CUIT            */
+    /* ======================================================== */
+    
+    /* Bouton Cru (Vert Jardin Pastel & Frais) */
+    .btn-prep-cru {
+        border: 1.5px solid #2E7D32 !important;
+        color: #1B5E20 !important;
+        background-color: #FFFFFF;
+        font-weight: 800;
+        font-size: 0.75rem;
+        padding: 7px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .btn-prep-cru.active {
+        background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%) !important; /* Vert pastel tendre */
+        color: #1B5E20 !important;
+        border-color: #2E7D32 !important;
+        box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2) !important;
+    }
+
+    /* Bouton Cuit (Orange-Marron Rôti Pastel) */
+    .btn-prep-cuit {
+        border: 1.5px solid #D84315 !important;
+        color: #4E342E !important;
+        background-color: #FFFFFF;
+        font-weight: 800;
+        font-size: 0.75rem;
+        padding: 7px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .btn-prep-cuit.active {
+        background: linear-gradient(135deg, #FBE9E7 0%, #FFCCBC 100%) !important; /* Orange-Marron pastel doré */
+        color: #4E342E !important;
+        border-color: #D84315 !important;
+        box-shadow: 0 4px 10px rgba(216, 67, 21, 0.2) !important;
+    }
+
+/* Badge dynamique au sommet de la carte (à côté de LÉGUME) */
+    .badge-prep-mode {
+        font-size: 0.7rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        padding: 5px 9px;
+        border-radius: 20px;
+        background-color: #FFF;
+        border: 1px solid;
+        white-space: nowrap;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    .badge-prep-mode.cru {
+        border-color: #2E7D32 !important;
+        color: #1B5E20 !important;
+        background-color: #E8F5E9 !important;
+    }
+    .badge-prep-mode.cuit {
+        border-color: #D84315 !important;
+        color: #4E342E !important;
+        background-color: #FBE9E7 !important;
+    }
+
+    /* En Mode Sombre */
+    body.dark-mode .badge-prep-mode {
+        background-color: #2B2824 !important;
+    }
+    body.dark-mode .badge-prep-mode.cru {
+        border-color: #81C784 !important;
+        color: #C8E6C9 !important;
+        background-color: #1B3520 !important;
+    }
+    body.dark-mode .badge-prep-mode.cuit {
+        border-color: #FFAB91 !important;
+        color: #FFCCBC !important;
+        background-color: #3B2014 !important;
+    }
+
+    /* En Mode Sombre : teintes nuit profondes */
+    body.dark-mode .btn-prep-cru {
+        background-color: var(--bg-card) !important;
+        border-color: #81C784 !important;
+        color: #81C784 !important;
+    }
+    body.dark-mode .btn-prep-cru.active {
+        background: #1B3520 !important;
+        color: #C8E6C9 !important;
+        border-color: #81C784 !important;
+    }
+    body.dark-mode .btn-prep-cuit {
+        background-color: var(--bg-card) !important;
+        border-color: #FFAB91 !important;
+        color: #FFAB91 !important;
+    }
+    body.dark-mode .btn-prep-cuit.active {
+        background: #3B2014 !important;
+        color: #FFCCBC !important;
+        border-color: #FFAB91 !important;
+    }
 	
 </style>
 
@@ -939,36 +1144,23 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v11.11</div>
-            <!-- =================================== -->
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.00</div>
             
-            <div class="profils-section">
-                <div class="profils-header" style="cursor: default;">
+            <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
+                <div class="profils-header" style="cursor: pointer; gap: 2px;">
                     <h2 class="profils-title">Identifiez votre profil digestif</h2>
-                    <svg id="profils-chevron" class="profils-chevron" viewBox="0 0 24 24" width="32" height="32">
+                    <svg class="profils-chevron" viewBox="0 0 24 24" width="50" height="50" style="fill: var(--accent-dark); opacity: 0.85;">
                         <path d="M7 10l5 5 5-5z"/>
                     </svg>
                 </div>
-                <div id="profils-content" class="profils-content">
-                    <div style="display: flex; justify-content: center; margin-bottom: 8px;">
-                        <button class="profil-btn" id="btn-profil-neutre" onclick="showProfilModal('neutre')">🟢 Neutre</button>
-                    </div>
-                    <div class="profils-container">
-                        <button class="profil-btn" id="btn-profil-estomac" onclick="showProfilModal('estomac')">🔥 Acidité</button>
-                        <button class="profil-btn" id="btn-profil-lactose" onclick="showProfilModal('lactose')">🥛 Lactose</button>
-                        <button class="profil-btn" id="btn-profil-gluten" onclick="showProfilModal('gluten')">🌾 Gluten</button>
-                        <button class="profil-btn" id="btn-profil-colon" onclick="showProfilModal('colon')">💨 Irritable</button>
-                    </div>
-                </div>
             </div>
-
             <button id="btn-install" class="btn-install-pwa">📱 Installer l'application</button>
         </div>
 
         <div class="search-box-container" style="margin-top: 0px;">
 			
-            <div id="home-profil-badge" class="active-profil-badge" onclick="toggleProfils()" style="cursor: pointer;">Profil : 🟢 Neutre</div>
-            <input type="text" id="global-search" class="search-input" placeholder="Rechercher un aliment..." oninput="handleSearch(event, 'search-results', 'global-search')">
+            <div id="home-profil-badge" class="active-profil-badge" onclick="ouvrirModalChangerProfil()" style="cursor: pointer;">Profil : 🟢 Neutre</div>
+            <input type="text" id="global-search" class="search-input" placeholder="Rechercher . . ." oninput="handleSearch(event, 'search-results', 'global-search')">
             <div id="search-results" class="search-results"></div>
         </div>
 
@@ -986,8 +1178,8 @@
             </div>
             
             <div class="search-box-container" style="margin-top: 18px; margin-bottom: 5px;">
-                <div id="list-profil-badge" class="active-profil-badge">Profil : 🟢 Neutre</div>
-                <input type="text" id="list-search" class="search-input" placeholder="Rechercher un aliment..." oninput="handleSearch(event, 'list-search-results', 'list-search')">
+                <div id="list-profil-badge" class="active-profil-badge" onclick="ouvrirModalChangerProfil()" style="cursor: pointer;" title="Cliquer pour changer de profil">Profil : 🟢 Neutre</div>
+                <input type="text" id="list-search" class="search-input" placeholder="Rechercher . . ." oninput="handleSearch(event, 'list-search-results', 'list-search')">
                 <div id="list-search-results" class="search-results"></div>
             </div>
 
@@ -1219,6 +1411,69 @@
 <!-- NOUVELLES MODALES (FENÊTRES SUPERPOSÉES)   -->
 <!-- ========================================== -->
 
+<!-- Fenêtre unique et interactive de profil digestif -->
+<div id="modal-select-profil" class="modal-overlay hidden">
+  <div class="modal-box" style="max-height: 85vh; overflow-y: auto;">
+    <button class="close-btn" onclick="fermerModalChangerProfil()">❌</button>
+    <h3 style="margin-top:0; color: #2C3E50; text-align: center;">Profil Digestif</h3>
+    <p style="font-size: 0.72rem; color: #8D99AE; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-bottom: 12px; text-align: center;">Sélectionnez vos sensibilités</p>
+    
+    <!-- Boutons de profils regroupés par thèmes -->
+    <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+        <!-- Tout-venant -->
+        <div style="display: flex; justify-content: center;">
+            <button class="profil-btn" id="btn-mod-neutre" onclick="clicProfilModalRapide('neutre')">🟢 Neutre</button>
+        </div>
+
+        <!-- 1. Digestion & Intestin -->
+        <div style="background: rgba(0,0,0,0.02); border-radius: 14px; padding: 6px 8px; border: 1px solid var(--border-color);">
+            <div style="font-size: 0.65rem; color: var(--accent-dark); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-bottom: 5px; text-align: center;">Digestion & Intestin</div>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 5px;">
+                <button class="profil-btn" id="btn-mod-estomac" onclick="clicProfilModalRapide('estomac')">🔥 Acidité</button>
+                <button class="profil-btn" id="btn-mod-colon" onclick="clicProfilModalRapide('colon')">💨 Irritable</button>
+                <button class="profil-btn" id="btn-mod-fodmap" onclick="clicProfilModalRapide('fodmap')">🧪 FODMAP Pur</button>
+            </div>
+        </div>
+
+        <!-- 2. Intolérances -->
+        <div style="background: rgba(0,0,0,0.02); border-radius: 14px; padding: 6px 8px; border: 1px solid var(--border-color);">
+            <div style="font-size: 0.65rem; color: var(--accent-dark); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-bottom: 5px; text-align: center;">Intolérances</div>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 5px;">
+                <button class="profil-btn" id="btn-mod-lactose" onclick="clicProfilModalRapide('lactose')">🥛 Lactose</button>
+                <button class="profil-btn" id="btn-mod-gluten" onclick="clicProfilModalRapide('gluten')">🌾 Gluten</button>
+            </div>
+        </div>
+
+        <!-- 3. Métabolisme & Santé -->
+        <div style="background: rgba(0,0,0,0.02); border-radius: 14px; padding: 6px 8px; border: 1px solid var(--border-color);">
+            <div style="font-size: 0.65rem; color: var(--accent-dark); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-bottom: 5px; text-align: center;">Métabolisme & Santé</div>
+            <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 5px;">
+                <button class="profil-btn" id="btn-mod-diabete" onclick="clicProfilModalRapide('diabete')">🩸 Diabète</button>
+                <button class="profil-btn" id="btn-mod-poids" onclick="clicProfilModalRapide('poids')">⚖️ Perte de Poids</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Encadré 1 : Description dynamique -->
+    <div class="mp-section" style="background: #FFFFFF; border-radius: 16px; padding: 14px; margin-bottom: 10px; border: 1px solid var(--border-color);">
+        <div class="mp-section-title" style="font-size: 0.75rem; text-transform: uppercase; font-weight: 800; color: var(--accent-dark); margin-bottom: 6px; letter-spacing: 1px;">Votre Profil</div>
+        <p id="mod-desc-text" class="mp-text" style="font-size: 0.9rem; line-height: 1.45; color: var(--text-main); margin: 0;"></p>
+    </div>
+
+    <!-- Encadré 2 : Pathologies dynamiques -->
+    <div class="mp-section" style="background: #FFFFFF; border-radius: 16px; padding: 14px; margin-bottom: 18px; border: 1px solid var(--border-color);">
+        <div class="mp-section-title" style="font-size: 0.75rem; text-transform: uppercase; font-weight: 800; color: var(--accent-dark); margin-bottom: 6px; letter-spacing: 1px;">Exemples de pathologies liées</div>
+        <p id="mod-patho-text" class="mp-text" style="font-size: 0.9rem; line-height: 1.45; color: var(--text-main); font-weight: 600; margin: 0;"></p>
+    </div>
+
+    <!-- Boutons d'action -->
+    <div style="display: flex; gap: 10px;">
+        <button class="btn btn-mp-cancel" style="flex: 1; padding: 12px; font-weight: 700; border-radius: 14px;" onclick="fermerModalChangerProfil()">Annuler</button>
+        <button class="btn btn-mp-confirm" style="flex: 1.4; padding: 12px; font-weight: 800; border-radius: 14px;" onclick="appliquerProfilModalRapide()">✅ Confirmer ce profil</button>
+    </div>
+  </div>
+</div>
+
 <!-- Modale 1 : À Propos (Mentions Légales) -->
     <div id="modal-about" class="modal-overlay hidden">
       <div class="modal-box">
@@ -1269,9 +1524,10 @@
 			<p style="margin: 0 0 8px 0; color: #555; line-height: 1.4;">Le moteur de l'application adapte l'affichage à votre métabolisme :</p>
   
 			<ul style="margin: 0; padding-left: 20px; color: #555; line-height: 1.4;">
-				<li style="margin-bottom: 6px;"><strong>Choix du profil :</strong> Déployez le menu pour choisir un profil unique (Neutre) ou croisez plusieurs sensibilités simultanément (ex : Acidité + Irritable).</li>
-				<li style="margin-bottom: 6px;"><strong>Validation :</strong> Validez via l'icône ✅ pour que l'affichage s'ajuste instantanément.</li>
-				<li style="margin-bottom: 0;"><strong>Filtrage automatique :</strong> Seuls les aliments <strong>🟢 Pastille Verte</strong> et <strong>🟡 Pastille Jaune</strong> seront visibles. Les aliments incompatibles <strong>🟠 Pastille Orange</strong> seront masqués.</li>
+				<li style="margin-bottom: 6px;"><strong>Accessible partout :</strong> Cliquez sur le titre ou sur le badge de profil, que vous soyez sur l'accueil ou directement dans vos listes d'aliments.</li>
+				<li style="margin-bottom: 6px;"><strong>Explications en direct :</strong> Cochez une sensibilité ou croisez-en plusieurs (ex : <em>Acidité + Irritable</em>). Les explications et pathologies associées s'affichent instantanément sous vos yeux.</li>
+				<li style="margin-bottom: 6px;"><strong>Validation :</strong> Cliquez sur <strong>« ✅ Confirmer ce profil »</strong> pour ajuster l'ensemble de votre marché.</li>
+				<li style="margin-bottom: 0;"><strong>Filtrage automatique :</strong> Seuls les aliments <strong>🟢 À volonté</strong> et <strong>🟡 À limiter</strong> sont affichés. Les aliments <strong>🟠 À éviter</strong> sont écartés (mais restent consultables via les filtres).</li>
 			</ul>
 		</div>
 
@@ -1322,8 +1578,11 @@
 
           <!-- 5. Gestion des Fiches Masquées -->
           <div style="background: #FFF8E1; border-left: 4px solid #F57F17; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
-            <p style="color: #E65100; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0;">5. Gestion des Fiches Masquées 👁️</p>
-            <p style="margin: 0 0 5px 0; color: #555; line-height: 1.4;">Un aliment ne vous intéresse pas ou vous souhaitez le cacher temporairement ? Cliquez sur le bouton 👁️ présent sur chaque fiche pour le masquer de la liste principale.</p>
+            <p style="color: #E65100; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0; display: flex; align-items: center; gap: 6px;">
+              5. Gestion des Fiches Masquées 
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#E65100" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.8-7 10-7 10 7 10 7-3.8 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="2.5" fill="#E65100"></circle><line x1="3" y1="3" x2="21" y2="21" stroke="#E65100" stroke-width="2"></line></svg>
+            </p>
+            <p style="margin: 0 0 5px 0; color: #555; line-height: 1.4;">Un aliment ne vous intéresse pas ou vous souhaitez le cacher temporairement ? Cliquez sur le bouton œil barré présent sur chaque fiche pour le masquer de la liste principale.</p>
             <p style="margin: 0; color: #555; line-height: 1.4;"><strong>Retrouver et gérer vos fiches :</strong> Rendez-vous dans les <strong>Paramètres ⚙️</strong> puis cliquez sur <strong>"Gestion des fiches masquées"</strong>. Une fenêtre s'ouvrira pour vous lister l'ensemble de vos éléments cachés : vous pourrez alors choisir de les <strong>remettre</strong> (les réafficher) ou de les <strong>supprimer définitivement</strong> de l'application d'un simple clic.</p>
           </div>
 
@@ -1336,16 +1595,19 @@
 
           <!-- 7. Sauvegarde, Partage & Synchronisation QR -->
           <div style="background: #EFEBE9; border-left: 4px solid #795548; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
-            <p style="color: #4E342E; font-weight: 800; font-size: 0.95rem; margin: 0 0 8px 0;">7. Sauvegarde & Partage intelligent 💾📱</p>
+            <p style="color: #4E342E; font-weight: 800; font-size: 0.95rem; margin: 0 0 8px 0; display: flex; align-items: center; gap: 6px;">
+              7. Sauvegarde & Partage intelligent 💾 
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="#4E342E"><path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm10-2h3v3h-3v-3zm5 0h3v3h-3v-3zm-5 5h3v3h-3v-3zm5 0h3v3h-3v-3zm-2-2h2v2h-2v-2z"/></svg>
+            </p>
             <p style="margin: 0 0 8px 0; color: #555; line-height: 1.4;">Vos personnalisations (notes, recettes, nouvelles fiches) sont précieuses. Voici comment les gérer :</p>
             
             <ul style="padding-left: 15px; margin: 0; color: #555; line-height: 1.5;">
               <li style="margin-bottom: 6px;"><strong>💾 Sauvegarde complète :</strong> Exportez tout votre marché en un fichier <code>.json</code>. C'est la solution idéale pour migrer vers un nouveau téléphone.</li>
-              <li style="margin-bottom: 6px;"><strong>📱 Partage express par QR Code :</strong> 
+              <li style="margin-bottom: 6px;"><strong>Partage express par QR Code :</strong> 
                 <ul>
-                  <li><strong>Partage direct :</strong> Cliquez sur l'icône 📱 sur une fiche pour générer un QR Code unique pour cet aliment. Flashez-le avec un autre appareil pour transférer instantanément vos notes/recettes.</li>
-                  <li><strong>Partage groupé :</strong> Dans <em>Paramètres > Partager par QR Code</em>, sélectionnez plusieurs fiches via les pilules vertes. Le système gère les doublons automatiquement et fusionne vos notes sans jamais écraser celles de vos amis.</li>
-                  <li><strong>Limites :</strong> Pour garantir une lecture instantanée, chaque partage est limité à 8 fiches. Si vous avez plus de nouveautés, envoyez-les en plusieurs "voyages".</li>
+                  <li style="margin-top: 4px;"><strong>Partage direct :</strong> Cliquez sur l'icône QR Code d'une fiche pour générer son code unique. Flashez-le avec un autre appareil pour transférer instantanément vos notes/recettes.</li>
+                  <li style="margin-top: 4px;"><strong>Partage groupé :</strong> Dans <em>Paramètres > Partager par QR Code</em>, sélectionnez plusieurs fiches via les pilules vertes. Le système gère les doublons automatiquement et fusionne vos notes sans jamais écraser celles de vos amis.</li>
+                  <li style="margin-top: 4px;"><strong>Limites :</strong> Pour garantir une lecture instantanée, chaque partage est limité à 8 fiches à la fois.</li>
                 </ul>
               </li>
               <li style="margin-bottom: 6px;"><strong>🔄 Réparation intelligente :</strong> Vous avez supprimé une fiche officielle par erreur ? Le bouton "Restaurer les fiches de base" dans les Paramètres récupère les fiches manquantes sans toucher à vos données personnelles !</li>
@@ -1375,11 +1637,17 @@
     <h3 style="margin-top:0; color: #2C3E50;">⚙️ Paramètres</h3>
     <div class="settings-menu">
       <button class="settings-btn" id="btn-darkmode" onclick="toggleDarkMode()">🌙 Mode Sombre</button>
-      <button class="settings-btn" id="btn-hidden-items" onclick="ouvrirModalFichesMasquees()">👁️ Gestion des fiches masquées</button>
+      <button class="settings-btn" id="btn-hidden-items" onclick="ouvrirModalFichesMasquees()" style="display: flex; align-items: center; gap: 10px;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#C85A32" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M2 12s3.8-7 10-7 10 7 10 7-3.8 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="2.5" fill="#C85A32"></circle><line x1="3" y1="3" x2="21" y2="21" stroke="#C85A32" stroke-width="2"></line></svg>
+          Gestion des fiches masquées
+      </button>
       <button class="settings-btn" onclick="sauvegarderDonnees()" style="background-color: #E8F5E9; border-color: #A5D6A7; font-weight: 800;">💾 Sauvegarder (Partage 2 clics)</button>
       <button class="settings-btn" onclick="document.getElementById('import-file-menu').click()">📂 Restaurer (.json)</button>
       <input type="file" id="import-file-menu" style="display:none" accept=".json" onchange="importData(event)">
-      <button class="settings-btn" id="btn-qr-transfer" onclick="ouvrirQrModal()">📱 Partager par QR Code</button>
+      <button class="settings-btn" id="btn-qr-transfer" onclick="ouvrirQrModal()" style="display: flex; align-items: center; gap: 10px;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="#111111" style="flex-shrink:0;"><path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm10-2h3v3h-3v-3zm5 0h3v3h-3v-3zm-5 5h3v3h-3v-3zm5 0h3v3h-3v-3zm-2-2h2v2h-2v-2z"/></svg>
+          Partager par QR Code
+      </button>
 	  <button class="settings-btn" onclick="restaurerFichesDefaut()" style="background-color: #E3F2FD; border-color: #90CAF9; color: #0D47A1; font-weight: 700;">🔄 Réparer / Restaurer les fiches de base</button>
 	  <button class="settings-btn" id="btn-admin-reset" onclick="localStorage.clear(); location.reload();" style="display: none; background-color: #FFF0F0; color: #D32F2F; border-color: #FFCDCD; margin-top: 10px;">🔧 Forcer la mise à jour (Réinitialiser)</button>
     </div>
@@ -1387,6 +1655,103 @@
 </div>
 
 <!-- MODALE DE SYNCHRONISATION (QR CODE + LIEN MAGIQUE PC/MOBILE) -->
+
+<!-- MODALE RECETTES EN 2 TEMPS (ERGONOMIE ÉPURÉE SANS CROIX) -->
+<div id="modal-recipe-search" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 460px; max-height: 88vh; overflow-y: auto; padding: 20px;">
+        
+        <!-- ========================================== -->
+        <!-- ÉCRAN 1 : LE HUB DE DÉPART (CHOIX DU SITE) -->
+        <!-- ========================================== -->
+        <div id="rec-vue-choix">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <div style="width: 25px;"></div>
+                <div style="text-align: center;">
+                    <h3 id="rec-hub-titre-aliment" style="color: var(--text-title); margin: 0 0 4px 0; font-family: 'Playfair Display', serif; font-size: 1.35rem;">🍲 Recettes</h3>
+                    <div id="rec-hub-badge-profil" style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Profil actif</div>
+                </div>
+                <button type="button" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; padding: 0;" onclick="fermerModalRecetteSmart()">❌</button>
+            </div>
+
+            <!-- 1. TheMealDB (Intégrée) -->
+            <!-- TheMealDB (Base Internationale Collaborative) -->
+            <div style="background: #FFFDF8; border: 1.5px solid var(--accent); border-radius: 16px; padding: 15px; margin-bottom: 18px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03);">
+                <div style="font-size: 0.75rem; color: var(--accent-dark); font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">🌍 Base internationale collaborative TheMealDB</div>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0 0 12px 0; line-height: 1.4;">
+                    Accès direct à près de <strong>800 repas</strong> et <strong>1000 ingrédients</strong>.<br>
+                    Consultez, traduisez et enregistrez vos recettes en 1 clic !
+                </p>
+                <button type="button" class="btn btn-primary" style="width: 100%; padding: 12px; font-weight: 800; font-size: 0.9rem;" onclick="lancerExplorationTheMealDB()">
+                    🍲 Explorer les recettes TheMealDB
+                </button>
+            </div>
+
+            <!-- 2. Partenaires Suisses (2 par ligne) -->
+            <div style="border-top: 1px dashed var(--border-color); padding-top: 12px; margin-bottom: 14px;">
+                <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; text-align: center;">🇨🇭 Partenaires Suisses</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <button type="button" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #D4A373; background: #FFFDF8;" onclick="ouvrirPartenaireWeb('https://migusto.migros.ch')">🇨🇭 Migusto</button>
+                    <button type="button" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #4CAF50; background: #FFFDF8; color: #2E7D32;" onclick="ouvrirPartenaireWeb('https://fooby.ch')">🇨🇭 FOOBY</button>
+                    <button type="button" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #D84315; background: #FFFDF8; color: #D84315;" onclick="ouvrirPartenaireWeb('https://www.bettybossi.ch')" >🇨🇭 Betty Bossi</button>
+                    <button type="button" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #1976D2; background: #FFFDF8; color: #1565C0;" onclick="ouvrirPartenaireWeb('https://www.swissmilk.ch/fr/recettes/')">🇨🇭 Swissmilk</button>
+                </div>
+            </div>
+
+            <!-- 3. Partenaires Français (2 par ligne) -->
+            <div style="border-top: 1px dashed var(--border-color); padding-top: 12px;">
+                <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; text-align: center;">🇫🇷 Partenaires Français</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <button type="button" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #E65100; background: #FFFDF8; color: #E65100;" onclick="ouvrirPartenaireWeb('https://www.marmiton.org')">🇫🇷 Marmiton</button>
+                    <button type="button" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #8E24AA; background: #FFFDF8; color: #6A1B9A;" onclick="ouvrirPartenaireWeb('https://www.cuisineaz.com')">🇫🇷 Cuisine AZ</button>
+                    <button type="button" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #D32F2F; background: #FFFDF8; color: #C62828;" onclick="ouvrirPartenaireWeb('https://www.750g.com')">🇫🇷 750g</button>
+                    <button type="button" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #0288D1; background: #FFFDF8; color: #0288D1;" onclick="ouvrirPartenaireWeb('https://www.cuisineactuelle.fr')">🇫🇷 Cuisine Actuelle</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ÉCRAN 2 : LISTE DES RECETTES THEMEALDB    -->
+        <!-- ========================================== -->
+        <div id="rec-vue-liste" style="display: none;">
+            <!-- Haut : Retour à la recherche à gauche | Traduire la liste seul à droite (SANS CROIX) -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <button type="button" class="btn" onclick="retourAuHubChoix()" style="padding: 6px 12px; font-size: 0.78rem; font-weight: 800;">← Retour à la recherche</button>
+                <button type="button" id="btn-traduire-liste" class="btn" onclick="traduireListeTitresTheMealDB()" style="padding: 6px 12px; font-size: 0.78rem; font-weight: 800; border-color: var(--accent); color: var(--accent-dark); background: #FFFDF8;">🌐 Traduire la liste</button>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 12px;">
+                <h4 id="rec-liste-titre" style="margin: 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.15rem;">Recettes</h4>
+            </div>
+
+            <div id="rec-loading" style="display: none; text-align: center; padding: 25px 0; color: var(--text-muted); font-weight: 700; font-size: 0.9rem;">
+                ⏳ Récupération du festin en cours...
+            </div>
+            
+            <div id="rec-liste-container" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px;"></div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ÉCRAN 3 : DÉTAIL COMPLET D'UNE RECETTE    -->
+        <!-- ========================================== -->
+        <div id="rec-vue-detail" style="display: none;">
+            <!-- Haut : Retour à la liste à gauche | Traduire seul à droite (SANS CROIX) -->
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <button type="button" class="btn" onclick="retourListeRecettes()" style="padding: 6px 12px; font-size: 0.78rem; font-weight: 800;">← Retour à la liste</button>
+                <button type="button" id="btn-traduire-recette" class="btn" onclick="traduireRecetteActuelle()" style="padding: 6px 12px; font-size: 0.78rem; font-weight: 800; border-color: var(--accent); color: var(--accent-dark); background: #FFFDF8;">🌐 Traduire</button>
+            </div>
+            
+            <!-- Contenu de la recette -->
+            <div id="rec-detail-contenu" style="background: #FFFFFF; border-radius: 16px; padding: 16px; border: 1px solid var(--border-color); margin-bottom: 15px;"></div>
+            
+            <!-- Bas : Bouton Enregistrer EN PLEINE LARGEUR ! -->
+            <div style="margin-top: 15px; margin-bottom: 10px;">
+                <button type="button" id="btn-enregistrer-recette" class="btn btn-primary" onclick="enregistrerRecetteTheMealDB()" style="width: 100%; padding: 14px; font-weight: 800; font-size: 0.95rem; box-shadow: 0 4px 12px rgba(212,163,115,0.3);">
+                    💾 Enregistrer sur la fiche
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <div id="qr-modal" class="modal" style="display: none;">
     <div class="modal-content" style="text-align: center; max-width: 400px;">
         <h3 style="color: #2C3E50; margin-top: 0;">📱 Synchronisation & Partage</h3>
@@ -1416,7 +1781,10 @@
 <!-- MODALE DE GESTION DES FICHES MASQUÉES -->
 <div id="hidden-items-modal" class="modal" style="display: none;">
     <div class="modal-content" style="max-width: 500px;">
-        <h3 style="color: #2C3E50; margin-top: 0; text-align: center;">👁️ Fiches masquées</h3>
+        <h3 style="color: #2C3E50; margin-top: 0; text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#C85A32" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.8-7 10-7 10 7 10 7-3.8 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="2.5" fill="#C85A32"></circle><line x1="3" y1="3" x2="21" y2="21" stroke="#C85A32" stroke-width="2"></line></svg>
+            Fiches masquées
+        </h3>
         <p style="font-size: 0.9rem; color: #666; text-align: center;">Retrouvez ci-dessous la liste de vos fiches masquées :</p>
         
         <!-- Zone où la liste des fiches masquées va s'afficher -->
@@ -1433,7 +1801,7 @@
 <!-- ========================================== -->
 <script>
     // ========================================================
-    const APP_VERSION = "11.11";
+    const APP_VERSION = "12.00";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -1893,14 +2261,14 @@ const defaultData = [
             patho: "Aucune.<br>Ce profil s'adresse aux personnes ayant une digestion saine, sans intolérances, allergies, ni inconforts intestinaux."
         },
         'estomac': {
-            titre: "🔥 Acidité",
+            titre: "🔥 Acidité / Estomac",
             desc: "L'estomac et le duodénum peinent à gérer les aliments trop acides ou très riches en graisses. L'application masque tout ce qui est classé 'Acide' ou 'Gras'.",
             patho: "• RGO (Reflux Gastro-Œsophagien)<br>• Gastrite (aiguë ou chronique)<br>• Ulcère gastroduodénal<br>• Dyspepsie fonctionnelle"
         },
         'lactose': {
             titre: "🥛 Lactose",
-            desc: "L'intestin grêle manque d'enzymes pour absorber le lactose ou le fructose. L'application masque tous les aliments contenant du Lactose ou à indice Fructose élevé.",
-            patho: "• Intolérance au lactose (primaire ou secondaire)<br>• Malabsorption du fructose"
+            desc: "L'intestin grêle manque d'enzymes pour absorber le lactose. L'application masque tous les aliments contenant du Lactose.",
+            patho: "• Intolérance au lactose (primaire ou secondaire)"
         },
         'gluten': {
             titre: "🌾 Gluten",
@@ -1908,9 +2276,24 @@ const defaultData = [
             patho: "• Maladie cœliaque<br>• Hypersensibilité au gluten non cœliaque"
         },
         'colon': {
-            titre: "💨 Irritable",
-            desc: "Le côlon réagit excessivement aux fibres dures et aux FODMAPs, provoquant des ballonnements et des spasmes. L'application masque les fibres insolubles et les FODMAPs élevés.",
+            titre: "💨 Irritable (Côlon)",
+            desc: "Le côlon réagit excessivement aux fibres dures (insolubles) et à la chair ferme. L'application masque les fibres agressives pour protéger la muqueuse.",
             patho: "• Syndrome de l'Intestin Irritable (SII)<br>• Colopathie fonctionnelle<br>• Diverticulose colique"
+        },
+        'fodmap': {
+            titre: "🧪 FODMAP Pur (Fermentation)",
+            desc: "Cible uniquement les petits glucides fermentescibles. L'application masque les aliments riches en FODMAPs et en Fructose élevé.",
+            patho: "• SIBO (Colonisation bactérienne)<br>• Spasmes et ballonnements de fermentation<br>• Régime strict FODMAPs"
+        },
+        'diabete': {
+            titre: "🩸 Diabète / Glycémie",
+            desc: "Surveille l'impact glycémique des aliments. L'application masque les aliments à Charge Glycémique (CG) Élevée ou Moyenne pour éviter les pics d'insuline.",
+            patho: "• Diabète de type 1 et type 2<br>• Prédiabète / Résistance à l'insuline<br>• Diabète gestationnel"
+        },
+        'poids': {
+            titre: "⚖️ Perte de Poids",
+            desc: "Combine le contrôle des lipides et des sucres rapides. L'application masque les aliments riches en Graisses et ceux à Charge Glycémique élevée.",
+            patho: "• Rééquilibrage alimentaire<br>• Gestion du surpoids<br>• Prévention du syndrome métabolique"
         }
     };
 
@@ -1975,6 +2358,16 @@ const content = document.getElementById('profils-content');
         } else {
             content.classList.add('collapsed');
             chevron.classList.remove('open');
+            localStorage.setItem('marche_saison_profil_open', 'false');
+        }
+    };
+
+window.fermerProfils = function() {
+        const content = document.getElementById('profils-content');
+        const chevron = document.getElementById('profils-chevron');
+        if (content && !content.classList.contains('collapsed')) {
+            content.classList.add('collapsed');
+            if (chevron) chevron.classList.remove('open');
             localStorage.setItem('marche_saison_profil_open', 'false');
         }
     };
@@ -2148,13 +2541,120 @@ const content = document.getElementById('profils-content');
         }, 1000);
     }
 
+// === GESTION DYNAMIQUE DU PROFIL DIGESTIF EN DIRECT ===
+    let selectionProfilModal = [];
+
+    function ouvrirModalChangerProfil() {
+        const modal = document.getElementById('modal-select-profil');
+        if (!modal) return;
+        
+        // Récupère les profils actuellement actifs
+        if (!currentProfil || currentProfil === 'neutre') {
+            selectionProfilModal = [];
+        } else {
+            selectionProfilModal = currentProfil.split(',');
+        }
+        
+        rafraichirBoutonsModalProfil();
+        mettreAJourTextesExplicatifs();
+        modal.classList.remove('hidden');
+    }
+
+    function fermerModalChangerProfil() {
+        const modal = document.getElementById('modal-select-profil');
+        if (modal) modal.classList.add('hidden');
+    }
+
+    function rafraichirBoutonsModalProfil() {
+        const tousLesBoutons = ['estomac', 'lactose', 'gluten', 'colon', 'fodmap', 'diabete', 'poids'];
+        const btnNeutre = document.getElementById('btn-mod-neutre');
+        
+        if (selectionProfilModal.length === 0) {
+            if (btnNeutre) btnNeutre.classList.add('active');
+            tousLesBoutons.forEach(p => {
+                const b = document.getElementById('btn-mod-' + p);
+                if (b) b.classList.remove('active');
+            });
+        } else {
+            if (btnNeutre) btnNeutre.classList.remove('active');
+            tousLesBoutons.forEach(p => {
+                const b = document.getElementById('btn-mod-' + p);
+                if (b) {
+                    if (selectionProfilModal.includes(p)) b.classList.add('active');
+                    else b.classList.remove('active');
+                }
+            });
+        }
+    }
+
+    // Fonction qui met à jour les descriptions et pathologies EN DIRECT
+    function mettreAJourTextesExplicatifs() {
+        const descEl = document.getElementById('mod-desc-text');
+        const pathoEl = document.getElementById('mod-patho-text');
+        if (!descEl || !pathoEl) return;
+
+        if (selectionProfilModal.length === 0) {
+            descEl.innerHTML = profilsInfo['neutre'] ? profilsInfo['neutre'].desc : '';
+            pathoEl.innerHTML = profilsInfo['neutre'] ? profilsInfo['neutre'].patho : '';
+        } else {
+            let descCombine = selectionProfilModal.map(p => {
+                if (!profilsInfo[p]) return '';
+                return `<div style="font-weight: 800; color: var(--accent-dark); margin-bottom: 3px;">${profilsInfo[p].titre}</div>${profilsInfo[p].desc}`;
+            }).filter(t => t).join('<br><br>');
+
+            let pathoCombine = selectionProfilModal.map(p => {
+                if (!profilsInfo[p]) return '';
+                return `<div style="font-weight: 800; color: var(--text-title); margin-bottom: 3px;">${profilsInfo[p].titre}</div>${profilsInfo[p].patho}`;
+            }).filter(t => t).join('<br><br>');
+
+            descEl.innerHTML = descCombine;
+            pathoEl.innerHTML = pathoCombine;
+        }
+    }
+
+    function clicProfilModalRapide(profilId) {
+        if (profilId === 'neutre') {
+            selectionProfilModal = [];
+        } else {
+            if (selectionProfilModal.includes(profilId)) {
+                selectionProfilModal = selectionProfilModal.filter(p => p !== profilId);
+            } else {
+                selectionProfilModal.push(profilId);
+            }
+        }
+        rafraichirBoutonsModalProfil();
+        mettreAJourTextesExplicatifs(); // Actualise les explications instantanément !
+    }
+
+    function appliquerProfilModalRapide() {
+        // Enregistre le nouveau profil
+        currentProfil = selectionProfilModal.length === 0 ? 'neutre' : selectionProfilModal.join(',');
+        localStorage.setItem('marche_saison_profil', currentProfil);
+
+        // Met à jour les badges et compteurs
+        updateProfilBadges();
+        renderHomeCounts();
+
+        // Ferme la fenêtre
+        fermerModalChangerProfil();
+
+        // Si on est dans une saison ou dans Adaptés, actualise la liste
+        const viewList = document.getElementById('view-list');
+        if (viewList && viewList.style.display === 'block') {
+            renderCards();
+        }
+    }
+
     function updateProfilBadges() {
         const shortNames = {
             'neutre': '🟢 Neutre',
             'estomac': '🔥 Acidité',
             'lactose': '🥛 Lactose',
             'gluten': '🌾 Gluten',
-            'colon': '💨 Irritable'
+            'colon': '💨 Irritable',
+            'fodmap': '🧪 FODMAP',
+            'diabete': '🩸 Diabète',
+            'poids': '⚖️ Poids'
         };
         
         let displayTxt = "Profil : ";
@@ -2179,10 +2679,28 @@ const content = document.getElementById('profils-content');
     function isClinicallyBad(l, profil) {
         if (!profil || profil === 'neutre') return false;
         let bad = false;
+
+        // 1. Acidité / Estomac
         if (profil.includes('estomac') && (l.acidite === "Acide" || l.graisses === "Gras")) bad = true;
-        if (profil.includes('lactose') && (l.lactose === "Avec" || l.fructose === "Haut")) bad = true;
+
+        // 2. Intolérance au Lactose
+        if (profil.includes('lactose') && l.lactose === "Avec") bad = true;
+
+        // 3. Intolérance au Gluten
         if (profil.includes('gluten') && l.gluten === "Avec") bad = true;
-        if (profil.includes('colon') && (l.fodmap === "Haut" || l.fibres === "Insolubles")) bad = true;
+
+        // 4. Intestin Irritable (Fibres dures)
+        if (profil.includes('colon') && (l.fibres === "Insolubles" || l.texture === "Fibreuse")) bad = true;
+
+        // 5. NOUVEAU : Protocol FODMAP Pur (Fermentation)
+        if (profil.includes('fodmap') && (l.fodmap === "Haut" || l.fructose === "Haut")) bad = true;
+
+        // 6. NOUVEAU : Diabète / Glycémie (Charge Glycémique Élevée)
+        if (profil.includes('diabete') && (l.cg === "Élevé" || l.cg === "Moyen")) bad = true;
+
+        // 7. NOUVEAU : Perte de Poids (Graisses + Sucre rapide)
+        if (profil.includes('poids') && (l.graisses === "Gras" || l.cg === "Élevé")) bad = true;
+
         return bad;
     }
 
@@ -2371,9 +2889,12 @@ const content = document.getElementById('profils-content');
         const menuContainer = document.getElementById('home-menu-saisons');
         if (!menuContainer) return;
         
-        const safeLegumes = getSafeLegumes();
+        const safeLegumes = getSafeLegumes(true);
         
-        const countRecommandes = safeLegumes.filter(l => l.tolerance.includes("🟢") || l.tolerance.includes("🟡")).length;
+        const countRecommandes = safeLegumes.filter(l => {
+            const evalTol = getToleranceDynamique(l, currentProfil, currentModePreparation);
+            return !evalTol.isAvoid; // Compte tous les aliments vert/jaune selon le mode actif !
+        }).length;
         const cP = safeLegumes.filter(l => l.saison === "Printemps").length;
         const cE = safeLegumes.filter(l => l.saison === "Été").length;
         const cA = safeLegumes.filter(l => l.saison === "Automne").length;
@@ -2510,7 +3031,16 @@ const content = document.getElementById('profils-content');
             div.onclick = function() { 
                 resultsBox.style.display = 'none'; 
                 document.getElementById(inputId).value = ''; 
-                openSaisonAndFocus(item.saison, item.id); 
+
+                // Si on est déjà dans "Adaptés" ou "Favoris", on y RESTE !
+                let destinationSaison = (currentSaison === "Recommandés" || currentSaison === "Favoris") ? currentSaison : item.saison;
+
+                // Si on est sur l'accueil, on ouvre la saison normale
+                if (document.getElementById('view-home').style.display !== 'none') {
+                    destinationSaison = item.saison;
+                }
+
+                openSaisonAndFocus(destinationSaison, item.id); 
             };
             
             resultsBox.appendChild(div);
@@ -2531,11 +3061,26 @@ const content = document.getElementById('profils-content');
         const panel = document.getElementById('advanced-filters-panel');
         const btn = document.getElementById('btn-toggle-filters');
         if (window.isFilterPanelOpen) {
-            panel.style.display = 'flex';
-            btn.classList.add('open');
+            if (panel) panel.classList.remove('collapsed');
+            if (btn) btn.classList.add('open');
         } else {
-            panel.style.display = 'none';
-            btn.classList.remove('open');
+            if (panel) panel.classList.add('collapsed');
+            if (btn) btn.classList.remove('open');
+        }
+    }
+	
+	window.isTypeSwitcherOpen = false;
+
+    function toggleTypeSwitcher() {
+        window.isTypeSwitcherOpen = !window.isTypeSwitcherOpen;
+        const container = document.getElementById('type-switcher-container');
+        const btn = document.getElementById('btn-toggle-types');
+        if (window.isTypeSwitcherOpen) {
+            if (container) container.classList.remove('collapsed');
+            if (btn) btn.classList.add('open');
+        } else {
+            if (container) container.classList.add('collapsed');
+            if (btn) btn.classList.remove('open');
         }
     }
     
@@ -2555,13 +3100,17 @@ const content = document.getElementById('profils-content');
     }
 
     function openSaison(saison) {
-        currentSaison = saison; 
-        currentTolFilter = 'all'; currentTypeFilters = []; 
-        currentFodmapFilter = 'all'; currentFibreFilter = 'all'; currentCgFilter = 'all'; 
-        currentAciditeFilter = 'all'; currentGraisseFilter = 'all'; currentGlutenFilter = 'all'; currentLactoseFilter = 'all'; currentFructoseFilter = 'all';
-        currentTextureFilter = 'all';
+        // Si on change complètement de catégorie, on nettoie les types d'aliments spécifiques
+        if (currentSaison !== saison && currentSaison !== "Recommandés") {
+            currentTypeFilters = [];
+        }
         
+        currentSaison = saison; 
+        // On conserve currentTolFilter (À volonté, À limiter...) actif en mémoire !
+        
+        // On s'assure que le panneau arrive bien fermé et propre
         window.isFilterPanelOpen = false;
+        window.isTypeSwitcherOpen = false;
         
         document.getElementById('view-home').style.display = 'none';
         document.getElementById('view-list').style.display = 'block';
@@ -2582,27 +3131,40 @@ const content = document.getElementById('profils-content');
     }
 
     function openSaisonAndFocus(saison, alimentId) {
-        openSaison(saison);
-        
-        // NOUVEAU : Si l'aliment cherché est "À éviter", on bascule le filtre automatiquement pour l'afficher !
-        const aliment = legumes.find(l => l.id === alimentId);
-        if (aliment && (aliment.tolerance.includes('🔴') || aliment.tolerance.includes('🟠') || isClinicallyBad(aliment, currentProfil))) {
-            currentTolFilter = '🟠'; 
-            renderCards(); // On redessine avec le bon filtre
-        }
+    const aliment = legumes.find(l => l.id === alimentId);
+    if (!aliment) return;
 
-        setTimeout(() => {
-            const cards = document.querySelectorAll('.card');
-            cards.forEach(card => {
-                const editBtn = card.querySelector(`button[onclick*="openForm(${alimentId})"]`);
-                if (editBtn) {
-                    scrollToFirstCard(card);
-                    card.classList.add('highlight');
-                    setTimeout(() => card.classList.remove('highlight'), 2000);
-                }
-            });
-        }, 150);
+    // 1. Assistant Cru / Cuit : Si la cuisson sauve l'aliment, on passe sur Cuit
+    const evalCru = getToleranceDynamique(aliment, currentProfil, 'cru');
+    const evalCuit = getToleranceDynamique(aliment, currentProfil, 'cuit');
+
+    if (evalCru.isAvoid && !evalCuit.isAvoid) {
+        currentModePreparation = 'cuit';
     }
+
+    // 2. Si l'aliment est orange dans la vue Adaptés, on active le filtre Orange 
+    // pour être SÛR qu'il s'affiche sur la page Adaptés sans changer de page !
+    const evalActuelle = getToleranceDynamique(aliment, currentProfil, currentModePreparation);
+    if (saison === "Recommandés" && evalActuelle.isAvoid) {
+        currentTolFilter = '🟠';
+    }
+
+    // 3. On reste STRICTEMENT sur la page où tu te trouves (ex: Adaptés)
+    openSaison(saison);
+
+    // 4. On fait glisser l'écran vers la fiche avec l'effet doré
+    setTimeout(() => {
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            const editBtn = card.querySelector(`button[onclick*="openForm(${alimentId})"]`);
+            if (editBtn) {
+                scrollToFirstCard(card);
+                card.classList.add('highlight');
+                setTimeout(() => card.classList.remove('highlight'), 2000);
+            }
+        });
+    }, 150);
+}
 
     function scrollToFirstCard(targetCard = null) {
         setTimeout(() => {
@@ -2616,15 +3178,34 @@ const content = document.getElementById('profils-content');
     }
 
     function goHome() {
-        // 1. On force l'affichage de l'accueil IMMÉDIATEMENT pour un bouton ultra-réactif
+        // Annule les minuteries en cours
+        if (typeof timerFermetureFiltres !== 'undefined' && timerFermetureFiltres) {
+            clearTimeout(timerFermetureFiltres);
+        }
+
+        // Force la fermeture de tous les volets de filtres pour la prochaine visite
+        window.isFilterPanelOpen = false;
+        window.isTypeSwitcherOpen = false;
+
+        const panel = document.getElementById('advanced-filters-panel');
+        const btn = document.getElementById('btn-toggle-filters');
+        if (panel) panel.classList.add('collapsed');
+        if (btn) btn.classList.remove('open');
+
+        const typesCont = document.getElementById('type-switcher-container');
+        const btnTypes = document.getElementById('btn-toggle-types');
+        if (typesCont) typesCont.classList.add('collapsed');
+        if (btnTypes) btnTypes.classList.remove('open');
+
+        // Affiche l'accueil
         document.getElementById('view-list').style.display = 'none';
         document.getElementById('view-home').style.display = 'block';
         window.scrollTo(0, 0); 
         renderHomeCounts();
 
-        // 2. On nettoie l'URL proprement en arrière-plan pour le bouton natif du téléphone
-        if (window.location.hash === '#saison') {
-            history.back();
+        // Nettoyage de l'adresse sans conflit
+        if (window.location.hash) {
+            history.replaceState(null, '', window.location.pathname + window.location.search);
         }
     }
 
@@ -2650,7 +3231,11 @@ const content = document.getElementById('profils-content');
         }
     });
 
+    let timerFermetureFiltres = null;
+
     function setFilter(type, val) {
+        if (timerFermetureFiltres) clearTimeout(timerFermetureFiltres);
+
         if(type === 'type') {
             if(val === 'all') {
                 currentTypeFilters = [];
@@ -2662,8 +3247,22 @@ const content = document.getElementById('profils-content');
                     if (currentTypeFilters.length === 1) hasSeenMultiSelectHint = false;
                 }
             }
+            // Fermeture automatique également après avoir choisi un aliment
+            timerFermetureFiltres = setTimeout(() => {
+                if (window.isFilterPanelOpen) {
+                    toggleAdvancedFilters();
+                }
+            }, 2000);
         }
-        if(type==='tol') currentTolFilter = val;
+        if(type==='tol') {
+            currentTolFilter = val;
+            // Fermeture automatique du volet après 1,2 seconde
+            timerFermetureFiltres = setTimeout(() => {
+                if (window.isFilterPanelOpen) {
+                    toggleAdvancedFilters();
+                }
+            }, 2000);
+        }
         if(type==='fodmap') currentFodmapFilter = val;
         if(type==='fibre') currentFibreFilter = val;
         if(type==='cg') currentCgFilter = val;
@@ -2675,6 +3274,96 @@ const content = document.getElementById('profils-content');
         if(type==='texture') currentTextureFilter = val;
         renderCards(); 
     }
+
+let currentModePreparation = 'cru'; // 'cru' par défaut
+
+function changerModePreparation(mode) {
+    const bandeau = document.querySelector('.sticky-header');
+    const basBandeau = bandeau ? bandeau.getBoundingClientRect().bottom : 180;
+    
+    // 1. LE RADAR INTELLIGENT : On cherche la carte qui occupe LE PLUS DE PLACE à l'écran
+    let idAlimentGagnant = null;
+    let maxSurfaceVisible = 0;
+    let positionExacteSurEcran = 0;
+    
+    const cards = document.querySelectorAll('.card');
+    for (let c of cards) {
+        const rect = c.getBoundingClientRect();
+        
+        // On calcule la portion de carte réellement visible sous le bandeau
+        const hautVisible = Math.max(basBandeau, rect.top);
+        const basVisible = Math.min(window.innerHeight, rect.bottom);
+        const surfaceVisible = Math.max(0, basVisible - hautVisible);
+        
+        // La carte qui a la plus grande surface visible gagne !
+        if (surfaceVisible > maxSurfaceVisible) {
+            const btn = c.querySelector('button[onclick*="openForm"]');
+            if (btn) {
+                const match = btn.getAttribute('onclick').match(/\d+/);
+                if (match) {
+                    maxSurfaceVisible = surfaceVisible;
+                    idAlimentGagnant = match[0];
+                    positionExacteSurEcran = rect.top; // On note sa hauteur exacte au pixel près
+                }
+            }
+        }
+    }
+
+    // 2. On change le mode (cru ou cuit) et on recalcule
+    currentModePreparation = mode;
+    renderCards();
+
+    // 3. On rescotche la carte gagnante PILE au même pixel d'écran !
+    if (idAlimentGagnant) {
+        const carteCible = document.querySelector(`button[onclick*="openForm(${idAlimentGagnant})"]`)?.closest('.card');
+        if (carteCible) {
+            // Position absolue sur la page entière
+            const positionSurLaPage = carteCible.getBoundingClientRect().top + window.scrollY;
+            // On la remet exactement à la même hauteur d'écran qu'avant le clic
+            const scrollFinal = positionSurLaPage - positionExacteSurEcran;
+            window.scrollTo({ top: Math.max(0, scrollFinal), behavior: 'instant' });
+        }
+    }
+}
+
+// === LE CERVEAU DE CALCUL DYNAMIQUE (CRU / CUIT & PROFILS) ===
+function getToleranceDynamique(leg, profil, mode) {
+    let tolBase = leg.tolerance;
+    const aUnModeCuisson = ["Légume", "Fruit", "Féculent", "Légumineuse"].includes(leg.type);
+    
+    // 1. Liste des aliments toxiques ou totalement indigestes lorsqu'ils sont CRUS
+    const exclusCrus = ["pomme de terre", "riz", "pate", "pâte", "patate douce", "aubergine", "morille", "lentille", "haricot", "pois chiche", "quinoa", "panais", "manioc", "topinambour", "châtaigne", "chataigne"];
+    const nomLower = removeAccents(leg.nom.toLowerCase());
+    const doitEtreCuit = exclusCrus.some(mot => nomLower.includes(mot));
+
+    // Si on est en mode CRU et que l'aliment EXIGE une cuisson :
+    if (mode === 'cru' && doitEtreCuit) {
+        return { isAvoid: true, emoji: "🟠", color: "#C62828", tolBase: "🟠 À éviter (Cru)" };
+    }
+
+    let legVirtuel = { ...leg };
+
+    // 2. Si on est en mode CUIT : la cuisson ramollit les fibres et adoucit la chair
+    if (mode === 'cuit' && aUnModeCuisson) {
+        if (legVirtuel.fibres === 'Insolubles') legVirtuel.fibres = 'Solubles';
+        if (legVirtuel.texture === 'Ferme' || legVirtuel.texture === 'Fibreuse') legVirtuel.texture = 'Fondante';
+
+        if (tolBase.includes("🔴") || tolBase.includes("🟠")) {
+            tolBase = "🟡 À limiter";
+        } else if (tolBase.includes("🟡")) {
+            tolBase = "🟢 À volonté";
+        }
+    }
+
+    // 3. Test de tolérance clinique avec le profil
+    const badClin = isClinicallyBad(legVirtuel, profil);
+    const isAvoid = tolBase.includes("🔴") || tolBase.includes("🟠") || badClin;
+
+    let emoji = isAvoid ? "🟠" : (tolBase.includes("🟢") ? "🟢" : "🟡");
+    let color = isAvoid ? "#C62828" : (tolBase.includes("🟢") ? "#2E7D32" : "#F57F17");
+
+    return { isAvoid, emoji, color, tolBase };
+}
 
 function renderCards() {
         const container = document.getElementById('cards-container'); 
@@ -2694,17 +3383,15 @@ function renderCards() {
         }
 
         const matchesAllBut = (l, skipCat) => {
-            const badUniv = l.tolerance.includes("🔴") || l.tolerance.includes("🟠");
-            const badClin = isClinicallyBad(l, currentProfil);
-            const isAvoid = badUniv || badClin; // Vrai si l'aliment est mauvais de base OU mauvais pour le profil
+            const evalTol = getToleranceDynamique(l, currentProfil, currentModePreparation);
 
             if (skipCat !== 'type' && currentTypeFilters.length > 0 && !currentTypeFilters.includes(l.type || 'Légume')) return false;
             
             if (skipCat !== 'tol') {
-                if (currentTolFilter === 'all' && isAvoid) return false; // On cache les mauvais du "Tous"
-                if (currentTolFilter === '🟢' && (isAvoid || !l.tolerance.includes('🟢'))) return false;
-                if (currentTolFilter === '🟡' && (isAvoid || !l.tolerance.includes('🟡'))) return false;
-                if (currentTolFilter === '🟠' && !isAvoid) return false; // Le bouton Orange affiche TOUS les mauvais
+                if (currentSaison === "Recommandés" && currentTolFilter === 'all' && evalTol.isAvoid) return false;
+                if (currentTolFilter === '🟢' && evalTol.emoji !== '🟢') return false;
+                if (currentTolFilter === '🟡' && evalTol.emoji !== '🟡') return false;
+                if (currentTolFilter === '🟠' && !evalTol.isAvoid) return false;
             }
             
             if (skipCat !== 'fodmap' && currentFodmapFilter !== 'all' && l.fodmap !== currentFodmapFilter) return false;
@@ -2736,17 +3423,9 @@ function renderCards() {
             if (!ctType[t]) ctType[t] = 0;
             if (matchesAllBut(l, 'type')) ctType[t]++;
             if (matchesAllBut(l, 'tol')) {
-                const badUniv = l.tolerance.includes("🔴") || l.tolerance.includes("🟠");
-                const badClin = isClinicallyBad(l, currentProfil);
-                
-                if (badUniv || badClin) {
-                    ctTol['🟠']++; // Si c'est mauvais, ça va dans le compteur Orange
-                } else if (l.tolerance.includes("🟢")) {
-                    ctTol['🟢']++;
-                } else if (l.tolerance.includes("🟡")) {
-                    ctTol['🟡']++;
-                }
-            }
+        const evalTol = getToleranceDynamique(l, currentProfil, currentModePreparation);
+        ctTol[evalTol.emoji]++;
+    }
             if (matchesAllBut(l, 'fodmap') && l.fodmap) ctFodmap[l.fodmap]++;
             if (matchesAllBut(l, 'fibre') && l.fibres) ctFibre[l.fibres]++;
             if (matchesAllBut(l, 'cg') && l.cg) ctCg[l.cg]++;
@@ -2828,45 +3507,48 @@ function renderCards() {
         }
 
         let isFiltersActive = currentTypeFilters.length > 0 || currentTolFilter !== 'all' || currentFodmapFilter !== 'all' || currentFibreFilter !== 'all' || currentCgFilter !== 'all' || currentAciditeFilter !== 'all' || currentGraisseFilter !== 'all' || currentGlutenFilter !== 'all' || currentLactoseFilter !== 'all' || currentFructoseFilter !== 'all' || currentTextureFilter !== 'all';
-        let filterBtnText = isFiltersActive ? 'FILTRES (ACTIFS)' : 'FILTRES CLINIQUES';
+        let filterBtnText = isFiltersActive ? 'FILTRES ACTIFS' : 'FILTRES CLINIQUES';
 
-        let advancedFiltersHtml = `<div id="advanced-filters-panel" class="advanced-filters-panel" style="display: ${window.isFilterPanelOpen ? 'flex' : 'none'};">`;
+        let advancedFiltersHtml = `<div id="advanced-filters-panel" class="advanced-filters-panel ${window.isFilterPanelOpen ? '' : 'collapsed'}">`;
         
         // 1. LES PASTILLES DE TOLÉRANCE EN PREMIER (En haut)
         advancedFiltersHtml += `
-            <div style="background-color: rgba(141, 153, 174, 0.1); border-radius: 16px; padding: 12px 5px; margin-bottom: 8px; width: 100%; box-sizing: border-box;">
-                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-bottom: 10px; text-align: center;">Aliments Adaptés</div>
-                <div class="filter-row" style="width: 100%;">
+            <div class="tolerance-box-cadre">
+                <div class="tolerance-box-title">Tolérance Digestive</div>
+                <div class="filter-row" style="width: 100%; margin-bottom: 2px;">
                     <button class="filter-btn tol-btn ${currentTolFilter === 'all' ? 'active' : ''}" onclick="setFilter('tol','all')">Tous</button>
-                    <button class="filter-btn tol-btn ${currentTolFilter === '🟢' ? 'active' : ''}" onclick="setFilter('tol','🟢')">🟢 À volonté (${ctTol['🟢']})</button>
-                    <button class="filter-btn tol-btn ${currentTolFilter === '🟡' ? 'active' : ''}" onclick="setFilter('tol','🟡')">🟡 À limiter (${ctTol['🟡']})</button>
+                    <button class="filter-btn tol-btn ${currentTolFilter === '🟢' ? 'active' : ''}" onclick="setFilter('tol','🟢')">🟢 À volonté <span class="tol-badge-count">${ctTol['🟢']}</span></button>
+                    <button class="filter-btn tol-btn ${currentTolFilter === '🟡' ? 'active' : ''}" onclick="setFilter('tol','🟡')">🟡 À limiter <span class="tol-badge-count">${ctTol['🟡']}</span></button>
                 </div>
-            </div>
-            <div class="filter-row" style="margin-bottom: 15px; width: 100%;">
-                <button class="filter-btn tol-btn ${currentTolFilter === '🟠' ? 'active' : ''}" onclick="setFilter('tol','🟠')" style="border-color: #FFCDCD; color: #D32F2F; background-color: ${currentTolFilter === '🟠' ? '#FFF0F0' : '#FFFFFF'}; font-size: 0.75rem;">🟠 À éviter (${ctTol['🟠']})</button>
+                <div class="tol-divider-subtle"></div>
+                <div class="filter-row" style="width: 100%;">
+                    <button class="filter-btn tol-btn tol-btn-avoid ${currentTolFilter === '🟠' ? 'active' : ''}" onclick="setFilter('tol','🟠')">🟠 À éviter <span class="tol-badge-count">${ctTol['🟠']}</span></button>
+                </div>
             </div>
         `;
 
-        // 2. LA MATRICE CLINIQUE AU MILIEU
-        if (showFodmap) advancedFiltersHtml += `<select class="filter-btn" style="background-color: ${currentFodmapFilter !== 'all' ? 'var(--text-title)' : '#fff'}; color: ${currentFodmapFilter !== 'all' ? '#fff' : 'var(--text-main)'};" onchange="setFilter('fodmap', this.value)"><option value="all">FODMAPs</option><option value="Bas" ${currentFodmapFilter === 'Bas' ? 'selected' : ''}>Bas 🟢 (${ctFodmap['Bas']})</option><option value="Haut" ${currentFodmapFilter === 'Haut' ? 'selected' : ''}>Haut 🔴 (${ctFodmap['Haut']})</option></select>`;
-        if (showFibres) advancedFiltersHtml += `<select class="filter-btn" style="background-color: ${currentFibreFilter !== 'all' ? 'var(--text-title)' : '#fff'}; color: ${currentFibreFilter !== 'all' ? '#fff' : 'var(--text-main)'};" onchange="setFilter('fibre', this.value)"><option value="all">Fibres</option><option value="Solubles" ${currentFibreFilter === 'Solubles' ? 'selected' : ''}>Solubles 🟢 (${ctFibre['Solubles']})</option><option value="Insolubles" ${currentFibreFilter === 'Insolubles' ? 'selected' : ''}>Insolubles 🔴 (${ctFibre['Insolubles']})</option><option value="Sans" ${currentFibreFilter === 'Sans' ? 'selected' : ''}>Sans ⚪ (${ctFibre['Sans']})</option></select>`;
-        if (showCg) advancedFiltersHtml += `<select class="filter-btn" style="background-color: ${currentCgFilter !== 'all' ? 'var(--text-title)' : '#fff'}; color: ${currentCgFilter !== 'all' ? '#fff' : 'var(--text-main)'};" onchange="setFilter('cg', this.value)"><option value="all">Glycémie (CG)</option><option value="Bas" ${currentCgFilter === 'Bas' ? 'selected' : ''}>Bas 🟢 (${ctCg['Bas']})</option><option value="Moyen" ${currentCgFilter === 'Moyen' ? 'selected' : ''}>Moyen 🟡 (${ctCg['Moyen']})</option><option value="Élevé" ${currentCgFilter === 'Élevé' ? 'selected' : ''}>Élevé 🔴 (${ctCg['Élevé']})</option></select>`;
-        if (showAcidite) advancedFiltersHtml += `<select class="filter-btn" style="background-color: ${currentAciditeFilter !== 'all' ? 'var(--text-title)' : '#fff'}; color: ${currentAciditeFilter !== 'all' ? '#fff' : 'var(--text-main)'};" onchange="setFilter('acidite', this.value)"><option value="all">Acidité</option><option value="Doux" ${currentAciditeFilter === 'Doux' ? 'selected' : ''}>Doux 🟢 (${ctAcidite['Doux']})</option><option value="Acide" ${currentAciditeFilter === 'Acide' ? 'selected' : ''}>Acide 🔴 (${ctAcidite['Acide']})</option></select>`;
-        if (showFructose) advancedFiltersHtml += `<select class="filter-btn" style="background-color: ${currentFructoseFilter !== 'all' ? 'var(--text-title)' : '#fff'}; color: ${currentFructoseFilter !== 'all' ? '#fff' : 'var(--text-main)'};" onchange="setFilter('fructose', this.value)"><option value="all">Fructose</option><option value="Bas" ${currentFructoseFilter === 'Bas' ? 'selected' : ''}>Bas 🟢 (${ctFructose['Bas']})</option><option value="Haut" ${currentFructoseFilter === 'Haut' ? 'selected' : ''}>Haut 🔴 (${ctFructose['Haut']})</option></select>`;
-        if (showGluten) advancedFiltersHtml += `<select class="filter-btn" style="background-color: ${currentGlutenFilter !== 'all' ? 'var(--text-title)' : '#fff'}; color: ${currentGlutenFilter !== 'all' ? '#fff' : 'var(--text-main)'};" onchange="setFilter('gluten', this.value)"><option value="all">Gluten</option><option value="Sans" ${currentGlutenFilter === 'Sans' ? 'selected' : ''}>Sans 🟢 (${ctGluten['Sans']})</option><option value="Avec" ${currentGlutenFilter === 'Avec' ? 'selected' : ''}>Avec 🔴 (${ctGluten['Avec']})</option></select>`;
-        if (showLactose) advancedFiltersHtml += `<select class="filter-btn" style="background-color: ${currentLactoseFilter !== 'all' ? 'var(--text-title)' : '#fff'}; color: ${currentLactoseFilter !== 'all' ? '#fff' : 'var(--text-main)'};" onchange="setFilter('lactose', this.value)"><option value="all">Lactose</option><option value="Sans" ${currentLactoseFilter === 'Sans' ? 'selected' : ''}>Sans 🟢 (${ctLactose['Sans']})</option><option value="Avec" ${currentLactoseFilter === 'Avec' ? 'selected' : ''}>Avec 🔴 (${ctLactose['Avec']})</option></select>`;
-        if (showGraisses) advancedFiltersHtml += `<select class="filter-btn" style="background-color: ${currentGraisseFilter !== 'all' ? 'var(--text-title)' : '#fff'}; color: ${currentGraisseFilter !== 'all' ? '#fff' : 'var(--text-main)'};" onchange="setFilter('graisse', this.value)"><option value="all">Graisses</option><option value="Maigre" ${currentGraisseFilter === 'Maigre' ? 'selected' : ''}>Maigre 🟢 (${ctGraisse['Maigre']})</option><option value="Gras" ${currentGraisseFilter === 'Gras' ? 'selected' : ''}>Gras 🔴 (${ctGraisse['Gras']})</option></select>`;
-        if (showTexture) advancedFiltersHtml += `<select class="filter-btn" style="background-color: ${currentTextureFilter !== 'all' ? 'var(--text-title)' : '#fff'}; color: ${currentTextureFilter !== 'all' ? '#fff' : 'var(--text-main)'};" onchange="setFilter('texture', this.value)"><option value="all">Dureté de chair</option><option value="Fondante" ${currentTextureFilter === 'Fondante' ? 'selected' : ''}>Fondante 🟢 (${ctTexture['Fondante']})</option><option value="Ferme" ${currentTextureFilter === 'Ferme' ? 'selected' : ''}>Ferme 🟡 (${ctTexture['Ferme']})</option><option value="Fibreuse" ${currentTextureFilter === 'Fibreuse' ? 'selected' : ''}>Fibreuse 🔴 (${ctTexture['Fibreuse']})</option></select>`;
+        
 
-        // 3. LE GROS BLOC DES TYPES D'ALIMENTS À LA FIN (En bas)
+        // 3. LE GROS BLOC DES TYPES D'ALIMENTS (DÉROULANT AVEC BOUTON)
         if (typesAvailable > 1) {
+            let isOpenTypes = window.isTypeSwitcherOpen;
+            let typeBtnText = currentTypeFilters.length > 0 ? `TYPES D'ALIMENTS (${currentTypeFilters.length})` : "TYPES D'ALIMENTS";
+
             advancedFiltersHtml += `
-            <div class="type-switcher" style="margin-top: 12px; margin-bottom: 6px; width: 100%;">
-                <div class="type-tab-top">
-                    <button class="type-tab ${currentTypeFilters.length === 0 ? 'active' : ''}" style="max-width: 180px; padding: 6px 20px;" onclick="setFilter('type','all')">🥗 Tous (${countTotal})</button>
+            <div style="width: 100%; display: flex; justify-content: center; margin-top: 8px; margin-bottom: 8px;">
+                <button id="btn-toggle-types" type="button" class="btn-toggle-filters ${isOpenTypes ? 'open' : ''}" onclick="toggleTypeSwitcher()">
+                    🍽️ ${typeBtnText}
+                    <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                </button>
+            </div>
+            <div id="type-switcher-container" class="type-switcher-container ${isOpenTypes ? '' : 'collapsed'}">
+                <div class="type-switcher" style="margin-bottom: 6px; width: 100%;">
+                    <div class="type-tab-top">
+                        <button class="type-tab ${currentTypeFilters.length === 0 ? 'active' : ''}" style="max-width: 180px; padding: 6px 20px;" onclick="setFilter('type','all')">🥗 Tous (${countTotal})</button>
+                    </div>
+                    ${currentTypeFilters.length === 1 && !hasSeenMultiSelectHint ? `<div style="width: 100%; text-align: center; overflow: hidden; animation: hintFadeInOut 4.5s forwards ease;"><span style="background-color: rgba(212, 163, 115, 0.15); color: var(--accent-dark); padding: 5px 12px; border-radius: 12px; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.3px; display: inline-block;">💡 Vous pouvez en sélectionner d'autres</span></div>` : ''}
+                    <div class="type-tab-bottom">${typesHtml}</div>
                 </div>
-                ${currentTypeFilters.length === 1 && !hasSeenMultiSelectHint ? `<div style="width: 100%; text-align: center; overflow: hidden; animation: hintFadeInOut 4.5s forwards ease;"><span style="background-color: rgba(212, 163, 115, 0.15); color: var(--accent-dark); padding: 5px 12px; border-radius: 12px; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.3px; display: inline-block;">💡 Vous pouvez en sélectionner d'autres</span></div>` : ''}
-                <div class="type-tab-bottom">${typesHtml}</div>
             </div>`;
             
             if (currentTypeFilters.length === 1) hasSeenMultiSelectHint = true;
@@ -2874,17 +3556,35 @@ function renderCards() {
 
         advancedFiltersHtml += `</div>`; // Fermeture du panneau
 
-        filterContainer.innerHTML = `
-            <div class="filter-controls-wrapper">
-                <button id="btn-toggle-filters" class="btn-toggle-filters ${window.isFilterPanelOpen ? 'open' : ''}" onclick="toggleAdvancedFilters()">
-                    ${filterBtnText}
-                    <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
-                </button>
-                ${isFiltersActive ? `<button class="btn-reset-filters" onclick="resetFilters()">↻ Effacer</button>` : ''}
-            </div>
-            ${advancedFiltersHtml}
-        `;
-        
+            const saisonsAvecCuisson = ["Printemps", "Été", "Automne", "Hiver", "Féculents", "Légumineuses", "Recommandés", "Favoris"];
+            const afficherCuisson = saisonsAvecCuisson.includes(currentSaison);
+
+            let htmlBtnCru = '';
+            let htmlBtnCuit = '';
+            if (afficherCuisson) {
+                htmlBtnCru = '<button type="button" class="btn-prep-cru ' + (currentModePreparation === 'cru' ? 'active' : '') + '" onclick="changerModePreparation(\'cru\')">🥕 Cru</button>';
+                htmlBtnCuit = '<button type="button" class="btn-prep-cuit ' + (currentModePreparation === 'cuit' ? 'active' : '') + '" onclick="changerModePreparation(\'cuit\')">🍗 Cuit</button>';
+            }
+
+            const totalAdaptesSaison = ctTol['🟢'] + ctTol['🟡'];
+
+            filterContainer.innerHTML = `
+                <div class="filter-controls-wrapper">
+                    ${htmlBtnCru}
+                    <button id="btn-toggle-filters" class="btn-toggle-filters ${window.isFilterPanelOpen ? 'open' : ''}" onclick="toggleAdvancedFilters()">
+                        ${filterBtnText}
+                        <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                    </button>
+                    ${htmlBtnCuit}
+                </div>
+                <div style="width: 100%; text-align: center; margin-top: -10px; margin-bottom: 6px;">
+                    <span style="font-family: 'Nunito', sans-serif; font-size: 0.68rem; font-weight: 800; letter-spacing: 1px; color: var(--text-muted); text-transform: uppercase;">
+                        🌿 ${totalAdaptesSaison} aliments adaptés
+                    </span>
+                </div>
+                ${advancedFiltersHtml}
+            `;
+			
         let filtered = baseList.filter(l => matchesAllBut(l, 'none')); 
 
         if (filtered.length === 0) {
@@ -2897,8 +3597,9 @@ function renderCards() {
             if (ordreA !== ordreB) return ordreA - ordreB; return a.nom.localeCompare(b.nom);
         });
 
-        filtered.forEach(leg => {
+        filtered.forEach(leg => {			
             const card = document.createElement('div'); card.className = 'card';
+			const aUnModeCuisson = ["Légume", "Fruit", "Féculent", "Légumineuse"].includes(leg.type);
             
             const bgColors = { 
                 "Printemps": ["#D9EDDB", "#A6D2A9"], "Été": ["#FFF1C5", "#F3D068"], "Automne": ["#FFE5D9", "#F2B89E"], "Hiver": ["#D6E8FD", "#9CC5EE"], 
@@ -2906,16 +3607,26 @@ function renderCards() {
                 "Laitages": ["#FFFDE7", "#FFF59D"]
             };
             card.style.backgroundColor = bgColors[leg.saison]?.[0] || "#FAF7F2";
-            card.style.borderColor = bgColors[leg.saison]?.[1] || "#E2D9CC";
             
-            const badUniv = leg.tolerance.includes("🔴") || leg.tolerance.includes("🟠");
-            const badClin = isClinicallyBad(leg, currentProfil);
-            const isAvoid = badUniv || badClin;
+            // NOUVEAU : Le contour de la fiche prend la couleur exacte du mode Cru ou Cuit !
+            const isDark = document.body.classList.contains('dark-mode');
+            const couleurMode = currentModePreparation === 'cru' 
+                ? (isDark ? '#81C784' : '#2E7D32') 
+                : (isDark ? '#FFAB91' : '#D84315');
 
-            // Si l'aliment est incompatible avec le profil, on force sa pastille en Orange !
-            let tolColor = isAvoid ? "#C62828" : (leg.tolerance.includes("🟢") ? "#2E7D32" : "#F57F17");
-            let tolEmoji = isAvoid ? "🟠" : (leg.tolerance.includes("🟢") ? "🟢" : "🟡");
-            let imgTag = (leg.image && leg.image.startsWith("data:image")) ? `<img src="${leg.image}" alt="${leg.nom}">` : `<img src="images/${removeAccents(leg.nom.toLowerCase()).trim().replace(/['']/g, "_").replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "")}.webp" data-ext-idx="0" onerror="tryNextExt(this, 'images/${removeAccents(leg.nom.toLowerCase()).trim().replace(/['']/g, "_").replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "")}')">`;
+            if (aUnModeCuisson) {
+                card.style.setProperty('border-color', couleurMode, 'important');
+                card.style.borderWidth = '1.8px';
+            } else {
+                card.style.borderColor = bgColors[leg.saison]?.[1] || "#E2D9CC";
+            }
+            
+            // Nouveau calcul dynamique direct :
+			const evalTol = getToleranceDynamique(leg, currentProfil, currentModePreparation);
+				let isAvoid = evalTol.isAvoid;
+				let tolColor = evalTol.color;
+				let tolEmoji = evalTol.emoji;
+				let imgTag = (leg.image && leg.image.startsWith("data:image")) ? `<img src="${leg.image}" alt="${leg.nom}">` : `<img src="images/${removeAccents(leg.nom.toLowerCase()).trim().replace(/['']/g, "_").replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "")}.webp" data-ext-idx="0" onerror="tryNextExt(this, 'images/${removeAccents(leg.nom.toLowerCase()).trim().replace(/['']/g, "_").replace(/[^a-z0-9]/g, "_").replace(/_+/g, "_").replace(/^_|_$/g, "")}')">`;
 
             const badges = { 
                 'Fruit': ['🍎 FRUIT', '#E91E63'], 'Féculent': ['🌾 FÉCULENT', '#A06A42'], 'Légumineuse': ['🫘 LÉGUMINEUSE', '#795548'], 'Laitage': ['🧀 LAITAGE', '#FBC02D'],
@@ -2930,33 +3641,82 @@ function renderCards() {
                 badgeColor = '#E53935'; 
             }
             if (groupPoissons.includes(leg.type)) { badgeType = '🐟 ' + leg.type.toUpperCase(); badgeColor = '#1E88E5'; }
-            if (groupLaitages.includes(leg.type)) { badgeType = '🧀 ' + leg.type.toUpperCase(); badgeColor = '#F57F17'; }
+            if (groupLaitages.includes(leg.type)) { 
+                let nomCourt = leg.type.replace(/Fromage /i, '').toUpperCase();
+                badgeType = '🧀 ' + nomCourt; 
+                badgeColor = '#F57F17'; 
+            }
+
+            // Détection des valeurs virtuelles selon la cuisson
+            let fibresAffichees = leg.fibres;
+            let textureAffichee = leg.texture;
+            
+            if (currentModePreparation === 'cuit' && aUnModeCuisson) {
+                if (fibresAffichees === 'Insolubles') fibresAffichees = 'Solubles';
+                if (textureAffichee === 'Ferme' || textureAffichee === 'Fibreuse') textureAffichee = 'Fondante';
+            }
 
             let tagsList = [];
-            if (leg.fodmap && leg.fodmap !== "N/A" && leg.fodmap !== "") tagsList.push(`<span class="tag-badge">${leg.fodmap === 'Bas' ? '🟢' : '🔴'} FODMAP ${leg.fodmap}</span>`);
-            if (leg.fructose && leg.fructose !== "N/A" && leg.fructose !== "") tagsList.push(`<span class="tag-badge">${leg.fructose === 'Bas' ? '🟢' : '🔴'} Fruct. ${leg.fructose}</span>`);
-            if (leg.fibres && leg.fibres !== "N/A" && leg.fibres !== "") tagsList.push(`<span class="tag-badge">${leg.fibres === 'Solubles' ? '🟢' : (leg.fibres === 'Sans' ? '⚪' : '🔴')} Fibres ${leg.fibres}</span>`);
-            if (leg.cg && leg.cg !== "N/A" && leg.cg !== "") tagsList.push(`<span class="tag-badge">${leg.cg === 'Bas' ? '🟢' : (leg.cg === 'Moyen' ? '🟡' : '🔴')} CG ${leg.cg}</span>`);
-            if (leg.acidite === "Acide") tagsList.push(`<span class="tag-badge">🔴 Acide</span>`);
-            if (leg.graisses === "Gras") tagsList.push(`<span class="tag-badge">🔴 Gras</span>`);
-            if (leg.gluten === "Avec") tagsList.push(`<span class="tag-badge">🔴 Gluten</span>`);
-            if (leg.lactose === "Avec") tagsList.push(`<span class="tag-badge">🔴 Lactose</span>`);
-            if (leg.texture && leg.texture !== "N/A" && leg.texture !== "") tagsList.push(`<span class="tag-badge">${leg.texture === 'Fondante' ? '🟢' : (leg.texture === 'Ferme' ? '🟡' : '🔴')} Chair ${leg.texture}</span>`);
+            if (leg.fodmap && leg.fodmap !== "N/A" && leg.fodmap !== "") tagsList.push('<span class="tag-badge">' + (leg.fodmap === 'Bas' ? '🟢' : '🔴') + ' FODMAP ' + leg.fodmap + '</span>');
+            if (leg.fructose && leg.fructose !== "N/A" && leg.fructose !== "") tagsList.push('<span class="tag-badge">' + (leg.fructose === 'Bas' ? '🟢' : '🔴') + ' Fruct. ' + leg.fructose + '</span>');
+            if (fibresAffichees && fibresAffichees !== "N/A" && fibresAffichees !== "") tagsList.push('<span class="tag-badge">' + (fibresAffichees === 'Solubles' ? '🟢' : (fibresAffichees === 'Sans' ? '⚪' : '🔴')) + ' Fibres ' + fibresAffichees + '</span>');
+            if (leg.cg && leg.cg !== "N/A" && leg.cg !== "") tagsList.push('<span class="tag-badge">' + (leg.cg === 'Bas' ? '🟢' : (leg.cg === 'Moyen' ? '🟡' : '🔴')) + ' CG ' + leg.cg + '</span>');
+            if (leg.acidite === "Acide") tagsList.push('<span class="tag-badge">🔴 Acide</span>');
+            if (leg.graisses === "Gras") tagsList.push('<span class="tag-badge">🔴 Gras</span>');
+            if (leg.gluten === "Avec") tagsList.push('<span class="tag-badge">🔴 Gluten</span>');
+            if (leg.lactose === "Avec") tagsList.push('<span class="tag-badge">🔴 Lactose</span>');
+            if (textureAffichee && textureAffichee !== "N/A" && textureAffichee !== "") tagsList.push('<span class="tag-badge">' + (textureAffichee === 'Fondante' ? '🟢' : (textureAffichee === 'Ferme' ? '🟡' : '🔴')) + ' Chair ' + textureAffichee + '</span>');
             
             let tagsHTML = tagsList.length > 0 ? `<div style="display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-bottom: 18px;">${tagsList.join('')}</div>` : '';
 			let soustitreHTML = leg.soustitre ? `<div style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-top: -6px; margin-bottom: 12px; font-weight: 700; letter-spacing: 0.5px;">${leg.soustitre}</div>` : '';
 
             let recipesArray = leg.recettesList || [];
-        let linksHTML = recipesArray.map(r => {
-            if (r.nom && r.url) {
-                // Vérifie et force le format web (évite que la PWA croie que c'est une page interne)
+        let linksHTML = recipesArray.map((r, rIndex) => {
+            // Si la recette a été enregistrée avec ses données internes TheMealDB :
+            if (r.instructions || r.idMeal) {
+                return `<button type="button" class="recipe-link" style="border:none; cursor:pointer; width:100%; text-align:left;" onclick="ouvrirLecteurRecetteInApp(${leg.id}, ${rIndex})">🍲 ${r.nom} <span style="margin-left:auto;">${r.statut || '🟢'}</span></button>`;
+            } 
+            // Sinon (si c'est un lien web classique copié à la main) :
+            else if (r.nom && r.url) {
                 let validUrl = r.url.startsWith('http') ? r.url : 'https://' + r.url;
-                // L'attribut rel="noopener noreferrer" ordonne au smartphone de sortir de la PWA
                 return `<a href="${validUrl}" target="_blank" rel="noopener noreferrer" class="recipe-link">🍲 ${r.nom}</a>`;
             }
             return '';
         }).join('');
-            
+           
+		// Calcul du diagnostic dynamique Cru / Cuit pour la boîte
+            let prepLabel = "";
+            let prepText = "";
+
+            if (currentModePreparation === 'cru') {
+                let emojiCru = isAvoid ? "🟠" : (leg.tolerance.includes("🟢") ? "🟢" : "🟡");
+                prepLabel = `<span style="font-size:0.9rem;">${emojiCru}</span> <span style="color:#2E7D32;">🥕 SPÉCIFICITÉ CRU</span>`;
+                prepText = (leg.inconvenient && leg.inconvenient !== "-" && leg.inconvenient !== "Aucun.") 
+                    ? leg.inconvenient 
+                    : "Aucun inconvénient particulier à cru.";
+            } else {
+                let emojiCuit = isAvoid ? "🟠" : (leg.tolerance.includes("🟠") ? "🟡" : "🟢");
+                prepLabel = `<span style="font-size:0.9rem;">${emojiCuit}</span> <span style="color:#D84315;">🍗 SPÉCIFICITÉ CUIT</span>`;
+                
+                // Si c'est un végétal / féculent
+                if (aUnModeCuisson) {
+                    const exclusCrus = ["pomme de terre", "riz", "pate", "pâte", "patate douce", "aubergine", "morille", "lentille", "haricot", "pois chiche", "quinoa", "panais", "manioc", "topinambour", "châtaigne", "chataigne"];
+                    const doitEtreCuit = exclusCrus.some(mot => removeAccents(leg.nom.toLowerCase()).includes(mot));
+
+                    if (doitEtreCuit) {
+                        prepText = "Cuisson obligatoire : détruit la toxicité à cru et rend l'amidon digeste.";
+                    } else {
+                        prepText = "La cuisson détruit les fibres dures et facilite grandement la digestion.";
+                    }
+                } else {
+                    // Pour le fromage, la viande, la crème, etc. : ON AFFICHE LEUR VRAI INCONVÉNIENT !
+                    prepText = (leg.inconvenient && leg.inconvenient !== "-" && leg.inconvenient !== "Aucun.") 
+                        ? leg.inconvenient 
+                        : "Consommer avec modération selon votre tolérance.";
+                }
+            }
+		   
+		   		   
             card.innerHTML = `
                 <button class="favorite-btn-card ${getFavoris().includes(leg.id) ? 'active' : 'inactive'}" onclick="toggleFavori(${leg.id})">
                     <img src="coeur.png" alt="Favori">
@@ -2964,6 +3724,7 @@ function renderCards() {
                 <div class="card-top-overlay">
                     <div class="card-top-left"><div class="card-photo-round" style="border-color: ${tolColor};">${imgTag}<div class="tolerance-badge">${tolEmoji}</div></div></div>
                     <div class="card-top-center"><span class="category-badge" style="color: ${badgeColor}; border-color: ${badgeColor};">${badgeType}</span></div>
+			<div class="card-top-center"><span class="category-badge" style="color: ${badgeColor}; border-color: ${badgeColor};">${badgeType}</span></div>${aUnModeCuisson ? `<div class="card-top-prep"><span class="badge-prep-mode ${currentModePreparation}">${currentModePreparation === 'cru' ? '🥕 CRU' : '🍗 CUIT'}</span></div>` : ''}
                 </div>
                 <div class="card-content">
                     <h2 class="card-title-elegant">${leg.nom}</h2>
@@ -2971,21 +3732,37 @@ function renderCards() {
                     ${tagsHTML}
                     <div class="grid-props">
                         <div class="prop-box"><div class="prop-label">Avantage</div><div class="prop-value normal-text">${leg.avantage || '-'}</div></div>
-                        <div class="prop-box"><div class="prop-label">Inconvénient</div><div class="prop-value normal-text">${leg.inconvenient || '-'}</div></div>
+                        <div class="prop-box"><div class="prop-label" style="display: flex; align-items: center; gap: 5px;">${prepLabel}</div><div class="prop-value normal-text">${prepText}</div></div>
                     </div>
                     <div class="card-actions-row">
 						<button class="btn-action-wide" onclick="this.parentElement.nextElementSibling.classList.toggle('open')">📖 Conseils & Recettes</button>
 						<button class="btn-action-medium" onclick="openForm(${leg.id})" title="Éditer">✏️</button>
-						<button class="btn-action-square" onclick="partagerFicheDirect(${leg.id})" title="Partager cette fiche en QR" style="background-color: #E3F2FD; color: #1565C0; border-color: #90CAF9;">📱</button>
-						<button class="btn-action-square" onclick="masquerFiche(${leg.id})" title="Masquer la fiche" style="background-color: #FFF8E1; color: #F57F17; border-color: #FFE082;">👁️</button>
+						<button class="btn-action-square" onclick="partagerFicheDirect(${leg.id})" title="Partager en QR Code" style="background-color: #FFFFFF; border-color: #D1C7B8;">
+							<svg viewBox="0 0 24 24" width="22" height="22" fill="#111111"><path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm10-2h3v3h-3v-3zm5 0h3v3h-3v-3zm-5 5h3v3h-3v-3zm5 0h3v3h-3v-3zm-2-2h2v2h-2v-2z"/></svg>
+						</button>
+						<button class="btn-action-square" onclick="masquerFiche(${leg.id})" title="Masquer la fiche" style="background-color: #FFFDF8; border-color: #E8D5C4;">
+							<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="#C85A32" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+								<path d="M2 12s3.8-7 10-7 10 7 10 7-3.8 7-10 7-10-7-10-7z"></path>
+								<circle cx="12" cy="12" r="2.5" fill="#C85A32"></circle>
+								<line x1="3" y1="3" x2="21" y2="21" stroke="#C85A32" stroke-width="1.9"></line>
+							</svg>
+						</button>
 						<button class="btn-action-square" onclick="deleteFiche(${leg.id})" title="Supprimer">🗑️</button>
 					</div>
                     <div class="card-details">
                         <div style="margin-bottom: 16px;"><div class="prop-label" style="color: #D84315;">Préparation conseillée</div><div class="prop-value normal-text">${leg.preparation || 'À venir...'}</div></div>
                         <div><div class="prop-label" style="color: #D84315;">Notes</div><div class="prop-value normal-text">${leg.notes ? leg.notes.replace(/\n/g, '<br>') : 'À venir...'}</div></div>
-                        <div style="margin-top: 15px; border-top: 1px dashed #E2D9CC; padding-top: 15px;"><div class="prop-label" style="color: var(--accent-dark); margin-bottom: 8px;">Recettes</div>${linksHTML || 'À venir...'}</div>
-                    </div>
-                </div>`;
+<div style="margin-top: 15px; border-top: 1px dashed #E2D9CC; padding-top: 15px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <div class="prop-label" style="color: var(--accent-dark); margin: 0;">Recettes</div>
+        <button type="button" class="btn" style="padding: 4px 10px; font-size: 0.72rem; border-color: var(--accent); color: var(--accent-dark); font-weight: 800; background-color: #FFFDF8;" onclick="ouvrirRechercheRecetteSmart(${leg.id})">🔍 Chercher une recette</button>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+        ${linksHTML || '<div style="font-size:0.85rem; color:var(--text-muted); font-style:italic;">À venir...</div>'}
+    </div>
+</div>
+                </div>
+             </div>`;
             container.appendChild(card);
         });
     }
@@ -3664,7 +4441,10 @@ function ouvrirModalFichesMasquees() {
             <div style="display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 8px 12px; margin-bottom: 8px; border-radius: 8px; border: 1px solid #ddd;">
                 <span style="font-weight: 700; color: #2C3E50;">${item.nom} <span style="font-size:0.75rem; color:#888;">(${item.saison})</span></span>
                 <div style="display: flex; gap: 6px;">
-                    <button class="btn" style="padding: 4px 8px; font-size: 0.8rem;" onclick="demasquerFiche(${item.id})">👁️ Remettre</button>
+                    <button class="btn" style="padding: 4px 10px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 6px; color: #2E7D32; border-color: #C8E6C9; background-color: #F1F8F2;" onclick="demasquerFiche(${item.id})">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#2E7D32" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.8-7 10-7 10 7 10 7-3.8 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="2.5" fill="#2E7D32"></circle></svg>
+    Remettre
+</button>
                     <button class="btn" style="padding: 4px 8px; font-size: 0.8rem; background: #FFF0F0; color: #D32F2F;" onclick="supprimerDefinitif(${item.id})">🗑️</button>
                 </div>
             </div>
@@ -3719,6 +4499,829 @@ function fermerModalFichesMasquees() {
         modal.style.display = 'none';
         modal.classList.add('hidden');
     }
+}
+
+// =========================================================================
+// LE PONT MAGIQUE : ANALYSE CLINIQUE DES INGRÉDIENTS D'UNE RECETTE
+// =========================================================================
+
+// Dictionnaire inverse Anglais -> Français pour identifier les ingrédients
+const dicoAnglaisVersFrancais = {
+    // Végétaux & Fruits
+    "asparagus": "asperge", "spinach": "épinard", "lettuce": "laitue", "radish": "radis",
+    "pak choi": "pak-choi", "bok choy": "pak-choi", "strawberry": "fraise", "strawberries": "fraise",
+    "artichoke": "artichaut", "artichokes": "artichaut", "rhubarb": "rhubarbe", "cherry": "cerise",
+    "cherries": "cerise", "watercress": "cresson", "wild garlic": "ail des ours", "turnip": "navet",
+    "carrot": "carottes", "carrots": "carottes", "baby carrots": "carottes",
+    "onion": "oignon", "onions": "oignon", "red onion": "oignon", "spring onion": "oignon blanc", "spring onions": "oignon blanc", "shallot": "oignon", "shallots": "oignon",
+    "rocket": "roquette", "arugula": "roquette", "peas": "petits pois", "green peas": "petits pois",
+    "zucchini": "courgettes", "courgette": "courgettes", "eggplant": "aubergine", "aubergines": "aubergine",
+    "green beans": "haricots verts", "tomato": "tomate", "tomatoes": "tomate", "tomato puree": "coulis de tomate cuit", "chopped tomatoes": "tomate",
+    "fennel": "fenouil", "corn": "maïs", "sweetcorn": "maïs", "pepper": "poivron", "peppers": "poivron", "bell pepper": "poivron", "red pepper": "poivron", "green pepper": "poivron",
+    "cucumber": "concombre", "celery": "céleri-branche", "celery stick": "céleri-branche", "swiss chard": "côtes de bettes",
+    "avocado": "avocat", "avocados": "avocat", "banana": "banane", "bananas": "banane",
+    "blueberry": "myrtilles", "blueberries": "myrtilles", "raspberry": "framboises", "raspberries": "framboises",
+    "blackberry": "mûres", "blackberries": "mûres", "melon": "melon", "watermelon": "pastèque",
+    "peach": "pêches", "peaches": "pêches", "nectarine": "nectarines", "apricot": "abricots", "apricots": "abricots",
+    "plum": "prunes", "plums": "prunes", "prune": "pruneaux", "prunes": "pruneaux",
+    "mango": "mangue", "papaya": "papaye", "pineapple": "ananas", "okra": "gombo",
+    "lemon": "citron", "lemon juice": "citron", "lime": "lime", "lime juice": "lime",
+    "squash": "courge butternut", "butternut squash": "courge butternut", "pumpkin": "potiron",
+    "beetroot": "betterave rouge", "beet": "betterave rouge",
+    "mushroom": "champignons de paris", "mushrooms": "champignons de paris", "wild mushrooms": "chanterelles",
+    "cabbage": "chou vert frisé", "red cabbage": "chou rouge", "kale": "chou kale", "brussels sprouts": "choux de bruxelles",
+    "apple": "pommes", "apples": "pommes", "pear": "poires", "pears": "poires",
+    "grape": "raisins", "grapes": "raisins", "fig": "figue", "figs": "figue", "quince": "coing", "chestnut": "châtaigne marron", "chestnuts": "châtaigne marron",
+    "leek": "blanc de poireau", "leeks": "blanc de poireau", "chicory": "endive", "broccoli": "brocoli", "cauliflower": "chou-fleur",
+    "ginger": "gingembre", "kumquat": "kumquat",
+
+    // Féculents & Légumineuses
+    "potato": "pomme de terre", "potatoes": "pomme de terre", "sweet potato": "patate douce", "sweet potatoes": "patate douce",
+    "parsnip": "panais", "parsnips": "panais", "jerusalem artichoke": "topinambour",
+    "couscous": "couscous", "bulgur": "boulgour", "buckwheat": "sarrasin", "barley": "orge perlé",
+    "rice": "riz classique", "basmati rice": "riz basmati", "jasmine rice": "riz au jasmin", "brown rice": "riz complet",
+    "polenta": "polenta", "quinoa": "quinoa", "pasta": "pâtes", "noodles": "nouilles de riz", "rice noodles": "nouilles de riz",
+    "oats": "avoine", "tapioca": "manioc tapioca",
+    "beans": "haricots blancs", "kidney beans": "haricots rouges", "white beans": "haricots blancs", "mung beans": "haricots mungo", "black beans": "haricots noirs",
+    "lentils": "lentilles corail", "red lentils": "lentilles corail", "green lentils": "lentilles vertes",
+    "chickpeas": "pois chiches", "edamame": "edamame", "split peas": "pois jaunes",
+
+    // Viandes, Volailles & Poissons
+    "beef": "steak de boeuf", "minced beef": "viande hachée de boeuf", "ground beef": "viande hachée de boeuf", "beef steak": "steak de boeuf",
+    "pork": "filet de porc", "bacon": "lard fumé", "pork chops": "côtelette de porc",
+    "veal": "filet de veau", "chicken": "filet de poulet", "chicken breast": "filet de poulet", "chicken thighs": "cuisse de poulet", "chicken leg": "cuisse de poulet", "quail": "caille",
+    "turkey": "tranche de dinde", "lamb": "filet d'agneau", "horse meat": "steak de cheval", "venison": "médaillon de cerf", "rabbit": "lapin rable cuisse",
+    "cod": "filets de cabillaud", "salmon": "filets de saumon", "tuna": "filet de thon", "sea bream": "dorade royale", "trout": "filet de truite",
+    "lobster": "queue de homard", "mussels": "moules", "prawns": "crevettes cocktail", "shrimp": "crevettes cocktail", "king prawns": "crevettes crues black tiger",
+    "squid": "anneaux de calamar", "octopus": "poulpe frais", "perch": "filets de perche", "sea bass": "filet de loup de mer", "monkfish": "filets de baudroie", "sardines": "sardine fraîche", "sardine": "sardine fraîche", "scallops": "noix de saint-jacques",
+    "tofu": "tofu ferme nature",
+
+    // Condiments & Épices
+    "flaxseed": "graines de lin", "chia": "graines de chia", "sesame": "graines de sésame", "sesame seeds": "graines de sésame",
+    "walnut": "noix", "walnuts": "noix", "pecan": "noix de pécan", "pecans": "noix de pécan", "amande": "amandes", "almonds": "amandes", "hazelnut": "noisettes", "hazelnuts": "noisettes", "peanuts": "cacahuètes", "peanut": "cacahuètes",
+    "olive oil": "huile d'olive", "oil": "huile d'olive", "rapeseed oil": "huile de colza", "sesame oil": "huile de sésame",
+    "vinaigre": "vinaigre classique", "mustard": "moutarde", "chives": "ciboulette vert oignon", "basilic": "basilic frais", "coriandre": "coriandre fraîche", "cilantro": "coriandre fraîche", "tarragon": "estragon frais", "parsley": "persil plat",
+    "turmeric": "curcuma", "paprika": "paprika doux", "curry": "curry doux", "pepper": "poivre noir", "black pepper": "poivre noir",
+    "thyme": "thym", "rosemary": "romarin", "oregano": "origan", "garlic": "oignon ail", "garlic clove": "oignon ail"
+};
+
+// Analyse bienveillante et constructive de la recette
+function analyserCliniqueRecette(meal, profil) {
+    if (!meal || !profil || profil === 'neutre') {
+        return { statut: '🟢', verdict: '🟢 RECETTE HARMONIEUSE', alertes: [], scoreTexte: 'Ingrédients doux et équilibrés' };
+    }
+
+    let totalIng = 0;
+    let alertes = [];
+
+    for (let i = 1; i <= 20; i++) {
+        const ingEN = meal[`strIngredient${i}`];
+        if (ingEN && ingEN.trim().length > 0) {
+            totalIng++;
+            const ingClean = ingEN.toLowerCase().trim();
+            const nomFR = dicoAnglaisVersFrancais[ingClean];
+
+            if (nomFR) {
+                const alimentBase = legumes.find(l => removeAccents(l.nom.toLowerCase()).includes(nomFR));
+                if (alimentBase) {
+                    const estMauvais = isClinicallyBad(alimentBase, profil);
+                    if (estMauvais) {
+                        alertes.push(alimentBase.nom);
+                    }
+                }
+            }
+        }
+    }
+
+    // NOUVELLE PHILOSOPHIE BIENVEILLANTE :
+    if (alertes.length === 0) {
+        return { 
+            statut: '🟢', 
+            verdict: '🟢 RECETTE IDÉALE', 
+            alertes: [], 
+            scoreTexte: `${totalIng}/${totalIng} ingrédients doux pour votre profil` 
+        };
+    } else if (alertes.length <= 2) {
+        // Au lieu d'interdire, on propose d'adapter !
+        return { 
+            statut: '🟡', 
+            verdict: '🟡 FACILEMENT ADAPTABLE', 
+            alertes: alertes, 
+            scoreTexte: `Astuce : modérez ou retirez ${alertes.join(' et ')}` 
+        };
+    } else {
+        return { 
+            statut: '🟠', 
+            verdict: '🟠 SENSIBLE EN CRISE', 
+            alertes: alertes, 
+            scoreTexte: `Plusieurs ingrédients sensibles (${alertes.slice(0, 2).join(', ')}...)` 
+        };
+    }
+}
+
+// Vue détaillée chaleureuse et constructive
+async function voirDetailRecetteTheMealDB(idMeal) {
+    const detailZone = document.getElementById('rec-detail-contenu');
+    detailZone.innerHTML = "<div style='text-align:center; padding: 20px;'>⏳ Analyse bienveillante des ingrédients...</div>";
+
+    document.getElementById('rec-vue-liste').style.display = 'none';
+    document.getElementById('rec-vue-detail').style.display = 'block';
+
+    const btnTrad = document.getElementById('btn-traduire-recette');
+    if (btnTrad) {
+        btnTrad.innerText = "🌐 Traduire";
+        btnTrad.disabled = false;
+        btnTrad.style.borderColor = "var(--accent)";
+        btnTrad.style.color = "var(--accent-dark)";
+    }
+
+    try {
+        const rep = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeal}`);
+        const data = await rep.json();
+        const meal = data.meals[0];
+        recetteTheMealDBEnCours = meal;
+
+        const analyse = analyserCliniqueRecette(meal, currentProfil);
+
+        const dejaEnregistree = alimentRecetteActif?.recettesList?.some(r => r.idMeal == idMeal || r.nom === meal.strMeal);
+        const btnSave = document.getElementById('btn-enregistrer-recette');
+        if (btnSave) btnSave.style.display = dejaEnregistree ? 'none' : 'block';
+
+        // Puces douces et astuces constructives
+        let ingredientsHTML = "";
+        for (let i = 1; i <= 20; i++) {
+            const ing = meal[`strIngredient${i}`];
+            const qte = meal[`strMeasure${i}`];
+            if (ing && ing.trim().length > 0) {
+                const ingClean = ing.toLowerCase().trim();
+                const nomFR = dicoAnglaisVersFrancais[ingClean];
+                let puce = "🟢";
+                let conseil = "";
+
+                if (nomFR) {
+                    const alimentBase = legumes.find(l => removeAccents(l.nom.toLowerCase()).includes(nomFR));
+                    if (alimentBase && isClinicallyBad(alimentBase, currentProfil)) {
+                        puce = "🟡"; // Au lieu du rouge agressif !
+                        conseil = ` <span style="font-size:0.75rem; color:#B5603F; font-weight:700;">(💡 À doser selon votre sensibilité)</span>`;
+                    }
+                }
+
+                ingredientsHTML += `<li style="margin-bottom: 5px;">
+                    ${puce} <strong>${qte ? qte.trim() : ''}</strong> ${ing.trim()}${conseil}
+                </li>`;
+            }
+        }
+
+        // Couleurs du bandeau doux
+        let bannerBg = analyse.statut === '🟢' ? 'rgba(46,125,50,0.12)' : (analyse.statut === '🟡' ? 'rgba(245,127,23,0.12)' : 'rgba(216,67,21,0.12)');
+        let bannerColor = analyse.statut === '🟢' ? '#1B5E20' : (analyse.statut === '🟡' ? '#E65100' : '#B5603F');
+
+        detailZone.innerHTML = `
+            <img src="${meal.strMealThumb}" alt="${meal.strMeal}" style="width: 100%; height: 160px; object-fit: cover; border-radius: 12px; margin-bottom: 12px;">
+            <div style="text-align: center; margin-bottom: 12px;">
+                <span style="display: inline-block; padding: 5px 14px; border-radius: 20px; font-weight: 800; font-size: 0.78rem; background: ${bannerBg}; color: ${bannerColor}; border: 1.5px solid ${bannerColor};">
+                    ${analyse.verdict} • PROFIL : ${currentProfil ? currentProfil.toUpperCase() : 'NEUTRE'}
+                </span>
+                ${analyse.alertes.length > 0 ? `<div style="font-size:0.72rem; color:#B5603F; font-weight:700; margin-top:4px;">${analyse.scoreTexte}</div>` : ''}
+            </div>
+            <h4 id="rec-titre-detail" style="margin: 0 0 12px 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.25rem; text-align: center;">${meal.strMeal}</h4>
+            
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">🛒 Ingrédients :</div>
+            <ul id="rec-ingredients-detail" style="font-size: 0.85rem; margin: 0 0 16px 0; padding-left: 10px; list-style: none;">
+                ${ingredientsHTML}
+            </ul>
+
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">👨‍🍳 Instructions :</div>
+            <p id="rec-instructions-detail" style="font-size: 0.85rem; color: var(--text-main); line-height: 1.45; white-space: pre-line; margin: 0;">${meal.strInstructions}</p>
+        `;
+
+        const modal = document.getElementById('modal-recipe-search');
+        if (modal) modal.style.display = 'block';
+
+    } catch (e) {
+        detailZone.innerHTML = `<div style="text-align: center; color: #D32F2F;">Impossible de charger la recette.</div>`;
+    }
+}
+
+// Ouvre le détail complet avec ingrédients analysés individuellement (Image 4) !
+async function voirDetailRecetteTheMealDB(idMeal) {
+    const detailZone = document.getElementById('rec-detail-contenu');
+    detailZone.innerHTML = "<div style='text-align:center; padding: 20px;'>⏳ Analyse des ingrédients en cours...</div>";
+
+    document.getElementById('rec-vue-liste').style.display = 'none';
+    document.getElementById('rec-vue-detail').style.display = 'block';
+
+    const btnTrad = document.getElementById('btn-traduire-recette');
+    if (btnTrad) {
+        btnTrad.innerText = "🌐 Traduire";
+        btnTrad.disabled = false;
+        btnTrad.style.borderColor = "var(--accent)";
+        btnTrad.style.color = "var(--accent-dark)";
+    }
+
+    try {
+        const rep = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeal}`);
+        const data = await rep.json();
+        const meal = data.meals[0];
+        recetteTheMealDBEnCours = meal;
+
+        // Analyse clinique de la recette
+        const analyse = analyserCliniqueRecette(meal, currentProfil);
+
+        // Anti-doublon pour le bouton enregistrer
+        const dejaEnregistree = alimentRecetteActif?.recettesList?.some(r => r.idMeal == idMeal || r.nom === meal.strMeal);
+        const btnSave = document.getElementById('btn-enregistrer-recette');
+        if (btnSave) btnSave.style.display = dejaEnregistree ? 'none' : 'block';
+
+        // Construction des ingrédients avec les pastilles de couleur individuelles (Image 4) !
+        let ingredientsHTML = "";
+        for (let i = 1; i <= 20; i++) {
+            const ing = meal[`strIngredient${i}`];
+            const qte = meal[`strMeasure${i}`];
+            if (ing && ing.trim().length > 0) {
+                const ingClean = ing.toLowerCase().trim();
+                const nomFR = dicoAnglaisVersFrancais[ingClean];
+                let puce = "🟢";
+                let alerteTexte = "";
+
+                if (nomFR) {
+                    const alimentBase = legumes.find(l => removeAccents(l.nom.toLowerCase()).includes(nomFR));
+                    if (alimentBase && isClinicallyBad(alimentBase, currentProfil)) {
+                        puce = "🟠";
+                        alerteTexte = ` <span style="font-size:0.75rem; color:#D84315; font-weight:800;">(Non adapté ${currentProfil ? currentProfil.toUpperCase() : ''})</span>`;
+                    }
+                }
+
+                ingredientsHTML += `<li style="margin-bottom: 5px; color: ${puce === '🟠' ? '#D84315' : 'var(--text-main)'};">
+                    ${puce} <strong>${qte ? qte.trim() : ''}</strong> ${ing.trim()}${alerteTexte}
+                </li>`;
+            }
+        }
+
+        // Bandeau de verdict en haut
+        let bannerBg = analyse.statut === '🟢' ? 'rgba(46,125,50,0.12)' : (analyse.statut === '🟡' ? 'rgba(245,127,23,0.12)' : 'rgba(198,40,40,0.12)');
+        let bannerColor = analyse.statut === '🟢' ? '#1B5E20' : (analyse.statut === '🟡' ? '#E65100' : '#B71C1C');
+
+        detailZone.innerHTML = `
+            <img src="${meal.strMealThumb}" alt="${meal.strMeal}" style="width: 100%; height: 160px; object-fit: cover; border-radius: 12px; margin-bottom: 12px;">
+            <div style="text-align: center; margin-bottom: 12px;">
+                <span style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-weight: 800; font-size: 0.78rem; background: ${bannerBg}; color: ${bannerColor}; border: 1.5px solid ${bannerColor};">
+                    ${analyse.verdict} • PROFIL : ${currentProfil ? currentProfil.toUpperCase() : 'NEUTRE'}
+                </span>
+            </div>
+            <h4 id="rec-titre-detail" style="margin: 0 0 12px 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.25rem; text-align: center;">${meal.strMeal}</h4>
+            
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">🛒 Ingrédients analysés :</div>
+            <ul id="rec-ingredients-detail" style="font-size: 0.85rem; margin: 0 0 16px 0; padding-left: 10px; list-style: none;">
+                ${ingredientsHTML}
+            </ul>
+
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">👨‍🍳 Instructions :</div>
+            <p id="rec-instructions-detail" style="font-size: 0.85rem; color: var(--text-main); line-height: 1.45; white-space: pre-line; margin: 0;">${meal.strInstructions}</p>
+        `;
+
+        const modal = document.getElementById('modal-recipe-search');
+        if (modal) modal.style.display = 'block';
+
+    } catch (e) {
+        detailZone.innerHTML = `<div style="text-align: center; color: #D32F2F;">Impossible de charger la recette.</div>`;
+    }
+}
+
+// Enregistrement avec statut clinique conservé (Image 5)
+function enregistrerRecetteTheMealDB() {
+    if (!recetteTheMealDBEnCours || !alimentRecetteActif) return;
+    
+    const sourceLien = recetteTheMealDBEnCours.strSource || recetteTheMealDBEnCours.strYoutube || `https://www.themealdb.com/meal/${recetteTheMealDBEnCours.idMeal}`;
+    const nomParDefaut = recetteTheMealDBEnCours.strMeal;
+
+    const nomChoisi = prompt("Nom sous lequel enregistrer cette recette sur la fiche :", nomParDefaut);
+    if (!nomChoisi) return;
+
+    const analyse = analyserCliniqueRecette(recetteTheMealDBEnCours, currentProfil);
+
+    const objetRecetteComplet = {
+        nom: nomChoisi,
+        url: sourceLien,
+        idMeal: recetteTheMealDBEnCours.idMeal,
+        thumb: recetteTheMealDBEnCours.strMealThumb,
+        ingredients: document.getElementById('rec-ingredients-detail')?.innerHTML || '',
+        instructions: recetteTheMealDBEnCours.strInstructions,
+        statut: analyse.statut
+    };
+
+    sauvegarderObjetRecetteSurAliment(alimentRecetteActif.id, objetRecetteComplet);
+}
+
+function sauvegarderObjetRecetteSurAliment(idAliment, objetRecette) {
+    const index = legumes.findIndex(l => l.id == idAliment);
+    if (index > -1) {
+        if (!Array.isArray(legumes[index].recettesList)) {
+            legumes[index].recettesList = [];
+        }
+        legumes[index].recettesList.push(objetRecette);
+        saveToLocal();
+        if (document.getElementById('view-list').style.display === 'block') renderCards();
+        fermerModalRecetteSmart();
+        alert(`✅ Fiche recette "${objetRecette.nom}" enregistrée avec son diagnostic clinique !`);
+    }
+}
+
+function ouvrirPartenaireWeb(url) {
+    if (url) {
+        window.open(url, '_blank', 'noopener,noreferrer');
+    }
+}
+
+// Partenaires suisses invulnérables (depuis l'Écran 1)
+function ouvrirPartenaireSuisse(site) {
+    if (!alimentRecetteActif) return;
+    const aliment = encodeURIComponent(alimentRecetteActif.nom);
+    let url = "";
+
+    if (site === 'migusto') {
+        url = `https://www.google.com/search?q=site:migusto.migros.ch+recette+${aliment}`;
+    } else if (site === 'fooby') {
+        url = `https://www.google.com/search?q=site:fooby.ch+recette+${aliment}`;
+    } else if (site === 'betty') {
+        url = `https://www.google.com/search?q=site:bettybossi.ch+recette+${aliment}`;
+    }
+
+    window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+// Dictionnaire Français -> Anglais
+const dicoTraductionTheMealDB = {
+    // Végétaux & Fruits
+    "asperge": "asparagus", "pointes d'asperges": "asparagus",
+    "epinard": "spinach", "épinard": "spinach", "epinards": "spinach", "épinards": "spinach",
+    "laitue": "lettuce", "salade pommee": "lettuce", "salade pommée": "lettuce", "batavia": "lettuce", "iceberg": "lettuce", "rampon": "lettuce", "mache": "lettuce", "mâche": "lettuce",
+    "radis": "radish", "radis blanc": "radish",
+    "pak-choi": "pak choi", "pak choi": "pak choi",
+    "fraise": "strawberry", "fraises": "strawberries",
+    "artichaut": "artichoke", "artichauts": "artichoke",
+    "rhubarbe": "rhubarb",
+    "cerise": "cherry", "cerises": "cherries",
+    "cresson": "watercress",
+    "ail des ours": "wild garlic",
+    "navet": "turnip", "navet nouveau": "turnip",
+    "carotte": "carrot", "carottes": "carrots", "carottes nouvelle": "carrot",
+    "oignon": "onion", "oignons": "onions", "oignon blanc": "onion",
+    "roquette": "rocket",
+    "pois": "peas", "petits pois": "peas", "pois mange-tout": "peas",
+    "courgette": "zucchini", "courgettes": "zucchini",
+    "aubergine": "eggplant", "aubergines": "eggplant",
+    "haricot vert": "green beans", "haricots verts": "green beans",
+    "tomate": "tomato", "tomates": "tomatoes", "coulis de tomate": "tomato", "coulis de tomate cuit": "tomato",
+    "fenouil": "fennel",
+    "mais": "corn", "maïs": "corn",
+    "poivron": "pepper", "poivrons": "peppers", "pimientos": "pepper",
+    "concombre": "cucumber",
+    "celeri": "celery", "céleri": "celery", "celeri-branche": "celery", "céleri-branche": "celery", "celeri-rave": "celery", "céleri-rave": "celery",
+    "bette": "swiss chard", "cotes de bettes": "swiss chard", "côtes de bettes": "swiss chard",
+    "avocat": "avocado", "avocats": "avocado",
+    "banane": "banana", "bananes": "banana",
+    "myrtille": "blueberry", "myrtilles": "blueberries",
+    "framboise": "raspberry", "framboises": "raspberries",
+    "mure": "blackberry", "mûre": "blackberry", "mures": "blackberries", "mûres": "blackberries",
+    "melon": "melon", "pasteque": "watermelon", "pastèque": "watermelon",
+    "peche": "peach", "pêche": "peach", "peches": "peaches", "pêches": "peaches", "peches plates": "peach", "pêches plates": "peach",
+    "nectarine": "nectarine", "nectarines": "nectarine", "nectarines plates": "nectarine",
+    "abricot": "apricot", "abricots": "apricots",
+    "prune": "plum", "prunes": "plums", "pruneau": "plum", "pruneaux": "plums", "reines-claudes": "plum",
+    "mangue": "mango", "papaye": "papaya", "ananas": "pineapple", "gombo": "okra",
+    "citron": "lemon", "lime": "lime",
+    "courge": "squash", "butternut": "squash", "courge butternut": "squash", "potiron": "pumpkin", "citrouille": "pumpkin",
+    "betterave": "beetroot", "betterave rouge": "beetroot",
+    "champignon": "mushroom", "champignons": "mushrooms", "champignons de paris": "mushroom", "chanterelles": "mushroom", "pleurotes": "mushroom", "bolet": "mushroom", "bolet seche": "mushroom", "morille": "mushroom", "morille sechee": "mushroom",
+    "chou": "cabbage", "chou rouge": "cabbage", "chou chinois": "cabbage", "chou vert": "cabbage", "chou frise": "cabbage", "chou kale": "cabbage", "choux de bruxelles": "cabbage", "chou-rave": "cabbage",
+    "pomme": "apple", "pommes": "apples",
+    "poire": "pear", "poires": "pears",
+    "raisin": "grape", "raisins": "grapes",
+    "figue": "fig", "coing": "quince", "chataigne": "chestnut", "châtaigne": "chestnut", "marron": "chestnut",
+    "poireau": "leek", "poireaux": "leeks", "blanc de poireau": "leek",
+    "endive": "chicory", "brocoli": "broccoli", "chou-fleur": "cauliflower",
+    "gingembre": "ginger", "kumquat": "kumquat",
+
+    // Féculents & Légumineuses
+    "pomme de terre": "potato", "pommes de terre": "potatoes", "pomme de terre primeur": "potato",
+    "patate douce": "sweet potato",
+    "panais": "parsnip", "topinambour": "jerusalem artichoke",
+    "couscous": "couscous", "semoule": "couscous", "boulgour": "bulgur",
+    "sarrasin": "buckwheat", "orge": "barley", "orge perle": "barley",
+    "riz": "rice", "riz complet": "rice", "riz basmati": "rice", "riz au jasmin": "rice", "riz classique": "rice", "riz parfume": "rice", "riz a sushi": "rice",
+    "polenta": "polenta", "quinoa": "quinoa",
+    "pates": "pasta", "pâtes": "pasta", "nouilles": "noodles", "nouilles de riz": "rice noodles", "nouilles chinoises": "noodles",
+    "avoine": "oats", "flocons d'avoine": "oats", "flocons de sarrasin": "buckwheat",
+    "tapioca": "tapioca", "manioc": "tapioca",
+    "feve": "beans", "fèves": "beans", "haricot": "beans", "haricots rouges": "kidney beans", "haricots blancs": "white beans", "haricots mungo": "mung beans", "flageolets": "beans", "borlotti": "beans", "lima": "beans",
+    "lentille": "lentils", "lentilles": "lentils", "lentilles corail": "red lentils", "lentilles noires": "lentils", "lentilles vertes": "green lentils", "toor dal": "lentils",
+    "pois chiches": "chickpeas", "edamame": "edamame", "pois jaunes": "split peas",
+
+    // Viandes, Volailles & Poissons
+    "boeuf": "beef", "bœuf": "beef", "steak de boeuf": "beef", "roti de boeuf": "beef", "bouilli de boeuf": "beef", "ragout de boeuf": "beef", "emince de boeuf": "beef", "émincé de boeuf": "beef", "entrecote de boeuf": "beef", "viande hachee de boeuf": "minced beef", "burger de boeuf": "beef", "langue de boeuf": "beef", "foie de boeuf": "beef",
+    "porc": "pork", "cotelette de porc": "pork", "filet de porc": "pork", "emince de porc": "pork", "émincé de porc": "pork", "tranche de porc": "pork", "roti de porc": "pork", "foie de porc": "pork", "lard": "bacon", "lardons": "bacon", "bacon": "bacon",
+    "veau": "veal", "filet de veau": "veal", "escalope de veau": "veal", "cotelette de veau": "veal", "roti de veau": "veal", "foie de veau": "veal",
+    "poulet": "chicken", "cuisse de poulet": "chicken leg", "filet de poulet": "chicken breast", "emince de poulet": "chicken", "émincé de poulet": "chicken", "escalope de poulet": "chicken breast", "poulet entier": "chicken", "coquelet": "chicken", "caille": "quail",
+    "dinde": "turkey", "tranche de dinde": "turkey",
+    "agneau": "lamb", "filet d'agneau": "lamb",
+    "cheval": "horse meat", "steak de cheval": "horse meat",
+    "cerf": "venison", "medaillon de cerf": "venison", "gibier": "venison",
+    "lapin": "rabbit",
+    "cabillaud": "cod", "filets de cabillaud": "cod", "colin": "cod", "merlan": "cod", "merlu": "cod",
+    "saumon": "salmon", "darne de saumon": "salmon", "filet de saumon": "salmon",
+    "thon": "tuna", "filet de thon": "tuna",
+    "dorade": "sea bream", "truite": "trout",
+    "homard": "lobster", "moules": "mussels", "crevettes": "prawns", "crevettes cocktail": "prawns",
+    "calamar": "squid", "poulpe": "octopus", "perche": "perch", "loup de mer": "sea bass", "baudroie": "monkfish", "lotte": "monkfish", "sandre": "pike perch", "sardine": "sardine", "saint-jacques": "scallops",
+    "tofu": "tofu",
+
+    // Condiments & Épices
+    "lin": "flaxseed", "chia": "chia", "sesame": "sesame", "sésame": "sesame",
+    "noix": "walnut", "pecan": "pecan", "pécan": "pecan", "amande": "almond", "amandes": "almonds", "noisette": "hazelnut", "noisettes": "hazelnuts", "cacahuete": "peanut", "cacahuète": "peanuts",
+    "huile": "oil", "huile d'olive": "olive oil", "huile de colza": "rapeseed oil", "huile de sesame": "sesame oil",
+    "vinaigre": "vinegar", "moutarde": "mustard",
+    "ciboulette": "chives", "basilic": "basil", "coriandre": "coriander", "estragon": "tarragon", "persil": "parsley",
+    "curcuma": "turmeric", "paprika": "paprika", "curry": "curry", "poivre": "pepper", "poivre noir": "black pepper",
+    "thym": "thyme", "romarin": "rosemary", "origan": "oregano", "ail": "garlic"
+};
+let pageRecettesIndex = 0;
+let listeRecettesUniquesGlobal = [];
+
+// Interroge TheMealDB et prépare la liste complète
+async function chargerRecettesTheMealDB(leg) {
+    const conteneur = document.getElementById('rec-liste-container');
+    const loader = document.getElementById('rec-loading');
+    if (!conteneur) return;
+    
+    conteneur.innerHTML = "";
+    if (loader) loader.style.display = "block";
+
+    pageRecettesIndex = 0; // Remet à la Page 1
+    listeRecettesUniquesGlobal = [];
+
+    const nomClean = removeAccents(leg.nom.toLowerCase().trim());
+    let motAnglais = dicoTraductionTheMealDB[nomClean] || nomClean;
+
+    try {
+        let meals = [];
+        
+        // 1. Recherche par mot exact
+        const rep1 = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${encodeURIComponent(motAnglais)}`);
+        const data1 = await rep1.json();
+        if (data1 && data1.meals) meals.push(...data1.meals);
+
+        // 2. Pluriel
+        if (!motAnglais.endsWith('s')) {
+            const pluriel = motAnglais.endsWith('o') ? motAnglais + 'es' : motAnglais + 's';
+            try {
+                const repS = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${encodeURIComponent(pluriel)}`);
+                const dataS = await repS.json();
+                if (dataS && dataS.meals) meals.push(...dataS.meals);
+            } catch(e) {}
+        }
+
+        // 3. Titre
+        try {
+            const repTitre = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(motAnglais)}`);
+            const dataTitre = await repTitre.json();
+            if (dataTitre && dataTitre.meals) meals.push(...dataTitre.meals);
+        } catch(e) {}
+
+        // Déduplication exacte
+        const idsVus = new Set();
+        meals.forEach(m => {
+            if (!idsVus.has(m.idMeal)) {
+                idsVus.add(m.idMeal);
+                listeRecettesUniquesGlobal.push(m);
+            }
+        });
+
+        if (listeRecettesUniquesGlobal.length === 0) {
+            if (loader) loader.style.display = "none";
+            conteneur.innerHTML = `
+                <div style="text-align: center; padding: 25px 15px; color: var(--text-muted); font-size: 0.88rem;">
+                    Aucune recette TheMealDB trouvée pour "${leg.nom}".<br>
+                    <button type="button" class="btn" style="margin-top: 10px; font-weight:800;" onclick="retourAuHubChoix()">← Explorer les sites suisses</button>
+                </div>
+            `;
+            return;
+        }
+
+        // Affiche la Page 1 (20 premières recettes)
+        afficherPageRecettesCourante();
+
+    } catch (e) {
+        if (loader) loader.style.display = "none";
+        conteneur.innerHTML = `<div style="text-align: center; color: #D32F2F; font-size: 0.85rem; padding: 15px;">Erreur de connexion.</div>`;
+    }
+}
+
+// Affiche le lot de 20 recettes correspondant à la page actuelle
+async function afficherPageRecettesCourante() {
+    const conteneur = document.getElementById('rec-liste-container');
+    const loader = document.getElementById('rec-loading');
+    if (!conteneur) return;
+
+    conteneur.innerHTML = "";
+    if (loader) loader.style.display = "block";
+
+    const parPage = 20;
+    const debut = pageRecettesIndex * parPage;
+    const fin = debut + parPage;
+    const total = listeRecettesUniquesGlobal.length;
+    const nbPagesTotal = Math.ceil(total / parPage) || 1;
+
+    const lotExtrait = listeRecettesUniquesGlobal.slice(debut, fin);
+
+    // Récupération des détails pour ce lot de 20
+    const recettesCompletes = await Promise.all(lotExtrait.map(async m => {
+        if (m.strInstructions) return m;
+        try {
+            const r = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${m.idMeal}`);
+            const d = await r.json();
+            return d.meals[0] || m;
+        } catch(e) { return m; }
+    }));
+
+    if (loader) loader.style.display = "none";
+
+    // Dessine les 20 cartes
+    recettesCompletes.forEach(m => {
+        const analyse = (typeof analyserCliniqueRecette === 'function') 
+            ? analyserCliniqueRecette(m, currentProfil) 
+            : { statut: '🟢', verdict: '🟢 RECETTE THEMEALDB', alertes: [], scoreTexte: '' };
+        
+        let bgBadge = "rgba(46, 125, 50, 0.12)";
+        let bordBadge = "#2E7D32";
+        let txtBadge = "#1B5E20";
+
+        if (analyse.statut === '🟡') {
+            bgBadge = "rgba(245, 127, 23, 0.12)";
+            bordBadge = "#F57F17";
+            txtBadge = "#E65100";
+        } else if (analyse.statut === '🔴' || analyse.statut === '🟠') {
+            bgBadge = "rgba(216, 67, 21, 0.12)";
+            bordBadge = "#D84315";
+            txtBadge = "#B5603F";
+        }
+
+        const card = document.createElement('div');
+        card.style.cssText = "display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 14px; padding: 10px 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.03);";
+        
+        card.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;">
+                <img src="${m.strMealThumb}/preview" alt="${m.strMeal}" style="width: 52px; height: 52px; border-radius: 10px; object-fit: cover; flex-shrink: 0;">
+                <div style="min-width: 0;">
+                    <div class="meal-title-text" style="font-weight: 800; font-size: 0.88rem; color: var(--text-title); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${m.strMeal}</div>
+                    <div style="display: inline-block; font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: 10px; border: 1px solid ${bordBadge}; background: ${bgBadge}; color: ${txtBadge}; margin-top: 3px;">
+                        ${analyse.verdict}
+                    </div>
+                    ${analyse.alertes.length > 0 ? `<div style="font-size: 0.68rem; color: #D84315; font-weight: 700; margin-top: 2px;">💡 ${analyse.scoreTexte}</div>` : ''}
+                </div>
+            </div>
+            <div style="display: flex; gap: 5px; flex-shrink: 0;">
+                <button type="button" class="btn" style="padding: 6px 10px; font-size: 0.75rem; font-weight: 800;" onclick="voirDetailRecetteTheMealDB('${m.idMeal}')">👁️ Voir</button>
+                <button type="button" class="btn btn-primary" style="padding: 6px 10px; font-size: 0.75rem; font-weight: 800;" onclick="enregistrerDirectTheMealDB('${m.idMeal}', '${m.strMeal.replace(/'/g, "\\'")}')">💾</button>
+            </div>
+        `;
+        conteneur.appendChild(card);
+    });
+
+    // BARRE DE PAGINATION EN BAS (Précédente / Page X sur Y / Suivante)
+    if (total > parPage) {
+        const navBox = document.createElement('div');
+        navBox.style.cssText = "display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 12px; border-top: 1px dashed var(--border-color);";
+
+        const btnPrec = pageRecettesIndex > 0
+            ? `<button type="button" class="btn" onclick="changerPageRecettes(-1)" style="padding: 6px 12px; font-size: 0.78rem; font-weight: 800;">← 20 Précédentes</button>`
+            : `<div></div>`;
+
+        const btnSuiv = fin < total
+            ? `<button type="button" class="btn btn-primary" onclick="changerPageRecettes(1)" style="padding: 6px 12px; font-size: 0.78rem; font-weight: 800;">20 Suivantes ➔</button>`
+            : `<div></div>`;
+
+        navBox.innerHTML = `
+            ${btnPrec}
+            <div style="font-size: 0.75rem; font-weight: 800; color: var(--text-muted);">Page ${pageRecettesIndex + 1} / ${nbPagesTotal}</div>
+            ${btnSuiv}
+        `;
+        conteneur.appendChild(navBox);
+    }
+}
+
+// Fonction de changement de page
+function changerPageRecettes(direction) {
+    pageRecettesIndex += direction;
+    afficherPageRecettesCourante();
+    
+    // Remonte en haut de la liste de la fenêtre
+    const modalBox = document.querySelector('#modal-recipe-search .modal-content');
+    if (modalBox) modalBox.scrollTop = 0;
+}
+
+// Navigation entre les écrans
+function retourListeRecettes() {
+    document.getElementById('rec-vue-liste').style.display = 'block';
+    document.getElementById('rec-vue-detail').style.display = 'none';
+}
+
+function retourAuHubChoix() {
+    document.getElementById('rec-vue-choix').style.display = 'block';
+    document.getElementById('rec-vue-liste').style.display = 'none';
+}
+
+// Moteur de traduction instantanée
+async function traduireTexteEnFrancais(texte) {
+    if (!texte || texte.trim() === "") return "";
+    try {
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=fr&dt=t&q=${encodeURIComponent(texte.slice(0, 1500))}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data && data[0]) {
+            return data[0].map(item => item[0]).join('');
+        }
+        return texte;
+    } catch (e) {
+        return texte;
+    }
+}
+
+// Traduit tous les titres de la liste de recettes (Image 1)
+async function traduireListeTitresTheMealDB() {
+    const btn = document.getElementById('btn-traduire-liste');
+    const titreEls = document.querySelectorAll('.meal-title-text');
+    if (!titreEls || titreEls.length === 0) return;
+
+    if (btn) {
+        btn.innerText = "⏳ En cours...";
+        btn.disabled = true;
+    }
+
+    for (let el of titreEls) {
+        const fr = await traduireTexteEnFrancais(el.innerText);
+        if (fr) el.innerText = fr;
+    }
+
+    if (btn) {
+        btn.innerText = "✅ Liste traduite";
+        btn.style.borderColor = "#2E7D32";
+        btn.style.color = "#2E7D32";
+        btn.disabled = false;
+    }
+}
+
+// Traduit la recette complète en détail : Titre + Ingrédients + Étapes (Image 2)
+async function traduireRecetteActuelle() {
+    if (!recetteTheMealDBEnCours) return;
+
+    const btnTraduire = document.getElementById('btn-traduire-recette');
+    const titreEl = document.getElementById('rec-titre-detail');
+    const instructionsEl = document.getElementById('rec-instructions-detail');
+    const ingredientsEl = document.getElementById('rec-ingredients-detail');
+
+    if (btnTraduire) {
+        btnTraduire.innerText = "⏳ Traduction...";
+        btnTraduire.disabled = true;
+    }
+
+    // 1. Titre
+    const titreTraduit = await traduireTexteEnFrancais(recetteTheMealDBEnCours.strMeal || recetteTheMealDBEnCours.nom);
+    if (titreEl && titreTraduit) {
+        titreEl.innerText = titreTraduit;
+        recetteTheMealDBEnCours.strMeal = titreTraduit;
+        recetteTheMealDBEnCours.nom = titreTraduit;
+    }
+
+    // 2. Ingrédients
+    if (ingredientsEl) {
+        const items = ingredientsEl.querySelectorAll('li');
+        if (items.length > 0) {
+            const texteIngredients = Array.from(items).map(li => li.innerText.trim()).join('\n');
+            const tradIngredients = await traduireTexteEnFrancais(texteIngredients);
+            if (tradIngredients) {
+                const lignes = tradIngredients.split('\n');
+                let nouveauHTML = "";
+                lignes.forEach(l => {
+                    if (l.trim().length > 0) nouveauHTML += `<li style="margin-bottom: 5px;">${l.trim()}</li>`;
+                });
+                ingredientsEl.innerHTML = nouveauHTML;
+                recetteTheMealDBEnCours.ingredients = nouveauHTML;
+            }
+        }
+    }
+
+    // 3. Instructions
+    const texteInstructions = recetteTheMealDBEnCours.strInstructions || recetteTheMealDBEnCours.instructions;
+    const instructionsTraduites = await traduireTexteEnFrancais(texteInstructions);
+    if (instructionsEl && instructionsTraduites) {
+        instructionsEl.innerText = instructionsTraduites;
+        recetteTheMealDBEnCours.strInstructions = instructionsTraduites;
+        recetteTheMealDBEnCours.instructions = instructionsTraduites;
+    }
+
+    if (btnTraduire) {
+        btnTraduire.innerText = "✅ Recette traduite";
+        btnTraduire.style.borderColor = "#2E7D32";
+        btnTraduire.style.color = "#2E7D32";
+    }
+}
+
+function fermerModalRecetteSmart() {
+    const modal = document.getElementById('modal-recipe-search');
+    if (modal) modal.style.display = 'none';
+
+    // AIMANT : On replace immédiatement l'écran sur la fiche que tu consultais !
+    if (alimentRecetteActif) {
+        const carteCible = document.querySelector(`button[onclick*="openForm(${alimentRecetteActif.id})"]`)?.closest('.card');
+        if (carteCible) {
+            const hauteurBandeau = document.querySelector('.sticky-header')?.offsetHeight || 180;
+            const positionCible = carteCible.getBoundingClientRect().top + window.scrollY - hauteurBandeau - 55;
+            window.scrollTo({ top: Math.max(0, positionCible), behavior: 'instant' });
+        }
+    }
+}
+
+// 1. Ouvre la fenêtre au départ (Écran 1 : Le Hub de choix)
+function ouvrirRechercheRecetteSmart(alimentId) {
+    const leg = legumes.find(l => l.id == alimentId);
+    if (!leg) return;
+
+    alimentRecetteActif = leg;
+    recetteTheMealDBEnCours = null;
+
+    const titreEl = document.getElementById('rec-hub-titre-aliment') || document.getElementById('rec-modal-titre-aliment');
+    if (titreEl) titreEl.innerText = `🍲 Recettes pour : ${leg.nom}`;
+
+    const badgeProfil = document.getElementById('rec-hub-badge-profil') || document.getElementById('rec-modal-badge-profil');
+    if (badgeProfil) {
+        badgeProfil.innerText = `Profil actif : ${currentProfil ? currentProfil.toUpperCase() : 'NEUTRE'}`;
+    }
+
+    const vueChoix = document.getElementById('rec-vue-choix');
+    if (vueChoix) vueChoix.style.display = 'block';
+
+    const vueListe = document.getElementById('rec-vue-liste');
+    if (vueListe) vueListe.style.display = 'none';
+
+    const vueDetail = document.getElementById('rec-vue-detail');
+    if (vueDetail) vueDetail.style.display = 'none';
+
+    const modal = document.getElementById('modal-recipe-search');
+    if (modal) modal.style.display = 'block';
+}
+
+// 2. Le bouton "Explorer les recettes TheMealDB" qui bascule sur la liste (Écran 2)
+function lancerExplorationTheMealDB() {
+    if (!alimentRecetteActif) return;
+    
+    const vueChoix = document.getElementById('rec-vue-choix');
+    if (vueChoix) vueChoix.style.display = 'none';
+    
+    const vueListe = document.getElementById('rec-vue-liste');
+    if (vueListe) vueListe.style.display = 'block';
+    
+    const titreListe = document.getElementById('rec-liste-titre');
+    if (titreListe) titreListe.innerText = `Recettes avec : ${alimentRecetteActif.nom}`;
+    
+    const btnTrad = document.getElementById('btn-traduire-liste');
+    if (btnTrad) {
+        btnTrad.innerText = "🌐 Traduire la liste";
+        btnTrad.disabled = false;
+        btnTrad.style.borderColor = "var(--accent)";
+        btnTrad.style.color = "var(--accent-dark)";
+    }
+
+    // Lance le chargement des recettes
+    if (typeof chargerRecettesTheMealDB === 'function') {
+        chargerRecettesTheMealDB(alimentRecetteActif);
+    }
+}
+
+// 3. Bouton Retour pour revenir au Hub de choix
+function retourAuHubChoix() {
+    const vueChoix = document.getElementById('rec-vue-choix');
+    if (vueChoix) vueChoix.style.display = 'block';
+
+    const vueListe = document.getElementById('rec-vue-liste');
+    if (vueListe) vueListe.style.display = 'none';
+}
+
+// 4. Les 3 boutons partenaires suisses du bas de l'Écran 1
+function ouvrirPartenaireSuisse(site) {
+    if (!alimentRecetteActif) return;
+    const aliment = encodeURIComponent(alimentRecetteActif.nom);
+    let url = "";
+
+    if (site === 'migusto') {
+        url = `https://www.google.com/search?q=site:migusto.migros.ch+recette+${aliment}`;
+    } else if (site === 'fooby') {
+        url = `https://www.google.com/search?q=site:fooby.ch+recette+${aliment}`;
+    } else if (site === 'betty') {
+        url = `https://www.google.com/search?q=site:bettybossi.ch+recette+${aliment}`;
+    }
+
+    if (url) window.open(url, '_blank', 'noopener,noreferrer');
 }
 
 // === PORTE SECRÈTE : MODE DÉVELOPPEUR / ADMIN ===
