@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.00 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.01 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -8,6 +8,7 @@
 <!-- CHANGEMENT TERMES DE TOLORENCE A VOLONTE - A LIMITER - A EVITER -->
 <!-- RENDRE LE BADGE PROFIF DIGESTIF CLICABLE -->
 <!-- RETOUR AVEC TOUCHE MOBILE - NOUVELLE STRUCTURE FILTRE ACTIF -->
+<!-- NOUVEAU POSSIBILITE DE RECHERCHE DE RECETTES ET DE LEUR ENREGISTREMENT -->
 <!-- ========================================================= -->
 
 <!DOCTYPE html>
@@ -1144,7 +1145,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.00</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.01</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -1801,7 +1802,7 @@
 <!-- ========================================== -->
 <script>
     // ========================================================
-    const APP_VERSION = "12.00";
+    const APP_VERSION = "12.01";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -1969,6 +1970,7 @@ const defaultData = [
     { id: 406, nom: "Trévise", soustitre: "", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Automne", fodmap: "Bas", fructose: "Bas", fibres: "Insolubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fibreuse", avantage: "Riche en antioxydants (couleur rouge).", inconvenient: "C'est une chicorée : feuilles épaisses, coriaces, amères et riches en fibres dures.", preparation: "À éviter crue. Si consommée, elle doit être braisée ou poêlée pour détruire la dureté des fibres.", notes: "", recettesList: [] },
     { id: 633, nom: "Gingembre", soustitre: "", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Automne", fodmap: "Bas", fructose: "Bas", fibres: "Solubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Excellent anti-inflammatoire naturel, calme les nausées et facilite la digestion.", inconvenient: "Le goût piquant peut surprendre, mais il n'irrite pas l'estomac.", preparation: "En infusion, râpé frais dans les plats ou en poudre.", notes: "", recettesList: [] },
     { id: 958, nom: "Compote de pomme", soustitre: "Fabrication Maison", type: "Fruit", image: "", tolerance: "🟢 Très conseillé", saison: "Automne", fodmap: "Bas", fructose: "Bas", fibres: "Solubles", cg: "Moyen", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Cuisson dégradant la cellulose, libère la pectine.", inconvenient: "Aucun si faite sans sucre ajouté.", preparation: "Cuire longuement et mixer finement.", notes: "", recettesList: [] },
+	{ id: 1028, nom: "Kaki", soustitre: "Persimmon - Kaki Sharon", type: "Fruit", image: "", tolerance: "🟢 À volonté", saison: "Automne", fodmap: "Bas", fructose: "Bas", fibres: "Solubles", cg: "Moyen", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Pectines très douces pour la muqueuse, riche en bêta-carotène.", inconvenient: "Si mangé pas assez mûr, les tanins sont astringents et ralentissent la digestion.", preparation: "Consommer exclusivement bien mûr et très tendre à la cuillère, peler la peau fine.", notes: "", recettesList: [] },
 
     /* HIVER */
     { id: 18, nom: "Blanc de poireau", soustitre: "", type: "Légume", image: "", tolerance: "🟢 Très conseillé", saison: "Hiver", fodmap: "Haut", fructose: "Bas", fibres: "Solubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Partie tendre et savoureuse.", inconvenient: "Le vert est trop fibreux.", preparation: "Jeter le vert, émincer finement le blanc.", notes: "", recettesList: [{nom: "Fondue de poireaux", url: ""}] },
@@ -1991,6 +1993,7 @@ const defaultData = [
     { id: 305, nom: "Radis blanc", soustitre: "", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Hiver", fodmap: "Bas", fructose: "Bas", fibres: "Insolubles", cg: "Bas", acidite: "Acide", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Aucun.", inconvenient: "Consommé cru, fibres agressives, effet piquant irritant pour les muqueuses.", preparation: "À éviter totalement.", notes: "", recettesList: [] },
     { id: 407, nom: "Salade Frisée", soustitre: "", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Hiver", fodmap: "Bas", fructose: "Bas", fibres: "Insolubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fibreuse", avantage: "Résiste bien au froid, donne du volume.", inconvenient: "Extrêmement fibreuse. Ses feuilles frisées et rêches sont de véritables brosses, très irritantes pour les diverticules.", preparation: "À éviter. Si incontournable, ne manger que le cœur très blanc et jaune (le plus tendre) en toute petite quantité.", notes: "", recettesList: [] },
     { id: 408, nom: "Salade Scarole", soustitre: "", type: "Légume", image: "", tolerance: "🔴 À proscrire", saison: "Hiver", fodmap: "Bas", fructose: "Bas", fibres: "Insolubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fibreuse", avantage: "Volumineuse et robuste.", inconvenient: "Comme la frisée, c'est une chicorée à feuilles très épaisses et nervures dures (fibres insolubles agressives).", preparation: "À proscrire en salade crue. Excellente et bien tolérée si elle est cuite (en soupe ou braisée longuement).", notes: "", recettesList: [] },
+	{ id: 1027, nom: "Chou blanc", soustitre: "", type: "Légume", image: "", tolerance: "🟠 À éviter", saison: "Hiver", fodmap: "Haut", fructose: "Bas", fibres: "Insolubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Riche en vitamine C et en antioxydants.", inconvenient: "Riche en composés soufrés et fibres dures, forte tendance aux gaz et ballonnements.", preparation: "Émincer très finement, blanchir 5 min dans l'eau bouillante avant une cuisson longue.", notes: "", recettesList: [] },
 
     /* LÉGUMINEUSES */
     { id: 4, nom: "Petits pois", soustitre: "", type: "Légumineuse", image: "", tolerance: "🔴 À proscrire", saison: "Légumineuses", fodmap: "Haut", fructose: "Bas", fibres: "Insolubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Aucun.", inconvenient: "La petite pellicule autour du pois ne se digère pas du tout.", preparation: "À éviter.", notes: "", recettesList: [] },
@@ -4533,7 +4536,7 @@ const dicoAnglaisVersFrancais = {
     "apple": "pommes", "apples": "pommes", "pear": "poires", "pears": "poires",
     "grape": "raisins", "grapes": "raisins", "fig": "figue", "figs": "figue", "quince": "coing", "chestnut": "châtaigne marron", "chestnuts": "châtaigne marron",
     "leek": "blanc de poireau", "leeks": "blanc de poireau", "chicory": "endive", "broccoli": "brocoli", "cauliflower": "chou-fleur",
-    "ginger": "gingembre", "kumquat": "kumquat",
+    "ginger": "gingembre", "kumquat": "kumquat", "white cabbage": "chou blanc", "persimmon": "kaki", "persimmons": "kaki",
 
     // Féculents & Légumineuses
     "potato": "pomme de terre", "potatoes": "pomme de terre", "sweet potato": "patate douce", "sweet potatoes": "patate douce",
@@ -4901,7 +4904,7 @@ const dicoTraductionTheMealDB = {
     "figue": "fig", "coing": "quince", "chataigne": "chestnut", "châtaigne": "chestnut", "marron": "chestnut",
     "poireau": "leek", "poireaux": "leeks", "blanc de poireau": "leek",
     "endive": "chicory", "brocoli": "broccoli", "chou-fleur": "cauliflower",
-    "gingembre": "ginger", "kumquat": "kumquat",
+    "gingembre": "ginger", "kumquat": "kumquat", "chou blanc": "cabbage", "kaki": "persimmon", "kakis": "persimmon",
 
     // Féculents & Légumineuses
     "pomme de terre": "potato", "pommes de terre": "potatoes", "pomme de terre primeur": "potato",
