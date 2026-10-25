@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.04 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.05 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -1146,7 +1146,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.04</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.05</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -1807,7 +1807,7 @@
 <!-- ========================================== -->
 <script>
     // ========================================================
-    const APP_VERSION = "12.04";
+    const APP_VERSION = "12.05";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -4232,7 +4232,17 @@ function afficherQrPourPaquet(paquetFiches) {
 
     try {
         const baseLink = encodeURI(window.location.href.split('#')[0]);
-        const texteJson = JSON.stringify(paquetFiches);
+        // Compresseur de données : enlève le superflu pour aérer le QR Code au maximum
+const fichesMicro = paquetFiches.map(f => {
+    let micro = { i: f.id, n: f.nom };
+    if (f.notes) micro.o = f.notes;
+    if (f.recettesList && f.recettesList.length > 0) {
+        micro.r = f.recettesList.map(r => r.idMeal ? { m: r.idMeal } : { n: r.nom, u: r.url });
+    }
+    return micro;
+});
+
+const texteJson = JSON.stringify(fichesMicro);
         const urlFinale = `${baseLink}#import=${encodeURIComponent(texteJson)}`;
 
         lienPartageActif = urlFinale;
@@ -4325,8 +4335,21 @@ function fusionnerDonneesRecues(donneesAImporter) {
     let nouvellesFiches = 0;
     let fichesEnrichies = 0;
 
-    donneesAImporter.forEach(item => {
+    	donneesAImporter.forEach(item => {
+        if (!item) return;
+
+        // --- TRADUCTEUR COMPRESSEUR (Décode le langage micro du QR Code) ---
+        if (item.i && !item.id) item.id = item.i;
+        if (item.n && !item.nom) item.nom = item.n;
+        if (item.o && !item.notes) item.notes = item.o;
+        if (item.r && !item.recettesList) {
+            item.recettesList = item.r.map(rec => {
+                if (rec.m) return { idMeal: rec.m };
+                return { nom: rec.n || "", url: rec.u || "" };
+            });
+        }
         if (!item || !item.nom) return;
+		
         const nomClean = removeAccents(item.nom.toLowerCase().trim());
         const indexExistant = legumes.findIndex(l => removeAccents(l.nom.toLowerCase().trim()) === nomClean);
 
