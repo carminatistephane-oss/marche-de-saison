@@ -5236,6 +5236,9 @@ function ouvrirLecteurRecetteInApp(alimentId, indexRecette) {
     if (!leg || !leg.recettesList || !leg.recettesList[indexRecette]) return;
 
     const rec = leg.recettesList[indexRecette];
+	
+	alert("Contenu de la recette cliquée : " + JSON.stringify(rec));
+	
     alimentRecetteActif = leg;
     recetteTheMealDBEnCours = rec;
 
