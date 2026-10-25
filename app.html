@@ -5245,6 +5245,61 @@ function fermerModalRecetteSmart() {
     }
 }
 
+// Ouvre la liseuse de recette directement depuis le bouton caramel de la carte !
+function ouvrirLecteurRecetteInApp(alimentId, indexRecette) {
+    const leg = legumes.find(l => l.id == alimentId);
+    if (!leg || !leg.recettesList || !leg.recettesList[indexRecette]) return;
+
+    const rec = leg.recettesList[indexRecette];
+    alimentRecetteActif = leg;
+    recetteTheMealDBEnCours = rec;
+
+    // Masque le bouton enregistrer car elle est DÉJÀ sur la carte
+    const btnSave = document.getElementById('btn-enregistrer-recette');
+    if (btnSave) btnSave.style.display = 'none';
+
+    const btnTrad = document.getElementById('btn-traduire-recette');
+    if (btnTrad) {
+        btnTrad.innerText = "🌐 Traduire";
+        btnTrad.disabled = false;
+        btnTrad.style.borderColor = "var(--accent)";
+        btnTrad.style.color = "var(--accent-dark)";
+    }
+
+    // Affiche la liseuse interne avec ingrédients et étapes
+    if (rec.instructions) {
+        const vueChoix = document.getElementById('rec-vue-choix');
+        if (vueChoix) vueChoix.style.display = 'none';
+
+        const vueListe = document.getElementById('rec-vue-liste');
+        if (vueListe) vueListe.style.display = 'none';
+
+        const vueDetail = document.getElementById('rec-vue-detail');
+        if (vueDetail) vueDetail.style.display = 'block';
+
+        const detailZone = document.getElementById('rec-detail-contenu');
+        if (detailZone) {
+            detailZone.innerHTML = `
+                <img src="${rec.thumb || ''}" alt="${rec.nom}" style="width: 100%; height: 160px; object-fit: cover; border-radius: 12px; margin-bottom: 12px;">
+                <h4 id="rec-titre-detail" style="margin: 0 0 10px 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.2rem;">${rec.nom}</h4>
+                <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">🛒 Ingrédients :</div>
+                <ul id="rec-ingredients-detail" style="font-size: 0.85rem; color: var(--text-main); margin: 0 0 14px 0; padding-left: 20px;">
+                    ${rec.ingredients || '<li>Ingrédients enregistrés</li>'}
+                </ul>
+                <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">👨‍🍳 Instructions :</div>
+                <p id="rec-instructions-detail" style="font-size: 0.85rem; color: var(--text-main); line-height: 1.45; white-space: pre-line; margin: 0;">${rec.instructions}</p>
+            `;
+        }
+
+        const modal = document.getElementById('modal-recipe-search');
+        if (modal) modal.style.display = 'block';
+    } else if (rec.idMeal && typeof voirDetailRecetteTheMealDB === 'function') {
+        voirDetailRecetteTheMealDB(rec.idMeal);
+    } else if (rec.url) {
+        window.open(rec.url, '_blank', 'noopener,noreferrer');
+    }
+}
+
 // 1. Ouvre la fenêtre au départ (Écran 1 : Le Hub de choix)
 function ouvrirRechercheRecetteSmart(alimentId) {
     const leg = legumes.find(l => l.id == alimentId);

@@ -1,9 +1,9 @@
 // ========================================================
 // SERVICE WORKER - LE PETIT MARCHÉ DE MON ESTOMAC
-// VERSION DU CACHE : v12.01 (Nouvelle Refonte Cru/Cuit & Recettes)
+// VERSION DU CACHE : v12.02 (Nouvelle Refonte Cru/Cuit & Recettes)
 // ========================================================
 
-const CACHE_NAME = 'marche-cache-v12.01';
+const CACHE_NAME = 'marche-cache-v12.02';
 
 // Fichiers vitaux à stocker pour le fonctionnement 100% hors-ligne
 const URLS_A_METTRE_EN_CACHE = [
