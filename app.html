@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.03 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.04 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -1146,7 +1146,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.03</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.04</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -1807,7 +1807,7 @@
 <!-- ========================================== -->
 <script>
     // ========================================================
-    const APP_VERSION = "12.03";
+    const APP_VERSION = "12.04";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -4045,14 +4045,16 @@ function ouvrirQrModal(idFicheUnique = null) {
     // --- LE COMPRESSEUR "VOYAGE LÉGER" ---
     // Supprime le texte lourd des recettes pour ne garder que le numéro d'identification (idMeal)
     const allegerRecettes = (recettes) => {
-        if (!recettes || !Array.isArray(recettes)) return [];
-        return recettes.map(r => {
-            if (r.idMeal) {
-                return { nom: r.nom, url: r.url, idMeal: r.idMeal }; // On jette les instructions et ingrédients !
-            }
-            return { nom: r.nom, url: r.url }; // Lien web classique
-        });
-    };
+    if (!recettes || !Array.isArray(recettes)) return [];
+    return recettes.map(r => {
+        if (r.idMeal) {
+            // SI ON A LE IDMEAL : ON JETTE L'URL COMPLÈTE ! On ne garde QUE le numéro idMeal !
+            return { idMeal: r.idMeal }; 
+        }
+        // Sinon (lien web simple), on ne garde que le nom et l'URL
+        return { nom: r.nom, url: r.url };
+    });
+};
 
     try {
         // CAS A : PARTAGE DIRECT D'UNE SEULE FICHE
