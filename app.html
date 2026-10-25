@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.06 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.07 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -1146,7 +1146,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.06</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.07</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -1807,7 +1807,7 @@
 <!-- ========================================== -->
 <script>
     // ========================================================
-    const APP_VERSION = "12.06";
+    const APP_VERSION = "12.07";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -5290,8 +5290,9 @@ function ouvrirLecteurRecetteInApp(alimentId, indexRecette) {
 
         const modal = document.getElementById('modal-recipe-search');
         if (modal) modal.style.display = 'block';
-    } else if (rec.idMeal && typeof voirDetailRecetteTheMealDB === 'function') {
-        voirDetailRecetteTheMealDB(rec.idMeal, true);
+    } else if ((rec.idMeal || rec.m) && typeof voirDetailRecetteTheMealDB === 'function') {
+        const idAEnvoyer = rec.idMeal || rec.m;
+        voirDetailRecetteTheMealDB(idAEnvoyer, true);
     } else if (rec.url) {
         window.open(rec.url, '_blank', 'noopener,noreferrer');
     }
