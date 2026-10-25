@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.01 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.02 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -9,6 +9,7 @@
 <!-- RENDRE LE BADGE PROFIF DIGESTIF CLICABLE -->
 <!-- RETOUR AVEC TOUCHE MOBILE - NOUVELLE STRUCTURE FILTRE ACTIF -->
 <!-- NOUVEAU POSSIBILITE DE RECHERCHE DE RECETTES ET DE LEUR ENREGISTREMENT -->
+<!-- MISE A JOUR DU MENU D'AIDE -->
 <!-- ========================================================= -->
 
 <!DOCTYPE html>
@@ -1145,7 +1146,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.01</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.02</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -1515,117 +1516,120 @@
     <div id="modal-help" class="modal-overlay hidden">
       <div class="modal-box">
         <button class="close-btn" onclick="closePopup('modal-help')">❌</button>
-        <h3 style="margin-top:0; color: #2C3E50; text-align: center;">📖 Mode d'emploi</h3>
+        <h3 style="margin-top:0; color: #2C3E50; text-align: center;">📖 Aide</h3>
         <div class="modal-body" style="font-size: 0.85rem;">
           
-        <!-- 1. Profil -->
+        <!-- 1. Profils -->
 		<div style="background: #F4F6F8; border-left: 4px solid #4A90E2; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
-			<p style="color: #4A90E2; font-weight: 800; font-size: 0.95rem; margin: 0 0 8px 0;">1. Sélection du Profil Digestif</p>
-  
-			<p style="margin: 0 0 8px 0; color: #555; line-height: 1.4;">Le moteur de l'application adapte l'affichage à votre métabolisme :</p>
-  
-			<ul style="margin: 0; padding-left: 20px; color: #555; line-height: 1.4;">
-				<li style="margin-bottom: 6px;"><strong>Accessible partout :</strong> Cliquez sur le titre ou sur le badge de profil, que vous soyez sur l'accueil ou directement dans vos listes d'aliments.</li>
-				<li style="margin-bottom: 6px;"><strong>Explications en direct :</strong> Cochez une sensibilité ou croisez-en plusieurs (ex : <em>Acidité + Irritable</em>). Les explications et pathologies associées s'affichent instantanément sous vos yeux.</li>
-				<li style="margin-bottom: 6px;"><strong>Validation :</strong> Cliquez sur <strong>« ✅ Confirmer ce profil »</strong> pour ajuster l'ensemble de votre marché.</li>
-				<li style="margin-bottom: 0;"><strong>Filtrage automatique :</strong> Seuls les aliments <strong>🟢 À volonté</strong> et <strong>🟡 À limiter</strong> sont affichés. Les aliments <strong>🟠 À éviter</strong> sont écartés (mais restent consultables via les filtres).</li>
+			<p style="color: #4A90E2; font-weight: 800; font-size: 0.95rem; margin: 0 0 8px 0;">1. Profils Digestifs & Bouton "Adaptés"</p>
+			<p style="margin: 0 0 8px 0; color: #555; line-height: 1.4;">L'application dispose de 8 profils cliniques que vous pouvez combiner :</p>
+			<ul style="margin: 0 0 8px 0; padding-left: 15px; color: #555; line-height: 1.4;">
+                <li><strong>Digestion :</strong> <em>Acidité</em> (Anti-reflux), <em>Irritable</em> (Protège le côlon), <em>FODMAP Pur</em> (Anti-fermentation).</li>
+                <li><strong>Intolérances :</strong> <em>Lactose</em> et <em>Gluten</em>.</li>
+                <li><strong>Métabolisme :</strong> <em>Diabète</em> (Gère les pics de glycémie) et <em>Poids</em> (Contrôle sucres et graisses).</li>
 			</ul>
+            <p style="margin: 0 0 8px 0; color: #555; line-height: 1.4;">Le moteur de l'application adapte l'affichage à votre métabolisme :</p>
+            <ul style="margin: 0 0 8px 0; padding-left: 15px; color: #555; line-height: 1.4;">
+                <li style="margin-bottom: 4px;"><strong>Accessible partout :</strong> Cliquez sur le titre ou sur le badge de profil, sur l'accueil ou directement dans vos listes d'aliments.</li>
+                <li style="margin-bottom: 4px;"><strong>Explications en direct :</strong> Cochez une ou plusieurs sensibilités. Les explications s'affichent instantanément.</li>
+                <li style="margin-bottom: 4px;"><strong>Validation :</strong> Cliquez sur « ✅ Confirmer ce profil » pour ajuster l'ensemble de votre marché.</li>
+                <li style="margin-bottom: 0;"><strong>Filtrage automatique :</strong> Seuls les aliments 🟢 et 🟡 sont affichés. Les 🟠 sont écartés (mais consultables via les filtres).</li>
+            </ul>
+            <p style="margin: 8px 0 0 0; color: #555; line-height: 1.4;">✨ <strong>Le bouton "Adaptés" :</strong> Sur la page d'accueil, ce bouton magique filtre instantanément les aliments pour ne vous afficher QUE ceux compatibles avec le profil choisi !</p>
 		</div>
 
-          <!-- 2. Couleurs et Filtres -->
-          <div style="background: #FDF2E9; border-left: 4px solid #D4A373; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
-            <p style="color: #A06A42; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0;">2. Codes Couleurs et Critères d'Analyse</p>
+        <!-- 2. Codes Couleurs, Cru/Cuit & Coaching -->
+        <div style="background: #FDF2E9; border-left: 4px solid #D4A373; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+            <p style="color: #A06A42; font-weight: 800; font-size: 0.95rem; margin: 0 0 8px 0;">2. Codes Couleurs et Critères d'Analyse</p>
             <p style="margin: 0 0 5px 0; font-weight: bold; color: #4A4A4A;">Les Pastilles de Tolérance :</p>
-            <ul style="padding-left: 15px; margin: 0 0 10px 0; color: #555;">
-              <li><strong>🟢 Pastille Verte :</strong> Aliment hautement digeste, parfaitement compatible avec votre profil actuel.</li>
-              <li><strong>🟡 Pastille Jaune :</strong> Attention, aliment à consommer avec modération selon votre propre seuil de tolérance.</li>
-              <li><strong>🟠 Pastille Orange :</strong> Aliment problématique, fortement déconseillé par rapport aux sensibilités que vous avez cochées.</li>
+            <ul style="padding-left: 15px; margin: 0 0 10px 0; color: #555; line-height: 1.4;">
+                <li style="margin-bottom: 4px;"><strong>🟢 Pastille Verte :</strong> Aliment hautement digeste, parfaitement compatible avec votre profil actuel.</li>
+                <li style="margin-bottom: 4px;"><strong>🟡 Pastille Jaune :</strong> Attention, aliment à consommer avec modération selon votre propre seuil de tolérance.</li>
+                <li style="margin-bottom: 0;"><strong>🟠 Pastille Orange :</strong> Aliment problématique, fortement déconseillé par rapport aux sensibilités que vous avez cochées.</li>
             </ul>
-            <p style="margin: 0 0 5px 0; font-weight: bold; color: #4A4A4A;">Comprendre les Filtres et Caractéristiques :</p>
-            <ul style="padding-left: 15px; margin: 0; color: #555; line-height: 1.4;">
-              <li><strong>FODMAPs :</strong> Indique la présence de petits glucides qui fermentent dans l'intestin (souvent responsables de ballonnements et spasmes).</li>
-              <li><strong>Fibres :</strong> Évalue la concentration et le type de fibres (les fibres insolubles peuvent être très irritantes pour le côlon).</li>
-              <li><strong>Charge glycémique :</strong> Mesure l'impact direct de l'aliment sur l'élévation de votre taux de sucre dans le sang.</li>
-              <li><strong>Acidité :</strong> Signale les aliments favorisant les brûlures d'estomac ou le Reflux Gastro-Œsophagien (RGO).</li>
-              <li><strong>Fructose :</strong> Indique une forte teneur en sucre de fruit, qui peut être difficilement absorbé par certains intestins.</li>
-              <li><strong>Gluten :</strong> Repère la présence de cette protéine (blé, seigle, épeautre) problématique en cas de sensibilité ou maladie cœliaque.</li>
-              <li><strong>Lactose :</strong> Cible le sucre du lait qui nécessite une enzyme spécifique pour être digéré.</li>
-              <li><strong>Graisses :</strong> Identifie les aliments riches en lipides qui ralentissent considérablement la vidange de l'estomac.</li>
-              <li><strong>Dureté de la chair :</strong> Indique la texture de l'aliment, exigeant un effort de mastication et une digestion mécanique (gastrique) plus longue.</li>
-            </ul>
-          </div>
+            <p style="margin: 0 0 5px 0; color: #555; line-height: 1.4;">🥕 <strong>Simulateur Cru / Cuit :</strong> La cuisson transforme les aliments ! Cliquez sur les boutons <em>Cru</em> ou <em>Cuit</em> : un chou-fleur cru (🟠) devient digeste une fois cuit (🟡). Attention : cuire une carotte augmente son taux de sucre.</p>
+            <p style="margin: 0; color: #555; line-height: 1.4;">💡 <strong>Coaching Bienveillant :</strong> L'application ne punit pas. Si une recette contient un ingrédient sensible, elle n'est pas "Interdite" mais <em>"🟡 Facilement adaptable"</em> : l'appli vous indique exactement quel ingrédient retirer (ex: Ail ou Oignon) pour rendre le plat parfait !</p>
+        </div>
 
-          <!-- 3. Édition -->
-          <div style="background: #E8F5E9; border-left: 4px solid #2E7D32; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+        <!-- 3. Édition -->
+        <div style="background: #E8F5E9; border-left: 4px solid #2E7D32; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
             <p style="color: #1B5E20; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0;">3. Mode Édition : Personnaliser vos Fiches</p>
-            <p style="margin: 0 0 5px 0; color: #555;">Appropriez-vous la base de données en enrichissant chaque ingrédient avec vos propres informations :</p>
+            <p style="margin: 0 0 5px 0; color: #555; line-height: 1.4;">Cliquez sur ✏️ pour vous approprier la base de données :</p>
             <ul style="padding-left: 15px; margin: 0; color: #555; line-height: 1.4;">
-              <li><strong>Sous-titre :</strong> Spécifiez une variété précise (ex : distinguer une farine type 550 classique d'une autre, ou préciser "Citrons Beldi").</li>
-              <li><strong>Notes :</strong> Consignez vos observations de préparation (ex : "Peler la peau pour une meilleure tolérance" ou "Nécessite une longue autolyse pour le pain").</li>
-              <li><strong>Lien de la recette :</strong> Ce champ spécifique vous permet d'insérer directement l'adresse URL de votre recette favorite. D'un simple clic depuis la fiche, vous serez redirigé vers la page web de votre plat.</li>
+                <li style="margin-bottom: 4px;"><strong>Sous-titre :</strong> Spécifiez une variété précise (ex : "Citrons Beldi").</li>
+                <li style="margin-bottom: 4px;"><strong>Notes :</strong> Consignez vos observations de préparation.</li>
+                <li style="margin-bottom: 0;"><strong>Lien de la recette :</strong> Insérez directement l'adresse URL de votre recette favorite pour y accéder d'un clic.</li>
             </ul>
-          </div>
+        </div>
 
-          <!-- 4. Ajout -->
-          <div style="background: #F3E5F5; border-left: 4px solid #8E24AA; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+        <!-- 4. Ajout -->
+        <div style="background: #F3E5F5; border-left: 4px solid #8E24AA; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
             <p style="color: #4A148C; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0;">4. Mode Ajout : Créer de Nouveaux Aliments</p>
-            <p style="margin: 0 0 5px 0; color: #555;">Si un ingrédient spécifique manque à votre marché, ajoutez-le :</p>
+            <p style="margin: 0 0 5px 0; color: #555; line-height: 1.4;">Si un ingrédient spécifique manque à votre marché, ajoutez-le :</p>
             <ul style="padding-left: 15px; margin: 0; color: #555; line-height: 1.4;">
-              <li><strong>Informations de base :</strong> Entrez le nom de l'aliment, sélectionnez ses mois de saisonnalité et chargez une image représentative.</li>
-              <li><strong>Profilage digestif :</strong> Cochez rigoureusement les attributs de l'aliment pour que l'algorithme des pastilles fonctionne correctement.</li>
-              <li><strong>Détails et Liens :</strong> Remplissez le sous-titre, vos notes et l'URL d'une recette associée pour que cette nouvelle entrée soit opérationnelle.</li>
+                <li style="margin-bottom: 4px;"><strong>Informations de base :</strong> Entrez le nom, la saisonnalité et chargez une image.</li>
+                <li style="margin-bottom: 4px;"><strong>Profilage digestif :</strong> Cochez rigoureusement les attributs pour que l'algorithme calcule les pastilles.</li>
+                <li style="margin-bottom: 0;"><strong>Détails et Liens :</strong> Remplissez le sous-titre, vos notes et l'URL d'une recette associée.</li>
             </ul>
-          </div>
+        </div>
 
-          <!-- 5. Gestion des Fiches Masquées -->
-          <div style="background: #FFF8E1; border-left: 4px solid #F57F17; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+        <!-- 5. Fiches Masquées -->
+        <div style="background: #FFF8E1; border-left: 4px solid #F57F17; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
             <p style="color: #E65100; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0; display: flex; align-items: center; gap: 6px;">
-              5. Gestion des Fiches Masquées 
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#E65100" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.8-7 10-7 10 7 10 7-3.8 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="2.5" fill="#E65100"></circle><line x1="3" y1="3" x2="21" y2="21" stroke="#E65100" stroke-width="2"></line></svg>
+                5. Gestion des Fiches Masquées 
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#E65100" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.8-7 10-7 10 7 10 7-3.8 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="2.5" fill="#E65100"></circle><line x1="3" y1="3" x2="21" y2="21" stroke="#E65100" stroke-width="2"></line></svg>
             </p>
-            <p style="margin: 0 0 5px 0; color: #555; line-height: 1.4;">Un aliment ne vous intéresse pas ou vous souhaitez le cacher temporairement ? Cliquez sur le bouton œil barré présent sur chaque fiche pour le masquer de la liste principale.</p>
-            <p style="margin: 0; color: #555; line-height: 1.4;"><strong>Retrouver et gérer vos fiches :</strong> Rendez-vous dans les <strong>Paramètres ⚙️</strong> puis cliquez sur <strong>"Gestion des fiches masquées"</strong>. Une fenêtre s'ouvrira pour vous lister l'ensemble de vos éléments cachés : vous pourrez alors choisir de les <strong>remettre</strong> (les réafficher) ou de les <strong>supprimer définitivement</strong> de l'application d'un simple clic.</p>
-          </div>
+            <p style="margin: 0 0 5px 0; color: #555; line-height: 1.4;">Un aliment ne vous intéresse pas ou vous souhaitez le cacher temporairement ? Cliquez sur le bouton œil barré présent sur chaque fiche.</p>
+            <p style="margin: 0; color: #555; line-height: 1.4;"><strong>Retrouver et gérer vos fiches :</strong> Rendez-vous dans <em>Paramètres ⚙️ > Gestion des fiches masquées</em> pour les réafficher ou les supprimer définitivement.</p>
+        </div>
 
-          <!-- 6. Gestion des Favoris (NOUVEAU) -->
-          <div style="background: #FCE4EC; border-left: 4px solid #E91E63; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+        <!-- 6. Favoris -->
+        <div style="background: #FCE4EC; border-left: 4px solid #E91E63; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
             <p style="color: #C2185B; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0;">6. Gestion des Favoris 💖</p>
-            <p style="margin: 0 0 5px 0; color: #555; line-height: 1.4;">Retrouvez en un clin d'œil vos aliments préférés en cliquant sur le bouton <strong>Favoris</strong> situé en haut de la page d'accueil.</p>
-            <p style="margin: 0; color: #555; line-height: 1.4;"><strong>Ajouter ou retirer un favori :</strong> Il vous suffit de cliquer sur le petit cœur affiché en haut à droite de chaque fiche d'aliment. Le cœur devient rouge lorsqu'il est sélectionné et se synchronise instantanément avec votre compteur d'accueil.</p>
-          </div>
+            <p style="margin: 0 0 5px 0; color: #555; line-height: 1.4;">Retrouvez en un clin d'œil vos aliments préférés en cliquant sur le bouton <strong>FAVORIS</strong> à l'accueil.</p>
+            <p style="margin: 0; color: #555; line-height: 1.4;"><strong>Ajouter ou retirer :</strong> Cliquez sur le petit cœur en haut à droite d'une fiche. Il devient rouge et se synchronise avec l'accueil.</p>
+        </div>
 
-          <!-- 7. Sauvegarde, Partage & Synchronisation QR -->
-          <div style="background: #EFEBE9; border-left: 4px solid #795548; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+        <!-- 7. LE MOTEUR DE RECETTES (NOUVEAU) -->
+        <div style="background: #E3F2FD; border-left: 4px solid #1976D2; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+            <p style="color: #1565C0; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0;">7. Moteur de Recettes Intelligent 🍲</p>
+            <p style="margin: 0 0 5px 0; color: #555; line-height: 1.4;">Cliquez sur <strong>🔍 Chercher une recette</strong> dans n'importe quelle fiche !</p>
+            <ul style="margin: 0; padding-left: 15px; color: #555; line-height: 1.4;">
+                <li style="margin-bottom: 4px;"><strong>TheMealDB :</strong> Lisez, traduisez 🌐, et enregistrez 💾 des recettes mondiales en un clic, directement sur la fiche de l'aliment.</li>
+                <li><strong>Sites 🇫🇷 & 🇨🇭 :</strong> Des liens directs à leur plateforme vers Marmiton, FOOBY, Migusto, etc.</li>
+            </ul>
+        </div>
+
+        <!-- 8. Sauvegarde & Partage -->
+        <div style="background: #EFEBE9; border-left: 4px solid #795548; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
             <p style="color: #4E342E; font-weight: 800; font-size: 0.95rem; margin: 0 0 8px 0; display: flex; align-items: center; gap: 6px;">
-              7. Sauvegarde & Partage intelligent 💾 
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="#4E342E"><path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm10-2h3v3h-3v-3zm5 0h3v3h-3v-3zm-5 5h3v3h-3v-3zm5 0h3v3h-3v-3zm-2-2h2v2h-2v-2z"/></svg>
+                8. Sauvegarde & Partage intelligent 💾 
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="#4E342E"><path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm10-2h3v3h-3v-3zm5 0h3v3h-3v-3zm-5 5h3v3h-3v-3zm5 0h3v3h-3v-3zm-2-2h2v2h-2v-2z"/></svg>
             </p>
             <p style="margin: 0 0 8px 0; color: #555; line-height: 1.4;">Vos personnalisations (notes, recettes, nouvelles fiches) sont précieuses. Voici comment les gérer :</p>
             
             <ul style="padding-left: 15px; margin: 0; color: #555; line-height: 1.5;">
-              <li style="margin-bottom: 6px;"><strong>💾 Sauvegarde complète :</strong> Exportez tout votre marché en un fichier <code>.json</code>. C'est la solution idéale pour migrer vers un nouveau téléphone.</li>
-              <li style="margin-bottom: 6px;"><strong>Partage express par QR Code :</strong> 
-                <ul>
-                  <li style="margin-top: 4px;"><strong>Partage direct :</strong> Cliquez sur l'icône QR Code d'une fiche pour générer son code unique. Flashez-le avec un autre appareil pour transférer instantanément vos notes/recettes.</li>
-                  <li style="margin-top: 4px;"><strong>Partage groupé :</strong> Dans <em>Paramètres > Partager par QR Code</em>, sélectionnez plusieurs fiches via les pilules vertes. Le système gère les doublons automatiquement et fusionne vos notes sans jamais écraser celles de vos amis.</li>
-                  <li style="margin-top: 4px;"><strong>Limites :</strong> Pour garantir une lecture instantanée, chaque partage est limité à 8 fiches à la fois.</li>
-                </ul>
-              </li>
-              <li style="margin-bottom: 6px;"><strong>🔄 Réparation intelligente :</strong> Vous avez supprimé une fiche officielle par erreur ? Le bouton "Restaurer les fiches de base" dans les Paramètres récupère les fiches manquantes sans toucher à vos données personnelles !</li>
-            </ul>
-          </div>
+                <li style="margin-bottom: 6px;">💾 <strong>Sauvegarde complète :</strong> Exportez tout votre marché en un fichier <code>.json</code>. C'est la solution idéale pour migrer vers un nouveau téléphone.</li>
+                <li style="margin-bottom: 6px;"><strong>Partage express par QR Code :</strong> 
+                    <ul style="padding-left: 15px; margin-top: 4px; list-style-type: circle;">
+                        <li style="margin-bottom: 4px;"><strong>Partage direct :</strong> Cliquez sur l'icône QR Code d'une fiche pour générer son code unique. Flashez-le avec un autre appareil pour transférer instantanément vos notes/recettes.</li>
+                        <li style="margin-bottom: 4px;"><strong>Partage groupé :</strong> Dans <em>Paramètres > Partager par QR Code</em>, sélectionnez plusieurs fiches via les pilules vertes. Le système gère les doublons automatiquement et fusionne vos notes sans jamais écraser celles de vos amis.</li>
+                        <li style="margin-bottom: 4px;"><strong>Limites :</strong> Pour garantir une lecture instantanée, chaque partage est limité à 8 fiches à la fois.</li>
+                    </ul>
+               
+        </div>
 
-          <!-- 8. Réparation & Restauration Intelligente -->
-          <div style="background: #E0F7FA; border-left: 4px solid #0097A7; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
-            <p style="color: #006064; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0;">8. Réparation & Restauration des fiches de base 🔄</p>
+        <!-- 9. Réparation -->
+        <div style="background: #E0F7FA; border-left: 4px solid #0097A7; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+            <p style="color: #006064; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0;">9. Réparation & Restauration des fiches de base 🔄</p>
             <p style="margin: 0; color: #555; line-height: 1.4;">Si vous supprimez par mégarde un aliment officiel (ex: la carotte ou le riz), rendez-vous dans les <strong>Paramètres ⚙️</strong> et cliquez sur <strong>"Réparer / Restaurer les fiches de base"</strong>. Le système réinjecte uniquement les fiches manquantes <strong>sans jamais écraser vos créations personnelles, vos notes ou vos liens de recettes</strong>.</p>
-          </div>
+        </div>
 
-          <!-- 9. Mode Sombre (Édition Nocturne) -->
-          <div style="background: #EDE7F6; border-left: 4px solid #5E35B1; padding: 12px; margin-bottom: 5px; border-radius: 0 8px 8px 0;">
-            <p style="color: #311B92; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0;">9. Mode Sombre (Édition Nocturne) 🌙</p>
-            <p style="margin: 0; color: #555; line-height: 1.4;">Pour reposer vos yeux le soir ou au lit, activez le <strong>Mode Sombre 🌙</strong> dans les <strong>Paramètres ⚙️</strong>. L'interface bascule dans une ambiance "Moka / Apothicaire" chaleureuse, avec un effet verre fumé sur les cartes qui préserve subtilement les couleurs des saisons sans éblouir.</p>
-          </div>
+        <!-- 10. Mode Sombre -->
+        <div style="background: #EDE7F6; border-left: 4px solid #5E35B1; padding: 12px; margin-bottom: 5px; border-radius: 0 8px 8px 0;">
+            <p style="color: #311B92; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0;">10. Mode Sombre (Édition Nocturne) 🌙</p>
+            <p style="margin: 0; color: #555; line-height: 1.4;">Activez le Mode Sombre 🌙 dans les Paramètres ⚙️. L'interface bascule dans une ambiance chaleureuse avec un effet verre fumé sur les cartes.</p>
+        </div>
 
         </div>
       </div>
@@ -1737,7 +1741,8 @@
         <div id="rec-vue-detail" style="display: none;">
             <!-- Haut : Retour à la liste à gauche | Traduire seul à droite (SANS CROIX) -->
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <button type="button" class="btn" onclick="retourListeRecettes()" style="padding: 6px 12px; font-size: 0.78rem; font-weight: 800;">← Retour à la liste</button>
+                <button type="button" id="btn-retour-liste" class="btn" onclick="retourListeRecettes()" style="padding: 6px 12px; font-size: 0.78rem; font-weight: 800;">← Retour à la liste</button>
+                <button type="button" id="btn-fermer-detail" class="btn" onclick="fermerModalRecetteSmart()" style="padding: 6px 12px; font-size: 0.78rem; font-weight: 800; display: none;">← Fermer</button>
                 <button type="button" id="btn-traduire-recette" class="btn" onclick="traduireRecetteActuelle()" style="padding: 6px 12px; font-size: 0.78rem; font-weight: 800; border-color: var(--accent); color: var(--accent-dark); background: #FFFDF8;">🌐 Traduire</button>
             </div>
             
@@ -1802,7 +1807,7 @@
 <!-- ========================================== -->
 <script>
     // ========================================================
-    const APP_VERSION = "12.01";
+    const APP_VERSION = "12.02";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -4037,20 +4042,32 @@ function ouvrirQrModal(idFicheUnique = null) {
     if (statusText) statusText.innerHTML = '';
     if (btnCopier) btnCopier.style.display = 'none';
 
+    // --- LE COMPRESSEUR "VOYAGE LÉGER" ---
+    // Supprime le texte lourd des recettes pour ne garder que le numéro d'identification (idMeal)
+    const allegerRecettes = (recettes) => {
+        if (!recettes || !Array.isArray(recettes)) return [];
+        return recettes.map(r => {
+            if (r.idMeal) {
+                return { nom: r.nom, url: r.url, idMeal: r.idMeal }; // On jette les instructions et ingrédients !
+            }
+            return { nom: r.nom, url: r.url }; // Lien web classique
+        });
+    };
+
     try {
-        // CAS A : PARTAGE DIRECT D'UNE SEULE FICHE (BOUTON 📱 SUR LA CARTE)
+        // CAS A : PARTAGE DIRECT D'UNE SEULE FICHE
         if (idFicheUnique) {
             const fiche = legumes.find(l => l.id == idFicheUnique);
             if (fiche) {
                 let paquetUnique = [{
                     nom: fiche.nom,
                     notes: fiche.notes || "",
-                    recettesList: fiche.recettesList || [],
+                    recettesList: allegerRecettes(fiche.recettesList),
                     soustitre: fiche.soustitre || ""
                 }];
                 const estNouveau = !defaultData.some(d => removeAccents(d.nom.toLowerCase().trim()) === removeAccents(fiche.nom.toLowerCase().trim()));
                 if (estNouveau) {
-                    paquetUnique = [{ ...fiche }];
+                    paquetUnique = [{ ...fiche, recettesList: allegerRecettes(fiche.recettesList) }];
                     delete paquetUnique[0].image;
                 }
 
@@ -4076,7 +4093,7 @@ function ouvrirQrModal(idFicheUnique = null) {
             if (!d) {
                 // Nouvel aliment inventé par l'utilisateur
                 estModifie = true;
-                paquet = { ...l };
+                paquet = { ...l, recettesList: allegerRecettes(l.recettesList) };
                 delete paquet.image;
             } else {
                 // Fiche officielle avec vos notes ou recettes personnalisées
@@ -4084,8 +4101,8 @@ function ouvrirQrModal(idFicheUnique = null) {
                 const noteOrigine = (d.notes || "").trim();
                 const aNote = notePerso.length > 0 && notePerso !== noteOrigine && notePerso !== "À venir...";
 
-                const recettesPerso = JSON.stringify(l.recettesList || []);
-                const recettesOrigine = JSON.stringify(d.recettesList || []);
+                const recettesPerso = JSON.stringify(allegerRecettes(l.recettesList));
+                const recettesOrigine = JSON.stringify(allegerRecettes(d.recettesList));
                 const aRecette = (l.recettesList && l.recettesList.length > 0) && (recettesPerso !== recettesOrigine);
 
                 if (aNote || aRecette) {
@@ -4094,7 +4111,7 @@ function ouvrirQrModal(idFicheUnique = null) {
                         id: l.id,
                         nom: l.nom,
                         notes: l.notes || "",
-                        recettesList: l.recettesList || []
+                        recettesList: allegerRecettes(l.recettesList)
                     };
                 }
             }
@@ -4121,7 +4138,6 @@ function ouvrirQrModal(idFicheUnique = null) {
         }
 
         // COCHAGE AUTOMATIQUE INTELLIGENT :
-        // Coche au maximum les 8 premières fiches pour garantir un QR Code parfait !
         selectionFichesIds = fichesAEnvoyerGlobal.slice(0, MAX_FICHES_PAR_QR).map(f => f.id || f.nom);
         dessinerInterfacePilules();
 
@@ -4166,7 +4182,23 @@ function dessinerInterfacePilules() {
         return;
     }
 
-    afficherQrPourPaquet(fichesSelectionnees);
+    // LE COMPRESSEUR "VOYAGE LÉGER" S'ACTIVE ICI !
+    // On nettoie les fiches juste avant de les donner au QR Code
+    const fichesAllegees = fichesSelectionnees.map(fiche => {
+        let fichePropre = { ...fiche };
+        if (fichePropre.recettesList && Array.isArray(fichePropre.recettesList)) {
+            fichePropre.recettesList = fichePropre.recettesList.map(r => {
+                if (r.idMeal) {
+                    // Si c'est une recette TheMealDB, on ne garde QUE le numéro magique !
+                    return { nom: r.nom, url: r.url, idMeal: r.idMeal };
+                }
+                return { nom: r.nom, url: r.url };
+            });
+        }
+        return fichePropre;
+    });
+
+    afficherQrPourPaquet(fichesAllegees);
 }
 
 // Bascule une pilule avec BLOCAGE DE SÉCURITÉ À 8 FICHES MAX
@@ -4623,12 +4655,24 @@ function analyserCliniqueRecette(meal, profil) {
 }
 
 // Vue détaillée chaleureuse et constructive
-async function voirDetailRecetteTheMealDB(idMeal) {
+async function voirDetailRecetteTheMealDB(idMeal, vientDeLaFiche = false) {
     const detailZone = document.getElementById('rec-detail-contenu');
     detailZone.innerHTML = "<div style='text-align:center; padding: 20px;'>⏳ Analyse bienveillante des ingrédients...</div>";
 
+    document.getElementById('rec-vue-choix').style.display = 'none';
     document.getElementById('rec-vue-liste').style.display = 'none';
     document.getElementById('rec-vue-detail').style.display = 'block';
+
+    // RÈGLE : On vient de la liste -> Le bouton affiche "← Retour à la liste" !
+    const btnRetour = document.getElementById('btn-retour-liste');
+    const btnFermer = document.getElementById('btn-fermer-detail');
+    if (vientDeLaFiche) {
+        if (btnRetour) btnRetour.style.display = 'none';
+        if (btnFermer) btnFermer.style.display = 'block';
+    } else {
+        if (btnRetour) btnRetour.style.display = 'block';
+        if (btnFermer) btnFermer.style.display = 'none';
+    }
 
     const btnTrad = document.getElementById('btn-traduire-recette');
     if (btnTrad) {
@@ -4650,7 +4694,6 @@ async function voirDetailRecetteTheMealDB(idMeal) {
         const btnSave = document.getElementById('btn-enregistrer-recette');
         if (btnSave) btnSave.style.display = dejaEnregistree ? 'none' : 'block';
 
-        // Puces douces et astuces constructives
         let ingredientsHTML = "";
         for (let i = 1; i <= 20; i++) {
             const ing = meal[`strIngredient${i}`];
@@ -4664,7 +4707,7 @@ async function voirDetailRecetteTheMealDB(idMeal) {
                 if (nomFR) {
                     const alimentBase = legumes.find(l => removeAccents(l.nom.toLowerCase()).includes(nomFR));
                     if (alimentBase && isClinicallyBad(alimentBase, currentProfil)) {
-                        puce = "🟡"; // Au lieu du rouge agressif !
+                        puce = "🟡";
                         conseil = ` <span style="font-size:0.75rem; color:#B5603F; font-weight:700;">(💡 À doser selon votre sensibilité)</span>`;
                     }
                 }
@@ -4675,7 +4718,6 @@ async function voirDetailRecetteTheMealDB(idMeal) {
             }
         }
 
-        // Couleurs du bandeau doux
         let bannerBg = analyse.statut === '🟢' ? 'rgba(46,125,50,0.12)' : (analyse.statut === '🟡' ? 'rgba(245,127,23,0.12)' : 'rgba(216,67,21,0.12)');
         let bannerColor = analyse.statut === '🟢' ? '#1B5E20' : (analyse.statut === '🟡' ? '#E65100' : '#B5603F');
 
@@ -4697,9 +4739,6 @@ async function voirDetailRecetteTheMealDB(idMeal) {
             <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">👨‍🍳 Instructions :</div>
             <p id="rec-instructions-detail" style="font-size: 0.85rem; color: var(--text-main); line-height: 1.45; white-space: pre-line; margin: 0;">${meal.strInstructions}</p>
         `;
-
-        const modal = document.getElementById('modal-recipe-search');
-        if (modal) modal.style.display = 'block';
 
     } catch (e) {
         detailZone.innerHTML = `<div style="text-align: center; color: #D32F2F;">Impossible de charger la recette.</div>`;
@@ -4824,15 +4863,16 @@ function sauvegarderObjetRecetteSurAliment(idAliment, objetRecette) {
         }
         legumes[index].recettesList.push(objetRecette);
         saveToLocal();
+        
+        // On actualise la liste en arrière-plan
         if (document.getElementById('view-list').style.display === 'block') renderCards();
-        fermerModalRecetteSmart();
+        
+        // On affiche le succès
         alert(`✅ Fiche recette "${objetRecette.nom}" enregistrée avec son diagnostic clinique !`);
-    }
-}
-
-function ouvrirPartenaireWeb(url) {
-    if (url) {
-        window.open(url, '_blank', 'noopener,noreferrer');
+        
+        // On masque immédiatement le bouton Enregistrer sous tes yeux !
+        const btnSave = document.getElementById('btn-enregistrer-recette');
+        if (btnSave) btnSave.style.display = 'none';
     }
 }
 
@@ -5254,9 +5294,16 @@ function ouvrirLecteurRecetteInApp(alimentId, indexRecette) {
     alimentRecetteActif = leg;
     recetteTheMealDBEnCours = rec;
 
-    // Masque le bouton enregistrer car elle est DÉJÀ sur la carte
+    // RÈGLE 1 : La recette est déjà sur la carte -> On masque le bouton Enregistrer
     const btnSave = document.getElementById('btn-enregistrer-recette');
     if (btnSave) btnSave.style.display = 'none';
+
+    // RÈGLE 2 : On vient de la fiche -> On cache "Retour", on affiche "Fermer"
+    const btnRetour = document.getElementById('btn-retour-liste');
+    const btnFermer = document.getElementById('btn-fermer-detail');
+    if (btnRetour) btnRetour.style.display = 'none';
+    if (btnFermer) btnFermer.style.display = 'block';
+    
 
     const btnTrad = document.getElementById('btn-traduire-recette');
     if (btnTrad) {
@@ -5281,7 +5328,12 @@ function ouvrirLecteurRecetteInApp(alimentId, indexRecette) {
         if (detailZone) {
             detailZone.innerHTML = `
                 <img src="${rec.thumb || ''}" alt="${rec.nom}" style="width: 100%; height: 160px; object-fit: cover; border-radius: 12px; margin-bottom: 12px;">
-                <h4 id="rec-titre-detail" style="margin: 0 0 10px 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.2rem;">${rec.nom}</h4>
+                <div style="text-align: center; margin-bottom: 12px;">
+                    <span style="display: inline-block; padding: 5px 14px; border-radius: 20px; font-weight: 800; font-size: 0.78rem; background: rgba(46,125,50,0.12); color: #1B5E20; border: 1.5px solid #1B5E20;">
+                        ${rec.statut || '🟢'} RECETTE SAUVEGARDÉE
+                    </span>
+                </div>
+                <h4 id="rec-titre-detail" style="margin: 0 0 10px 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.2rem; text-align: center;">${rec.nom}</h4>
                 <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">🛒 Ingrédients :</div>
                 <ul id="rec-ingredients-detail" style="font-size: 0.85rem; color: var(--text-main); margin: 0 0 14px 0; padding-left: 20px;">
                     ${rec.ingredients || '<li>Ingrédients enregistrés</li>'}
@@ -5294,7 +5346,7 @@ function ouvrirLecteurRecetteInApp(alimentId, indexRecette) {
         const modal = document.getElementById('modal-recipe-search');
         if (modal) modal.style.display = 'block';
     } else if (rec.idMeal && typeof voirDetailRecetteTheMealDB === 'function') {
-        voirDetailRecetteTheMealDB(rec.idMeal);
+        voirDetailRecetteTheMealDB(rec.idMeal, true);
     } else if (rec.url) {
         window.open(rec.url, '_blank', 'noopener,noreferrer');
     }
