@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.05 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.06 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -1146,7 +1146,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.05</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.06</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -1807,7 +1807,7 @@
 <!-- ========================================== -->
 <script>
     // ========================================================
-    const APP_VERSION = "12.05";
+    const APP_VERSION = "12.06";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -4343,11 +4343,15 @@ function fusionnerDonneesRecues(donneesAImporter) {
         if (item.n && !item.nom) item.nom = item.n;
         if (item.o && !item.notes) item.notes = item.o;
         if (item.r && !item.recettesList) {
-            item.recettesList = item.r.map(rec => {
-                if (rec.m) return { idMeal: rec.m };
-                return { nom: rec.n || "", url: rec.u || "" };
-            });
-        }
+			item.recettesList = item.r.map(rec => {
+				if (rec.m) {
+					// Si on a le numéro idMeal, on met un nom par défaut "Recette TheMealDB"
+					// L'application remplacera ce nom automatiquement lors du premier clic !
+					return { nom: rec.n || "Recette TheMealDB", idMeal: rec.m };
+				}
+				return { nom: rec.n || "Recette", url: rec.u || "" };
+		});
+	}
         if (!item || !item.nom) return;
 		
         const nomClean = removeAccents(item.nom.toLowerCase().trim());
