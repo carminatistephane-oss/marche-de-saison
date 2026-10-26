@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.08 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.09 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -844,35 +844,45 @@
     filter: none drop-shadow(0 2px 4px rgba(0,0,0,0.15));
 }
 
-/* ========================================== */
-    /* ÉDITION NOCTURNE (MODE SOMBRE ÉLÉGANT)     */
-    /* ========================================== */
-   body.dark-mode {
-        --bg-main: #38342E; /* Moka plus clair et doux */
-        --bg-card: #443F38; /* Encadrés un peu plus clairs */
-        --text-main: #EBE6DF; 
-        --text-title: #FFFFFF;
-        --text-muted: #B0A89D;
-        --border-color: #5A534A;
+/* ======================================================== */
+    /* MODE SOMBRE DÉFINITIF : CHALEUREUX, LISIBLE & ÉLÉGANT     */
+    /* ======================================================== */
+    body.dark-mode {
+        --bg-main: #3D352E;        /* Fond : Sable chaud Moka doux */
+        --bg-card: #4A423A;        /* Cartes : Noisette & Café crème */
+        --text-main: #FFF8F0;      /* Textes : Blanc crème très doux */
+        --text-title: #FFFFFF;     /* Titres : Blanc lumineux */
+        --text-muted: #D4C7B8;     /* Sous-titres : Sable clair */
+        --border-color: #5C5248;   /* Bordures : Noisette douce */
     }
 
-    /* On force les éléments blancs à devenir "Ardoise/Chocolat" */
+    /* Cartes, Modales & Fenêtres */
+    body.dark-mode .card,
+    body.dark-mode .modal-box,
+    body.dark-mode .modal-content,
+    body.dark-mode #modal-recipe-search .modal-content {
+        background-color: var(--bg-card) !important;
+        color: var(--text-main) !important;
+        border-color: var(--border-color) !important;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+    }
+
+    /* Formulaires, boutons et sections */
     body.dark-mode .btn,
     body.dark-mode .form-control,
     body.dark-mode .search-input,
     body.dark-mode .search-results,
-    body.dark-mode .modal-box,
-    body.dark-mode .modal-content,
     body.dark-mode .file-upload-wrapper,
     body.dark-mode .btn-action-medium,
     body.dark-mode .btn-action-wide,
     body.dark-mode .settings-btn,
     body.dark-mode .mp-section {
-        background-color: var(--bg-card) !important;
-        color: var(--text-main) !important;
-        border-color: var(--border-color) !important;
+        background-color: #544B42 !important;
+        color: #FFF8F0 !important;
+        border-color: #6B6055 !important;
     }
 
+    /* En-tête fixe */
     body.dark-mode .sticky-header {
         background-color: var(--bg-main) !important;
         border-bottom-color: var(--border-color) !important;
@@ -880,146 +890,93 @@
 
     body.dark-mode .fruits-legumes-cadre,
     body.dark-mode .type-switcher {
-        background-color: var(--bg-card) !important;
+        background-color: #443C35 !important;
     }
 
-    /* NOUVEAU : On baisse la luminosité des boutons pastel d'accueil pour reposer les yeux */
-    body.dark-mode .bouton-moitie,
-    body.dark-mode .saison-btn {
-        filter: brightness(0.85) contrast(1.05);
+/* ======================================================== */
+    /* CORRECTION LISIBILITÉ DES RECETTES                       */
+    /* ======================================================== */
+    body.dark-mode #rec-detail-contenu {
+        background-color: #FAF7F2 !important;
+        border: 1px solid #E2D5C5 !important;
+        color: #332D27 !important;
     }
 
-    body.dark-mode .type-tab {
-        background-color: rgba(255,255,255,0.05) !important;
-        color: var(--text-main) !important;
+    body.dark-mode #rec-detail-contenu p,
+    body.dark-mode #rec-detail-contenu div,
+    body.dark-mode #rec-instructions-detail,
+    body.dark-mode #rec-ingredients-detail,
+    body.dark-mode #rec-ingredients-detail li {
+        color: #332D27 !important;
+        font-weight: 600 !important;
     }
 
-    body.dark-mode .type-tab.active,
-    body.dark-mode .filter-btn.active {
-        background-color: var(--accent) !important;
-        color: #1F1D1A !important;
-        border-color: var(--accent) !important;
+    body.dark-mode #rec-titre-detail {
+        color: #2C3E50 !important;
     }
 
+    /* Encadré d'exploration TheMealDB */
+    body.dark-mode #rec-vue-choix div[style*="background"] {
+        background-color: #4A423A !important;
+        border-color: #D4A373 !important;
+    }
+
+    body.dark-mode #rec-vue-choix p {
+        color: #D4C7B8 !important;
+    }
+
+    /* Boîtes de propriétés (Avantage, Préparation) */
+    body.dark-mode .prop-box {
+        background-color: #38312B !important;
+        border-color: #574B41 !important;
+    }
+
+    /* Détails de la carte pliante */
     body.dark-mode .card-details {
-        background-color: #272420 !important;
+        background-color: #3B332C !important;
+        border-color: #574B41 !important;
     }
 
-    body.dark-mode .prop-box {
-        background-color: #23201C !important;
-        border-color: #3C3833 !important;
-    }
-    
-    /* On adapte les petites pastilles pour qu'elles restent douces */
+    /* Badges et Pastilles */
     body.dark-mode .category-badge,
-    body.dark-mode .active-profil-badge {
-        background-color: #2B2824 !important;
-    }
-	
-	/* Correction pour les boutons de profils en mode sombre */
-    body.dark-mode .profil-btn {
-        background-color: var(--bg-card) !important;
-        color: var(--text-main) !important;
-        border-color: var(--border-color) !important;
-    }
-    body.dark-mode .profil-btn.active {
-        background-color: var(--accent) !important;
-        color: #1F1D1A !important;
-        border-color: var(--accent) !important;
-    }
-	
-/* ======================================================== */
-    /* NOUVELLE CORRECTION DES CARTES (EFFET VERRE FUMÉ SAISON) */
-    /* ======================================================== */
-    
-    body.dark-mode .card {
-        /* Calque plus clair et plus transparent (70%) pour laisser rayonner la couleur */
-        background-image: linear-gradient(rgba(47, 43, 38, 0.70), rgba(47, 43, 38, 0.70)) !important;
-        border-color: rgba(255, 255, 255, 0.1) !important;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.2) !important; 
-    }
-
-    body.dark-mode .card-title-elegant {
-        color: var(--text-title) !important;
-        text-shadow: none !important;
-    }
-
-    /* Les badges et boîtes deviennent translucides pour laisser passer la couleur */
+    body.dark-mode .active-profil-badge,
     body.dark-mode .tag-badge {
-        background-color: rgba(0, 0, 0, 0.35) !important; 
-        color: var(--text-title) !important; 
-        border-color: rgba(255, 255, 255, 0.1) !important;
-    }
-
-    body.dark-mode .prop-box {
-        background-color: rgba(0, 0, 0, 0.15) !important; 
-        border-color: rgba(255, 255, 255, 0.05) !important;
-    }
-
-    /* On assombrit le bouton "FILTRES CLINIQUES" qui flashait en blanc */
-    body.dark-mode .btn-toggle-filters {
-        background-color: var(--bg-card) !important;
-        color: var(--text-main) !important;
-        border-color: var(--border-color) !important;
+        background-color: #3A322B !important;
+        color: #E2D5C5 !important;
+        border-color: #5E5246 !important;
     }
 
 /* ======================================================== */
-    /* CORRECTION DES BOUTONS DE FILTRES EN MODE SOMBRE         */
+    /* BOUTONS ACCUEIL & PARTENAIRES EN TONS PASTEL DOUX        */
     /* ======================================================== */
-    
-    /* On force les boutons et menus à devenir sombres */
-    body.dark-mode .filter-btn {
-        background-color: var(--bg-card) !important;
-        color: var(--text-title) !important;
-        border-color: var(--border-color) !important;
-    }
+    body.dark-mode .printemps { background: linear-gradient(135deg, #3A503E 0%, #2A3B2D 100%) !important; color: #A8E6CF !important; border-color: #4C6B52 !important; }
+    body.dark-mode .ete { background: linear-gradient(135deg, #544833 0%, #3D3424 100%) !important; color: #FFD97D !important; border-color: #6E5F44 !important; }
+    body.dark-mode .automne { background: linear-gradient(135deg, #543B35 0%, #3D2B26 100%) !important; color: #FFC0AD !important; border-color: #6E4E46 !important; }
+    body.dark-mode .hiver { background: linear-gradient(135deg, #334454 0%, #24313D 100%) !important; color: #B3DDFF !important; border-color: #445B70 !important; }
 
-    /* Astuce : Quand on sélectionne un menu déroulant, il s'allume en Caramel ! */
-    body.dark-mode select.filter-btn[style*="var(--text-title)"] {
-        background-color: var(--accent) !important;
-        color: #1F1D1A !important;
-        border-color: var(--accent) !important;
-    }
-	
-	/* ======================================================== */
-    /* CORRECTIONS DES TEXTES DES FENÊTRES (MENTIONS & AIDE)    */
-    /* ======================================================== */
-    
-    body.dark-mode .modal-body,
-    body.dark-mode .modal-body p,
-    body.dark-mode .modal-body strong,
-    body.dark-mode .modal-body ul,
-    body.dark-mode .modal-body li {
-        color: var(--text-main) !important;
-    }
-
-    body.dark-mode .modal-box h3,
-    body.dark-mode .modal-content h3,
-    body.dark-mode .modal-content p {
-        color: var(--text-title) !important;
-    }
-
-    /* NOUVEAU : Effet Verre Fumé sur les encadrés pour garder leur teinte ! */
-    body.dark-mode .modal-body div[style*="background"] {
-        background-image: linear-gradient(rgba(56, 52, 46, 0.85), rgba(56, 52, 46, 0.85)) !important; 
-    }
-    
-    /* NOUVEAU : On RESTAURE et on illumine les jolies couleurs des titres de l'Aide ! */
-    body.dark-mode .modal-body p[style*="#2C3E50"] { color: #8AB4F8 !important; } /* Bleu pastel */
-    body.dark-mode .modal-body p[style*="#A06A42"] { color: #E8C199 !important; } /* Caramel clair */
-    body.dark-mode .modal-body p[style*="#1B5E20"] { color: #81C784 !important; } /* Vert clair */
-    body.dark-mode .modal-body p[style*="#4A148C"] { color: #BA68C8 !important; } /* Violet clair */
-    body.dark-mode .modal-body p[style*="#E65100"] { color: #FFB74D !important; } /* Orange clair */
-    body.dark-mode .modal-body p[style*="#C2185B"] { color: #F06292 !important; } /* Rose clair */
-    body.dark-mode .modal-body p[style*="#4E342E"] { color: #BCAAA4 !important; } /* Brun clair */
-	body.dark-mode .modal-body p[style*="#006064"] { color: #4DD0E1 !important; } /* Cyan néon pour le point 8 */
-    body.dark-mode .modal-body p[style*="#311B92"] { color: #B39DDB !important; } /* Indigo pastel pour le point 9 */
+    body.dark-mode .feculents { background: linear-gradient(135deg, #424954 0%, #2E333B 100%) !important; color: #CFD8DC !important; border-color: #555F6E !important; }
+    body.dark-mode .legumineuses { background: linear-gradient(135deg, #4B403B 0%, #352D29 100%) !important; color: #E0D3CE !important; border-color: #61534D !important; }
+    body.dark-mode .bouton-moitie[style*="FFEBEE"] { background: linear-gradient(135deg, #543336 0%, #3D2427 100%) !important; color: #FFCDD2 !important; border-color: #704448 !important; }
+    body.dark-mode .bouton-moitie[style*="E3F2FD"] { background: linear-gradient(135deg, #2B4254 0%, #1E2E3B 100%) !important; color: #BBDEFB !important; border-color: #39576E !important; }
+    body.dark-mode .bouton-moitie[style*="FFFDE7"] { background: linear-gradient(135deg, #545033 0%, #3D3A24 100%) !important; color: #FFF9C4 !important; border-color: #6E6843 !important; }
+    body.dark-mode .bouton-moitie[style*="E8F5E9"] { background: linear-gradient(135deg, #334838 0%, #233327 100%) !important; color: #C8E6C9 !important; border-color: #435E49 !important; }
+    body.dark-mode .saison-btn[style*="EFEBE9"] { background: linear-gradient(135deg, #453C3A 0%, #302A29 100%) !important; color: #E0D3CE !important; border-color: #5B4F4D !important; }
 
 /* ======================================================== */
-    /* NOUVELLES COULEURS & STYLES : MODE CRU / CUIT            */
+    /* PARTENAIRES WEB : TEINTES POUDRÉES ET DÉSATURÉES (-20%)  */
     /* ======================================================== */
-    
-    /* Bouton Cru (Vert Jardin Pastel & Frais) */
+    body.dark-mode button[onclick*="migusto"] { background: #443B33 !important; color: #FFFFFF !important; border-color: #C29A72 !important; font-weight: 800 !important; }
+    body.dark-mode button[onclick*="fooby"] { background: #324435 !important; color: #FFFFFF !important; border-color: #5BA85E !important; font-weight: 800 !important; }
+    body.dark-mode button[onclick*="betty"] { background: #4A352F !important; color: #FFFFFF !important; border-color: #E0643D !important; font-weight: 800 !important; }
+    body.dark-mode button[onclick*="swissmilk"] { background: #2B3B4A !important; color: #FFFFFF !important; border-color: #3C93DC !important; font-weight: 800 !important; }
+    body.dark-mode button[onclick*="marmiton"] { background: #4A3B2F !important; color: #FFFFFF !important; border-color: #E09524 !important; font-weight: 800 !important; }
+    body.dark-mode button[onclick*="cuisineaz"] { background: #412D4A !important; color: #FFFFFF !important; border-color: #9A3FB0 !important; font-weight: 800 !important; }
+    body.dark-mode button[onclick*="750g"] { background: #4A2B2B !important; color: #FFFFFF !important; border-color: #DC4949 !important; font-weight: 800 !important; }
+    body.dark-mode button[onclick*="cuisineactuelle"] { background: #223F4A !important; color: #FFFFFF !important; border-color: #21B3C7 !important; font-weight: 800 !important; }
+
+    /* ======================================================== */
+    /* BOUTONS CRU / CUIT                                       */
+    /* ======================================================== */
     .btn-prep-cru {
         border: 1.5px solid #2E7D32 !important;
         color: #1B5E20 !important;
@@ -1032,13 +989,12 @@
         transition: all 0.2s ease;
     }
     .btn-prep-cru.active {
-        background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%) !important; /* Vert pastel tendre */
+        background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%) !important;
         color: #1B5E20 !important;
         border-color: #2E7D32 !important;
         box-shadow: 0 4px 10px rgba(46, 125, 50, 0.2) !important;
     }
 
-    /* Bouton Cuit (Orange-Marron Rôti Pastel) */
     .btn-prep-cuit {
         border: 1.5px solid #D84315 !important;
         color: #4E342E !important;
@@ -1051,13 +1007,12 @@
         transition: all 0.2s ease;
     }
     .btn-prep-cuit.active {
-        background: linear-gradient(135deg, #FBE9E7 0%, #FFCCBC 100%) !important; /* Orange-Marron pastel doré */
+        background: linear-gradient(135deg, #FBE9E7 0%, #FFCCBC 100%) !important;
         color: #4E342E !important;
         border-color: #D84315 !important;
         box-shadow: 0 4px 10px rgba(216, 67, 21, 0.2) !important;
     }
 
-/* Badge dynamique au sommet de la carte (à côté de LÉGUME) */
     .badge-prep-mode {
         font-size: 0.7rem;
         font-weight: 800;
@@ -1080,41 +1035,381 @@
         background-color: #FBE9E7 !important;
     }
 
-    /* En Mode Sombre */
-    body.dark-mode .badge-prep-mode {
-        background-color: #2B2824 !important;
-    }
-    body.dark-mode .badge-prep-mode.cru {
-        border-color: #81C784 !important;
-        color: #C8E6C9 !important;
-        background-color: #1B3520 !important;
-    }
-    body.dark-mode .badge-prep-mode.cuit {
-        border-color: #FFAB91 !important;
-        color: #FFCCBC !important;
-        background-color: #3B2014 !important;
+    /* Adaptations Cru/Cuit en Mode Sombre */
+    body.dark-mode .badge-prep-mode { background-color: #2B2824 !important; }
+    body.dark-mode .badge-prep-mode.cru { border-color: #81C784 !important; color: #C8E6C9 !important; background-color: #1B3520 !important; }
+    body.dark-mode .badge-prep-mode.cuit { border-color: #FFAB91 !important; color: #FFCCBC !important; background-color: #3B2014 !important; }
+
+    body.dark-mode .btn-prep-cru { background-color: var(--bg-card) !important; border-color: #81C784 !important; color: #81C784 !important; }
+    body.dark-mode .btn-prep-cru.active { background: #1B3520 !important; color: #C8E6C9 !important; border-color: #81C784 !important; }
+    body.dark-mode .btn-prep-cuit { background-color: var(--bg-card) !important; border-color: #FFAB91 !important; color: #FFAB91 !important; }
+    body.dark-mode .btn-prep-cuit.active { background: #3B2014 !important; color: #FFCCBC !important; border-color: #FFAB91 !important; }
+	
+	/* FORCER LES TITRES DE LA LISTE DE RECETTES EN BLANC PUR EN MODE SOMBRE */
+    body.dark-mode #rec-liste-container .meal-title-text,
+    body.dark-mode #rec-liste-container div,
+    body.dark-mode #rec-liste-container span {
+        color: #FFFFFF !important;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.5);
     }
 
-    /* En Mode Sombre : teintes nuit profondes */
-    body.dark-mode .btn-prep-cru {
-        background-color: var(--bg-card) !important;
-        border-color: #81C784 !important;
-        color: #81C784 !important;
+    /* Le petit encadré autour de chaque recette de la liste */
+    body.dark-mode #rec-liste-container > div {
+        background-color: #38312B !important;
+        border-color: #5C5248 !important;
     }
+	
+	/* ======================================================== */
+    /* CORRECTION DE LA SURBRILLANCE DU MENU DE RECHERCHE      */
+    /* ======================================================== */
+    
+    /* Le fond du menu déroulant de recherche */
+    body.dark-mode .search-results {
+        background-color: #38312B !important;
+        border-color: #5C5248 !important;
+    }
+
+    /* Les éléments de la liste de recherche */
+    body.dark-mode .search-result-item {
+        color: #FFF8F0 !important;
+        border-bottom-color: #4A423A !important;
+    }
+
+    /* SURBRILLANCE (Quand la souris passe dessus ou au clic) */
+    body.dark-mode .search-result-item:hover {
+        background-color: #D4A373 !important; /* Caramel chaleureux */
+        color: #231F1A !important; /* Texte foncé hyper lisible */
+    }
+
+    /* Le petit texte de la saison à droite (ex: "Été") en surbrillance */
+    body.dark-mode .search-result-item:hover span {
+        color: #231F1A !important;
+    }
+	
+/* ======================================================== */
+    /* MODALES EN CARAMEL DORÉ / BISCUIT CHAUD (-10% DE PLUS)    */
+    /* ======================================================== */
+    
+    /* Le fond devient un Caramel Doré poudré et chaleureux */
+    body.dark-mode .modal-box,
+    body.dark-mode #modal-about .modal-box,
+    body.dark-mode #modal-help .modal-box,
+    body.dark-mode #modal-settings .modal-box {
+        background-color: #D1C0AA !important; /* Caramel Biscuit chaud */
+        border: 2px solid #B89B77 !important;
+        color: #231F1A !important;
+    }
+
+    /* Le titre principal */
+    body.dark-mode .modal-box h3 {
+        color: #231F1A !important;
+    }
+
+    /* Tous les paragraphes, listes et textes */
+    body.dark-mode .modal-body,
+    body.dark-mode .modal-body p,
+    body.dark-mode .modal-body strong,
+    body.dark-mode .modal-body li,
+    body.dark-mode .modal-body div {
+        color: #231F1A !important;
+    }
+
+    /* Les boutons des Paramètres sur fond biscuit */
+    body.dark-mode #modal-settings .settings-btn {
+        background-color: #F0E6D8 !important;
+        color: #231F1A !important;
+        border-color: #C2B09B !important;
+    }
+	
+/* ======================================================== */
+    /* UNIFORMISATION ABSOLUE : TOUTES LES MODALES EN CARAMEL   */
+    /* ======================================================== */
+
+    /* 1. Le fond Caramel Biscuit chaud pour ABSOLUMENT TOUTES les fenêtres */
+    body.dark-mode .modal-box,
+    body.dark-mode .modal-content,
+    body.dark-mode #modal-about .modal-box,
+    body.dark-mode #modal-help .modal-box,
+    body.dark-mode #modal-settings .modal-box,
+    body.dark-mode #modal-recipe-search .modal-content,
+    body.dark-mode #hidden-items-modal .modal-content,
+    body.dark-mode #qr-modal .modal-content {
+        background-color: #D1C0AA !important; /* Caramel Biscuit chaud */
+        border: 2px solid #B89B77 !important;
+        color: #231F1A !important;
+    }
+
+    /* 2. Tous les titres principaux de TOUTES les fenêtres */
+    body.dark-mode .modal-box h3,
+    body.dark-mode .modal-content h3,
+    body.dark-mode #hidden-items-modal h3,
+    body.dark-mode #qr-modal h3,
+    body.dark-mode #rec-vue-choix h3,
+    body.dark-mode #rec-liste-titre {
+        color: #231F1A !important;
+    }
+
+    /* 3. Tous les textes, paragraphes et explications */
+    body.dark-mode .modal-body,
+    body.dark-mode .modal-body p,
+    body.dark-mode .modal-body strong,
+    body.dark-mode .modal-body li,
+    body.dark-mode .modal-body div,
+    body.dark-mode #hidden-items-modal p,
+    body.dark-mode #qr-modal p,
+    body.dark-mode #qr-modal div,
+    body.dark-mode #rec-vue-choix p {
+        color: #231F1A !important;
+    }
+
+    /* 4. Les sous-cartes/boutons à l'intérieur des fenêtres (Paramètres, QR, Fiches Masquées) */
+    body.dark-mode #modal-settings .settings-btn,
+    body.dark-mode #hidden-items-modal .settings-btn,
+    body.dark-mode #qr-modal .settings-btn,
+    body.dark-mode #hidden-items-container div {
+        background-color: #F0E6D8 !important;
+        color: #231F1A !important;
+        border-color: #C2B09B !important;
+        font-weight: 800 !important;
+    }
+
+    /* 5. Champ "Coller le lien ici" */
+    body.dark-mode #input-coller-lien {
+        background-color: #F0E6D8 !important;
+        color: #231F1A !important;
+        border-color: #C2B09B !important;
+    }
+
+    /* 6. La carte blanche de la recette reste sur son beau fond crème lumineux */
+    body.dark-mode #rec-detail-contenu {
+        background-color: #FAF7F2 !important;
+        border: 1px solid #B89B77 !important;
+        color: #231F1A !important;
+    }
+	
+	/* Rendre le bloc d'exploration TheMealDB parfaitement lumineux et lisible */
+    body.dark-mode #rec-vue-choix div[style*="background"] {
+        background-color: #F0E6D8 !important;
+        border: 1.5px solid #B89B77 !important;
+        color: #231F1A !important;
+    }
+
+    body.dark-mode #rec-vue-choix p,
+    body.dark-mode #rec-vue-choix strong {
+        color: #231F1A !important;
+    }
+	
+	/* ======================================================== */
+    /* ARRONDI ET CENTRAGE SÉCURISÉ DES MODALES                 */
+    /* ======================================================== */
+    
+    /* Coins arrondis doux sur tous les panneaux de modales */
+    .modal-box,
+    .modal-content {
+        border-radius: 24px !important;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35) !important;
+    }
+
+    /* Centrage fluide par marge sans bloquer le script */
+    #hidden-items-modal .modal-content,
+    #qr-modal .modal-content,
+    #modal-recipe-search .modal-content {
+        margin: 8vh auto !important;
+        max-height: 84vh !important;
+        overflow-y: auto !important;
+    }
+	
+/* ======================================================== */
+    /* ALIGNEMENT ET MARGES PARFAITES POUR LA MODALE QR CODE    */
+    /* ======================================================== */
+    
+    /* Marge interne générale */
+    #qr-modal .modal-content {
+        padding: 22px 20px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Ajustement de la zone d'importation PC (Coller le lien + Importer) */
+    #qr-modal div[style*="display: flex; gap: 8px;"] {
+        display: flex !important;
+        gap: 6px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Le champ de texte "Coller le lien..." */
+    #input-coller-lien {
+        flex: 1 !important;
+        min-width: 0 !important; /* Empêche le champ de pousser le bouton dehors ! */
+        border-radius: 12px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Le bouton Importer */
+    #qr-modal button[onclick*="importerLienManuel"] {
+        flex-shrink: 0 !important;
+        border-radius: 12px !important;
+        padding: 10px 12px !important;
+    }
+
+    /* Centrage parfait des gros boutons */
+    #btn-copy-link,
+    #qr-modal .modal-content > button:last-child {
+        width: 100% !important;
+        border-radius: 16px !important;
+        box-sizing: border-box !important;
+    }
+	
+	/* Alignement et wrapping automatique pour le duo Marquer / Historique */
+    #qr-status-text div[style*="display:flex"] {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    #qr-status-text button {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        white-space: normal !important; /* Permet au texte de rester fluide si l'écran est très étroit */
+    }
+	
+/* Aérer le titre du haut de la modale Fiches Masquées (-30%) */
+    #hidden-items-modal .modal-content {
+        padding-top: 20px !important; /* Le dosage idéal */
+        padding-bottom: 22px !important;
+    }
+
+    #hidden-items-modal h3 {
+        margin-top: 0 !important;
+        margin-bottom: 10px !important;
+    }
+	
+	/* Rendre l'icône de l'œil bien visible et lumineuse en Mode Sombre */
+    body.dark-mode #hidden-items-container button svg {
+        stroke: #81C784 !important; /* Vert menthe lumineux */
+        filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4)) !important;
+    }
+
+    body.dark-mode #hidden-items-container button svg circle {
+        fill: #81C784 !important;
+    }
+
+    /* Le texte "Remettre" à côté de l'œil */
+    body.dark-mode #hidden-items-container button {
+        color: #FFFFFF !important;
+        font-weight: 800 !important;
+    }
+	
+/* ======================================================== */
+    /* CRU / CUIT : STYLE NOBLE, SOBRE ET DÉLICAT               */
+    /* ======================================================== */
+
+    /* Bouton Éteint : Fondu discret dans le décor */
+    body.dark-mode .btn-prep-cru:not(.active),
+    body.dark-mode .btn-prep-cuit:not(.active) {
+        background-color: transparent !important;
+        color: #A89C8F !important;
+        border-color: #5C5248 !important;
+        opacity: 0.6 !important;
+    }
+
+    /* Bouton Allumé : Teinte douce veloutée avec texte bien blanc */
     body.dark-mode .btn-prep-cru.active {
-        background: #1B3520 !important;
-        color: #C8E6C9 !important;
-        border-color: #81C784 !important;
+        background-color: #384D3B !important; /* Vert forêt très doux */
+        color: #FFFFFF !important;
+        border: 2px solid #81C784 !important;
+        font-weight: 800 !important;
     }
-    body.dark-mode .btn-prep-cuit {
-        background-color: var(--bg-card) !important;
-        border-color: #FFAB91 !important;
-        color: #FFAB91 !important;
-    }
+
     body.dark-mode .btn-prep-cuit.active {
-        background: #3B2014 !important;
-        color: #FFCCBC !important;
-        border-color: #FFAB91 !important;
+        background-color: #523932 !important; /* Moka cuivré très doux */
+        color: #FFFFFF !important;
+        border: 2px solid #FFAB91 !important;
+        font-weight: 800 !important;
+    }
+	
+	/* ======================================================== */
+    /* MODALE PROFIL : STYLE NOBLE SOMBRE & BOUTONS LISIBLES    */
+    /* ======================================================== */
+
+    /* 1. On garde les encadrés sombres très classes */
+    body.dark-mode #modal-select-profil .mp-section {
+        background-color: #38312B !important;
+        border: 1px solid #5C5248 !important;
+    }
+
+    body.dark-mode #modal-select-profil .mp-text {
+        color: #FFF8F0 !important;
+    }
+
+    /* 2. Titres dorés bien lumineux */
+    body.dark-mode #modal-select-profil .mp-section-title {
+        color: #E8C199 !important;
+        font-weight: 800 !important;
+    }
+
+    /* 3. Les boutons de profils : Fond doux et texte Moka bien contrasté */
+    body.dark-mode #modal-select-profil .profil-btn {
+        background-color: #F0E6D8 !important; /* Exactement la même couleur que Copier/Fermer */
+        color: #231F1A !important;
+        border: 1px solid #C2B09B !important;
+        font-weight: 800 !important;
+    }
+
+    /* Quand un profil est sélectionné */
+    body.dark-mode #modal-select-profil .profil-btn.active {
+        background-color: #2C3E50 !important;
+        color: #FFFFFF !important;
+        border-color: #2C3E50 !important;
+    }
+
+    /* Bouton Annuler */
+    body.dark-mode #modal-select-profil .btn-mp-cancel {
+        background-color: #38312B !important;
+        color: #FFF8F0 !important;
+        border-color: #5C5248 !important;
+    }
+	
+	/* ======================================================== */
+    /* LES 4 TITRES AVEC LEURS VRAIES COULEURS DE BASE          */
+    /* ======================================================== */
+
+    /* 1. Le sous-titre du haut : Gris Ardoise Doux et Net */
+    body.dark-mode #modal-select-profil p[style*="text-transform: uppercase"] {
+        color: #5A687A !important; /* Gris Ardoise d'origine, lisible et soigné */
+        font-weight: 800 !important;
+        letter-spacing: 1.2px !important;
+    }
+
+    /* 2. Les 3 titres des cadres : Caramel Brun Chaud d'origine */
+    body.dark-mode #modal-select-profil div[style*="font-size: 0.65rem"] {
+        color: #7E4B28 !important; /* Beau Caramel Brun chaud et tranché */
+        font-weight: 800 !important;
+        letter-spacing: 1.2px !important;
+    }
+	
+	/* ======================================================== */
+    /* VERROUILLAGE DE LA MODALE À SA TAILLE DE CROISIÈRE       */
+    /* ======================================================== */
+
+    /* La fenêtre prend directement sa belle hauteur finale dès l'ouverture */
+    #modal-select-profil .modal-box {
+        height: 95vh !important;       /* Hauteur finale fixe : ZÉRO saut ! */
+        max-height: 95vh !important;
+        display: flex !important;
+        flex-direction: column !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Le contenu intérieur s'étale naturellement sans ascenseurs disgracieux */
+    #modal-select-profil .mp-section {
+        height: auto !important;
+        min-height: auto !important;
+        max-height: none !important;
+        overflow-y: visible !important;
     }
 	
 </style>
@@ -1146,7 +1441,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.08</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.09</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -1807,7 +2102,7 @@
 <!-- ========================================== -->
 <script>
     // ========================================================
-    const APP_VERSION = "12.08";
+    const APP_VERSION = "12.09";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -4170,7 +4465,7 @@ function dessinerInterfacePilules() {
             <strong>Sélectionnez vos fiches (<span style="color:${couleurCompteur}; font-weight:800;">${totalCoches} / ${MAX_FICHES_PAR_QR} max</span>) :</strong>
         </div>
         <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:4px; margin-bottom:10px; max-height:100px; overflow-y:auto; padding:2px;">${pilulesHTML}</div>
-        <div style="display:flex; gap:6px; justify-content:center; margin-bottom:10px;">
+        <div style="display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; width: 100%; box-sizing: border-box; margin: 0 auto 12px auto;">
             <button type="button" onclick="validerEnvoiTermine()" style="background:#E8F5E9; border:1px solid #A5D6A7; color:#2E7D32; font-weight:800; font-size:0.72rem; padding:6px 10px; border-radius:12px; cursor:pointer;">✅ Marquer sélection envoyée</button>
             <button type="button" onclick="forcerRenvoyerToutHistorique()" style="background:#FFF; border:1px dashed var(--accent); color:var(--accent-dark); font-size:0.72rem; padding:6px 8px; border-radius:12px; cursor:pointer;" title="Recharger toutes les fiches créées">↺ Tout l'historique</button>
         </div>
