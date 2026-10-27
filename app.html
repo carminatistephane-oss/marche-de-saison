@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.10 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.11 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -1449,7 +1449,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.10</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.11</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -2139,7 +2139,7 @@
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "12.10";
+    const APP_VERSION = "12.11";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -4375,7 +4375,10 @@ async function creerCodePartageCloud() {
         return;
     }
 
-    const fichesSelectionnees = fichesAEnvoyerGlobal.filter(f => selectionFichesIds.includes(f.id || f.nom));
+    // Récupère les vraies fiches complètes cochées par l'utilisateur
+    const fichesSelectionnees = selectionFichesIds.map(idOuNom => {
+        return legumes.find(l => (l.id == idOuNom) || (removeAccents(l.nom.toLowerCase().trim()) === removeAccents(String(idOuNom).toLowerCase().trim())));
+    }).filter(f => f); // Supprime les éléments vides
     const btnCreer = document.getElementById('btn-creer-pin');
     if (btnCreer) {
         btnCreer.innerText = "⏳ Création du casier...";
