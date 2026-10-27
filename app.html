@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.11 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.12 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -1449,7 +1449,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.11</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.12</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -2139,7 +2139,7 @@
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "12.11";
+    const APP_VERSION = "12.12";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -4459,9 +4459,11 @@ async function telechargerParCodePin() {
             return;
         }
 
-        const data = docRef.data();
         if (data && data.fiches && Array.isArray(data.fiches)) {
-            const confirmation = confirm(`📦 CASIER N° ${codePin} OUVERT !\n\n${data.fiches.length} fiche(s) personnalisée(s) et recette(s) trouvée(s).\n\nVoulez-vous les ajouter à votre marché ?`);
+            // Récupère les vrais noms des aliments reçus
+            const listeNoms = data.fiches.map(f => f.nom || f.n || "Aliment").join(', ');
+
+            const confirmation = confirm(`📦 CASIER N° ${codePin} OUVERT !\n\nAliments reçus :\n👉 ${listeNoms}\n\n(${data.fiches.length} fiche(s) personnalisée(s) et recette(s))\n\nVoulez-vous les ajouter à votre marché ?`);
 
             if (confirmation) {
                 fusionnerDonneesRecues(data.fiches);
@@ -5310,21 +5312,24 @@ function sauvegarderObjetRecetteSurAliment(idAliment, objetRecette) {
     }
 }
 
-// Partenaires suisses invulnérables (depuis l'Écran 1)
-function ouvrirPartenaireSuisse(site) {
-    if (!alimentRecetteActif) return;
-    const aliment = encodeURIComponent(alimentRecetteActif.nom);
-    let url = "";
-
-    if (site === 'migusto') {
-        url = `https://www.google.com/search?q=site:migusto.migros.ch+recette+${aliment}`;
-    } else if (site === 'fooby') {
-        url = `https://www.google.com/search?q=site:fooby.ch+recette+${aliment}`;
-    } else if (site === 'betty') {
-        url = `https://www.google.com/search?q=site:bettybossi.ch+recette+${aliment}`;
+// === OUVERTURE DIRECTE DES PAGES D'ACCUEIL OFFICIELLES (ZÉRO ERREUR 404) ===
+function ouvrirPartenaireWeb(urlBase) {
+    if (urlBase) {
+        window.open(urlBase, '_blank', 'noopener,noreferrer');
     }
+}
 
-    window.open(url, '_blank', 'noopener,noreferrer');
+// Sécurité si un bouton utilise l'ancien appel
+function ouvrirPartenaireSuisse(site) {
+    const urls = {
+        'migusto': 'https://migusto.migros.ch',
+        'fooby': 'https://fooby.ch',
+        'betty': 'https://www.bettybossi.ch',
+        'swissmilk': 'https://www.swissmilk.ch/fr/recettes/'
+    };
+    if (urls[site]) {
+        window.open(urls[site], '_blank', 'noopener,noreferrer');
+    }
 }
 
 // Dictionnaire Français -> Anglais
