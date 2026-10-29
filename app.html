@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.14 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.15 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -19,8 +19,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Le Petit Marché de mon Estomac</title>
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon.png" type="image/png">
-<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icones/icon.png" type="image/png">
+<link rel="apple-touch-icon" href="icones/icon.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -1441,7 +1441,7 @@
 
 
         <div class="header-accueil">
-            <img src="logo.png" alt="Logo" class="header-logo" onerror="this.onerror=null; this.src='logo_2.jpg';">
+            <img src="icones/logo.png" alt="Logo" class="header-logo" onerror="this.onerror=null; this.src='icones/logo_2.jpg';">
             <h1>
                 <span class="title-part-1">Le Petit Marché</span>
                 <span class="title-part-2">de mon Estomac</span>
@@ -1449,7 +1449,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.14</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.15</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -2139,7 +2139,7 @@
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "12.14";
+    const APP_VERSION = "12.15";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -3265,7 +3265,7 @@ window.fermerProfils = function() {
             
             <!-- Bouton Favoris (Moitié gauche) -->
             <button class="btn-top-custom" style="flex: 1; align-items: center; justify-content: flex-start; padding: 0; margin: 0;" onclick="openSaison('Favoris')">
-                <img src="favoris_02.png" alt="Favoris" style="width: 58px; margin-right: 8px;">
+                <img src="icones/favoris_02.png" alt="Favoris" style="width: 58px; margin-right: 8px;">
                 <div class="txt-block" style="padding-top: 2px; align-items: flex-start; text-align: left;">
                     <span class="txt-small">ALIMENTS</span>
                     <span class="txt-big">FAVORIS</span>
@@ -3282,7 +3282,7 @@ window.fermerProfils = function() {
                     <span class="txt-shadow" style="right: 0;">ADAPTÉS</span>
                     <span style="font-family: 'Nunito', sans-serif; font-size: 0.85rem; font-weight: 800; color: var(--text-muted); margin-top: 1px;">${countRecommandes}</span>
                 </div>
-                <img src="recommandes_02.png" alt="Adaptés" style="width: 58px;">
+                <img src="icones/recommandes_02.png" alt="Adaptés" style="width: 58px;">
             </button>
         </div>
             <!-- 2. Fruits & Légumes (Cadre) -->
@@ -4059,7 +4059,7 @@ function renderCards() {
 		   		   
             card.innerHTML = `
                 <button class="favorite-btn-card ${getFavoris().includes(leg.id) ? 'active' : 'inactive'}" onclick="toggleFavori(${leg.id})">
-                    <img src="coeur.png" alt="Favori">
+                    <img src="icones/coeur.png" alt="Favori">
                 </button>
                 <div class="card-top-overlay">
                     <div class="card-top-left"><div class="card-photo-round" style="border-color: ${tolColor};">${imgTag}<div class="tolerance-badge">${tolEmoji}</div></div></div>

@@ -1,21 +1,23 @@
 // ========================================================
 // SERVICE WORKER - LE PETIT MARCHÉ DE MON ESTOMAC
-// VERSION DU CACHE : v12.14 (Nouvelle Refonte Cru/Cuit & Recettes)
+// VERSION DU CACHE : v12.15 (Nouvelle Refonte Cru/Cuit & Recettes)
 // ========================================================
 
-const CACHE_NAME = 'marche-cache-v12.14';
+const CACHE_NAME = 'marche-cache-v12.15';
 
 // Fichiers vitaux à stocker pour le fonctionnement 100% hors-ligne
-const URLS_A_METTRE_EN_CACHE = [
-    './',
-    './app.html',
-    './manifest.json',
-    './logo.png',
-    './logo_2.jpg',
-    './icon.png',
-    './coeur.png',
-    './favoris_02.png',
-    './recommandes_02.png'
+const urlsToCache = [
+  './',
+  './app.html',
+  './index.html',
+  './manifest.json',
+  './icones/logo.png',
+  './icones/icon.png',
+  './icones/coeur.png',
+  './icones/favoris_02.png',
+  './icones/recommandes_02.png',
+  './icones/icn-192.png',
+  './icones/icn-512.png'
 ];
 
 // 1. INSTALLATION : Téléchargement des fichiers essentiels (avec sécurité tolérante)
