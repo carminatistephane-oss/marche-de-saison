@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.13 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.14 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -1449,7 +1449,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.13</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.14</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -2139,7 +2139,7 @@
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "12.13";
+    const APP_VERSION = "12.14";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -5315,7 +5315,14 @@ function sauvegarderObjetRecetteSurAliment(idAliment, objetRecette) {
 // === OUVERTURE DIRECTE DES PAGES D'ACCUEIL OFFICIELLES (ZÉRO ERREUR 404) ===
 function ouvrirPartenaireWeb(urlBase) {
     if (urlBase) {
-        window.open(urlBase, '_blank', 'noopener,noreferrer');
+        // ASTUCE SPÉCIALE PWA MOBILE : Forcer l'ouverture hors de l'application
+        const lienInvisible = document.createElement('a');
+        lienInvisible.href = urlBase;
+        lienInvisible.target = '_blank';
+        lienInvisible.rel = 'noopener noreferrer';
+        document.body.appendChild(lienInvisible);
+        lienInvisible.click(); // Simule un clic physique
+        document.body.removeChild(lienInvisible); // Nettoie derrière lui
     }
 }
 
@@ -5328,7 +5335,7 @@ function ouvrirPartenaireSuisse(site) {
         'swissmilk': 'https://www.swissmilk.ch/fr/recettes/'
     };
     if (urls[site]) {
-        window.open(urls[site], '_blank', 'noopener,noreferrer');
+        ouvrirPartenaireWeb(urls[site]);
     }
 }
 
