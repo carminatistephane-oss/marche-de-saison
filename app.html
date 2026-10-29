@@ -1417,13 +1417,14 @@
     }
 	
 	/* ======================================================== */
-    /* CORRECTION DU BOUTON D'INSTALLATION (ÉVITER LE CHEVAUCHEMENT) */
+    /* CORRECTION DU BOUTON D'INSTALLATION (SANS TOUCHER AU RESTE) */
     /* ======================================================== */
     
     .btn-install-pwa {
-        margin-bottom: 35px !important; /* Pousse la barre de recherche et la pastille vers le bas */
+        margin-top: 0px !important; /* Rapproche le bouton de la flèche au-dessus */
+        margin-bottom: 35px !important; /* Pousse la barre de recherche vers le bas */
         position: relative !important;
-        z-index: 20 !important; /* S'assure qu'il reste bien cliquable au-dessus du reste */
+        z-index: 20 !important;
     }
 	
 </style>
