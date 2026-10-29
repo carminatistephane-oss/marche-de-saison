@@ -1416,6 +1416,16 @@
         overflow-y: visible !important;
     }
 	
+	/* ======================================================== */
+    /* CORRECTION DU BOUTON D'INSTALLATION (ÉVITER LE CHEVAUCHEMENT) */
+    /* ======================================================== */
+    
+    .btn-install-pwa {
+        margin-bottom: 35px !important; /* Pousse la barre de recherche et la pastille vers le bas */
+        position: relative !important;
+        z-index: 20 !important; /* S'assure qu'il reste bien cliquable au-dessus du reste */
+    }
+	
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
