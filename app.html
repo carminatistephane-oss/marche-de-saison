@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.16 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.17 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -1470,7 +1470,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.16</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.17</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -2309,7 +2309,7 @@
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "12.16";
+    const APP_VERSION = "12.17";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -2772,6 +2772,8 @@ const defaultData = [
 
  
 ];
+
+
 
     const profilsInfo = {
         'neutre': {
@@ -3259,122 +3261,71 @@ window.fermerProfils = function() {
         container.appendChild(div);
     }
 
-    function initData() {
+function initData() {
         const STORAGE_KEY = 'marche_saison_data';
         const storedData = localStorage.getItem(STORAGE_KEY);
-        let loadedData = [];
+        let donneesLocales = [];
 
         if (storedData) {
-            loadedData = JSON.parse(storedData);
-            loadedData.forEach(item => {
-                const nomLower = item.nom.toLowerCase();
-                
-                if (nomLower.includes("laitue")) {
-                    item.saison = "Printemps";
-                    item.type = "Légume";
-                }
-                if (nomLower === "chèvre affiné" || nomLower === "chevre affiné") {
-                    item.type = "Fromage pâte molle";
-                }
-                if (nomLower === "chèvre pressé" || nomLower === "chevre pressé") {
-                    item.type = "Fromage pâte mi-dure";
-                }
-                if (nomLower === "mascarpone") {
-                    item.type = "Fromage frais";
-                }
-                
-                item.nom = item.nom.replace(/\(|\)/g, "").trim();
-
-                if (nomLower.includes("bolet") || nomLower.includes("morille")) item.saison = "Automne";
-                // --- AUTO-RÉPARATION : On remet la sauce soja dans les Condiments ---
-                if (nomLower.includes("sauce soja")) {
-                    item.type = "Condiment";
-                    item.saison = "Condiments";
-                }
-
-                const motsLegumineuses = ["petits pois", "fèves", "mungo", "haricots rouges", "haricots blancs", "lentille", "soja", "toor dal", "edamame", "flageolets", "borlotti", "lima", "pois chiches"];
-                // NOUVEAU : On interdit de ranger la "sauce" soja dans les légumes secs !
-                if (motsLegumineuses.some(m => nomLower.includes(m)) && !nomLower.includes("sauce")) { 
-                    item.type = "Légumineuse"; 
-                    item.saison = "Légumineuses"; 
-                }
-                // --- AUTO-RÉPARATION : On remet la pâte à tartiner dans les Douceurs ---
-                if (nomLower.includes("tartiner") || nomLower.includes("nutella")) {
-                    item.type = "Douceur";
-                    item.saison = "Boissons";
-                }
-
-                const motsFeculents = ["pomme de terre", "patate douce", "panais", "topinambour", "riz", "pâte", "couscous", "boulgour", "quinoa", "sarrasin", "polenta", "avoine"];
-                // NOUVEAU : On interdit de ranger la pâte à "tartiner" dans les féculents !
-                if (motsFeculents.some(m => nomLower.includes(m)) && !nomLower.includes("tartiner")) { item.type = "Féculent"; item.saison = "Féculents"; }
-                
-                const motsCharcuterie = ["charcuterie", "jambon", "saucisson", "saucisse", "lardon", "bacon"];
-                if (motsCharcuterie.some(m => nomLower.includes(m))) { item.type = "Charcuterie"; item.saison = "Viandes"; }
-
-                // --- AUTO-RÉPARATION : Bouillon, Chocolat et Yaourt de coco ---
-                if (nomLower.includes("bouillon de boeuf") || nomLower.includes("bouillon de bœuf")) {
-                    item.type = "Épices";
-                    item.saison = "Condiments";
-                }
-                if (nomLower.includes("chocolat au lait")) {
-                    item.type = "Douceur";
-                    item.saison = "Boissons";
-                }
-                if (nomLower.includes("yaourt au lait de coco")) {
-                    item.type = "Yaourt / Séré";
-                    item.saison = "Laitages";
-                }
-
-                const motsLaitages = ["lait", "yaourt", "séré", "fromage", "beurre", "crème", "mozzarella", "camembert", "tomme", "gruyère", "emmentaler", "raclette", "oeuf", "suisse", "cottage", "feta", "chèvre", "chevre", "mascarpone", "brie", "gorgonzola", "parmesan", "sbrinz", "tartare", "margarine"];
-                // NOUVEAU : On interdit de ranger le chocolat, le boeuf ou la salade dans les laitages !
-                if (motsLaitages.some(m => nomLower.includes(m)) && !nomLower.includes("laitue") && !nomLower.includes("boeuf") && !nomLower.includes("bœuf") && !nomLower.includes("chocolat") && !groupViandes.includes(item.type) && !groupPoissons.includes(item.type)) {
-                    item.saison = "Laitages";
-                    // PRIORITÉ AUX YAOURTS : On vérifie si c'est un yaourt AVANT de vérifier le lait !
-                    if (nomLower.includes("yaourt") || nomLower.includes("séré") || nomLower.includes("suisse")) item.type = "Yaourt / Séré";
-                    else if (nomLower.includes("lait ") || nomLower === "lait") item.type = "Lait";
-                    else if (nomLower.includes("beurre") || nomLower.includes("crème") || nomLower.includes("margarine")) item.type = "Crème / Beurre";
-                    else if (nomLower.includes("frais") || nomLower.includes("mozzarella") || nomLower.includes("cottage") || nomLower.includes("feta") || nomLower.includes("tartare") || nomLower.includes("chèvre frais") || nomLower.includes("chevre frais") || nomLower.includes("mascarpone")) item.type = "Fromage frais";
-                    else if (nomLower.includes("molle") || nomLower.includes("camembert") || nomLower.includes("tomme") || nomLower.includes("vacherin") || nomLower.includes("brie") || nomLower.includes("gorgonzola") || nomLower.includes("caprice") || nomLower.includes("agur") || nomLower.includes("chèvre affiné") || nomLower.includes("chevre affine")) item.type = "Fromage pâte molle";
-                    else if (nomLower.includes("mi-dure") || nomLower.includes("raclette") || nomLower.includes("tête de moine") || nomLower.includes("appenzeller") || nomLower.includes("tilsiter") || nomLower.includes("hollande") || nomLower.includes("chèvre pressé") || nomLower.includes("chevre presse")) item.type = "Fromage pâte mi-dure";
-                    else if (nomLower.includes("dure") || nomLower.includes("gruyère") || nomLower.includes("emmentaler") || nomLower.includes("sbrinz") || nomLower.includes("parmesan")) item.type = "Fromage pâte dure";
-                    else if (nomLower.includes("oeuf") && !nomLower.includes("boeuf") && !nomLower.includes("bœuf")) item.type = "oeuf";
-                    else if (!groupLaitages.includes(item.type)) item.type = "Laitage";
-                }
-
-                if (item.ig && !item.cg) { item.cg = item.ig; delete item.ig; }
-
-                if (!item.gluten) item.gluten = (["pâte", "couscous", "boulgour", "orge"].some(m => nomLower.includes(m))) ? "Avec" : "Sans";
-                if (!item.lactose) item.lactose = (item.type === "Lait" || item.type === "Yaourt / Séré" || nomLower.includes("lait ") || nomLower === "lait") ? "Avec" : "Sans";
-                if (!item.graisses) item.graisses = (nomLower.includes("avocat") || nomLower.includes("saumon") || nomLower.includes("beurre") || nomLower.includes("crème") || nomLower.includes("fromage") || item.type === "Charcuterie" || nomLower.includes("mozzarella") || nomLower.includes("feta") || nomLower.includes("mascarpone") || nomLower.includes("parmesan") || nomLower.includes("sbrinz") || nomLower.includes("brie") || nomLower.includes("gorgonzola") || nomLower.includes("tartare") || nomLower.includes("agur") || nomLower.includes("margarine")) ? "Gras" : "Maigre";
-                if (!item.acidite) item.acidite = (["citron", "lime", "rhubarbe", "orange", "pamplemousse", "tomate", "clémentine", "mandarine", "kiwi", "fraise"].some(m => nomLower.includes(m))) ? "Acide" : "Doux";
-                if (!item.fructose) item.fructose = (item.type === "Fruit" && item.fodmap === "Haut") ? "Haut" : "Bas";
-                if (!item.fodmap) item.fodmap = (item.tolerance.includes("🔴")) ? "Haut" : "Bas";
-                if (!item.fibres) item.fibres = (item.tolerance.includes("🔴")) ? "Insolubles" : "Solubles";
-                if (!item.cg) item.cg = "Bas";
-                if (!item.texture) item.texture = (nomLower.includes("poisson") || nomLower.includes("haché") || item.type === "Charcuterie") ? "Fondante" : "Ferme";
-            });
+            donneesLocales = JSON.parse(storedData);
         }
-        
-        defaultData.forEach(defItem => {
-            const existingItem = loadedData.find(item => removeAccents(item.nom.toLowerCase()) === removeAccents(defItem.nom.toLowerCase()));
-            if (!existingItem) {
-                const newId = loadedData.length > 0 ? Math.max(...loadedData.map(l => l.id)) + 1 : defItem.id;
-                defItem.id = newId;
-                const nomLower = defItem.nom.toLowerCase();
-                if (!defItem.gluten) defItem.gluten = (["pâte", "couscous", "boulgour", "orge"].some(m => nomLower.includes(m))) ? "Avec" : "Sans";
-                if (!defItem.lactose) defItem.lactose = (defItem.type === "Lait" || defItem.type === "Yaourt / Séré" || nomLower.includes("lait ")) ? "Avec" : "Sans";
-                if (!defItem.graisses) defItem.graisses = (nomLower.includes("avocat") || nomLower.includes("saumon") || nomLower.includes("beurre") || nomLower.includes("crème") || nomLower.includes("fromage") || defItem.type === "Charcuterie" || nomLower.includes("mozzarella") || nomLower.includes("feta") || nomLower.includes("mascarpone") || nomLower.includes("parmesan") || nomLower.includes("sbrinz") || nomLower.includes("brie") || nomLower.includes("gorgonzola") || nomLower.includes("tartare") || nomLower.includes("agur") || nomLower.includes("margarine")) ? "Gras" : "Maigre";
-                if (!defItem.acidite) defItem.acidite = (["citron", "lime", "rhubarbe", "orange", "pamplemousse", "tomate", "clémentine", "mandarine", "kiwi", "fraise"].some(m => nomLower.includes(m))) ? "Acide" : "Doux";
-                if (!defItem.fructose) defItem.fructose = (defItem.type === "Fruit" && (!defItem.fodmap || defItem.fodmap === "Haut")) ? "Haut" : "Bas";
-                if (!defItem.fodmap) defItem.fodmap = (defItem.tolerance.includes("🔴")) ? "Haut" : "Bas";
-                if (!defItem.fibres) defItem.fibres = (defItem.tolerance.includes("🔴")) ? "Insolubles" : "Solubles";
-                if (!defItem.cg) defItem.cg = "Bas";
-                if (!defItem.texture) defItem.texture = (nomLower.includes("poisson") || nomLower.includes("haché") || defItem.type === "Charcuterie" || nomLower.includes("truite fumée") || nomLower.includes("saumon fumé")) ? "Fondante" : "Ferme";
-                loadedData.push(defItem);
+
+        // =========================================================================
+        // 🛡️ MOTEUR DE FUSION INTELLIGENTE (SMART MERGE) - ZÉRO PERTE DE DONNÉES
+        // =========================================================================
+        let donneesFusionnees = [];
+
+        // 1. On parcourt le NOUVEAU catalogue (defaultData) pour le mettre à jour
+        defaultData.forEach(nouvelAliment => {
+            // On cherche si l'utilisateur avait déjà cet aliment dans son téléphone
+            const alimentSauvegarde = donneesLocales.find(item => 
+                item.id === nouvelAliment.id || 
+                removeAccents(item.nom.toLowerCase()) === removeAccents(nouvelAliment.nom.toLowerCase())
+            );
+
+            if (alimentSauvegarde) {
+                // L'aliment existait ! On prend tes nouveautés (saison, type, tolérance...) 
+                // ET on remet par-dessus les données privées de l'utilisateur.
+                donneesFusionnees.push({
+                    ...nouvelAliment, // Prend les modifs du code (ex: Mélasse passe en Boissons)
+                    // On restaure les données privées :
+                    notes: alimentSauvegarde.notes !== undefined ? alimentSauvegarde.notes : nouvelAliment.notes,
+                    recettesList: alimentSauvegarde.recettesList !== undefined ? alimentSauvegarde.recettesList : nouvelAliment.recettesList,
+                    soustitre: (alimentSauvegarde.soustitre && alimentSauvegarde.soustitre !== nouvelAliment.soustitre) ? alimentSauvegarde.soustitre : nouvelAliment.soustitre,
+                    dejaEnvoye: alimentSauvegarde.dejaEnvoye !== undefined ? alimentSauvegarde.dejaEnvoye : false
+                });
+            } else {
+                // C'est un tout nouvel aliment que tu viens d'inventer dans le code !
+                donneesFusionnees.push({...nouvelAliment});
             }
         });
 
-        legumes = loadedData;
+        // 2. On récupère les aliments 100% personnalisés créés par l'utilisateur (qui ne sont pas dans defaultData)
+        donneesLocales.forEach(alimentSauvegarde => {
+            const existeDansNouveau = defaultData.some(defItem => 
+                defItem.id === alimentSauvegarde.id || 
+                removeAccents(defItem.nom.toLowerCase()) === removeAccents(alimentSauvegarde.nom.toLowerCase())
+            );
+            if (!existeDansNouveau) {
+                donneesFusionnees.push(alimentSauvegarde);
+            }
+        });
+
+        // 3. Application des attributs de sécurité manquants
+        donneesFusionnees.forEach(item => {
+            const nomLower = item.nom.toLowerCase();
+            if (!item.gluten) item.gluten = (["pâte", "couscous", "boulgour", "orge"].some(m => nomLower.includes(m))) ? "Avec" : "Sans";
+            if (!item.lactose) item.lactose = (item.type === "Lait" || item.type === "Yaourt / Séré" || nomLower.includes("lait ")) ? "Avec" : "Sans";
+            if (!item.graisses) item.graisses = (nomLower.includes("avocat") || nomLower.includes("saumon") || nomLower.includes("beurre") || nomLower.includes("crème") || nomLower.includes("fromage") || item.type === "Charcuterie" || nomLower.includes("mozzarella") || nomLower.includes("feta") || nomLower.includes("mascarpone") || nomLower.includes("parmesan") || nomLower.includes("sbrinz") || nomLower.includes("brie") || nomLower.includes("gorgonzola") || nomLower.includes("tartare") || nomLower.includes("agur") || nomLower.includes("margarine")) ? "Gras" : "Maigre";
+            if (!item.acidite) item.acidite = (["citron", "lime", "rhubarbe", "orange", "pamplemousse", "tomate", "clémentine", "mandarine", "kiwi", "fraise"].some(m => nomLower.includes(m))) ? "Acide" : "Doux";
+            if (!item.fructose) item.fructose = (item.type === "Fruit" && (!item.fodmap || item.fodmap === "Haut")) ? "Haut" : "Bas";
+            if (!item.fodmap) item.fodmap = (item.tolerance.includes("🔴")) ? "Haut" : "Bas";
+            if (!item.fibres) item.fibres = (item.tolerance.includes("🔴")) ? "Insolubles" : "Solubles";
+            if (!item.cg) item.cg = "Bas";
+            if (!item.texture) item.texture = (nomLower.includes("poisson") || nomLower.includes("haché") || item.type === "Charcuterie" || nomLower.includes("truite fumée") || nomLower.includes("saumon fumé")) ? "Fondante" : "Ferme";
+        });
+
+        legumes = donneesFusionnees;
         localStorage.setItem('marche_saison_version', APP_VERSION);
         saveToLocal();
     }
