@@ -1,5 +1,5 @@
 <!-- ========================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.15 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 12.16 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -9,7 +9,8 @@
 <!-- RENDRE LE BADGE PROFIF DIGESTIF CLICABLE -->
 <!-- RETOUR AVEC TOUCHE MOBILE - NOUVELLE STRUCTURE FILTRE ACTIF -->
 <!-- NOUVEAU POSSIBILITE DE RECHERCHE DE RECETTES ET DE LEUR ENREGISTREMENT -->
-<!-- MISE A JOUR DU MENU D'AIDE -->
+<!-- MISE A JOUR DU MENU D'AIDE - REORGANISATION DOSSIER RACINE -->
+<!-- MISE A JOUR MODAL QR CODE - MISE A JOUR CLASSIFICATION ALIMENTS -->
 <!-- ========================================================= -->
 
 <!DOCTYPE html>
@@ -1441,15 +1442,24 @@
 <div id="app">
     <div id="view-home">
         
-        <!-- NOUVELLE BARRE DE NAVIGATION ICI -->
-        <nav id="top-nav">
-          <button id="btn-about" class="nav-btn">À Propos de</button>
-          <button id="btn-help" class="nav-btn nav-btn-green">Aide</button>
+        <!-- NOUVELLE BARRE DE NAVIGATION (AVEC BOUTON CLOUD) -->
+        <nav id="top-nav" style="display: flex; justify-content: space-between; align-items: center; width: 100%; box-sizing: border-box; margin-bottom: 8px;">
+          <button id="btn-about" class="nav-btn">À Propos</button>
+          <button id="btn-help" class="nav-btn">Aide</button>
+          
+          <!-- BOUTON 1-CLIC CLOUD (Invisible tant que le coffre n'est pas créé) -->
+          <button type="button" id="btn-cloud-quick-save" class="nav-btn" style="color: var(--accent-dark); font-weight: 800; display: none;" onclick="sauvegardeCloudUnClic()" title="Sauvegarde Cloud rapide">☁️ Sauver</button>
+          
           <button id="btn-settings" class="nav-btn-icon" aria-label="Paramètres">⚙️</button>
         </nav>
-        <!-- FIN DE LA BARRE DE NAVIGATION -->
 
+		<!-- FIN DE LA BARRE DE NAVIGATION -->
 
+        <!-- BANNIÈRE DE RAPPEL DISCRÈTE (Invisible par défaut) -->
+        <div id="cloud-reminder-banner" style="display: none; background: #FAF7F2; border: 1.5px dashed var(--accent); color: var(--text-title); text-align: center; padding: 7px 10px; font-size: 0.75rem; font-weight: 800; border-radius: 12px; margin: 0 0 10px 0; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.03);" onclick="sauvegardeCloudUnClic()">
+            ☁️ Pensez à sauvegarder votre marché aujourd'hui ! (Cliquez ici)
+        </div>
+        
 
         <div class="header-accueil">
             <img src="icones/logo.png" alt="Logo" class="header-logo" onerror="this.onerror=null; this.src='icones/logo_2.jpg';">
@@ -1460,7 +1470,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.15</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v12.16</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -1914,25 +1924,40 @@
             </ul>
         </div>
 
-        <!-- 8. Sauvegarde & Partage -->
+        <!-- 8. Sauvegardes & Partages -->
         <div style="background: #EFEBE9; border-left: 4px solid #795548; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
             <p style="color: #4E342E; font-weight: 800; font-size: 0.95rem; margin: 0 0 8px 0; display: flex; align-items: center; gap: 6px;">
-                8. Sauvegarde & Partage intelligent 💾 
-                <svg viewBox="0 0 24 24" width="16" height="16" fill="#4E342E"><path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm10-2h3v3h-3v-3zm5 0h3v3h-3v-3zm-5 5h3v3h-3v-3zm5 0h3v3h-3v-3zm-2-2h2v2h-2v-2z"/></svg>
+                8. Sauvegardes, Cloud & Partages 💾 
             </p>
-            <p style="margin: 0 0 8px 0; color: #555; line-height: 1.4;">Vos personnalisations (notes, recettes, nouvelles fiches) sont précieuses. Voici comment les gérer :</p>
             
-            <ul style="padding-left: 15px; margin: 0; color: #555; line-height: 1.5;">
-                <li style="margin-bottom: 6px;">💾 <strong>Sauvegarde complète :</strong> Exportez tout votre marché en un fichier <code>.json</code>. C'est la solution idéale pour migrer vers un nouveau téléphone.</li>
-                <li style="margin-bottom: 6px;"><strong>Partage express par QR Code :</strong> 
-                    <ul style="padding-left: 15px; margin-top: 4px; list-style-type: circle;">
-                        <li style="margin-bottom: 4px;"><strong>Partage direct :</strong> Cliquez sur l'icône QR Code d'une fiche pour générer son code unique. Flashez-le avec un autre appareil pour transférer instantanément vos notes/recettes.</li>
-                        <li style="margin-bottom: 4px;"><strong>Partage groupé :</strong> Dans <em>Paramètres > Partager par QR Code</em>, sélectionnez plusieurs fiches via les pilules vertes. Le système gère les doublons automatiquement et fusionne vos notes sans jamais écraser celles de vos amis.</li>
-                        <li style="margin-bottom: 4px;"><strong>Limites :</strong> Pour garantir une lecture instantanée, chaque partage est limité à 8 fiches à la fois.</li>
-                    </ul>
-               
-        </div>
+            <p style="margin: 0 0 6px 0; color: #3E2723; font-weight: bold; font-size: 0.85rem;">☁️ LE COFFRE-FORT CLOUD (Protection & Synchronisation) :</p>
+            <ul style="padding-left: 15px; margin: 0 0 10px 0; color: #555; line-height: 1.45; font-size: 0.8rem;">
+                <li style="margin-bottom: 4px;"><strong>Pourquoi l'activer ?</strong> L'application stocke vos données localement sur votre appareil. Si vous effectuez un nettoyage du navigateur ou perdez votre téléphone, vos personnalisations disparaissent. Le Coffre-Fort Cloud permet de tout récupérer en un éclair.</li>
+                <li style="margin-bottom: 4px;"><strong>Votre Clé Mémorisable :</strong> Elle combine un Prénom (ou Pseudo), un Nom (ou Mot favori) et une Année (ou 4 chiffres secrets). 100% anonyme, vous êtes libre d'utiliser un nom d'emprunt.</li>
+                <li style="margin-bottom: 4px;"><strong>Le Bouton 1-Clic « ☁️ Sauver » :</strong> Une fois activé, ce bouton apparaît discrètement en haut de l'écran. Un simple clic dessus met à jour votre sauvegarde en 1 seconde.</li>
+                <li style="margin-bottom: 4px;"><strong>Synchroniser un nouvel appareil :</strong> Ouvrez l'application sur votre tablette ou nouveau téléphone, entrez exactement la même combinaison : l'application reconnaîtra votre coffre et restaurera tout votre marché !</li>
+                <li style="margin-bottom: 0;"><strong>Contrôle et Suppression :</strong> Vous pouvez à tout moment effacer définitivement votre coffre des serveurs Google depuis les Paramètres ⚙️.</li>
+            </ul>
 
+            <p style="margin: 0 0 6px 0; color: #3E2723; font-weight: bold; font-size: 0.85rem;">🤝 LE PARTAGE ENTRE AMIS :</p>
+            <ul style="padding-left: 15px; margin: 0 0 10px 0; color: #555; line-height: 1.45; font-size: 0.8rem;">
+                <li style="margin-bottom: 4px;"><strong>Code PIN à 5 chiffres (Recommandé) :</strong> Cochez vos fiches (sans limite de nombre) et générez un code PIN (ex : <em>48291</em>). Votre ami tape ce numéro dans son application et télécharge vos fiches instantanément, même à distance.</li>
+                <li style="margin-bottom: 0;"><strong>QR Code :</strong> Pratique si vous êtes côte à côte sans réseau, pour transmettre 1 à 2 fiches simples d'un coup d'œil.</li>
+            </ul>
+
+            <p style="margin: 0 0 6px 0; color: #3E2723; font-weight: bold; font-size: 0.85rem;">📁 SAUVEGARDE & RESTAURATION MANUELLE (.JSON) :</p>
+            <p style="margin: 0 0 6px 0; color: #555; line-height: 1.45; font-size: 0.8rem;">
+                C'est votre assurance-vie 100% hors-ligne. Vous restez le propriétaire physique absolu de vos données, sans dépendre d'Internet :
+            </p>
+            <ul style="padding-left: 15px; margin: 0; color: #555; line-height: 1.45; font-size: 0.8rem;">
+                <li style="margin-bottom: 6px;">
+                    <strong>1. Créer votre copie de secours :</strong> Rendez-vous dans <em>Paramètres ⚙️ > Sauvegarder (Fichier .json)</em>. Un fichier daté (ex : <code>sauvegarde_2026-10-27.json</code>) est téléchargé. Vous pouvez le classer où vous le souhaitez : dans votre dossier Téléchargements, sur une clé USB, votre ordinateur ou vous l'envoyer par e-mail.
+                </li>
+                <li style="margin-bottom: 0;">
+                    <strong>2. Tout restaurer en cas de besoin :</strong> Si vous perdez vos recettes ou changez d'appareil sans réseau, allez dans <em>Paramètres ⚙️ > Restaurer (Fichier .json)</em>. Sélectionnez votre fichier de secours dans la mémoire de votre appareil : l'intégralité de vos notes et fiches réapparaît instantanément !
+                </li>
+            </ul>
+		</div>
         <!-- 9. Réparation -->
         <div style="background: #E0F7FA; border-left: 4px solid #0097A7; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
             <p style="color: #006064; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0;">9. Réparation & Restauration des fiches de base 🔄</p>
@@ -1955,20 +1980,63 @@
     <button class="close-btn" onclick="closePopup('modal-settings')">❌</button>
     <h3 style="margin-top:0; color: #2C3E50;">⚙️ Paramètres</h3>
     <div class="settings-menu">
+      
+      <!-- ========================================== -->
+      <!-- PARTIE 1 : PARAMÈTRES DE L'APPLICATION     -->
+      <!-- ========================================== -->
+      <div style="font-size: 0.72rem; color: var(--accent-dark); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-top: 4px; margin-bottom: 2px;">
+          ⚙️ Paramètres Appli
+      </div>
+
       <button class="settings-btn" id="btn-darkmode" onclick="toggleDarkMode()">🌙 Mode Sombre</button>
+      
       <button class="settings-btn" id="btn-hidden-items" onclick="ouvrirModalFichesMasquees()" style="display: flex; align-items: center; gap: 10px;">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#C85A32" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M2 12s3.8-7 10-7 10 7 10 7-3.8 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="2.5" fill="#C85A32"></circle><line x1="3" y1="3" x2="21" y2="21" stroke="#C85A32" stroke-width="2"></line></svg>
           Gestion des fiches masquées
       </button>
-      <button class="settings-btn" onclick="sauvegarderDonnees()" style="background-color: #E8F5E9; border-color: #A5D6A7; font-weight: 800;">💾 Sauvegarder (Partage 2 clics)</button>
-      <button class="settings-btn" onclick="document.getElementById('import-file-menu').click()">📂 Restaurer (.json)</button>
-      <input type="file" id="import-file-menu" style="display:none" accept=".json" onchange="importData(event)">
+
+      <!-- SÉPARATEUR DISCRET -->
+      <div style="border-top: 1px dashed var(--border-color); margin: 8px 0 4px 0;"></div>
+
+      <!-- ========================================== -->
+      <!-- PARTIE 2 : SAUVEGARDE & PARTAGE            -->
+      <!-- ========================================== -->
+      <div style="font-size: 0.72rem; color: var(--accent-dark); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-bottom: 2px;">
+          💾 Sauvegarde & Partage
+      </div>
+
+      <!-- 1. Le Coffre-Fort Cloud -->
+      <button class="settings-btn" id="btn-menu-cloud" onclick="ouvrirCloudSetup()" style="display: flex; align-items: center; gap: 10px; background-color: #FFFDF8; border-color: var(--accent); color: var(--accent-dark); font-weight: 800;">
+          ☁️ Mon Coffre-Fort Cloud (Synchro)
+      </button>
+
+      <!-- 2. Le Partage QR Code / PIN -->
       <button class="settings-btn" id="btn-qr-transfer" onclick="ouvrirQrModal()" style="display: flex; align-items: center; gap: 10px;">
           <svg viewBox="0 0 24 24" width="20" height="20" fill="#111111" style="flex-shrink:0;"><path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm10-2h3v3h-3v-3zm5 0h3v3h-3v-3zm-5 5h3v3h-3v-3zm5 0h3v3h-3v-3zm-2-2h2v2h-2v-2z"/></svg>
-          Partager par QR Code
+          Partager par QR Code ou Code PIN
       </button>
-	  <button class="settings-btn" onclick="restaurerFichesDefaut()" style="background-color: #E3F2FD; border-color: #90CAF9; color: #0D47A1; font-weight: 700;">🔄 Réparer / Restaurer les fiches de base</button>
-	  <button class="settings-btn" id="btn-admin-reset" onclick="localStorage.clear(); location.reload();" style="display: none; background-color: #FFF0F0; color: #D32F2F; border-color: #FFCDCD; margin-top: 10px;">🔧 Forcer la mise à jour (Réinitialiser)</button>
+
+      <!-- 3. La Sauvegarde 2 clics (.json) -->
+      <button class="settings-btn" onclick="sauvegarderDonnees()" style="background-color: #E8F5E9; border-color: #A5D6A7; font-weight: 800;">
+          💾 Sauvegarder (Fichier .json)
+      </button>
+
+      <!-- 4. La Restauration (.json) -->
+      <button class="settings-btn" onclick="document.getElementById('import-file-menu').click()">
+          📂 Restaurer (Fichier .json)
+      </button>
+      <input type="file" id="import-file-menu" style="display:none" accept=".json" onchange="importData(event)">
+
+      <!-- 5. La Réparation des fiches -->
+      <button class="settings-btn" onclick="restaurerFichesDefaut()" style="background-color: #E3F2FD; border-color: #90CAF9; color: #0D47A1; font-weight: 700;">
+          🔄 Réparer les fiches de base
+      </button>
+
+      <!-- Bouton Admin caché -->
+      <button class="settings-btn" id="btn-admin-reset" onclick="localStorage.clear(); location.reload();" style="display: none; background-color: #FFF0F0; color: #D32F2F; border-color: #FFCDCD; margin-top: 10px;">
+          🔧 Forcer la mise à jour (Réinitialiser)
+      </button>
+
     </div>
   </div>
 </div>
@@ -1983,13 +2051,21 @@
         <!-- ÉCRAN 1 : LE HUB DE DÉPART (CHOIX DU SITE) -->
         <!-- ========================================== -->
         <div id="rec-vue-choix">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
                 <div style="width: 25px;"></div>
-                <div style="text-align: center;">
+                <div style="text-align: center; flex: 1;">
                     <h3 id="rec-hub-titre-aliment" style="color: var(--text-title); margin: 0 0 4px 0; font-family: 'Playfair Display', serif; font-size: 1.35rem;">🍲 Recettes</h3>
                     <div id="rec-hub-badge-profil" style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Profil actif</div>
                 </div>
                 <button type="button" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; padding: 0;" onclick="fermerModalRecetteSmart()">❌</button>
+            </div>
+
+            <!-- CHAMP DE RECHERCHE PERSONNALISABLE AVEC DICO -->
+            <div style="margin: 6px auto 14px auto; max-width: 320px; text-align: center;">
+                <label style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800; display: block; margin-bottom: 4px;">
+                    🔍 Ingrédient cherché (modifiable à volonté) :
+                </label>
+                <input type="text" id="rec-input-recherche-perso" class="form-control" placeholder="Tapez un ingrédient..." style="padding: 8px 12px; font-size: 0.95rem; border-radius: 12px; text-align: center; font-weight: 800; color: var(--accent-dark); border: 1.5px solid var(--accent); background: #FFFDF8;">
             </div>
 
             <!-- 1. TheMealDB (Intégrée) -->
@@ -2125,9 +2201,92 @@
     </div>
 </div>
 
-	<!-- ========================================== -->
+<!-- MODALE COFFRE-FORT CLOUD (AVEC GESTION & SUPPRESSION) -->
+<div id="modal-cloud-setup" class="modal-overlay hidden">
+  <div class="modal-box" style="text-align: center; max-width: 420px;">
+    <button class="close-btn" onclick="fermerCloudSetup()">❌</button>
+    <h3 style="margin-top:0; margin-bottom: 6px; color: var(--text-title);">☁️ Votre Coffre-Fort Cloud</h3>
+    <p style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-bottom: 12px;">Protection & Synchronisation</p>
+    
+    <!-- CAS A : L'UTILISATEUR A DÉJÀ UN COFFRE CONNECTÉ -->
+    <div id="cloud-vue-gestion" style="display: none; text-align: center;">
+        <div style="background: #E8F5E9; border: 1.5px solid #A5D6A7; border-radius: 14px; padding: 14px; margin-bottom: 15px; color: #1B5E20; font-size: 0.85rem; line-height: 1.4;">
+            <strong>✅ Appareil synchronisé</strong><br>
+            Votre coffre actif :<br>
+            <span id="cloud-identifiant-affiche" style="font-size: 1.15rem; font-weight: 800; color: #2E7D32; font-family: monospace; display: inline-block; margin-top: 5px;"></span>
+        </div>
+
+        <button type="button" class="btn btn-primary" onclick="sauvegardeCloudUnClic()" style="width: 100%; margin-bottom: 10px; padding: 12px; font-weight: 800; font-size: 0.85rem; border-radius: 12px;">
+            ☁️ Sauvegarder maintenant
+        </button>
+
+        <!-- LE BOUTON ROUGE DE SUPPRESSION TOTALE -->
+        <div style="border-top: 1px dashed var(--border-color); padding-top: 12px;">
+            <button type="button" onclick="supprimerCoffreCloud()" style="background: #FFF0F0; border: 1px solid #FFCDCD; color: #D32F2F; border-radius: 12px; padding: 10px; font-size: 0.78rem; font-weight: 800; cursor: pointer; width: 100%;">
+                🗑️ Supprimer définitivement mon Coffre du Cloud
+            </button>
+            <div style="font-size: 0.68rem; color: #999; margin-top: 5px;">Efface toutes vos données des serveurs Google (vos recettes restent sur cet appareil).</div>
+        </div>
+    </div>
+
+    <!-- CAS B : NOUVEAU COFFRE (CRÉATION) -->
+    <!-- CAS B : NOUVEAU COFFRE (CRÉATION OU SYNCHRONISATION) -->
+    <div id="cloud-vue-creation">
+        
+        <!-- AVERTISSEMENT, UTILITÉ & RENVOI À L'AIDE -->
+        <div style="background: #FFF8E1; border: 1.5px solid #FFE082; border-radius: 14px; padding: 12px; margin-bottom: 14px; text-align: left; font-size: 0.8rem; line-height: 1.45; color: #5D4037;">
+            <strong>🛑 COFFRE STRICTEMENT PERSONNEL</strong><br>
+            <strong>Pourquoi ce coffre ?</strong> Si vous effacez les données de votre navigateur ou si vous changez de téléphone, toutes vos notes et recettes personnalisées sont conservées dans ce coffre et restaurables en 1 clic !<br><br>
+            🔒 <strong>100% Anonyme :</strong> Aucune donnée d'identité n'est collectée ni vérifiée. Vous pouvez utiliser vos vrais identifiants <em>OU</em> un pseudonyme inventé (ex : <em>Soleil + Jardin + 2026</em>). Mémorisez bien votre combinaison pour synchroniser vos autres appareils.<br><br>
+            📖 <em>Pour comprendre toute la logique et l'utilisation détaillée du "Coffre-Fort Cloud", consultez à tout moment le  (Paragraphe 8.) de la rubrique<strong>« Aide »</strong> en haut de l'application.<br><br></em> ℹ️ Vous restez maître à bord, suppression définitive de votre <strong>"Coffre-Fort"</strong> possible à tout moment depuis ⚙️ Paramètres.
+        </div>
+
+        <div style="text-align: left;">
+            
+            <!-- Champ 1 : Prénom / Pseudo -->
+            <div class="form-group" style="margin-bottom: 10px;">
+                <label style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800; display: flex; justify-content: space-between;">
+                    <span>Prénom ou Pseudo <strong style="color: #D84315;">*</strong></span>
+                    <span style="font-size: 0.65rem; font-weight: normal; text-transform: none;">(15 lettres max)</span>
+                </label>
+                <input type="text" id="cloud-prenom" class="form-control" maxlength="15" placeholder="Ex: Stephane ou Tigre" style="padding: 10px 14px; font-size: 0.95rem; border-radius: 12px;">
+            </div>
+
+            <!-- Champ 2 : Nom / Mot favori -->
+            <div class="form-group" style="margin-bottom: 10px;">
+                <label style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800; display: flex; justify-content: space-between;">
+                    <span>Nom ou Mot favori <strong style="color: #D84315;">*</strong></span>
+                    <span style="font-size: 0.65rem; font-weight: normal; text-transform: none;">(15 lettres max)</span>
+                </label>
+                <input type="text" id="cloud-nom" class="form-control" maxlength="15" placeholder="Ex: Carminati ou Soleil" style="padding: 10px 14px; font-size: 0.95rem; border-radius: 12px;">
+            </div>
+
+            <!-- Champ 3 : Année / 4 chiffres -->
+            <div class="form-group" style="margin-bottom: 6px;">
+                <label style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800; display: flex; justify-content: space-between;">
+                    <span>Année ou 4 chiffres <strong style="color: #D84315;">*</strong></span>
+                    <span style="font-size: 0.65rem; font-weight: normal; text-transform: none;">(4 chiffres exacts)</span>
+                </label>
+                <input type="text" inputmode="numeric" id="cloud-annee" class="form-control" maxlength="4" placeholder="Ex: 1964 ou 2026" style="padding: 10px 14px; font-size: 0.95rem; border-radius: 12px;">
+            </div>
+
+            <!-- Note explicative de l'astérisque -->
+            <div style="font-size: 0.68rem; color: #8D99AE; margin-bottom: 14px;">
+                <strong style="color: #D84315;">*</strong> Tous les champs sont obligatoires pour fabriquer votre clé unique.
+            </div>
+
+        </div>
+
+            <div style="display: flex; gap: 8px;">
+            <button type="button" class="settings-btn" style="flex: 1; padding: 12px; font-size: 0.85rem; text-align: center; justify-content: center; border-radius: 14px;" onclick="fermerCloudSetup()">Plus tard</button>
+            <button type="button" id="btn-valider-cloud-setup" class="btn btn-primary" style="flex: 1.4; padding: 12px; font-size: 0.85rem; font-weight: 800; border-radius: 14px;" onclick="validerCreationCloud()">Activer le Coffre ☁️</button>
+        </div>
+    </div>
+
+  </div>
+</div>
+
 <script>
-    <!-- ========================================== -->
 	
 	// ========================================================
     // CONNEXION AU CASIER GOOGLE FIREBASE (Code PIN 5 chiffres)
@@ -2150,7 +2309,7 @@
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "12.15";
+    const APP_VERSION = "12.16";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -2494,8 +2653,9 @@ const defaultData = [
     { id: 969, nom: "Lait d'Amande", soustitre: "", type: "Lait", image: "", tolerance: "🟢 Très conseillé", saison: "Laitages", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Excellente alternative sans lactose.", inconvenient: "Aucun.", preparation: "Froide ou chaude.", notes: "", recettesList: [] },
     { id: 970, nom: "Lait d'Avoine", soustitre: "", type: "Lait", image: "", tolerance: "🟡 Moyen", saison: "Laitages", fodmap: "Bas", fructose: "Bas", fibres: "Solubles", cg: "Moyen", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Douce et adoucissante.", inconvenient: "Faire attention s'il y a une sensibilité au gluten (souvent traces).", preparation: "Alternative parfaite pour le petit déjeuner.", notes: "", recettesList: [] },
     { id: 971, nom: "Yaourt lait coco nature", soustitre: "", type: "Yaourt / Séré", image: "", tolerance: "🟡 Moyen", saison: "Laitages", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Sans lactose.", inconvenient: "Graisses saturées végétales, ralentit la vidange de l'estomac.", preparation: "Consommer avec modération.", notes: "", recettesList: [] },
-
-    /* POISSONS & CRUSTACES */
+	{ id: 1036, nom: "Lait de coco", soustitre: "Cuisine / Allégé", type: "Lait", image: "", tolerance: "🟡 À limiter", saison: "Laitages", fodmap: "Bas", fructose: "Bas", fibres: "Solubles", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Alternative onctueuse 100% sans lactose pour sauces et veloutés.", inconvenient: "Riche en graisses saturées, peut ralentir la vidange gastrique en excès.", preparation: "Privilégier la version allégée et ne pas faire bouillir trop fort.", notes: "", recettesList: [] },
+    
+	/* POISSONS & CRUSTACES */
     { id: 701, nom: "Filets de cabillaud", soustitre: "", type: "Poisson", image: "", tolerance: "🟢 Très conseillé", saison: "Poissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Poisson blanc extrêmement digeste.", inconvenient: "Aucun.", preparation: "Cuisson douce à la vapeur ou poché dans un bouillon léger.", notes: "", recettesList: [] },
     { id: 702, nom: "Darne de saumon", soustitre: "", type: "Poisson", image: "", tolerance: "🟡 Moyen", saison: "Poissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Excellent apport en oméga-3.", inconvenient: "La forte teneur en graisses ralentit la vidange de l'estomac.", preparation: "Éviter d'ajouter de la matière grasse à la cuisson. Cuire au four.", notes: "", recettesList: [] },
     { id: 703, nom: "Filet de thon", soustitre: "", type: "Poisson", image: "", tolerance: "🟡 Moyen", saison: "Poissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Très riche en protéines.", inconvenient: "Chair très dense qui demande un vrai travail mécanique à l'estomac.", preparation: "Cuire mi-cuit (rosé à cœur) pour éviter que la chair ne devienne trop dure et sèche.", notes: "", recettesList: [] },
@@ -2519,6 +2679,7 @@ const defaultData = [
     { id: 965, nom: "Noix de Saint-Jacques", soustitre: "", type: "Crustacé", image: "", tolerance: "🟢 Très conseillé", saison: "Poissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Extrêmement doux et digeste.", inconvenient: "Aucun.", preparation: "Snacké rapidement à la poêle.", notes: "", recettesList: [] },
     { id: 966, nom: "Sardine fraîche", soustitre: "", type: "Poisson", image: "", tolerance: "🟡 Moyen", saison: "Poissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Oméga-3 utiles.", inconvenient: "Poisson gras, peut peser sur l'estomac.", preparation: "Cuisson sans matières grasses.", notes: "", recettesList: [] },
     { id: 967, nom: "Sardine à l'huile", soustitre: "", type: "Poisson", image: "", tolerance: "🔴 À proscrire", saison: "Poissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Aucun.", inconvenient: "Bain d'huile beaucoup trop lourd pour la vidange gastrique.", preparation: "À éviter.", notes: "", recettesList: [] },
+	{ id: 1039, nom: "Anchois", soustitre: "Filets marinés ou à l'huile", type: "Poisson", image: "", tolerance: "🟡 À limiter", saison: "Poissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Excellente concentration en oméga-3.", inconvenient: "Très salé en conserve, peut stimuler l'acidité si consommé en quantité.", preparation: "Rincer à l'eau tiède ou faire fondre dans une sauce chaude.", notes: "", recettesList: [] },
 
     /* CONDIMENTS */
     { id: 901, nom: "Graines de lin", soustitre: "Entières ou Concassées", type: "Graines & Fruits secs", image: "", tolerance: "🟢 Très conseillé", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Solubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Mucilage protecteur qui lubrifie le côlon sans irriter la muqueuse.", inconvenient: "Doit impérativement être moulu.", preparation: "Saupoudrer sur les plats ou yaourts.", notes: "", recettesList: [] },
@@ -2528,7 +2689,7 @@ const defaultData = [
     { id: 905, nom: "Graines de tournesol", soustitre: "", type: "Graines & Fruits secs", image: "", tolerance: "🟡 Moyen", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Insolubles", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Graines croquantes.", inconvenient: "Fibres dures rêches.", preparation: "Broyage soigné nécessaire.", notes: "", recettesList: [] },
     { id: 906, nom: "Noix de pécan", soustitre: "", type: "Graines & Fruits secs", image: "", tolerance: "🟢 Très conseillé", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Solubles", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "L'une des plus digestes, texture plus tendre.", inconvenient: "Reste calorique.", preparation: "Bien mâcher, portion raisonnable.", notes: "", recettesList: [] },
     { id: 907, nom: "Noix", soustitre: "Cerneaux", type: "Graines & Fruits secs", image: "", tolerance: "🟡 Moyen", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Insolubles", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Excellents oméga-3.", inconvenient: "Peau amère irritante et morceaux pointus.", preparation: "En très petite quantité.", notes: "", recettesList: [] },
-    { id: 908, nom: "Amandes", soustitre: "", type: "Graines & Fruits secs", image: "", tolerance: "🟡 Moyen", saison: "Condiments", fodmap: "Haut", fructose: "Bas", fibres: "Insolubles", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Saines mais...", inconvenient: "Dure à mastiquer crue, riche en FODMAPs si > 10 unités.", preparation: "Préférer la purée d'amande blanche lisse.", notes: "", recettesList: [] },
+    { id: 908, nom: "Amandes", soustitre: "", type: "Graines & Fruits secs", image: "", tolerance: "🟡 Moyen", saison: "Condiments", fodmap: "Haut", fructose: "Bas", fibres: "Insolubles", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Saines mais...", inconvenient: "Dure à mastiquer crue, riche en FODMAPs si plus de 10 unités.", preparation: "Préférer la purée d'amande blanche lisse.", notes: "", recettesList: [] },
     { id: 909, nom: "Noisettes", soustitre: "", type: "Graines & Fruits secs", image: "", tolerance: "🟡 Moyen", saison: "Condiments", fodmap: "Haut", fructose: "Bas", fibres: "Insolubles", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Gourmand.", inconvenient: "Riches en GOS (FODMAPs) et fibres rêches.", preparation: "À modérer fortement si côlon sensible.", notes: "", recettesList: [] },
     { id: 910, nom: "Noix du Brésil", soustitre: "", type: "Graines & Fruits secs", image: "", tolerance: "🟡 Moyen", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Insolubles", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Source majeure de sélénium.", inconvenient: "Chair très dense et riche en lipides.", preparation: "1 à 2 par jour maximum.", notes: "", recettesList: [] },
     { id: 911, nom: "Cacahuètes", soustitre: "", type: "Graines & Fruits secs", image: "", tolerance: "🟡 Moyen", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Insolubles", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Riche en protéines.", inconvenient: "Pèse sur l'estomac entière.", preparation: "En purée 100% cacahuète sans sucre, bien tolérée à petite dose.", notes: "", recettesList: [] },
@@ -2538,8 +2699,8 @@ const defaultData = [
     { id: 915, nom: "Huile d'avocat", soustitre: "", type: "Huile & Vinaigre", image: "", tolerance: "🟢 Très conseillé", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Supporte bien la chaleur.", inconvenient: "Aucun.", preparation: "Idéale pour poêler.", notes: "", recettesList: [] },
     { id: 916, nom: "Vinaigre Classique", soustitre: "Cidre, Vin, Blanc, Herbes", type: "Huile & Vinaigre", image: "", tolerance: "🟡 Moyen", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Acide", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Plus doux que le vinaigre d'alcool.", inconvenient: "Reste un acide fort.", preparation: "En toute petite quantité.", notes: "", recettesList: [] },
     { id: 917, nom: "Vinaigre Balsamique", soustitre: "Classique ou en Crème", type: "Huile & Vinaigre", image: "", tolerance: "🔴 À proscrire", saison: "Condiments", fodmap: "Bas", fructose: "Haut", fibres: "Sans", cg: "Bas", acidite: "Acide", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Aucun.", inconvenient: "Déclencheur direct de brûlures gastriques.", preparation: "À éviter.", notes: "", recettesList: [] },
-    { id: 918, nom: "Moutarde", soustitre: "Forte ou Non", type: "Épices", image: "", tolerance: "🔴 À proscrire", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Acide", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Aucun.", inconvenient: "Très agressive pour la muqueuse de l'estomac, stimule la pompe à protons.", preparation: "À éviter.", notes: "", recettesList: [] },
-    { id: 919, nom: "Mayonnaise", soustitre: "Maison ou Industrielle", type: "Huile & Vinaigre", image: "", tolerance: "🔴 À proscrire", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Acide", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "La version maison est plus douce (sans additifs chimiques).", inconvenient: "Émulsion très grasse, retarde lourdement la vidange de l'estomac.", preparation: "Préférer une version maison légère en petite quantité.", notes: "", recettesList: [] },
+    { id: 918, nom: "Moutarde", soustitre: "Forte ou Non", type: "Condiment", image: "", tolerance: "🔴 À proscrire", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Acide", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Aucun.", inconvenient: "Très agressive pour la muqueuse de l'estomac, stimule la pompe à protons.", preparation: "À éviter.", notes: "", recettesList: [] },
+    { id: 919, nom: "Mayonnaise", soustitre: "Maison ou Industrielle", type: "Condiment", image: "", tolerance: "🔴 À proscrire", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Acide", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "La version maison est plus douce (sans additifs chimiques).", inconvenient: "Émulsion très grasse, retarde lourdement la vidange de l'estomac.", preparation: "Préférer une version maison légère en petite quantité.", notes: "", recettesList: [] },
     { id: 920, nom: "Ketchup", soustitre: "", type: "Épices", image: "", tolerance: "🔴 À proscrire", saison: "Condiments", fodmap: "Haut", fructose: "Haut", fibres: "Sans", cg: "Moyen", acidite: "Acide", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Aucun.", inconvenient: "Vinaigre corrosif + concentré de tomate acide + sirop de glucose-fructose.", preparation: "À éviter.", notes: "", recettesList: [] },
     { id: 921, nom: "Ciboulette Vert oignon", soustitre: "Ciboulle", type: "Épices", image: "", tolerance: "🟢 Très conseillé", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Solubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Donne la saveur sans les fructanes coliques du bulbe.", inconvenient: "Aucun.", preparation: "Ciseler finement cru.", notes: "", recettesList: [] },
     { id: 922, nom: "Basilic frais", soustitre: "", type: "Épices", image: "", tolerance: "🟢 Très conseillé", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Solubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Antispasmodique naturel réputé.", inconvenient: "Aucun.", preparation: "Ajouter en fin de cuisson.", notes: "", recettesList: [] },
@@ -2552,15 +2713,23 @@ const defaultData = [
     { id: 929, nom: "Curry doux", soustitre: "", type: "Épices", image: "", tolerance: "🟡 Moyen", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Parfumé et bien toléré s'il est exempt de piment fort.", inconvenient: "Mélange parfois inconnu.", preparation: "Vérifier la composition.", notes: "", recettesList: [] },
     { id: 930, nom: "Poivre noir", soustitre: "", type: "Épices", image: "", tolerance: "🔴 À proscrire", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Acide", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Aucun.", inconvenient: "La pipérine agresse directement la paroi stomacale.", preparation: "À proscrire.", notes: "", recettesList: [] },
     { id: 931, nom: "Poivre blanc", soustitre: "", type: "Épices", image: "", tolerance: "🔴 À proscrire", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Acide", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Aucun.", inconvenient: "Même action piquante et hypersécrétoire que le poivre noir.", preparation: "À proscrire.", notes: "", recettesList: [] },
-    { id: 932, nom: "Bouillon de volaille", soustitre: "Sans Ail", type: "Épices", image: "", tolerance: "🟢 Très conseillé", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Pansement et hydratant.", inconvenient: "Aucun.", preparation: "En fond de sauce ou soupe.", notes: "", recettesList: [] },
-    { id: 933, nom: "Bouillon de Boeuf", soustitre: "Dégraissé", type: "Épices", image: "", tolerance: "🟢 Très conseillé", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Reminéralisant.", inconvenient: "À condition d'avoir écumé tout le gras de cuisson.", preparation: "Bouillon clair.", notes: "", recettesList: [] },
+    { id: 932, nom: "Bouillon de volaille", soustitre: "Sans Ail", type: "Condiment", image: "", tolerance: "🟢 Très conseillé", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Pansement et hydratant.", inconvenient: "Aucun.", preparation: "En fond de sauce ou soupe.", notes: "", recettesList: [] },
+    { id: 933, nom: "Bouillon de Boeuf", soustitre: "Dégraissé", type: "Condiment", image: "", tolerance: "🟢 Très conseillé", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Reminéralisant.", inconvenient: "À condition d'avoir écumé tout le gras de cuisson.", preparation: "Bouillon clair.", notes: "", recettesList: [] },
 	{ id: 952, nom: "Fruits secs", soustitre: "Abricots, dattes, raisins...", type: "Graines & Fruits secs", image: "", tolerance: "🔴 À proscrire", saison: "Condiments", fodmap: "Haut", fructose: "Haut", fibres: "Insolubles", cg: "Moyen", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Énergétique et riche en minéraux.", inconvenient: "S'ils sont mangés secs, ils agissent comme des éponges et provoquent des ballonnements violents.", preparation: "Très irritants secs : à faire tremper dans l'eau tiède ou à cuire en compote impérativement !", notes: "", recettesList: [] },
 	{ id: 1025, nom: "Condiment liquide", soustitre: "Maggi, Knorr, Mirador...", type: "Condiment", image: "", tolerance: "🔴 À proscrire", saison: "Condiments", fodmap: "Haut", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Acide", graisses: "Maigre", lactose: "Sans", gluten: "Avec", texture: "Fondante", avantage: "Donne un goût umami puissant.", inconvenient: "Produit ultra-transformé. Contient souvent du gluten (blé), des exhausteurs de goût et des extraits d'oignon/ail (FODMAPs).", preparation: "À éviter en cas d'intestin irritable.", notes: "", recettesList: [] },
     { id: 1026, nom: "Condiment en poudre", soustitre: "Aromat, Mirador...", type: "Condiment", image: "", tolerance: "🔴 À proscrire", saison: "Condiments", fodmap: "Haut", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Avec", gluten: "Sans", texture: "Fondante", avantage: "Exhausteur de goût très populaire.", inconvenient: "Contient très souvent du lactose, de l'oignon/ail en poudre (FODMAPs) et des graisses végétales.", preparation: "À éviter. Préférer le sel et les herbes pures.", notes: "", recettesList: [] },
-	
-	
+	/* NOUVEAUX AROMATES, CONDIMENTS & SAVEURS DU MONDE */
+    { id: 1029, nom: "Ciboulette", soustitre: "Fraîche", type: "Épices", image: "", tolerance: "🟢 À volonté", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Solubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Donne le goût d'oignon sans apporter les fructanes qui fermentent.", inconvenient: "Aucun.", preparation: "Ciseler crue au dernier moment sur les plats.", notes: "", recettesList: [] },
+    { id: 1031, nom: "Basilic thaï", soustitre: "Saveur anisée", type: "Épices", image: "", tolerance: "🟢 À volonté", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Solubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Parfum doux et digestif, apaise les ballonnements.", inconvenient: "Aucun.", preparation: "Ajouter les feuilles entières ou déchirées en toute fin de cuisson.", notes: "", recettesList: [] },
+    { id: 1032, nom: "Sauge", soustitre: "Fraîche ou séchée", type: "Épices", image: "", tolerance: "🟢 À volonté", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Solubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Excellente pour stimuler la vésicule et aider la digestion lente.", inconvenient: "Arôme très puissant, à doser avec modération.", preparation: "Infuser quelques feuilles ou poêler légèrement dans l'huile d'olive.", notes: "", recettesList: [] },
+    { id: 1033, nom: "Citronnelle", soustitre: "Bâtons frais", type: "Épices", image: "", tolerance: "🟢 À volonté", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Insolubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fibreuse", avantage: "Goût citronné frais sans l'acidité agressive du jus de citron.", inconvenient: "Tige coriace et très fibreuse.", preparation: "Écraser le bâton pour infuser dans les bouillons et le retirer avant de servir.", notes: "", recettesList: [] },
+    { id: 1034, nom: "Feuilles de kaffir", soustitre: "Combava", type: "Épices", image: "", tolerance: "🟢 À volonté", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Insolubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fibreuse", avantage: "Parfum d'agrumes sublime sans aucune acidité pour l'estomac.", inconvenient: "Feuille dure non digestible entière.", preparation: "Froisser et infuser dans les currys et soupes, retirer avant dégustation.", notes: "", recettesList: [] },
+    { id: 1035, nom: "Sauce de poisson", soustitre: "Nuoc-mâm", type: "Condiment", image: "", tolerance: "🟢 À volonté", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Apporte une richesse umami exceptionnelle sans ail ni oignon.", inconvenient: "Forte teneur en sel.", preparation: "Quelques gouttes suffisent pour relever un bouillon ou un sauté.", notes: "", recettesList: [] },
+    { id: 1037, nom: "Olives", soustitre: "Vertes ou Noires", type: "Condiment", image: "", tolerance: "🟢 À volonté", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Solubles", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Bonnes graisses mono-insaturées protectrices, zéro FODMAP.", inconvenient: "Teneur en sel de la saumure.", preparation: "Rincer à l'eau claire si trop salées, bien dénoyauter.", notes: "", recettesList: [] },
+    { id: 1038, nom: "Citrons confits", soustitre: "Citrons Beldi au sel", type: "Condiment", image: "", tolerance: "🟢 À volonté", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Solubles", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "La macération adoucit l'écorce et élimine l'acidité gastrique corrosive.", inconvenient: "Riche en sel.", preparation: "Rincer et n'utiliser que l'écorce coupée en petits dés dans les mijotés.", notes: "", recettesList: [] },
+    	
     /* BOISSONS & DOUCEURS */
-   { id: 934, nom: "Infusions & Tisanes", soustitre: "Verveine, Tilleul, Camomille, Mélisse, Rooibos, Fenouil...", type: "Boisson Chaude", image: "", tolerance: "🟢 Très conseillé", saison: "Boissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Sans théine ni caféine. Hydrate, apaise les muqueuses digestives et calme les spasmes.", inconvenient: "Attention à la menthe poivrée en cas de reflux gastrique et aux tisanes de fruits rouges/hibiscus (acides).", preparation: "Infusion de 5 à 7 min dans une eau chaude. Boire tiède plutôt que brûlant pour protéger l'œsophage.", notes: "", recettesList: [] },
+	{ id: 934, nom: "Infusions & Tisanes", soustitre: "Verveine, Tilleul, Camomille, Mélisse, Rooibos, Fenouil...", type: "Boisson Chaude", image: "", tolerance: "🟢 Très conseillé", saison: "Boissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Sans théine ni caféine. Hydrate, apaise les muqueuses digestives et calme les spasmes.", inconvenient: "Attention à la menthe poivrée en cas de reflux gastrique et aux tisanes de fruits rouges/hibiscus (acides).", preparation: "Infusion de 5 à 7 min dans une eau chaude. Boire tiède plutôt que brûlant pour protéger l'œsophage.", notes: "", recettesList: [] },
     { id: 935, nom: "Thé vert nature", soustitre: "", type: "Boisson Chaude", image: "", tolerance: "🟢 Très conseillé", saison: "Boissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Antioxydant doux.", inconvenient: "Aucun.", preparation: "Infusion légère.", notes: "", recettesList: [] },
     { id: 936, nom: "Thé vert Parfumé", soustitre: "Menthe, Jasmin, Agrumes, Pêche, Fruits rouges, Gingembre...", type: "Boisson Chaude", image: "", tolerance: "🟡 Moyen", saison: "Boissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Acide", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Moins excitant que le café, antioxydant et très varié en saveurs.", inconvenient: "Les arômes ajoutés (agrumes, menthe forte, essences) peuvent irriter un estomac sensible ou stimuler le reflux.", preparation: "Infusion douce et courte (2 min max) avec une eau à 75-80°C. Ne jamais utiliser d'eau bouillante.", notes: "", recettesList: [] },
     { id: 953, nom: "Thé noir", soustitre: "Earl Grey, Ceylan, Darjeeling, Breakfast...", type: "Boisson Chaude", image: "", tolerance: "🟡 Moyen", saison: "Boissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Acide", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Riche en théaflavines antioxydantes, stimulant plus diffus que le café.", inconvenient: "Les tanins et la théine stimulent l'acidité gastrique et peuvent favoriser les brûlures d'estomac.", preparation: "Infusion courte (2 à 3 min max) dans une eau à 85-90°C pour éviter de sur-extraire les tanins amers et agressifs. À éviter à jeun.", notes: "", recettesList: [] },
@@ -2590,8 +2759,8 @@ const defaultData = [
     { id: 1008, nom: "Légumes au vinaigre", soustitre: "Pickles / Cornichons", type: "Condiment", image: "", tolerance: "🔴 À proscrire", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Insolubles", cg: "Bas", acidite: "Acide", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Probiotiques si lactofermenté.", inconvenient: "Le vinaigre pur est très corrosif pour l'estomac.", preparation: "À éviter si brûlures d'estomac.", notes: "", recettesList: [] },
     { id: 1009, nom: "Thon à l'huile", soustitre: "En boîte", type: "Poisson", image: "", tolerance: "🟡 Moyen", saison: "Poissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Pratique.", inconvenient: "Le bain d'huile rend la chair très lourde à digérer.", preparation: "Bien égoutter. Préférer le thon au naturel.", notes: "", recettesList: [] },
     { id: 1010, nom: "Mélasse de table", soustitre: "Bischofszell", type: "Douceur", image: "", tolerance: "🟡 Moyen", saison: "Condiments", fodmap: "Haut", fructose: "Haut", fibres: "Sans", cg: "Élevé", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Riche en minéraux (fer).", inconvenient: "Forte concentration en sucre (FODMAP), peut fermenter.", preparation: "À utiliser avec modération (1 cc max).", notes: "", recettesList: [] },
-    { id: 1011, nom: "Sucre blanc", soustitre: "Saccharose", type: "Douceur", image: "", tolerance: "🟡 Moyen", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Élevé", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Ne fermente pas comme le miel (ratio fructose/glucose équilibré).", inconvenient: "Charge glycémique très élevée, inflammatoire à haute dose.", preparation: "Avec grande modération.", notes: "", recettesList: [] },
-    { id: 1012, nom: "Sucre de canne", soustitre: "Roux / Cassonade", type: "Douceur", image: "", tolerance: "🟡 Moyen", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Élevé", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Goût caramélisé.", inconvenient: "Identique au sucre blanc au niveau digestif, charge glycémique forte.", preparation: "Avec modération.", notes: "", recettesList: [] },
+    { id: 1011, nom: "Sucre blanc", soustitre: "Saccharose", type: "Douceur", image: "", tolerance: "🟡 Moyen", saison: "Boissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Élevé", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Ne fermente pas comme le miel (ratio fructose/glucose équilibré).", inconvenient: "Charge glycémique très élevée, inflammatoire à haute dose.", preparation: "Avec grande modération.", notes: "", recettesList: [] },
+    { id: 1012, nom: "Sucre de canne", soustitre: "Roux / Cassonade", type: "Douceur", image: "", tolerance: "🟡 Moyen", saison: "Boissons", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Élevé", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Goût caramélisé.", inconvenient: "Identique au sucre blanc au niveau digestif, charge glycémique forte.", preparation: "Avec modération.", notes: "", recettesList: [] },
     { id: 1013, nom: "Édulcorant", soustitre: "Poudre ou Liquide", type: "Douceur", image: "", tolerance: "🔴 À proscrire", saison: "Condiments", fodmap: "Haut", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Sans calories.", inconvenient: "Les édulcorants (sorbitol, xylitol) sont des polyols qui provoquent gaz sévères et diarrhées.", preparation: "À éviter absolument.", notes: "", recettesList: [] },
     { id: 1014, nom: "Sel", soustitre: "Fin ou Gros", type: "Épices", image: "", tolerance: "🟢 Très conseillé", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Indispensable à l'équilibre minéral.", inconvenient: "En excès, augmente la tension.", preparation: "Saler normalement, sans excès.", notes: "", recettesList: [] },
     { id: 1015, nom: "Sauce soja", soustitre: "Classique", type: "Condiment", image: "", tolerance: "🟡 Moyen", saison: "Condiments", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Avec", texture: "Fondante", avantage: "Les FODMAP du soja sont détruits par la fermentation.", inconvenient: "Contient du blé (donc du gluten) et beaucoup de sel.", preparation: "Si intolérance au gluten, choisir la sauce 'Tamari'.", notes: "", recettesList: [] },
@@ -4289,6 +4458,8 @@ function toggleFavori(id) {
 }
 
     initData();
+	
+	surveillerEtatCoffre();
 
     // === LOGIQUE D'INSTALLATION PWA ===
     let deferredPrompt;
@@ -4321,7 +4492,7 @@ function toggleFavori(id) {
 async function sauvegarderDonnees() {
     let donneesActuelles = localStorage.getItem('marche_saison_data') || JSON.stringify(defaultData);
     let dateDuJour = new Date().toISOString().slice(0, 10);
-    let nomFichierDefaut = `marche_saison_backup_${dateDuJour}.json`;
+    let nomFichierDefaut = `Petit_Marche__${dateDuJour}.json`;
 
     // 1. Si le navigateur supporte le sélecteur de fichier (PC moderne, etc.)
     if ('showSaveFilePicker' in window) {
@@ -4369,6 +4540,239 @@ let fichesAEnvoyerGlobal = [];
 let selectionFichesIds = [];
 let forcerToutHistorique = false;
 const MAX_FICHES_PAR_QR = 8; // La limite d'or pour un flash ultra-rapide
+
+// ========================================================
+// MOTEUR DU COFFRE-FORT CLOUD PERSONNEL (SAUVEGARDE & SYNCHRO)
+// ========================================================
+
+// 1. Ouvre la fenêtre du Coffre (Affiche la gestion si déjà connecté, ou le formulaire si nouveau)
+function ouvrirCloudSetup() {
+    let modalSettings = document.getElementById('modal-settings');
+    if (modalSettings) modalSettings.classList.add('hidden');
+
+    const cleCoffre = localStorage.getItem('marche_cloud_cle');
+    const vueGestion = document.getElementById('cloud-vue-gestion');
+    const vueCreation = document.getElementById('cloud-vue-creation');
+    const texteIdentifiant = document.getElementById('cloud-identifiant-affiche');
+
+    if (cleCoffre) {
+        // Déjà connecté : on affiche son coffre et les boutons de gestion
+        if (vueGestion) vueGestion.style.display = 'block';
+        if (vueCreation) vueCreation.style.display = 'none';
+        if (texteIdentifiant) texteIdentifiant.innerText = cleCoffre;
+    } else {
+        // Jamais connecté : on affiche le formulaire de création
+        if (vueGestion) vueGestion.style.display = 'none';
+        if (vueCreation) vueCreation.style.display = 'block';
+    }
+
+    const modal = document.getElementById('modal-cloud-setup');
+    if (modal) modal.classList.remove('hidden');
+}
+
+// Permet de basculer vers le formulaire pour se connecter à un autre coffre
+function basculerVersCreationCloud() {
+    const vueGestion = document.getElementById('cloud-vue-gestion');
+    const vueCreation = document.getElementById('cloud-vue-creation');
+    if (vueGestion) vueGestion.style.display = 'none';
+    if (vueCreation) vueCreation.style.display = 'block';
+}
+
+// Ferme la fenêtre du Coffre-Fort
+function fermerCloudSetup() {
+    const modal = document.getElementById('modal-cloud-setup');
+    if (modal) modal.classList.add('hidden');
+}
+
+// ========================================================
+// 2. SUPPRESSION DÉFINITIVE DU COFFRE SUR GOOGLE (RGPD)
+// ========================================================
+async function supprimerCoffreCloud() {
+    const cleCoffre = localStorage.getItem('marche_cloud_cle');
+    if (!cleCoffre) return;
+
+    const confirmation = confirm(`⚠️ ATTENTION : SUPPRESSION DÉFINITIVE DU CLOUD\n\nVoulez-vous vraiment effacer votre coffre "${cleCoffre}" des serveurs Google ?\n\nVos recettes resteront intactes sur cet appareil, mais votre sauvegarde en ligne sera définitivement détruite.`);
+
+    if (!confirmation) return;
+
+    if (!window.dbFirebase) {
+        alert("⚠️ Connexion Internet requise pour effacer le coffre.");
+        return;
+    }
+
+    try {
+        // 1. Ordre de destruction envoyé à Google
+        await window.dbFirebase.collection("coffres").doc(cleCoffre).delete();
+
+        // 2. On nettoie la mémoire de l'appareil
+        localStorage.removeItem('marche_cloud_cle');
+        localStorage.removeItem('marche_last_cloud_save');
+
+        // 3. On masque le bouton ☁️ et la bannière en haut
+        const btnQuick = document.getElementById('btn-cloud-quick-save');
+        if (btnQuick) btnQuick.style.display = 'none';
+
+        const banner = document.getElementById('cloud-reminder-banner');
+        if (banner) banner.style.display = 'none';
+
+        fermerCloudSetup();
+        alert(`✅ Votre Coffre-Fort "${cleCoffre}" a été entièrement supprimé des serveurs Google.`);
+
+    } catch (err) {
+        console.error("Erreur suppression Cloud :", err);
+        alert("⚠️ Impossible d'effacer le coffre. Vérifiez votre connexion.");
+    }
+}
+
+// 2. Nettoyeur d'identifiant (minuscules, sans accents, sans espaces)
+function formaterCleCloud(texte) {
+    return (texte || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+}
+
+// 3. Validation de création ou synchronisation du Coffre
+async function validerCreationCloud() {
+    const prenom = document.getElementById('cloud-prenom').value.trim();
+    const nom = document.getElementById('cloud-nom').value.trim();
+    const annee = document.getElementById('cloud-annee').value.trim();
+
+    if (!prenom || !nom || !annee) {
+        alert("⚠️ Veuillez renseigner votre Prénom, Nom et Année de naissance.");
+        return;
+    }
+
+    const cleCoffre = formaterCleCloud(prenom + nom + annee);
+
+    if (!window.dbFirebase) {
+        alert("⚠️ Connexion Internet requise pour joindre votre Coffre-Fort.");
+        return;
+    }
+
+    const btnValider = document.getElementById('btn-valider-cloud-setup');
+    if (btnValider) {
+        btnValider.innerText = "⏳ Connexion...";
+        btnValider.disabled = true;
+    }
+
+    try {
+        // On interroge Firebase : ce coffre existe-t-il déjà ?
+        const docRef = await window.dbFirebase.collection("coffres").doc(cleCoffre).get();
+
+        if (docRef.exists) {
+            // CAS MULTI-APPAREILS : Le coffre existe déjà (ex: créé sur PC, ouvert sur Pixel)
+            const confirmation = confirm(`☁️ COFFRE-FORT TROUVÉ !\n\nLe coffre "${cleCoffre}" existe déjà dans le Cloud.\n\nVoulez-vous TÉLÉCHARGER les données de ce coffre sur cet appareil ?`);
+            
+            if (confirmation) {
+                const data = docRef.data();
+                if (data && data.fiches && Array.isArray(data.fiches)) {
+                    legumes = data.fiches;
+                    saveToLocal();
+                    if (document.getElementById('view-list').style.display === 'block') renderCards();
+                    alert("✅ Synchronisation réussie ! Votre marché a été restauré.");
+                }
+            }
+        } else {
+            // NOUVEAU COFFRE : On l'enregistre pour la toute première fois
+            await window.dbFirebase.collection("coffres").doc(cleCoffre).set({
+                dateCreation: Date.now(),
+                fiches: legumes
+            });
+            alert(`✅ Votre Coffre-Fort "${cleCoffre}" a été créé avec succès !\nVos données sont désormais en sécurité.`);
+        }
+
+        // On mémorise la clé dans le téléphone
+        localStorage.setItem('marche_cloud_cle', cleCoffre);
+        localStorage.setItem('marche_last_cloud_save', Date.now());
+
+        // Affiche immédiatement le bouton 1-clic ☁️ en haut
+        const btnQuick = document.getElementById('btn-cloud-quick-save');
+        if (btnQuick) btnQuick.style.display = 'block';
+
+        fermerCloudSetup();
+
+    } catch (err) {
+        console.error("Erreur Coffre-Fort :", err);
+        alert("⚠️ Impossible d'accéder au Cloud. Vérifiez votre connexion.");
+    } finally {
+        if (btnValider) {
+            btnValider.innerText = "Activer le Coffre ☁️";
+            btnValider.disabled = false;
+        }
+    }
+}
+
+// 4. BOUTON RAPIDE 1-CLIC : Sauvegarder dans le Cloud
+async function sauvegardeCloudUnClic() {
+    const cleCoffre = localStorage.getItem('marche_cloud_cle');
+
+    if (!cleCoffre) {
+        ouvrirCloudSetup();
+        return;
+    }
+
+    if (!window.dbFirebase) {
+        alert("⚠️ Connexion Internet requise.");
+        return;
+    }
+
+    const btnQuick = document.getElementById('btn-cloud-quick-save');
+    if (btnQuick) btnQuick.innerText = "⏳...";
+
+    try {
+        await window.dbFirebase.collection("coffres").doc(cleCoffre).set({
+            derniereMiseAJour: Date.now(),
+            fiches: legumes
+        });
+
+        localStorage.setItem('marche_last_cloud_save', Date.now());
+        
+        // Cache la bannière de rappel si elle était visible
+        const banner = document.getElementById('cloud-reminder-banner');
+        if (banner) banner.style.display = 'none';
+
+        if (btnQuick) {
+            btnQuick.innerText = "✅ Sauvé !";
+            setTimeout(() => { btnQuick.innerText = "☁️ Sauver"; }, 2000);
+        }
+
+    } catch (err) {
+        console.error("Erreur sauvegarde Cloud :", err);
+        if (btnQuick) btnQuick.innerText = "☁️ Sauver";
+        alert("⚠️ Échec de la sauvegarde Cloud.");
+    }
+}
+
+// 5. SURVEILLANCE AUTOMATIQUE AU DÉMARRAGE
+function surveillerEtatCoffre() {
+    const cleCoffre = localStorage.getItem('marche_cloud_cle');
+    let ouvertures = parseInt(localStorage.getItem('marche_compteur_ouvertures') || "0") + 1;
+    localStorage.setItem('marche_compteur_ouvertures', ouvertures);
+
+    if (cleCoffre) {
+        // Le coffre est configuré : on affiche le bouton 1-clic en haut
+        const btnQuick = document.getElementById('btn-cloud-quick-save');
+        if (btnQuick) btnQuick.style.display = 'block';
+
+        // Rappel toutes les 10 ouvertures
+        const lastSave = parseInt(localStorage.getItem('marche_last_cloud_save') || "0");
+        const dixJours = 10 * 24 * 60 * 60 * 1000;
+        
+        if (ouvertures % 10 === 0 || (Date.now() - lastSave > dixJours)) {
+            const banner = document.getElementById('cloud-reminder-banner');
+            if (banner) banner.style.display = 'block';
+        }
+    } else {
+        // Premier lancement de l'application : on invite à créer le coffre
+        if (ouvertures === 1) {
+            setTimeout(() => {
+                ouvrirCloudSetup();
+            }, 1200);
+        }
+    }
+}
 
 // ========================================================
 // MOTEUR DE PARTAGE PAR CODE PIN 5 CHIFFRES (CLOUD FIREBASE)
@@ -4584,7 +4988,8 @@ function ouvrirQrModal(idFicheUnique = null) {
                         id: l.id,
                         nom: l.nom,
                         notes: l.notes || "",
-                        recettesList: allegerRecettes(l.recettesList)
+                        recettesList: allegerRecettes(l.recettesList),
+                        dejaEnvoye: l.dejaEnvoye /* LA PIÈCE MANQUANTE EST ICI ! */
                     };
                 }
             }
@@ -4611,7 +5016,12 @@ function ouvrirQrModal(idFicheUnique = null) {
         }
 
         // COCHAGE AUTOMATIQUE INTELLIGENT :
-        selectionFichesIds = fichesAEnvoyerGlobal.slice(0, MAX_FICHES_PAR_QR).map(f => f.id || f.nom);
+        // Uniquement à la première ouverture de la fenêtre ! (Ne force plus la main)
+        if (selectionFichesIds.length === 0 && !window.qrModalDejaOuverte) {
+            selectionFichesIds = fichesAEnvoyerGlobal.filter(f => !f.dejaEnvoye).map(f => String(f.id || f.nom));
+            window.qrModalDejaOuverte = true; // On mémorise qu'on l'a déjà fait
+        }
+        
         dessinerInterfacePilules();
 
     } catch (err) {
@@ -4619,31 +5029,63 @@ function ouvrirQrModal(idFicheUnique = null) {
     }
 }
 
-// Dessine les pilules cliquables avec le compteur (X / 8 max)
+// Dessine une liste verticale propre (type checklist) au lieu d'un nuage de pilules
 function dessinerInterfacePilules() {
     let statusText = document.getElementById('qr-status-text');
-    const fichesSelectionnees = fichesAEnvoyerGlobal.filter(f => selectionFichesIds.includes(f.id || f.nom));
+    const fichesSelectionnees = fichesAEnvoyerGlobal.filter(f => selectionFichesIds.includes(String(f.id || f.nom)));
     const totalCoches = fichesSelectionnees.length;
-    const couleurCompteur = totalCoches >= MAX_FICHES_PAR_QR ? '#D84315' : '#2E7D32';
 
+// 1. Boutons avec gestion des fiches "Déjà envoyées" (Grisées mais réversibles)
     let pilulesHTML = fichesAEnvoyerGlobal.map(f => {
-        const identifiant = f.id || f.nom;
-        const estCoche = selectionFichesIds.includes(identifiant);
-        const bg = estCoche ? '#2E7D32' : '#FFFFFF';
-        const color = estCoche ? '#FFFFFF' : '#888888';
-        const border = estCoche ? '#2E7D32' : '#CCCCCC';
-        const icone = estCoche ? '✅' : '⬜';
-        return `<button type="button" onclick="basculerPiluleQr('${identifiant}')" style="background:${bg}; color:${color}; border:1px solid ${border}; border-radius:15px; padding:5px 10px; font-size:0.75rem; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; margin:2px; box-shadow:0 1px 3px rgba(0,0,0,0.05);">${icone} ${f.nom}</button>`;
-    }).join(' ');
+        const identifiant = String(f.id || f.nom);
+		const estCoche = selectionFichesIds.map(String).includes(identifiant);
+        const estDejaEnvoye = f.dejaEnvoye && !estCoche; // Si elle a été envoyée et n'est pas cochée
+        
+        let bg, color, border, icone, actionClic;
 
+        if (estDejaEnvoye) {
+            // Style "Grisé et inactif", mais on peut cliquer pour le remettre !
+            bg = '#F2F0EB';
+            color = '#A89F91';
+            border = '#E8E0D2';
+            icone = '↩️'; // Icône de retour
+            actionClic = `annulerEnvoiFiche('${identifiant}')`;
+        } else {
+            // Style normal "En attente" (Coché ou non coché)
+            bg = estCoche ? '#2E7D32' : '#FFFFFF';
+            color = estCoche ? '#FFFFFF' : '#4A4A4A';
+            border = estCoche ? '#2E7D32' : '#E8E0D2';
+            icone = estCoche ? '✅' : '⬜';
+            actionClic = `basculerPiluleQr('${identifiant}')`;
+        }
+        
+        return `<button type="button" onclick="${actionClic}" style="background:${bg}; color:${color}; border:1px solid ${border}; border-radius:10px; padding:6px 8px; font-size:0.78rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:flex-start; gap:6px; width:100%; box-sizing:border-box; box-shadow:0 1px 3px rgba(0,0,0,0.02); text-align:left; transition: all 0.2s; opacity: ${estDejaEnvoye ? '0.7' : '1'};">
+            <span>${icone}</span> <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; ${estDejaEnvoye ? 'text-decoration: line-through;' : ''}">${f.nom}</span>
+        </button>`;
+    }).join('');
+
+    // 2. Grille à 2 colonnes avec barre de défilement discrète
     let actionsHTML = `
-        <div style="font-size:0.8rem; color:#666; margin-bottom:6px; text-align:center;">
-            <strong>Sélectionnez vos fiches (<span style="color:${couleurCompteur}; font-weight:800;">${totalCoches} / ${MAX_FICHES_PAR_QR} max</span>) :</strong>
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px; text-align:center; text-transform:uppercase; font-weight:800;">
+            Fiches en attente (${totalCoches} sélectionnées)
         </div>
-        <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:4px; margin-bottom:10px; max-height:100px; overflow-y:auto; padding:2px;">${pilulesHTML}</div>
-        <div style="display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; width: 100%; box-sizing: border-box; margin: 0 auto 12px auto;">
-            <button type="button" onclick="validerEnvoiTermine()" style="background:#E8F5E9; border:1px solid #A5D6A7; color:#2E7D32; font-weight:800; font-size:0.72rem; padding:6px 10px; border-radius:12px; cursor:pointer;">✅ Marquer sélection envoyée</button>
-            <button type="button" onclick="forcerRenvoyerToutHistorique()" style="background:#FFF; border:1px dashed var(--accent); color:var(--accent-dark); font-size:0.72rem; padding:6px 8px; border-radius:12px; cursor:pointer;" title="Recharger toutes les fiches créées">↺ Tout l'historique</button>
+        
+        <!-- Le conteneur en grille (2 colonnes) avec scrollbar personnalisée -->
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px; margin-bottom:12px; max-height:140px; overflow-y:auto; overflow-x:hidden; padding:6px; border:1px solid var(--border-color); border-radius:16px; background:#FAF7F2; scrollbar-width: thin; scrollbar-color: var(--accent) transparent;">
+            <style>
+                /* Barre de défilement fine pour Chrome/Safari */
+                #qr-modal-liste::-webkit-scrollbar { width: 6px; }
+                #qr-modal-liste::-webkit-scrollbar-track { background: transparent; }
+                #qr-modal-liste::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+            </style>
+            <div id="qr-modal-liste" style="display: contents;">
+                ${pilulesHTML}
+            </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; width: 100%; box-sizing: border-box; margin: 0 auto 15px auto;">
+            <button type="button" onclick="validerEnvoiTermine()" style="background:#E8F5E9; border:1px solid #A5D6A7; color:#2E7D32; font-weight:800; font-size:0.75rem; padding:8px 6px; border-radius:12px; cursor:pointer; width:100%; text-align:center;">✅ Marquer comme envoyé</button>
+            <button type="button" onclick="forcerRenvoyerToutHistorique()" style="background:#FFF; border:1px dashed var(--accent); color:var(--accent-dark); font-size:0.75rem; padding:8px 10px; border-radius:12px; cursor:pointer; white-space:nowrap;" title="Recharger tout">↺ Historique</button>
         </div>
     `;
 
@@ -4651,20 +5093,16 @@ function dessinerInterfacePilules() {
 
     if (fichesSelectionnees.length === 0) {
         let container = document.getElementById('qrcode-container');
-        if (container) container.innerHTML = '<div style="padding:20px; color:#A06A42; font-size:0.85rem; text-align:center;">⚠️ Cochez au moins une fiche pour créer le QR Code !</div>';
+        if (container) container.innerHTML = '<div style="padding:20px; color:#A06A42; font-size:0.85rem; text-align:center;">⚠️ Cochez au moins une fiche pour générer un code !</div>';
         return;
     }
 
-    // LE COMPRESSEUR "VOYAGE LÉGER" S'ACTIVE ICI !
-    // On nettoie les fiches juste avant de les donner au QR Code
+    // Le compresseur de données "Voyage Léger"
     const fichesAllegees = fichesSelectionnees.map(fiche => {
         let fichePropre = { ...fiche };
         if (fichePropre.recettesList && Array.isArray(fichePropre.recettesList)) {
             fichePropre.recettesList = fichePropre.recettesList.map(r => {
-                if (r.idMeal) {
-                    // Si c'est une recette TheMealDB, on ne garde QUE le numéro magique !
-                    return { nom: r.nom, url: r.url, idMeal: r.idMeal };
-                }
+                if (r.idMeal) return { idMeal: r.idMeal };
                 return { nom: r.nom, url: r.url };
             });
         }
@@ -4674,50 +5112,47 @@ function dessinerInterfacePilules() {
     afficherQrPourPaquet(fichesAllegees);
 }
 
-// Bascule une pilule avec BLOCAGE DE SÉCURITÉ À 8 FICHES MAX
+// Bascule une pilule SANS LIMITE DE NOMBRE ! (C'est le Cloud qui gère)
 function basculerPiluleQr(idOuNom) {
-    // Conversion en chaîne de caractères pour être sûr que ça corresponde
     const idString = String(idOuNom);
     const index = selectionFichesIds.findIndex(id => String(id) === idString);
     
     if (index > -1) {
-        // Décocher : si c'est déjà coché, on l'enlève
-        selectionFichesIds.splice(index, 1);
+        selectionFichesIds.splice(index, 1); // Décoche
     } else {
-        // Cocher : si c'est pas coché, on l'ajoute (avec la sécurité des 8 max)
-        if (selectionFichesIds.length >= MAX_FICHES_PAR_QR) {
-            alert(`⚠️ Limite de ${MAX_FICHES_PAR_QR} fiches max. Décochez-en une pour en ajouter une autre !`);
-            return;
-        }
-        selectionFichesIds.push(idString);
+        selectionFichesIds.push(idString); // Coche (sans limite !)
     }
     
-    // Une fois la liste mise à jour, on redessine tout
     dessinerInterfacePilules();
 }
 
 // Affiche le QR code et arme le bouton de copie
 function afficherQrPourPaquet(paquetFiches) {
     let container = document.getElementById('qrcode-container');
-    let btnCopier = document.getElementById('btn-copy-link');
 
     try {
-        const baseLink = encodeURI(window.location.href.split('#')[0]);
-        // Compresseur de données : enlève le superflu pour aérer le QR Code au maximum
-const fichesMicro = paquetFiches.map(f => {
-    let micro = { i: f.id, n: f.nom };
-    if (f.notes) micro.o = f.notes;
-    if (f.recettesList && f.recettesList.length > 0) {
-        micro.r = f.recettesList.map(r => r.idMeal ? { m: r.idMeal } : { n: r.nom, u: r.url });
-    }
-    return micro;
-});
+        const baseLink = window.location.href.split('#')[0];
+        
+        // Compresseur de données
+        const fichesMicro = paquetFiches.map(f => {
+            let micro = { i: f.id, n: f.nom };
+            if (f.notes) micro.o = f.notes;
+            if (f.recettesList && f.recettesList.length > 0) {
+                micro.r = f.recettesList.map(r => r.idMeal || r.m ? { m: (r.idMeal || r.m) } : { n: r.nom, u: r.url });
+            }
+            return micro;
+        });
 
-const texteJson = JSON.stringify(fichesMicro);
+        const texteJson = JSON.stringify(fichesMicro);
         const urlFinale = `${baseLink}#import=${encodeURIComponent(texteJson)}`;
 
-        lienPartageActif = urlFinale;
-        if (btnCopier) btnCopier.style.display = 'block';
+        // ==========================================
+        // LE DISJONCTEUR DE SÉCURITÉ !
+        // Si plus de 3 fiches OU si le texte est trop long, on coupe !
+        // ==========================================
+        if (paquetFiches.length > 3 || urlFinale.length > 900) {
+            throw new Error("QR Code trop dense"); // Force le passage dans le "catch" en bas !
+        }
 
         let qr = qrcode(0, 'L');
         qr.addData(urlFinale);
@@ -4736,56 +5171,104 @@ const texteJson = JSON.stringify(fichesMicro);
             }
         }
     } catch (e) {
-        console.error("Erreur QR:", e);
-        if (container) container.innerHTML = '<div style="color:#D32F2F; font-size:0.8rem; text-align:center;">⚠️ Trop de données. Décochez 1 ou 2 fiches !</div>';
+        console.warn("Sécurité activée :", e.message);
+        if (container) container.innerHTML = `
+            <div style="background:#FFF0F0; border:1px solid #EF9A9A; border-radius:12px; padding:15px; margin: 10px 0; color:#C62828; font-size:0.8rem; text-align:center; line-height: 1.4;">
+                <strong>⚠️ Le QR Code est saturé.</strong><br><br>
+                L'image ne peut transporter que 1 à 3 fiches simples pour rester lisible.<br><br>
+                👇 <strong>Utilisez le bouton bleu "Créer un code de partage" ci-dessous pour cet envoi volumineux !</strong>
+            </div>
+        `;
     }
 }
 
-// Valide l'envoi pour vider la file d'attente
-function validerEnvoiTermine() {
-    if (!selectionFichesIds || selectionFichesIds.length === 0) {
-        alert("⚠️ Aucune fiche n'est sélectionnée !");
-        return;
-    }
+// ========================================================
+// VALIDER OU ANNULER L'ENVOI (GESTION INDIVIDUELLE ROBUSTE)
+// ========================================================
 
-    let nbMarques = 0;
-    selectionFichesIds.forEach(idOuNom => {
-        const index = legumes.findIndex(l => (l.id == idOuNom) || (removeAccents(l.nom.toLowerCase().trim()) === removeAccents(String(idOuNom).toLowerCase().trim())));
+// 1. Marquer les fiches sélectionnées comme "Envoyées"
+// 1. Marquer les fiches sélectionnées comme "Envoyées"
+function validerEnvoiTermine() {
+    if (!selectionFichesIds || selectionFichesIds.length === 0) return;
+
+    selectionFichesIds.forEach(idString => {
+        const index = legumes.findIndex(l => String(l.id) === idString || removeAccents(String(l.nom).toLowerCase().trim()) === removeAccents(idString.toLowerCase().trim()));
         if (index > -1) {
             legumes[index].dejaEnvoye = true;
-            nbMarques++;
         }
+        const fItem = fichesAEnvoyerGlobal.find(f => String(f.id || f.nom) === idString);
+        if (fItem) fItem.dejaEnvoye = true;
     });
 
     saveToLocal();
-    forcerToutHistorique = false;
-    alert(`✅ C'est noté !\n\n${nbMarques} fiche(s) cochée(s) ont été marquées comme transmises.\nElles sont retirées de la file d'attente.`);
-    fermerQrModal();
+    selectionFichesIds = []; 
+    dessinerInterfacePilules(); 
 }
 
-// Recharge tout l'historique sans filtre de tampon
+// 2. Annuler l'envoi : On clique sur une fiche grise, elle redevient verte instantanément !
+function annulerEnvoiFiche(identifiant) {
+    const idString = String(identifiant);
+    const index = legumes.findIndex(l => String(l.id) === idString || removeAccents(String(l.nom).toLowerCase().trim()) === removeAccents(idString.toLowerCase().trim()));
+    
+    if (index > -1) {
+        legumes[index].dejaEnvoye = false;
+        saveToLocal();
+        
+        const fItem = fichesAEnvoyerGlobal.find(f => String(f.id || f.nom) === idString);
+        if (fItem) fItem.dejaEnvoye = false;
+
+        if (!selectionFichesIds.includes(idString)) {
+            selectionFichesIds.push(idString); 
+        }
+        
+        dessinerInterfacePilules(); 
+    }
+}
+
+// 3. Bascule une pilule (Cocher / Décocher) sans limite
+function basculerPiluleQr(identifiant) {
+    const idString = String(identifiant);
+    const index = selectionFichesIds.findIndex(id => id === idString);
+    
+    if (index > -1) {
+        selectionFichesIds.splice(index, 1); // Décoche la fiche (devient blanche)
+    } else {
+        selectionFichesIds.push(idString); // Coche la fiche (devient verte)
+    }
+    
+    dessinerInterfacePilules(); // Rafraîchit juste les boutons instantanément
+}
+
+// 4. Bouton Historique : Rallume TOUTES les fiches en vert et fait réapparaître les 6 !
 function forcerRenvoyerToutHistorique() {
-    forcerToutHistorique = true;
-    ouvrirQrModal();
+    legumes.forEach(l => { l.dejaEnvoye = false; });
+    saveToLocal();
+
+    selectionFichesIds = [];
+    window.qrModalDejaOuverte = false; // Réautorise l'affichage complet
+    ouvrirQrModal(); // Rescanne le carnet et fait réapparaître les 6 fiches !
 }
 
-// Partage direct depuis le bouton 📱 d'une fiche
+// 5. Partage direct depuis la fiche
 function partagerFicheDirect(idFiche) {
     ouvrirQrModal(idFiche);
 }
 
-// Fermeture de la modale
+// 6. Fermeture propre et remise à zéro totale
 function fermerQrModal() {
     let modal = document.getElementById('qr-modal');
     if (modal) {
         modal.style.display = 'none';
         modal.classList.add('hidden');
     }
-    const inputColler = document.getElementById('input-coller-lien');
+    const inputColler = document.getElementById('input-code-pin');
     if (inputColler) inputColler.value = '';
+    
+    // Remise à zéro pour la prochaine ouverture
     forcerToutHistorique = false;
+    selectionFichesIds = [];
+    window.qrModalDejaOuverte = false; 
 }
-
 // === 1. COPIER LE LIEN MAGIQUE DANS LE PRESSE-PAPIER (SUR MOBILE) ===
 function copierLienMagique() {
     if (!lienPartageActif) return;
@@ -5040,64 +5523,83 @@ function fermerModalFichesMasquees() {
 // LE PONT MAGIQUE : ANALYSE CLINIQUE DES INGRÉDIENTS D'UNE RECETTE
 // =========================================================================
 
-// Dictionnaire inverse Anglais -> Français pour identifier les ingrédients
+// ========================================================
+// LE GRAND DICTIONNAIRE INVERSE (ANGLAIS -> FRANÇAIS)
+// Permet à la Matrice Clinique de diagnostiquer chaque ingrédient !
+// ========================================================
 const dicoAnglaisVersFrancais = {
-    // Végétaux & Fruits
+
+    // --- VÉGÉTAUX & LÉGUMES ---
     "asparagus": "asperge", "spinach": "épinard", "lettuce": "laitue", "radish": "radis",
-    "pak choi": "pak-choi", "bok choy": "pak-choi", "strawberry": "fraise", "strawberries": "fraise",
-    "artichoke": "artichaut", "artichokes": "artichaut", "rhubarb": "rhubarbe", "cherry": "cerise",
-    "cherries": "cerise", "watercress": "cresson", "wild garlic": "ail des ours", "turnip": "navet",
-    "carrot": "carottes", "carrots": "carottes", "baby carrots": "carottes",
-    "onion": "oignon", "onions": "oignon", "red onion": "oignon", "spring onion": "oignon blanc", "spring onions": "oignon blanc", "shallot": "oignon", "shallots": "oignon",
+    "pak choi": "pak-choi", "bok choy": "pak-choi", "watercress": "cresson", "wild garlic": "ail des ours",
+    "artichoke": "artichaut", "artichokes": "artichaut", "rhubarb": "rhubarbe",
+    "turnip": "navet", "turnips": "navet", "baby carrots": "carottes", "carrot": "carottes", "carrots": "carottes",
+    "onion": "oignon ail", "onions": "oignon ail", "red onion": "oignon ail", "spring onion": "oignon blanc", "spring onions": "oignon blanc", "shallot": "oignon ail", "shallots": "oignon ail",
+    "garlic": "oignon ail", "garlic clove": "oignon ail", "garlic cloves": "oignon ail",
     "rocket": "roquette", "arugula": "roquette", "peas": "petits pois", "green peas": "petits pois",
     "zucchini": "courgettes", "courgette": "courgettes", "eggplant": "aubergine", "aubergines": "aubergine",
-    "green beans": "haricots verts", "tomato": "tomate", "tomatoes": "tomate", "tomato puree": "coulis de tomate cuit", "chopped tomatoes": "tomate",
-    "fennel": "fenouil", "corn": "maïs", "sweetcorn": "maïs", "pepper": "poivron", "peppers": "poivron", "bell pepper": "poivron", "red pepper": "poivron", "green pepper": "poivron",
+    "green beans": "haricots verts", "string beans": "haricots verts",
+    "tomato": "tomate", "tomatoes": "tomate", "tomato puree": "coulis de tomate cuit", "chopped tomatoes": "tomate", "plum tomatoes": "tomate",
+    "fennel": "fenouil", "corn": "maïs", "sweetcorn": "maïs",
+    "pepper": "poivron", "peppers": "poivron", "bell pepper": "poivron", "red pepper": "poivron", "green pepper": "poivron", "chilli": "poivron",
     "cucumber": "concombre", "celery": "céleri-branche", "celery stick": "céleri-branche", "swiss chard": "côtes de bettes",
-    "avocado": "avocat", "avocados": "avocat", "banana": "banane", "bananas": "banane",
-    "blueberry": "myrtilles", "blueberries": "myrtilles", "raspberry": "framboises", "raspberries": "framboises",
-    "blackberry": "mûres", "blackberries": "mûres", "melon": "melon", "watermelon": "pastèque",
-    "peach": "pêches", "peaches": "pêches", "nectarine": "nectarines", "apricot": "abricots", "apricots": "abricots",
-    "plum": "prunes", "plums": "prunes", "prune": "pruneaux", "prunes": "pruneaux",
-    "mango": "mangue", "papaya": "papaye", "pineapple": "ananas", "okra": "gombo",
-    "lemon": "citron", "lemon juice": "citron", "lime": "lime", "lime juice": "lime",
     "squash": "courge butternut", "butternut squash": "courge butternut", "pumpkin": "potiron",
     "beetroot": "betterave rouge", "beet": "betterave rouge",
-    "mushroom": "champignons de paris", "mushrooms": "champignons de paris", "wild mushrooms": "chanterelles",
-    "cabbage": "chou vert frisé", "red cabbage": "chou rouge", "kale": "chou kale", "brussels sprouts": "choux de bruxelles",
-    "apple": "pommes", "apples": "pommes", "pear": "poires", "pears": "poires",
-    "grape": "raisins", "grapes": "raisins", "fig": "figue", "figs": "figue", "quince": "coing", "chestnut": "châtaigne marron", "chestnuts": "châtaigne marron",
+    "mushroom": "champignons de paris", "mushrooms": "champignons de paris", "wild mushrooms": "chanterelles", "chestnut mushrooms": "champignons de paris",
+    "cabbage": "chou vert frisé", "red cabbage": "chou rouge", "kale": "chou kale", "brussels sprouts": "choux de bruxelles", "white cabbage": "chou blanc", "savoy cabbage": "chou vert frisé",
     "leek": "blanc de poireau", "leeks": "blanc de poireau", "chicory": "endive", "broccoli": "brocoli", "cauliflower": "chou-fleur",
-    "ginger": "gingembre", "kumquat": "kumquat", "white cabbage": "chou blanc", "persimmon": "kaki", "persimmons": "kaki",
+    "ginger": "gingembre",
 
-    // Féculents & Légumineuses
-    "potato": "pomme de terre", "potatoes": "pomme de terre", "sweet potato": "patate douce", "sweet potatoes": "patate douce",
-    "parsnip": "panais", "parsnips": "panais", "jerusalem artichoke": "topinambour",
-    "couscous": "couscous", "bulgur": "boulgour", "buckwheat": "sarrasin", "barley": "orge perlé",
+    // --- FRUITS ---
+    "apple": "pommes", "apples": "pommes", "pear": "poires", "pears": "poires",
+    "strawberry": "fraises", "strawberries": "fraises", "cherry": "cerises", "cherries": "cerises",
+    "banana": "banane", "bananas": "banane", "blueberry": "myrtilles", "blueberries": "myrtilles",
+    "raspberry": "framboises", "raspberries": "framboises", "blackberry": "mûres", "blackberries": "mûres",
+    "melon": "melon", "watermelon": "pastèque", "peach": "pêches", "peaches": "pêches",
+    "nectarine": "nectarines", "apricot": "abricots", "apricots": "abricots", "plum": "prunes", "plums": "prunes", "prune": "pruneaux",
+    "mango": "mangue", "papaya": "papaye", "pineapple": "ananas", "avocado": "avocat", "avocados": "avocat",
+    "lemon": "citron", "lemon juice": "citron", "lemon zest": "citron", "lime": "lime", "lime juice": "lime",
+    "orange": "oranges", "oranges": "oranges", "orange juice": "oranges", "grapefruit": "pamplemousse",
+    "grape": "raisins", "grapes": "raisins", "fig": "figue", "figs": "figue",
+    "quince": "coing", "chestnut": "châtaigne marron", "chestnuts": "châtaigne marron", "persimmon": "kaki",
+
+    // --- VIANDES & VOLAILLES ---
+    "beef": "steak de boeuf", "minced beef": "viande hachée de boeuf", "ground beef": "viande hachée de boeuf", "beef steak": "steak de boeuf", "beef stock": "bouillon de boeuf",
+    "pork": "filet de porc", "pork chops": "côtelette de porc", "pork loin": "filet de porc", "bacon": "lard fumé", "ham": "jambon cuit blanc", "sausage": "saucisse", "sausages": "saucisse",
+    "veal": "filet de veau", "chicken": "filet de poulet", "chicken breast": "filet de poulet", "chicken breasts": "filet de poulet", "chicken thighs": "cuisse de poulet", "chicken thigh": "cuisse de poulet", "chicken leg": "cuisse de poulet", "chicken stock": "bouillon de volaille",
+    "turkey": "tranche de dinde", "duck": "canard", "lamb": "filet d'agneau", "rabbit": "lapin rable cuisse",
+
+    // --- POISSONS & FRUITS DE MER ---
+    "fish": "poisson", "cod": "filets de cabillaud", "salmon": "filets de saumon", "smoked salmon": "saumon fumé",
+    "tuna": "filet de thon", "trout": "filet de truite", "sea bream": "dorade royale", "sea bass": "filet de loup de mer", "monkfish": "filets de baudroie", "haddock": "filets de cabillaud",
+    "prawns": "crevettes cocktail", "shrimp": "crevettes cocktail", "king prawns": "crevettes crues black tiger", "mussels": "moules", "squid": "anneaux de calamar", "octopus": "poulpe frais", "scallops": "noix de saint-jacques",
+
+    // --- FÉCULENTS, GRAINS & LÉGUMINEUSES ---
+    "potato": "pomme de terre", "potatoes": "pomme de terre", "sweet potato": "patate douce", "sweet potatoes": "patate douce", "parsnip": "panais", "parsnips": "panais",
     "rice": "riz classique", "basmati rice": "riz basmati", "jasmine rice": "riz au jasmin", "brown rice": "riz complet",
-    "polenta": "polenta", "quinoa": "quinoa", "pasta": "pâtes", "noodles": "nouilles de riz", "rice noodles": "nouilles de riz",
-    "oats": "avoine", "tapioca": "manioc tapioca",
-    "beans": "haricots blancs", "kidney beans": "haricots rouges", "white beans": "haricots blancs", "mung beans": "haricots mungo", "black beans": "haricots noirs",
-    "lentils": "lentilles corail", "red lentils": "lentilles corail", "green lentils": "lentilles vertes",
-    "chickpeas": "pois chiches", "edamame": "edamame", "split peas": "pois jaunes",
+    "pasta": "pâtes", "spaghetti": "pâtes", "macaroni": "pâtes", "noodles": "nouilles de riz", "rice noodles": "nouilles de riz", "egg noodles": "nouilles chinoises",
+    "couscous": "couscous", "bulgur": "boulgour", "quinoa": "quinoa", "polenta": "polenta", "oats": "avoine", "rolled oats": "avoine", "flour": "semoule de blé", "bread": "féculent",
+    "lentils": "lentilles corail", "red lentils": "lentilles corail", "green lentils": "lentilles vertes", "chickpeas": "pois chiches",
+    "kidney beans": "haricots rouges", "black beans": "haricots noirs", "white beans": "haricots blancs", "cannellini beans": "haricots blancs", "beans": "haricots blancs",
 
-    // Viandes, Volailles & Poissons
-    "beef": "steak de boeuf", "minced beef": "viande hachée de boeuf", "ground beef": "viande hachée de boeuf", "beef steak": "steak de boeuf",
-    "pork": "filet de porc", "bacon": "lard fumé", "pork chops": "côtelette de porc",
-    "veal": "filet de veau", "chicken": "filet de poulet", "chicken breast": "filet de poulet", "chicken thighs": "cuisse de poulet", "chicken leg": "cuisse de poulet", "quail": "caille",
-    "turkey": "tranche de dinde", "lamb": "filet d'agneau", "horse meat": "steak de cheval", "venison": "médaillon de cerf", "rabbit": "lapin rable cuisse",
-    "cod": "filets de cabillaud", "salmon": "filets de saumon", "tuna": "filet de thon", "sea bream": "dorade royale", "trout": "filet de truite",
-    "lobster": "queue de homard", "mussels": "moules", "prawns": "crevettes cocktail", "shrimp": "crevettes cocktail", "king prawns": "crevettes crues black tiger",
-    "squid": "anneaux de calamar", "octopus": "poulpe frais", "perch": "filets de perche", "sea bass": "filet de loup de mer", "monkfish": "filets de baudroie", "sardines": "sardine fraîche", "sardine": "sardine fraîche", "scallops": "noix de saint-jacques",
-    "tofu": "tofu ferme nature",
+    // --- LAITAGES & MATIÈRES GRASSES ---
+    "milk": "lait entier uht", "butter": "beurre de cuisine", "ghee": "ghee beurre clarifié",
+    "cream": "crème entière uht", "heavy cream": "crème entière uht", "double cream": "crème entière uht", "sour cream": "crème acidulée",
+    "cheese": "gruyère doux", "cheddar": "gruyère doux", "parmesan": "parmesan", "parmesan cheese": "parmesan", "mozzarella": "mozzarella di bufala", "feta": "feta", "feta cheese": "feta", "ricotta": "cottage cheese", "yogurt": "yaourt nature",
+    "egg": "oeufs frais", "eggs": "oeufs frais", "egg yolk": "oeufs frais", "egg white": "oeufs frais",
+    "olive oil": "huile d'olive", "vegetable oil": "huile de colza", "oil": "huile d'olive", "sesame oil": "huile de sésame", "coconut milk": "lait de coco",
 
-    // Condiments & Épices
-    "flaxseed": "graines de lin", "chia": "graines de chia", "sesame": "graines de sésame", "sesame seeds": "graines de sésame",
-    "walnut": "noix", "walnuts": "noix", "pecan": "noix de pécan", "pecans": "noix de pécan", "amande": "amandes", "almonds": "amandes", "hazelnut": "noisettes", "hazelnuts": "noisettes", "peanuts": "cacahuètes", "peanut": "cacahuètes",
-    "olive oil": "huile d'olive", "oil": "huile d'olive", "rapeseed oil": "huile de colza", "sesame oil": "huile de sésame",
-    "vinaigre": "vinaigre classique", "mustard": "moutarde", "chives": "ciboulette vert oignon", "basilic": "basilic frais", "coriandre": "coriandre fraîche", "cilantro": "coriandre fraîche", "tarragon": "estragon frais", "parsley": "persil plat",
-    "turmeric": "curcuma", "paprika": "paprika doux", "curry": "curry doux", "pepper": "poivre noir", "black pepper": "poivre noir",
-    "thyme": "thym", "rosemary": "romarin", "oregano": "origan", "garlic": "oignon ail", "garlic clove": "oignon ail"
+    // --- CONDIMENTS, GRAINES & ÉPICES ---
+    "flaxseed": "graines de lin", "chia seeds": "graines de chia", "sesame seeds": "graines de sésame",
+    "walnuts": "noix", "pecans": "noix de pécan", "almonds": "amandes", "hazelnuts": "noisettes", "peanuts": "cacahuètes",
+    "vinegar": "vinaigre classique", "balsamic vinegar": "vinaigre balsamique", "cider vinegar": "vinaigre classique", "mustard": "moutarde", "dijon mustard": "moutarde", "mayonnaise": "mayonnaise",
+    "soy sauce": "sauce soja", "honey": "miel", "sugar": "sucre blanc", "brown sugar": "sucre de canne",
+    "curry powder": "curry doux", "turmeric": "curcuma", "paprika": "paprika doux", "black pepper": "poivre noir", "salt": "sel",
+    "thyme": "thym", "rosemary": "romarin", "oregano": "origan", "basil": "basilic frais", "parsley": "persil plat", "coriander": "coriandre fraîche", "cilantro": "coriandre fraîche", "chives": "ciboulette vert oignon",
+	// --- NOUVEAUX AJOUTS ---
+    "chives": "ciboulette",  "tarragon": "estragon", "thai basil": "basilic thaï", "sage": "sauge", "fish sauce": "sauce de poisson", "lemongrass": "citronnelle", "kaffir lime leaves": "feuilles de kaffir",
+	"kaffir leaves": "feuilles de kaffir", "lime leaves": "feuilles de kaffir", "olives": "olives", "black olives": "olives", "green olives": "olives", "olive": "olives", "preserved lemon": "citrons confits", "preserved lemons": "citrons confits",
+    "anchovies": "anchois", "anchovy": "anchois", "anchovy fillets": "anchois",
 };
 
 // Analyse bienveillante et constructive de la recette
@@ -5350,105 +5852,118 @@ function ouvrirPartenaireSuisse(site) {
     }
 }
 
-// Dictionnaire Français -> Anglais
+// ========================================================
+// LE GRAND DICTIONNAIRE CULINAIRE UNIVERSEL (FRANÇAIS -> ANGLAIS)
+// ========================================================
 const dicoTraductionTheMealDB = {
-    // Végétaux & Fruits
-    "asperge": "asparagus", "pointes d'asperges": "asparagus",
+
+    // --- 1. TYPES DE PLATS & RECETTES (INDISPENSABLE !) ---
+    "soupe": "soup", "soupes": "soup", "potage": "soup", "veloute": "soup", "velouté": "soup", "bouillon": "broth",
+    "salade": "salad", "salades": "salad",
+    "ragout": "stew", "ragoût": "stew", "mijote": "stew", "mijoté": "stew", "casserole": "casserole",
+    "tarte": "pie", "tartes": "pie", "tourte": "pie", "quiche": "pie",
+    "gateau": "cake", "gâteau": "cake", "gateaux": "cake", "gâteaux": "cake", "biscuit": "cookie", "biscuits": "cookies",
+    "crepe": "pancake", "crêpe": "pancake", "crepes": "pancakes", "crêpes": "pancakes", "pancake": "pancake", "pancakes": "pancakes", "gaufre": "waffle", "gaufres": "waffles",
+    "gratin": "gratin", "flan": "flan", "pouding": "pudding", "pudding": "pudding",
+    "boulette": "meatball", "boulettes": "meatballs",
+    "pain": "bread", "pains": "bread", "brioche": "brioche", "croissant": "croissant",
+    "burger": "burger", "burgers": "burger", "sandwich": "sandwich", "wrap": "wrap", "pizza": "pizza",
+    "sauce": "sauce", "sauces": "sauce", "puree": "mash", "purée": "mash",
+    "roti": "roast", "rôti": "roast", "grille": "grilled", "grillé": "grilled", "frit": "fried", "pane": "crispy", "pané": "crispy",
+
+    // --- 2. VÉGÉTAUX, LÉGUMES & RACINES ---
+    "asperge": "asparagus", "asperges": "asparagus", "pointes d'asperges": "asparagus",
     "epinard": "spinach", "épinard": "spinach", "epinards": "spinach", "épinards": "spinach",
-    "laitue": "lettuce", "salade pommee": "lettuce", "salade pommée": "lettuce", "batavia": "lettuce", "iceberg": "lettuce", "rampon": "lettuce", "mache": "lettuce", "mâche": "lettuce",
+    "laitue": "lettuce", "salade pommee": "lettuce", "salade pommée": "lettuce", "batavia": "lettuce", "iceberg": "lettuce", "rampon": "lettuce", "mache": "lettuce", "mâche": "lettuce", "roquette": "rocket",
     "radis": "radish", "radis blanc": "radish",
-    "pak-choi": "pak choi", "pak choi": "pak choi",
-    "fraise": "strawberry", "fraises": "strawberries",
-    "artichaut": "artichoke", "artichauts": "artichoke",
-    "rhubarbe": "rhubarb",
-    "cerise": "cherry", "cerises": "cherries",
-    "cresson": "watercress",
-    "ail des ours": "wild garlic",
-    "navet": "turnip", "navet nouveau": "turnip",
+    "pak-choi": "pak choi", "pak choi": "pak choi", "bok choy": "pak choi",
+    "artichaut": "artichoke", "artichauts": "artichoke", "cresson": "watercress", "ail des ours": "wild garlic",
+    "navet": "turnip", "navets": "turnip", "navet nouveau": "turnip",
     "carotte": "carrot", "carottes": "carrots", "carottes nouvelle": "carrot",
-    "oignon": "onion", "oignons": "onions", "oignon blanc": "onion",
-    "roquette": "rocket",
+    "oignon": "onion", "oignons": "onions", "oignon blanc": "onion", "echalote": "shallot", "échalote": "shallot",
+    "poireau": "leek", "poireaux": "leeks", "blanc de poireau": "leek",
     "pois": "peas", "petits pois": "peas", "pois mange-tout": "peas",
     "courgette": "zucchini", "courgettes": "zucchini",
     "aubergine": "eggplant", "aubergines": "eggplant",
     "haricot vert": "green beans", "haricots verts": "green beans",
-    "tomate": "tomato", "tomates": "tomatoes", "coulis de tomate": "tomato", "coulis de tomate cuit": "tomato",
-    "fenouil": "fennel",
-    "mais": "corn", "maïs": "corn",
-    "poivron": "pepper", "poivrons": "peppers", "pimientos": "pepper",
-    "concombre": "cucumber",
-    "celeri": "celery", "céleri": "celery", "celeri-branche": "celery", "céleri-branche": "celery", "celeri-rave": "celery", "céleri-rave": "celery",
+    "tomate": "tomato", "tomates": "tomatoes", "coulis de tomate": "tomato", "coulis": "tomato",
+    "fenouil": "fennel", "mais": "corn", "maïs": "corn",
+    "poivron": "pepper", "poivrons": "peppers", "piment": "chilli", "piments": "chilli",
+    "concombre": "cucumber", "celeri": "celery", "céleri": "celery", "celeri-branche": "celery", "celeri-rave": "celery",
     "bette": "swiss chard", "cotes de bettes": "swiss chard", "côtes de bettes": "swiss chard",
     "avocat": "avocado", "avocats": "avocado",
+    "courge": "squash", "butternut": "squash", "courge butternut": "squash", "potiron": "pumpkin", "citrouille": "pumpkin",
+    "betterave": "beetroot", "betterave rouge": "beetroot",
+    "champignon": "mushroom", "champignons": "mushrooms", "champignons de paris": "mushroom", "chanterelles": "mushroom", "pleurotes": "mushroom", "bolet": "mushroom", "morille": "mushroom",
+    "chou": "cabbage", "chou rouge": "cabbage", "chou chinois": "cabbage", "chou vert": "cabbage", "chou frise": "cabbage", "chou kale": "cabbage", "choux de bruxelles": "cabbage", "chou-rave": "cabbage", "chou blanc": "cabbage",
+    "endive": "chicory", "endives": "chicory", "brocoli": "broccoli", "chou-fleur": "cauliflower",
+    "gingembre": "ginger",
+
+    // --- 3. FRUITS ---
+    "pomme": "apple", "pommes": "apples",
+    "poire": "pear", "poires": "pears",
+    "fraise": "strawberry", "fraises": "strawberries",
+    "cerise": "cherry", "cerises": "cherries",
     "banane": "banana", "bananes": "banana",
     "myrtille": "blueberry", "myrtilles": "blueberries",
     "framboise": "raspberry", "framboises": "raspberries",
     "mure": "blackberry", "mûre": "blackberry", "mures": "blackberries", "mûres": "blackberries",
     "melon": "melon", "pasteque": "watermelon", "pastèque": "watermelon",
-    "peche": "peach", "pêche": "peach", "peches": "peaches", "pêches": "peaches", "peches plates": "peach", "pêches plates": "peach",
-    "nectarine": "nectarine", "nectarines": "nectarine", "nectarines plates": "nectarine",
+    "peche": "peach", "pêche": "peach", "peches": "peaches", "pêches": "peaches",
+    "nectarine": "nectarine", "nectarines": "nectarine",
     "abricot": "apricot", "abricots": "apricots",
-    "prune": "plum", "prunes": "plums", "pruneau": "plum", "pruneaux": "plums", "reines-claudes": "plum",
-    "mangue": "mango", "papaye": "papaya", "ananas": "pineapple", "gombo": "okra",
-    "citron": "lemon", "lime": "lime",
-    "courge": "squash", "butternut": "squash", "courge butternut": "squash", "potiron": "pumpkin", "citrouille": "pumpkin",
-    "betterave": "beetroot", "betterave rouge": "beetroot",
-    "champignon": "mushroom", "champignons": "mushrooms", "champignons de paris": "mushroom", "chanterelles": "mushroom", "pleurotes": "mushroom", "bolet": "mushroom", "bolet seche": "mushroom", "morille": "mushroom", "morille sechee": "mushroom",
-    "chou": "cabbage", "chou rouge": "cabbage", "chou chinois": "cabbage", "chou vert": "cabbage", "chou frise": "cabbage", "chou kale": "cabbage", "choux de bruxelles": "cabbage", "chou-rave": "cabbage",
-    "pomme": "apple", "pommes": "apples",
-    "poire": "pear", "poires": "pears",
-    "raisin": "grape", "raisins": "grapes",
-    "figue": "fig", "coing": "quince", "chataigne": "chestnut", "châtaigne": "chestnut", "marron": "chestnut",
-    "poireau": "leek", "poireaux": "leeks", "blanc de poireau": "leek",
-    "endive": "chicory", "brocoli": "broccoli", "chou-fleur": "cauliflower",
-    "gingembre": "ginger", "kumquat": "kumquat", "chou blanc": "cabbage", "kaki": "persimmon", "kakis": "persimmon",
+    "prune": "plum", "prunes": "plums", "pruneau": "prune", "pruneaux": "prunes",
+    "mangue": "mango", "papaye": "papaya", "ananas": "pineapple",
+    "citron": "lemon", "citrons": "lemon", "lime": "lime",
+    "orange": "orange", "oranges": "orange", "clementine": "clementine", "clémentine": "clementine", "mandarine": "mandarin", "pamplemousse": "grapefruit",
+    "raisin": "grape", "raisins": "grapes", "figue": "fig", "figues": "fig", "rhubarbe": "rhubarb",
+    "coing": "quince", "chataigne": "chestnut", "châtaigne": "chestnut", "marron": "chestnut", "marrons": "chestnut",
+    "kaki": "persimmon", "kakis": "persimmon", "kumquat": "kumquat",
 
-    // Féculents & Légumineuses
-    "pomme de terre": "potato", "pommes de terre": "potatoes", "pomme de terre primeur": "potato",
-    "patate douce": "sweet potato",
-    "panais": "parsnip", "topinambour": "jerusalem artichoke",
-    "couscous": "couscous", "semoule": "couscous", "boulgour": "bulgur",
-    "sarrasin": "buckwheat", "orge": "barley", "orge perle": "barley",
-    "riz": "rice", "riz complet": "rice", "riz basmati": "rice", "riz au jasmin": "rice", "riz classique": "rice", "riz parfume": "rice", "riz a sushi": "rice",
-    "polenta": "polenta", "quinoa": "quinoa",
-    "pates": "pasta", "pâtes": "pasta", "nouilles": "noodles", "nouilles de riz": "rice noodles", "nouilles chinoises": "noodles",
-    "avoine": "oats", "flocons d'avoine": "oats", "flocons de sarrasin": "buckwheat",
-    "tapioca": "tapioca", "manioc": "tapioca",
-    "feve": "beans", "fèves": "beans", "haricot": "beans", "haricots rouges": "kidney beans", "haricots blancs": "white beans", "haricots mungo": "mung beans", "flageolets": "beans", "borlotti": "beans", "lima": "beans",
-    "lentille": "lentils", "lentilles": "lentils", "lentilles corail": "red lentils", "lentilles noires": "lentils", "lentilles vertes": "green lentils", "toor dal": "lentils",
-    "pois chiches": "chickpeas", "edamame": "edamame", "pois jaunes": "split peas",
+    // --- 4. FÉCULENTS, PÂTES, RIZ & LÉGUMINEUSES ---
+    "pomme de terre": "potato", "pommes de terre": "potatoes", "patate": "potato", "patates": "potatoes",
+    "patate douce": "sweet potato", "panais": "parsnip", "topinambour": "jerusalem artichoke",
+    "pate": "pasta", "pâtes": "pasta", "spaghetti": "spaghetti", "macaroni": "macaroni", "lasagne": "lasagna", "nouilles": "noodles", "nouille": "noodles",
+    "riz": "rice", "riz basmati": "rice", "riz jasmin": "rice",
+    "semoule": "couscous", "couscous": "couscous", "boulgour": "bulgur", "quinoa": "quinoa", "polenta": "polenta",
+    "avoine": "oats", "sarrasin": "buckwheat", "orge": "barley",
+    "lentille": "lentils", "lentilles": "lentils", "lentilles corail": "red lentils",
+    "pois chiche": "chickpeas", "pois chiches": "chickpeas", "feve": "beans", "fèves": "beans",
+    "haricot": "beans", "haricots": "beans", "haricots rouges": "kidney beans", "haricots blancs": "white beans", "haricots noirs": "black beans",
 
-    // Viandes, Volailles & Poissons
-    "boeuf": "beef", "bœuf": "beef", "steak de boeuf": "beef", "roti de boeuf": "beef", "bouilli de boeuf": "beef", "ragout de boeuf": "beef", "emince de boeuf": "beef", "émincé de boeuf": "beef", "entrecote de boeuf": "beef", "viande hachee de boeuf": "minced beef", "burger de boeuf": "beef", "langue de boeuf": "beef", "foie de boeuf": "beef",
-    "porc": "pork", "cotelette de porc": "pork", "filet de porc": "pork", "emince de porc": "pork", "émincé de porc": "pork", "tranche de porc": "pork", "roti de porc": "pork", "foie de porc": "pork", "lard": "bacon", "lardons": "bacon", "bacon": "bacon",
-    "veau": "veal", "filet de veau": "veal", "escalope de veau": "veal", "cotelette de veau": "veal", "roti de veau": "veal", "foie de veau": "veal",
-    "poulet": "chicken", "cuisse de poulet": "chicken leg", "filet de poulet": "chicken breast", "emince de poulet": "chicken", "émincé de poulet": "chicken", "escalope de poulet": "chicken breast", "poulet entier": "chicken", "coquelet": "chicken", "caille": "quail",
-    "dinde": "turkey", "tranche de dinde": "turkey",
-    "agneau": "lamb", "filet d'agneau": "lamb",
-    "cheval": "horse meat", "steak de cheval": "horse meat",
-    "cerf": "venison", "medaillon de cerf": "venison", "gibier": "venison",
-    "lapin": "rabbit",
-    "cabillaud": "cod", "filets de cabillaud": "cod", "colin": "cod", "merlan": "cod", "merlu": "cod",
-    "saumon": "salmon", "darne de saumon": "salmon", "filet de saumon": "salmon",
-    "thon": "tuna", "filet de thon": "tuna",
-    "dorade": "sea bream", "truite": "trout",
-    "homard": "lobster", "moules": "mussels", "crevettes": "prawns", "crevettes cocktail": "prawns",
-    "calamar": "squid", "poulpe": "octopus", "perche": "perch", "loup de mer": "sea bass", "baudroie": "monkfish", "lotte": "monkfish", "sandre": "pike perch", "sardine": "sardine", "saint-jacques": "scallops",
-    "tofu": "tofu",
+    // --- 5. VIANDES, VOLAILLES & OEUFS ---
+    "boeuf": "beef", "bœuf": "beef", "steak": "steak", "steaks": "steak", "viande hachee": "minced beef", "hache": "minced beef", "haché": "minced beef",
+    "veau": "veal", "escalope": "escalope",
+    "porc": "pork", "cotelette": "pork chop", "côtelette": "pork chop", "lard": "bacon", "bacon": "bacon", "jambon": "ham", "saucisse": "sausage", "saucisses": "sausages",
+    "poulet": "chicken", "poulets": "chicken", "cuisse de poulet": "chicken leg", "aile de poulet": "chicken wings", "blanc de poulet": "chicken breast", "dinde": "turkey", "canard": "duck", "lapin": "rabbit",
+    "agneau": "lamb", "mouton": "lamb", "cheval": "horse meat", "cerf": "venison", "chevreuil": "venison",
+    "oeuf": "egg", "oeufs": "eggs", "œuf": "egg", "œufs": "eggs",
 
-    // Condiments & Épices
-    "lin": "flaxseed", "chia": "chia", "sesame": "sesame", "sésame": "sesame",
-    "noix": "walnut", "pecan": "pecan", "pécan": "pecan", "amande": "almond", "amandes": "almonds", "noisette": "hazelnut", "noisettes": "hazelnuts", "cacahuete": "peanut", "cacahuète": "peanuts",
-    "huile": "oil", "huile d'olive": "olive oil", "huile de colza": "rapeseed oil", "huile de sesame": "sesame oil",
-    "vinaigre": "vinegar", "moutarde": "mustard",
-    "ciboulette": "chives", "basilic": "basil", "coriandre": "coriander", "estragon": "tarragon", "persil": "parsley",
-    "curcuma": "turmeric", "paprika": "paprika", "curry": "curry", "poivre": "pepper", "poivre noir": "black pepper",
-    "thym": "thyme", "romarin": "rosemary", "origan": "oregano", "ail": "garlic"
+    // --- 6. POISSONS & FRUITS DE MER ---
+    "poisson": "fish", "poissons": "fish",
+    "saumon": "salmon", "cabillaud": "cod", "colin": "cod", "merlu": "cod", "merlan": "cod",
+    "thon": "tuna", "truite": "trout", "dorade": "sea bream", "bar": "sea bass", "loup de mer": "sea bass",
+    "crevette": "prawns", "crevettes": "prawns", "crevette geante": "king prawns", "gambas": "prawns",
+    "moule": "mussels", "moules": "mussels", "saint-jacques": "scallops", "coquille saint-jacques": "scallops",
+    "calamar": "squid", "poulpe": "octopus", "homard": "lobster", "crabe": "crab",
+
+    // --- 7. PRODUITS LAITIERS, CONDIMENTS & ÉPICES ---
+    "fromage": "cheese", "fromages": "cheese", "cheddar": "cheese", "parmesan": "parmesan", "mozzarella": "mozzarella",
+    "lait": "milk", "beurre": "butter", "creme": "cream", "crème": "cream", "yaourt": "yogurt",
+    "chocolat": "chocolate", "vanille": "vanilla", "miel": "honey", "sucre": "sugar",
+    "huile": "oil", "huile d'olive": "olive oil", "vinaigre": "vinegar", "moutarde": "mustard",
+    "curry": "curry", "curcuma": "turmeric", "paprika": "paprika", "ail": "garlic", "persil": "parsley", "basilic": "basil", "thym": "thyme", "romarin": "rosemary", "coriandre": "coriander",
+	// --- NOUVEAUX AJOUTS ---
+    "ciboulette": "chives", "estragon": "tarragon", "basilic thai": "thai basil", "basilic thaï": "thai basil", "sauge": "sage", "sauce de poisson": "fish sauce", "nuoc mam": "fish sauce", "nuoc-mam": "fish sauce",
+    "lait de coco": "coconut milk", "citronnelle": "lemongrass", "feuilles de kaffir": "kaffir lime leaves", "kaffir": "kaffir lime leaves", "combava": "kaffir lime leaves",
+    "olive": "olive", "olives": "olives", "citron confit": "preserved lemon", "citrons confits": "preserved lemons", "anchois": "anchovies", "anchoi": "anchovies",
 };
 let pageRecettesIndex = 0;
 let listeRecettesUniquesGlobal = [];
 
-// Interroge TheMealDB et prépare la liste complète
+// ========================================================
+// MOTEUR THEMEALDB BLINDÉ (PROTECTION CONTRE LES PAGES VIDES)
+// ========================================================
 async function chargerRecettesTheMealDB(leg) {
     const conteneur = document.getElementById('rec-liste-container');
     const loader = document.getElementById('rec-loading');
@@ -5457,58 +5972,66 @@ async function chargerRecettesTheMealDB(leg) {
     conteneur.innerHTML = "";
     if (loader) loader.style.display = "block";
 
-    pageRecettesIndex = 0; // Remet à la Page 1
+    pageRecettesIndex = 0;
     listeRecettesUniquesGlobal = [];
 
-    const nomClean = removeAccents(leg.nom.toLowerCase().trim());
+    const nomBrut = (typeof leg === 'string') ? leg : (leg.nom || "");
+    const nomClean = removeAccents(nomBrut.toLowerCase().trim());
     let motAnglais = dicoTraductionTheMealDB[nomClean] || nomClean;
+
+    // Lecteur intelligent qui ne plante jamais sur du vide
+    const safeFetchJSON = async (url) => {
+        try {
+            const rep = await fetch(url);
+            const texte = await rep.text();
+            return (texte && texte.trim().length > 0) ? JSON.parse(texte) : null;
+        } catch(e) {
+            return null;
+        }
+    };
 
     try {
         let meals = [];
-        
-        // 1. Recherche par mot exact
-        const rep1 = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${encodeURIComponent(motAnglais)}`);
-        const data1 = await rep1.json();
+
+        // 1. Recherche par ingrédient exact
+        const data1 = await safeFetchJSON(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${encodeURIComponent(motAnglais)}`);
         if (data1 && data1.meals) meals.push(...data1.meals);
 
-        // 2. Pluriel
+        // 2. Recherche pluriel si besoin
         if (!motAnglais.endsWith('s')) {
             const pluriel = motAnglais.endsWith('o') ? motAnglais + 'es' : motAnglais + 's';
-            try {
-                const repS = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${encodeURIComponent(pluriel)}`);
-                const dataS = await repS.json();
-                if (dataS && dataS.meals) meals.push(...dataS.meals);
-            } catch(e) {}
+            const dataS = await safeFetchJSON(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${encodeURIComponent(pluriel)}`);
+            if (dataS && dataS.meals) meals.push(...dataS.meals);
         }
 
-        // 3. Titre
-        try {
-            const repTitre = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(motAnglais)}`);
-            const dataTitre = await repTitre.json();
-            if (dataTitre && dataTitre.meals) meals.push(...dataTitre.meals);
-        } catch(e) {}
+        // 3. Recherche par titre de recette
+        const dataTitre = await safeFetchJSON(`https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(motAnglais)}`);
+        if (dataTitre && dataTitre.meals) meals.push(...dataTitre.meals);
 
         // Déduplication exacte
         const idsVus = new Set();
         meals.forEach(m => {
-            if (!idsVus.has(m.idMeal)) {
+            if (m && m.idMeal && !idsVus.has(m.idMeal)) {
                 idsVus.add(m.idMeal);
                 listeRecettesUniquesGlobal.push(m);
             }
         });
 
+        if (loader) loader.style.display = "none";
+
+        // Si vraiment aucun résultat n'existe pour ce mot
         if (listeRecettesUniquesGlobal.length === 0) {
-            if (loader) loader.style.display = "none";
             conteneur.innerHTML = `
-                <div style="text-align: center; padding: 25px 15px; color: var(--text-muted); font-size: 0.88rem;">
-                    Aucune recette TheMealDB trouvée pour "${leg.nom}".<br>
-                    <button type="button" class="btn" style="margin-top: 10px; font-weight:800;" onclick="retourAuHubChoix()">← Explorer les sites suisses</button>
+                <div style="text-align: center; padding: 25px 15px; color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">
+                    Aucune recette TheMealDB trouvée pour <strong>"${nomBrut}"</strong>.<br>
+                    <span style="font-size: 0.78rem;">(Essayez un ingrédient plus simple comme <em>"Butternut"</em> ou <em>"Courge"</em>)</span><br><br>
+                    <button type="button" class="btn" style="font-weight:800;" onclick="retourAuHubChoix()">← Explorer nos partenaires suisses/français</button>
                 </div>
             `;
             return;
         }
 
-        // Affiche la Page 1 (20 premières recettes)
+        // Affiche les recettes trouvées proprement
         afficherPageRecettesCourante();
 
     } catch (e) {
@@ -5831,10 +6354,13 @@ function ouvrirRechercheRecetteSmart(alimentId) {
         badgeProfil.innerText = `Profil actif : ${currentProfil ? currentProfil.toUpperCase() : 'NEUTRE'}`;
     }
 
+    const inputRecherche = document.getElementById('rec-input-recherche-perso');
+    if (inputRecherche) inputRecherche.value = leg.nom;
+
     const vueChoix = document.getElementById('rec-vue-choix');
     if (vueChoix) vueChoix.style.display = 'block';
-
-    const vueListe = document.getElementById('rec-vue-liste');
+    
+       const vueListe = document.getElementById('rec-vue-liste');
     if (vueListe) vueListe.style.display = 'none';
 
     const vueDetail = document.getElementById('rec-vue-detail');
@@ -5844,9 +6370,15 @@ function ouvrirRechercheRecetteSmart(alimentId) {
     if (modal) modal.style.display = 'block';
 }
 
-// 2. Le bouton "Explorer les recettes TheMealDB" qui bascule sur la liste (Écran 2)
+// Lance la recherche avec le mot tapé dans la case !
 function lancerExplorationTheMealDB() {
     if (!alimentRecetteActif) return;
+    
+    // Récupère le mot tapé (ou le nom par défaut)
+    const inputRecherche = document.getElementById('rec-input-recherche-perso');
+    const termePerso = (inputRecherche && inputRecherche.value.trim().length > 0) 
+        ? inputRecherche.value.trim() 
+        : alimentRecetteActif.nom;
     
     const vueChoix = document.getElementById('rec-vue-choix');
     if (vueChoix) vueChoix.style.display = 'none';
@@ -5855,7 +6387,7 @@ function lancerExplorationTheMealDB() {
     if (vueListe) vueListe.style.display = 'block';
     
     const titreListe = document.getElementById('rec-liste-titre');
-    if (titreListe) titreListe.innerText = `Recettes avec : ${alimentRecetteActif.nom}`;
+    if (titreListe) titreListe.innerText = `Recettes avec : ${termePerso}`;
     
     const btnTrad = document.getElementById('btn-traduire-liste');
     if (btnTrad) {
@@ -5865,11 +6397,9 @@ function lancerExplorationTheMealDB() {
         btnTrad.style.color = "var(--accent-dark)";
     }
 
-    // Lance le chargement des recettes
-    if (typeof chargerRecettesTheMealDB === 'function') {
-        chargerRecettesTheMealDB(alimentRecetteActif);
-    }
-}
+    // Envoie le mot personnalisé au dictionnaire et à TheMealDB !
+    chargerRecettesTheMealDB(termePerso);
+	}
 
 // 3. Bouton Retour pour revenir au Hub de choix
 function retourAuHubChoix() {
