@@ -1,5 +1,5 @@
 <!-- ================================================================================== -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 13.05 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 14.00 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -13,6 +13,9 @@
 <!-- MISE A JOUR MODAL QR CODE - MISE A JOUR CLASSIFICATION ALIMENTS -->
 <!-- CORRECTION AFFICHAGE BOUTONS ALIMENTS QR - 8 VARIATIONS DIFFERANTES -->
 <!-- POUR LA DESCRITION "CUIT" - AJOUTOUT DE PLUSIEURS MODE DE COUPE ET CUISSON DICO -->
+<!-- MISE EN PLACE COFFRE_FORT CLOUD - GESTIONNAIRE LISTE DES RECETTES "MES RECETTES" -->
+<!-- MISE EN PLACE DE MA PROPRE BD DE RECETTES CONSULTABLE HORS LIGNE -->
+<!-- REORGANISATION DE LA PAGE ACCUEIL AVEC BOUTON ADAPTES-FAVORIS-RECETTE-SCANNER  -->
 <!-- =================================================================================== -->
 
 <!DOCTYPE html>
@@ -1521,9 +1524,24 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
 
+<!-- BIBLIOTHÈQUE DU SCANNER DE CODES-BARRES CAMÉRA (OPEN FOOD FACTS) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+
 <!-- BIBLIOTHÈQUES GOOGLE FIREBASE (Pour le code PIN 5 chiffres) -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<!-- BASE DE RECETTES MAISON (100% FRANÇAIS & HORS-LIGNE) -->
+<script src="donnees/recettes_printemps.js"></script>
+<script src="donnees/recettes_ete.js"></script>
+<script src="donnees/recettes_automne.js"></script>
+<script src="donnees/recettes_hiver.js"></script>
+<script src="donnees/recettes_feculents.js"></script>
+<script src="donnees/recettes_legumineuses.js"></script>
+<script src="donnees/recettes_viandes.js"></script>
+<script src="donnees/recettes_poissons.js"></script>
+<script src="donnees/recettes_laitages.js"></script>
+<script src="donnees/recettes_douceurs.js"></script>
 
 </head>
 <body>
@@ -1575,7 +1593,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v13.05</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v14.00</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -2024,6 +2042,7 @@
             <p style="color: #1565C0; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0;">7. Moteur de Recettes & Carnet Global 🍲</p>
             <p style="margin: 0 0 5px 0; color: #555; line-height: 1.4;">Cliquez sur <strong>🔍 Chercher une recette</strong> dans n'importe quelle fiche !</p>
             <ul style="margin: 0 0 10px 0; padding-left: 15px; color: #555; line-height: 1.4;">
+                <li style="margin-bottom: 4px;"><strong>⭐ Recettes Maison :</strong> Recettes officielles 100% en français, vérifiées cliniquement, avec le nombre exact de portions et des conseils digestifs bienveillants (accessibles même hors-ligne).</li>
                 <li style="margin-bottom: 4px;"><strong>TheMealDB :</strong> Lisez, traduisez 🌐, et enregistrez 💾 des recettes mondiales en un clic, directement sur la fiche de l'aliment.</li>
                 <li style="margin-bottom: 4px;"><strong>Sites 🇫🇷 & 🇨🇭 :</strong> Des liens directs à leur plateforme vers Marmiton, FOOBY, Migusto, etc.</li>
             </ul>
@@ -2492,6 +2511,77 @@
   </div>
 </div>
 
+<!-- ======================================================== -->
+<!-- MODALE DU SCANNER DE PRODUITS (OPEN FOOD FACTS)          -->
+<!-- ======================================================== -->
+<div id="modal-scanner" class="modal-overlay hidden">
+  <div class="modal-box" style="max-width: 440px; max-height: 90vh; overflow-y: auto; text-align: center; padding: 20px;">
+    
+    <!-- Bouton Fermer ❌ -->
+    <button class="close-btn" onclick="fermerScannerModal()">❌</button>
+
+    <h3 style="margin-top: 0; margin-bottom: 4px; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.35rem;">
+        📸 Scanner de Produits
+    </h3>
+    <div id="scan-badge-profil" style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
+        Profil actif
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VUE 1 : LE VISEUR CAMÉRA                  -->
+    <!-- ========================================== -->
+    <div id="scan-vue-camera">
+        <!-- Cadre noir où la caméra s'affiche -->
+        <div id="scanner-lecteur" style="width: 100%; min-height: 240px; border-radius: 16px; overflow: hidden; background: #111; margin-bottom: 12px; border: 2px dashed var(--accent); position: relative;"></div>
+        
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0 0 10px 0; line-height: 1.4;">
+            Cadrez le code-barres dans le viseur (le scan est automatique).
+        </p>
+
+        <!-- Solution de secours : taper le code au clavier (idéal pour tester sur PC !) -->
+        <div style="border-top: 1px dashed var(--border-color); padding-top: 10px; margin-top: 10px;">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800; margin-bottom: 6px;">
+                ⌨️ Ou tapez les 13 chiffres du code-barres :
+            </div>
+            <div style="display: flex; gap: 6px; justify-content: center;">
+                <input type="text" id="scan-input-manuel" class="form-control" placeholder="Ex: 7613035889751" style="padding: 8px 12px; font-size: 0.85rem; border-radius: 10px; text-align: center; font-weight: 800;">
+                <button type="button" class="btn btn-primary" onclick="lancerScanManuel()" style="padding: 8px 14px; font-size: 0.8rem; font-weight: 800; border-radius: 10px; white-space: nowrap;">
+                    Valider
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VUE 2 : CHARGEMENT EN COURS                -->
+    <!-- ========================================== -->
+    <div id="scan-vue-chargement" style="display: none; padding: 30px 10px; text-align: center;">
+        <div style="font-size: 2rem; margin-bottom: 10px; animation: pulse 1.5s infinite;">⏳</div>
+        <div style="font-weight: 800; color: var(--text-title); font-size: 0.95rem;">Recherche chez Open Food Facts...</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Analyse clinique de la composition en cours</div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- VUE 3 : LA FICHE RÉSULTAT DU PRODUIT      -->
+    <!-- ========================================== -->
+    <div id="scan-vue-resultat" style="display: none; text-align: left;">
+        <!-- Contenu rempli dynamiquement par le JavaScript -->
+        <div id="scan-contenu-resultat"></div>
+
+        <!-- Boutons d'action en bas -->
+        <div style="display: flex; gap: 8px; margin-top: 16px;">
+            <button type="button" class="btn" onclick="relancerViseurCamera()" style="flex: 1; padding: 12px; font-weight: 800; font-size: 0.85rem; border-color: var(--accent); color: var(--accent-dark); background: #FFFDF8;">
+                📸 Scanner un autre produit
+            </button>
+            <button type="button" class="btn btn-primary" onclick="fermerScannerModal()" style="flex: 0.8; padding: 12px; font-weight: 800; font-size: 0.85rem;">
+                Fermer
+            </button>
+        </div>
+    </div>
+
+  </div>
+</div>
+
 <script>
 	
 	// ========================================================
@@ -2515,7 +2605,7 @@
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "13.05";
+    const APP_VERSION = "14.00";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -2760,7 +2850,9 @@ const defaultData = [
     { id: 501, nom: "Steak de boeuf", soustitre: "", type: "Boeuf", image: "", tolerance: "🟡 Moyen", saison: "Viandes", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Riche en fer et protéines.", inconvenient: "Les fibres musculaires peuvent être dures à broyer.", preparation: "Cuisson saignante ou à point. Mâcher très soigneusement.", notes: "", recettesList: [] },
     { id: 502, nom: "Côtelette de porc", soustitre: "", type: "Porc", image: "", tolerance: "🔴 À proscrire", saison: "Viandes", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Aucun.", inconvenient: "Très gras, ralentit fortement la vidange de l'estomac (reflux).", preparation: "À éviter en période de sensibilité.", notes: "", recettesList: [] },
     { id: 503, nom: "Filet d'agneau", soustitre: "", type: "Agneau", image: "", tolerance: "🟢 Très conseillé", saison: "Viandes", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Chair très tendre et digeste.", inconvenient: "Aucun si le gras externe est retiré.", preparation: "Dégraisser au maximum, cuisson rosée.", notes: "", recettesList: [] },
-    { id: 504, nom: "Cuisse de poulet", soustitre: "", type: "Poulet", image: "", tolerance: "🟢 Très conseillé", saison: "Viandes", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Protéines douces.", inconvenient: "Lipides intramusculaires qui pèsent sur l'estomac.", preparation: "Retirer impérativement la peau avant cuisson.", notes: "", recettesList: [] },
+    { id: 1040, nom: "Gigot d'agneau", soustitre: "Épaule ou Gigot", type: "Agneau", image: "", tolerance: "🟢 À volonté", saison: "Viandes", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Riche en fer et en zinc, devient ultra-fondant et facile à digérer en mijoté long.", inconvenient: "Le gras de couverture doit être découpé avant de servir pour ne pas peser sur l'estomac.", preparation: "Dégraisser au couteau. Idéal mijoté doucement en tajine, ragoût ou rôti au four.", notes: "", recettesList: [] },
+    { id: 1041, nom: "Côtelette d'agneau", soustitre: "", type: "Agneau", image: "", tolerance: "🟡 À limiter", saison: "Viandes", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Chair très parfumée, tendre et savoureuse.", inconvenient: "Morceau gras qui ralentit la vidange de l'estomac et peut favoriser le reflux si mangé en excès.", preparation: "Retirer le gras sur le pourtour. Cuisson grillée ou poêlée vive sans ajout d'huile.", notes: "", recettesList: [] },
+	{ id: 504, nom: "Cuisse de poulet", soustitre: "", type: "Poulet", image: "", tolerance: "🟢 Très conseillé", saison: "Viandes", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Gras", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Protéines douces.", inconvenient: "Lipides intramusculaires qui pèsent sur l'estomac.", preparation: "Retirer impérativement la peau avant cuisson.", notes: "", recettesList: [] },
     { id: 505, nom: "Émincé de cheval", soustitre: "", type: "Cheval", image: "", tolerance: "🟢 Très conseillé", saison: "Viandes", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fondante", avantage: "Viande exceptionnellement maigre, riche en fer.", inconvenient: "Aucun.", preparation: "Saisir rapidement pour conserver la tendreté.", notes: "", recettesList: [] },
     { id: 506, nom: "Tranche de dinde", soustitre: "", type: "Dinde", image: "", tolerance: "🟢 Très conseillé", saison: "Viandes", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Ferme", avantage: "Très pauvre en graisses, excellente tolérance.", inconvenient: "Peut devenir sèche et dure si trop cuite.", preparation: "Cuisson douce à la vapeur ou en sauce légère.", notes: "", recettesList: [] },
     { id: 507, nom: "Médaillon de cerf", soustitre: "", type: "Gibier", image: "", tolerance: "🟡 Moyen", saison: "Viandes", fodmap: "Bas", fructose: "Bas", fibres: "Sans", cg: "Bas", acidite: "Doux", graisses: "Maigre", lactose: "Sans", gluten: "Sans", texture: "Fibreuse", avantage: "Viande très maigre.", inconvenient: "Fibres musculaires denses nécessitant un gros effort mécanique.", preparation: "Privilégier une cuisson longue (mijoté) ou hacher finement.", notes: "", recettesList: [] },
@@ -3600,30 +3692,41 @@ function initData() {
             </span>
         </div>
 
-        <!-- 1. Favoris & Conseillés (Symétrie miroir parfaite) -->
-        <div class="top-fav-rec-container" style="justify-content: space-between; align-items: center; margin-top: 0; padding: 0 15px; box-sizing: border-box; gap: 15px;">
+       <!-- 1. LES 4 PILIERS DU QUOTIDIEN (ADAPTÉS | FAVORIS | RECETTES | SCANNER) -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; width: 100%; max-width: 450px; margin: 0 auto 20px auto; padding: 0 2px; box-sizing: border-box;">
             
-            <!-- Bouton Favoris (Moitié gauche) -->
-            <button class="btn-top-custom" style="flex: 1; align-items: center; justify-content: flex-start; padding: 0; margin: 0;" onclick="openSaison('Favoris')">
-                <img src="icones/favoris_02.png" alt="Favoris" style="width: 58px; margin-right: 8px;">
-                <div class="txt-block" style="padding-top: 2px; align-items: flex-start; text-align: left;">
-                    <span class="txt-small">ALIMENTS</span>
-                    <span class="txt-big">FAVORIS</span>
-                    <span class="txt-shadow" style="left: 0;">FAVORIS</span>
-                    <span style="font-family: 'Nunito', sans-serif; font-size: 0.85rem; font-weight: 800; color: var(--text-muted); margin-top: 1px;">${getFavoris().length}</span>
-                </div>
+            <!-- 1. Mes Adaptés -->
+            <button type="button" onclick="openSaison('Recommandés')" style="background: transparent; border: none; padding: 2px; cursor: pointer; display: flex; flex-direction: column; align-items: center; text-align: center; transition: transform 0.2s;">
+                <img src="icones/recommandes_02.png" alt="Adaptés" style="width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.06)); margin-bottom: 3px;">
+                <span style="font-family: 'Nunito', sans-serif; font-size: 0.58rem; font-weight: 800; letter-spacing: 1px; color: var(--text-muted); text-transform: uppercase; line-height: 1;">MES</span>
+                <span style="font-family: 'Playfair Display', serif; font-size: 0.78rem; font-weight: 700; color: var(--text-title); line-height: 1.15; margin-top: 1px;">ADAPTÉS</span>
+                <span style="font-family: 'Nunito', sans-serif; font-size: 0.78rem; font-weight: 800; color: var(--accent-dark); margin-top: 2px;">${countRecommandes}</span>
             </button>
-            
-            <!-- Bouton Adaptés (Moitié droite, alignement miroir) -->
-            <button class="btn-top-custom" style="flex: 1; align-items: center; justify-content: flex-end; padding: 0; margin: 0;" onclick="openSaison('Recommandés')">
-                <div class="txt-block text-right" style="padding-top: 2px; align-items: flex-end; text-align: right; margin-right: 8px;">
-                    <span class="txt-small">ALIMENTS</span>
-                    <span class="txt-big">ADAPTÉS</span>
-                    <span class="txt-shadow" style="right: 0;">ADAPTÉS</span>
-                    <span style="font-family: 'Nunito', sans-serif; font-size: 0.85rem; font-weight: 800; color: var(--text-muted); margin-top: 1px;">${countRecommandes}</span>
-                </div>
-                <img src="icones/recommandes_02.png" alt="Adaptés" style="width: 58px;">
+
+            <!-- 2. Mes Favoris -->
+            <button type="button" onclick="openSaison('Favoris')" style="background: transparent; border: none; padding: 2px; cursor: pointer; display: flex; flex-direction: column; align-items: center; text-align: center; transition: transform 0.2s;">
+                <img src="icones/favoris_02.png" alt="Favoris" style="width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.06)); margin-bottom: 3px;">
+                <span style="font-family: 'Nunito', sans-serif; font-size: 0.58rem; font-weight: 800; letter-spacing: 1px; color: var(--text-muted); text-transform: uppercase; line-height: 1;">MES</span>
+                <span style="font-family: 'Playfair Display', serif; font-size: 0.78rem; font-weight: 700; color: var(--text-title); line-height: 1.15; margin-top: 1px;">FAVORIS</span>
+                <span style="font-family: 'Nunito', sans-serif; font-size: 0.78rem; font-weight: 800; color: var(--accent-dark); margin-top: 2px;">${getFavoris().length}</span>
             </button>
+
+            <!-- 3. Mes Recettes -->
+            <button type="button" onclick="ouvrirCarnetRecettes()" style="background: transparent; border: none; padding: 2px; cursor: pointer; display: flex; flex-direction: column; align-items: center; text-align: center; transition: transform 0.2s;">
+                <img src="icones/carnet_recette.png" alt="Recettes" style="width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.06)); margin-bottom: 3px;">
+                <span style="font-family: 'Nunito', sans-serif; font-size: 0.58rem; font-weight: 800; letter-spacing: 1px; color: var(--text-muted); text-transform: uppercase; line-height: 1;">MES</span>
+                <span style="font-family: 'Playfair Display', serif; font-size: 0.78rem; font-weight: 700; color: var(--text-title); line-height: 1.15; margin-top: 1px;">RECETTES</span>
+                <span style="font-family: 'Nunito', sans-serif; font-size: 0.78rem; font-weight: 800; color: var(--accent-dark); margin-top: 2px;">${totalRecettes}</span>
+            </button>
+
+            <!-- 4. Mon Scanner -->
+            <button type="button" onclick="ouvrirScannerModal()" style="background: transparent; border: none; padding: 2px; cursor: pointer; display: flex; flex-direction: column; align-items: center; text-align: center; transition: transform 0.2s;">
+                <img src="icones/scanner.png" alt="Scanner" onerror="this.onerror=null; this.src='icones/scanner.webp';" style="width: 58px; height: 58px; object-fit: contain; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.06)); margin-bottom: 3px;">
+                <span style="font-family: 'Nunito', sans-serif; font-size: 0.58rem; font-weight: 800; letter-spacing: 1px; color: var(--text-muted); text-transform: uppercase; line-height: 1;">MON</span>
+                <span style="font-family: 'Playfair Display', serif; font-size: 0.78rem; font-weight: 700; color: var(--text-title); line-height: 1.15; margin-top: 1px;">SCANNER</span>
+                <span style="font-family: 'Nunito', sans-serif; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.5px; color: var(--accent-dark); margin-top: 3px; text-transform: uppercase;">d'ALIMENTS</span>
+            </button>
+
         </div>
 				
             <!-- 2. Fruits & Légumes (Cadre) -->
@@ -3658,38 +3761,364 @@ function initData() {
             </div>
             
             <!-- 6. Boissons & Douceurs (Pleine largeur) -->
-<button class="saison-btn" style="background: linear-gradient(135deg, #EFEBE9 0%, #D7CCC8 100%); color: #6D4C41; border-color: #BCAAA4; margin-bottom: 0;" onclick="openSaison('Boissons')">
-    <div class="season-title"><span class="emoji-left">☕</span>BOISSONS & DOUCEURS<span class="emoji-right">🍫</span></div>
-    <div class="saison-btn-count">${cBo} éléments</div>
-</button>
-
-			<!-- SÉPARATEUR ÉLÉGANT (Marges réduites de 50%) -->
-            <div style="display: flex; align-items: center; justify-content: center; margin: 18px 0 12px 0; opacity: 0.4;">
-                <div style="height: 1px; background: var(--accent-dark); flex: 1; max-width: 80px;"></div>
-                <span style="margin: 0 15px; color: var(--accent-dark); font-size: 1.2rem;">✧</span>
-                <div style="height: 1px; background: var(--accent-dark); flex: 1; max-width: 80px;"></div>
-            </div>
-
-            <!-- LE CARNET DE RECETTES (ILLUSTRATION CENTRÉE ET RÉDUITE) -->
-            <div style="text-align: center; margin-bottom: 10px; cursor: pointer; transition: transform 0.3s ease;" onclick="ouvrirCarnetRecettes()" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
-                
-                <!-- L'illustration (Marge basse réduite à 4px) -->
-                <img src="icones/carnet_recette.png" alt="Mes Recettes" style="width: 65px; height: auto; filter: drop-shadow(0 4px 8px rgba(44, 62, 80, 0.06)); margin-bottom: 4px;">
-                
-                <!-- Le Titre -->
-                <div style="font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--text-title); letter-spacing: 0.5px; margin-bottom: 4px;">
-                    Mes Recettes
-                </div>
-                
-                <!-- Le Compteur -->
-                <div style="display: inline-block; font-family: 'Nunito', sans-serif; font-size: 0.65rem; font-weight: 800; color: var(--accent-dark); text-transform: uppercase; letter-spacing: 1px; background: rgba(212, 163, 115, 0.12); padding: 3px 10px; border-radius: 15px;">
-                    ${totalRecettes} sauvegardée(s)
-                </div>
-                
-            </div>
-
+            <button class="saison-btn" style="background: linear-gradient(135deg, #EFEBE9 0%, #D7CCC8 100%); color: #6D4C41; border-color: #BCAAA4; margin-bottom: 0;" onclick="openSaison('Boissons')">
+                <div class="season-title"><span class="emoji-left">☕</span>BOISSONS & DOUCEURS<span class="emoji-right">🍫</span></div>
+                <div class="saison-btn-count">${cBo} éléments</div>
+            </button>
         `;
     }
+
+    // ========================================================
+// 📸 MOTEUR DU SCANNER DE CODES-BARRES & OPEN FOOD FACTS
+// ========================================================
+let html5QrCodeScanner = null;
+let scanEnCours = false;
+
+// 1. Ouvre la fenêtre et démarre la caméra
+function ouvrirScannerModal() {
+    const modal = document.getElementById('modal-scanner');
+    if (!modal) return;
+
+    // Met à jour le badge du profil actif dans la fenêtre
+    const badgeProfil = document.getElementById('scan-badge-profil');
+    if (badgeProfil) {
+        badgeProfil.innerText = `Profil actif : ${currentProfil ? currentProfil.toUpperCase() : 'NEUTRE'}`;
+    }
+
+    // Réinitialise les vues
+    document.getElementById('scan-vue-camera').style.display = 'block';
+    document.getElementById('scan-vue-chargement').style.display = 'none';
+    document.getElementById('scan-vue-resultat').style.display = 'none';
+    const inputManuel = document.getElementById('scan-input-manuel');
+    if (inputManuel) inputManuel.value = '';
+
+    modal.classList.remove('hidden');
+
+    // Démarre la caméra arrière après un court instant
+    setTimeout(demarrerCameraScanner, 300);
+}
+
+// 2. Allume la caméra du smartphone (ou webcam PC)
+function demarrerCameraScanner() {
+    if (typeof Html5Qrcode === 'undefined') {
+        console.warn("Bibliothèque Html5Qrcode non chargée.");
+        return;
+    }
+
+    const lecteurDiv = document.getElementById('scanner-lecteur');
+    if (!lecteurDiv) return;
+
+    arreterCameraScanner().then(() => {
+        html5QrCodeScanner = new Html5Qrcode("scanner-lecteur");
+        scanEnCours = false;
+
+        const config = {
+            fps: 10,
+            qrbox: { width: 250, height: 160 },
+            aspectRatio: 1.333333
+        };
+
+        html5QrCodeScanner.start(
+            { facingMode: "environment" },
+            config,
+            (codeDetecte) => {
+                if (!scanEnCours) {
+                    scanEnCours = true;
+                    traiterCodeBarresDetecte(codeDetecte);
+                }
+            },
+            (erreurScan) => {}
+        ).catch(err => {
+            console.log("Caméra non disponible :", err);
+            // 🛑 Libère immédiatement la variable pour ne pas bloquer le bouton Valider sur PC
+            html5QrCodeScanner = null;
+            lecteurDiv.innerHTML = `
+                <div style="color: #FFF; padding: 40px 15px; font-size: 0.85rem; line-height: 1.4;">
+                    📷 <strong>Caméra non accessible sur ce poste</strong><br><br>
+                    <span style="color: #AAA; font-size: 0.75rem;">(Normal sur PC de bureau. Utilisez la case clavier ci-dessous pour tester avec vos 13 chiffres !).</span>
+                </div>
+            `;
+        });
+    });
+}
+
+// 3. Éteint la caméra proprement sans jamais bloquer
+function arreterCameraScanner() {
+    return new Promise((resolve) => {
+        try {
+            if (html5QrCodeScanner && html5QrCodeScanner.isScanning) {
+                html5QrCodeScanner.stop().then(() => {
+                    try { html5QrCodeScanner.clear(); } catch(e){}
+                    html5QrCodeScanner = null;
+                    resolve();
+                }).catch(() => {
+                    html5QrCodeScanner = null;
+                    resolve();
+                });
+            } else {
+                if (html5QrCodeScanner) {
+                    try { html5QrCodeScanner.clear(); } catch(e){}
+                    html5QrCodeScanner = null;
+                }
+                resolve();
+            }
+        } catch (e) {
+            html5QrCodeScanner = null;
+            resolve();
+        }
+    });
+}
+
+// 4. Ferme la modale du scanner
+function fermerScannerModal() {
+    arreterCameraScanner();
+    const modal = document.getElementById('modal-scanner');
+    if (modal) modal.classList.add('hidden');
+}
+
+// 5. Bouton "Scanner un autre produit"
+function relancerViseurCamera() {
+    document.getElementById('scan-vue-resultat').style.display = 'none';
+    document.getElementById('scan-vue-chargement').style.display = 'none';
+    document.getElementById('scan-vue-camera').style.display = 'block';
+
+    // 🧹 Vide le champ de saisie pour le prochain produit
+    const inputManuel = document.getElementById('scan-input-manuel');
+    if (inputManuel) inputManuel.value = '';
+
+    setTimeout(demarrerCameraScanner, 200);
+}
+
+// 6. Déclenchement manuel par le champ de texte (pour tester sur PC)
+function lancerScanManuel() {
+    const input = document.getElementById('scan-input-manuel');
+    if (!input || !input.value.trim()) {
+        alert("⚠️ Veuillez entrer les chiffres d'un code-barres !");
+        return;
+    }
+    const codeAEnvoyer = input.value.trim();
+    // 🧹 Vide le champ immédiatement dès qu'on a cliqué sur Valider
+    input.value = '';
+    
+    traiterCodeBarresDetecte(codeAEnvoyer);
+}
+
+// 7. MOTEUR TURBO SPÉCIAL SUPERMARCHÉ (Mémoire permanente hors-ligne & requête ultra-légère)
+async function traiterCodeBarresDetecte(codeBarres) {
+    // 1. Réactivité immédiate : affichage du sablier sans délai
+    document.getElementById('scan-vue-camera').style.display = 'none';
+    document.getElementById('scan-vue-resultat').style.display = 'none';
+    document.getElementById('scan-vue-chargement').style.display = 'block';
+
+    // 2. Éteint la caméra en tâche de fond
+    arreterCameraScanner();
+
+    // 3. ⚡ MÉMOIRE PERMANENTE DU TÉLÉPHONE : Si déjà scanné une fois = 0.05 seconde (marche hors-ligne au supermarché !)
+    try {
+        const cachePermanent = JSON.parse(localStorage.getItem('marche_scan_produits_cache') || '{}');
+        if (cachePermanent[codeBarres]) {
+            afficherResultatProduitScan(cachePermanent[codeBarres]);
+            return;
+        }
+    } catch(e) {}
+
+    try {
+        // 4. Requête minimale ultra-rapide (on retire les arbres d'images lourdes)
+        const champsUltraLegers = "product_name,product_name_fr,brands,quantity,image_front_small_url,image_front_url,image_url,ingredients_text,ingredients_text_fr,allergens_tags,nutriments";
+        const reponse = await fetch(`https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(codeBarres)}.json?fields=${champsUltraLegers}`);
+        const data = await reponse.json();
+
+        if ((data.status === 1 || data.status === "success" || data.status_verbose === "product found") && data.product) {
+            // Sauvegarde dans la mémoire permanente du téléphone
+            try {
+                let cachePermanent = JSON.parse(localStorage.getItem('marche_scan_produits_cache') || '{}');
+                cachePermanent[codeBarres] = data.product;
+                localStorage.setItem('marche_scan_produits_cache', JSON.stringify(cachePermanent));
+            } catch(e) {}
+
+            afficherResultatProduitScan(data.product);
+        } else {
+            afficherProduitNonTrouve(codeBarres);
+        }
+    } catch (e) {
+        console.error("Erreur Open Food Facts :", e);
+        alert("⚠️ Réseau indisponible dans ce rayon. Réessayez ou vérifiez votre connexion !");
+        relancerViseurCamera();
+    }
+}
+
+// 8. Écran produit non trouvé
+function afficherProduitNonTrouve(codeBarres) {
+    document.getElementById('scan-vue-chargement').style.display = 'none';
+    document.getElementById('scan-vue-camera').style.display = 'none';
+    document.getElementById('scan-vue-resultat').style.display = 'block';
+
+    const zoneContenu = document.getElementById('scan-contenu-resultat');
+    if (zoneContenu) {
+        zoneContenu.innerHTML = `
+            <div style="background: #FFFDF8; border: 2px dashed var(--border-color); border-radius: 16px; padding: 25px 15px; text-align: center;">
+                <div style="font-size: 2.2rem; margin-bottom: 8px;">📦❓</div>
+                <h4 style="color: var(--text-title); margin: 0 0 6px 0; font-family: 'Playfair Display', serif;">Produit introuvable</h4>
+                <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.45;">
+                    Le code-barres <strong>${codeBarres}</strong> n'est pas encore répertorié dans la base libre Open Food Facts.
+                </div>
+            </div>
+        `;
+    }
+}
+
+// 9. ARBITRE CLINIQUE & AFFICHAGE DE LA FICHE DU PRODUIT SCANNÉ
+function afficherResultatProduitScan(product) {
+    document.getElementById('scan-vue-chargement').style.display = 'none';
+    document.getElementById('scan-vue-camera').style.display = 'none';
+    document.getElementById('scan-vue-resultat').style.display = 'block';
+
+    const zoneContenu = document.getElementById('scan-contenu-resultat');
+    if (!zoneContenu) return;
+
+    // A. Extraction des informations de base
+    const nomProduit = product.product_name_fr || product.product_name || "Produit sans nom";
+    const marque = product.brands || "";
+    const quantite = product.quantity || "";
+    // 📷 Priorité à la miniature légère, sinon repli sur la photo normale
+    const photoUrl = product.image_front_small_url 
+                  || product.image_front_url 
+                  || product.selected_images?.front?.display?.fr 
+                  || product.selected_images?.front?.display?.de 
+                  || product.image_url 
+                  || "";
+    const ingredientsBruts = product.ingredients_text_fr || product.ingredients_text || "Liste des ingrédients non renseignée.";
+    const ingredientsClean = removeAccents(ingredientsBruts.toLowerCase());
+
+    const nutriments = product.nutriments || {};
+    const sucres = nutriments.sugars_100g !== undefined ? parseFloat(nutriments.sugars_100g) : (nutriments.sugars !== undefined ? parseFloat(nutriments.sugars) : null);
+    const graisses = nutriments.fat_100g !== undefined ? parseFloat(nutriments.fat_100g) : null;
+    const graissesSat = nutriments['saturated-fat_100g'] !== undefined ? parseFloat(nutriments['saturated-fat_100g']) : null;
+
+    const allergenesTags = (product.allergens_tags || []).join(' ').toLowerCase();
+
+    // B. SCANNER CLINIQUE : Détection des alertes selon le profil actif
+    let alertesRouges = [];
+    let alertesJaunes = [];
+
+    // 1. Détection Gluten
+    const aGluten = allergenesTags.includes('gluten') || ['ble', 'seigle', 'orge', 'epeautre', 'kamut', 'gluten', 'farine de ble'].some(m => ingredientsClean.includes(m));
+    if (currentProfil.includes('gluten') && aGluten) {
+        alertesRouges.push("🌾 Présence de Gluten (Blé / Céréales)");
+    }
+
+    // 2. Détection Lactose
+    const aLactose = allergenesTags.includes('milk') || allergenesTags.includes('lactose') || ['lait', 'creme', 'beurre', 'fromage', 'lactoserum', 'lactose', 'caseine', 'yaourt', 'mascarpone'].some(m => ingredientsClean.includes(m));
+    if (currentProfil.includes('lactose') && aLactose) {
+        alertesRouges.push("🥛 Présence de Lactose / Produits laitiers");
+    }
+
+    // 3. Détection Estomac / RGO (Graisses et Acidité)
+    if (currentProfil.includes('estomac')) {
+        if (graisses !== null && graisses >= 15) alertesJaunes.push("🧈 Taux de graisses élevé (ralentit la digestion)");
+        if (['vinaigre', 'moutarde', 'piment', 'poivre', 'chilli', 'concentre de tomate'].some(m => ingredientsClean.includes(m))) {
+            alertesJaunes.push("🔥 Ingrédients piquants ou acides pour l'estomac");
+        }
+    }
+
+    // 4. Détection Côlon irritable / FODMAPs
+    if (currentProfil.includes('colon') || currentProfil.includes('fodmap')) {
+        let fods = [];
+        if (ingredientsClean.includes('ail') || ingredientsClean.includes('garlic')) fods.push("Ail");
+        if (ingredientsClean.includes('oignon') || ingredientsClean.includes('onion')) fods.push("Oignon");
+        if (ingredientsClean.includes('echalote') || ingredientsClean.includes('shallot')) fods.push("Échalote");
+        if (['sirop de glucose-fructose', 'sirop de fructose', 'inuline', 'sorbitol', 'xylitol', 'maltitol'].some(m => ingredientsClean.includes(m))) fods.push("Glucides fermentescibles");
+        if (fods.length > 0) {
+            alertesJaunes.push(`💨 Composés fermentescibles : ${fods.join(', ')}`);
+        }
+    }
+
+    // 5. Détection Diabète (Glycémie)
+    if (currentProfil.includes('diabete')) {
+        if (sucres !== null && sucres >= 15) alertesRouges.push(`🩸 Teneur très élevée en sucres (${sucres.toFixed(1)}g / 100g)`);
+        else if (sucres !== null && sucres >= 8) alertesJaunes.push(`🩸 Teneur modérée en sucres (${sucres.toFixed(1)}g / 100g)`);
+    }
+
+    // 6. Détection Perte de Poids
+    if (currentProfil.includes('poids')) {
+        if (graisses !== null && graisses >= 18) alertesJaunes.push(`⚖️ Produit riche en lipides (${graisses.toFixed(1)}g / 100g)`);
+        if (sucres !== null && sucres >= 12) alertesJaunes.push(`⚖️ Produit sucré (${sucres.toFixed(1)}g / 100g)`);
+    }
+
+    // C. Calcul du grand verdict
+    let verdictTitre = "🟢 COMPATIBLE AVEC VOTRE PROFIL";
+    let verdictBg = "rgba(46, 125, 50, 0.12)";
+    let verdictColor = "#1B5E20";
+    let conseilDigestif = "Composition douce et harmonieuse. Ne présente pas d'ingrédients majeurs incompatibles avec vos sensibilités actuelles.";
+
+    if (alertesRouges.length > 0) {
+        verdictTitre = "🔴 DÉCONSEILLÉ POUR VOTRE PROFIL";
+        verdictBg = "rgba(198, 40, 40, 0.12)";
+        verdictColor = "#C62828";
+        conseilDigestif = "Ce produit contient des ingrédients fortement déconseillés par rapport aux sensibilités que vous avez cochées.";
+    } else if (alertesJaunes.length > 0) {
+        verdictTitre = "🟡 À MODÉRER SELON VOTRE TOLÉRANCE";
+        verdictBg = "rgba(245, 127, 23, 0.12)";
+        verdictColor = "#E65100";
+        conseilDigestif = "Ce produit est généralement toléré en quantité raisonnable, mais contient des éléments à surveiller selon votre confort.";
+    }
+
+    // D. Les 4 pastilles d'analyse rapide
+    const badgeLactose = aLactose ? '<span style="color:#C62828; font-weight:800;">🔴 Présence de lait</span>' : '<span style="color:#2E7D32; font-weight:800;">🟢 Sans lactose</span>';
+    const badgeGluten = aGluten ? '<span style="color:#C62828; font-weight:800;">🔴 Contient du gluten</span>' : '<span style="color:#2E7D32; font-weight:800;">🟢 Sans gluten</span>';
+    const badgeSucres = sucres !== null ? `${sucres.toFixed(1)}g / 100g ${sucres > 12 ? '🔴' : (sucres > 5 ? '🟡' : '🟢')}` : 'Non précisé ⚪';
+    const badgeGraisses = graisses !== null ? `${graisses.toFixed(1)}g / 100g ${graisses > 15 ? '🔴' : (graisses > 5 ? '🟡' : '🟢')}` : 'Non précisé ⚪';
+
+    const profilAffiche = currentProfil ? currentProfil.toUpperCase() : 'NEUTRE';
+
+    // E. Dessin de la fiche finale
+    zoneContenu.innerHTML = `
+        ${photoUrl ? `<div style="text-align:center; margin-bottom: 12px;"><img src="${photoUrl}" alt="" onerror="this.parentElement.style.display='none';" style="max-height: 140px; max-width: 100%; object-fit: contain; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.06);"></div>` : ''}
+
+        <div style="text-align: center; margin-bottom: 12px;">
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">${marque} ${quantite ? '• ' + quantite : ''}</div>
+            <h4 style="margin: 2px 0 10px 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.25rem;">${nomProduit}</h4>
+            
+            <div style="display: inline-block; padding: 6px 14px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; background: ${verdictBg}; color: ${verdictColor}; border: 1.5px solid ${verdictColor};">
+                ${verdictTitre}
+            </div>
+            <div style="font-size: 0.7rem; color: var(--text-muted); font-weight: 800; margin-top: 4px; text-transform: uppercase;">Profil : ${profilAffiche}</div>
+        </div>
+
+        <!-- LISTE DES ALERTES SPÉCIFIQUES -->
+        ${(alertesRouges.length > 0 || alertesJaunes.length > 0) ? `
+            <div style="background: #FFFDF8; border: 1.5px solid ${verdictColor}; border-radius: 14px; padding: 10px 12px; margin-bottom: 12px; font-size: 0.78rem;">
+                <div style="font-weight: 800; color: ${verdictColor}; text-transform: uppercase; margin-bottom: 4px;">Points de vigilance détectés :</div>
+                <ul style="margin: 0; padding-left: 15px; color: var(--text-main); line-height: 1.45;">
+                    ${alertesRouges.map(a => `<li style="color:#C62828; font-weight:700;">${a}</li>`).join('')}
+                    ${alertesJaunes.map(a => `<li style="color:#E65100; font-weight:700;">${a}</li>`).join('')}
+                </ul>
+            </div>
+        ` : ''}
+
+        <!-- 4 REPÈRES CLINIQUES DIGESTIFS -->
+        <div style="background: rgba(0,0,0,0.02); border: 1px solid var(--border-color); border-radius: 14px; padding: 10px; margin-bottom: 12px; font-size: 0.75rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div>🌾 <strong>Gluten :</strong><br>${badgeGluten}</div>
+                <div>🥛 <strong>Lactose :</strong><br>${badgeLactose}</div>
+                <div>🩸 <strong>Sucres :</strong><br>${badgeSucres}</div>
+                <div>🧈 <strong>Lipides :</strong><br>${badgeGraisses}</div>
+            </div>
+        </div>
+
+        <!-- CONSEIL DU PETIT MARCHÉ -->
+        <div style="background: rgba(46,125,50,0.08); border-radius: 12px; padding: 8px 10px; margin-bottom: 12px; font-size: 0.75rem; color: #1B5E20; line-height: 1.4;">
+            💡 <strong>Conseil nutrition :</strong> ${conseilDigestif}
+        </div>
+
+        <!-- LISTE COMPLÈTE DES INGRÉDIENTS D'ORIGINE -->
+        <details style="font-size: 0.72rem; color: var(--text-muted); cursor: pointer; border-top: 1px dashed var(--border-color); padding-top: 8px;">
+            <summary style="font-weight: 800; text-transform: uppercase;">🛒 Ingrédients complets du fabricant</summary>
+            <p style="margin: 6px 0 0 0; color: var(--text-main); line-height: 1.4; font-size: 0.75rem;">${ingredientsBruts}</p>
+        </details>
+    `;
+}
+
     function handleSearch(event, resultsBoxId = 'search-results', inputId = 'global-search') {
         const query = removeAccents(event.target.value.toLowerCase().trim());
         const resultsBox = document.getElementById(resultsBoxId);
@@ -5860,7 +6289,7 @@ const dicoAnglaisVersFrancais = {
     "green beans": "haricots verts", "string beans": "haricots verts",
     "tomato": "tomate", "tomatoes": "tomate", "tomato puree": "coulis de tomate cuit", "chopped tomatoes": "tomate", "plum tomatoes": "tomate",
     "fennel": "fenouil", "corn": "maïs", "sweetcorn": "maïs",
-    "pepper": "poivron", "peppers": "poivron", "bell pepper": "poivron", "red pepper": "poivron", "green pepper": "poivron", "chilli": "poivron",
+    "pepper": "poivron", "peppers": "poivron", "bell pepper": "poivron", "red pepper": "poivron", "green pepper": "poivron", "chilli": "piment",
     "cucumber": "concombre", "celery": "céleri-branche", "celery stick": "céleri-branche", "swiss chard": "côtes de bettes",
     "squash": "courge butternut", "butternut squash": "courge butternut", "pumpkin": "potiron",
     "beetroot": "betterave rouge", "beet": "betterave rouge",
@@ -5984,7 +6413,7 @@ function analyserCliniqueRecette(meal, profil) {
     }
 }
 
-// Vue détaillée chaleureuse et constructive
+// Vue détaillée harmonisée, chaleureuse et complète pour TheMealDB
 async function voirDetailRecetteTheMealDB(idMeal, vientDeLaFiche = false) {
     const detailZone = document.getElementById('rec-detail-contenu');
     detailZone.innerHTML = "<div style='text-align:center; padding: 20px;'>⏳ Analyse bienveillante des ingrédients...</div>";
@@ -5993,7 +6422,6 @@ async function voirDetailRecetteTheMealDB(idMeal, vientDeLaFiche = false) {
     document.getElementById('rec-vue-liste').style.display = 'none';
     document.getElementById('rec-vue-detail').style.display = 'block';
 
-    // RÈGLE : On vient de la liste -> Le bouton affiche "← Retour à la liste" !
     const btnRetour = document.getElementById('btn-retour-liste');
     const btnFermer = document.getElementById('btn-fermer-detail');
     if (vientDeLaFiche) {
@@ -6006,6 +6434,7 @@ async function voirDetailRecetteTheMealDB(idMeal, vientDeLaFiche = false) {
 
     const btnTrad = document.getElementById('btn-traduire-recette');
     if (btnTrad) {
+        btnTrad.style.display = 'block';
         btnTrad.innerText = "🌐 Traduire";
         btnTrad.disabled = false;
         btnTrad.style.borderColor = "var(--accent)";
@@ -6024,6 +6453,36 @@ async function voirDetailRecetteTheMealDB(idMeal, vientDeLaFiche = false) {
         const btnSave = document.getElementById('btn-enregistrer-recette');
         if (btnSave) btnSave.style.display = dejaEnregistree ? 'none' : 'block';
 
+        // 1. Dictionnaire des pays / provenances (strArea)
+        const dicoPays = {
+            "Algerian": "Algérienne", "American": "Américaine", "British": "Britannique", "Canadian": "Canadienne",
+            "Chinese": "Chinoise", "Croatian": "Croate", "Dutch": "Hollandaise", "Egyptian": "Égyptienne",
+            "French": "Française", "Greek": "Grecque", "Indian": "Indienne", "Irish": "Irlandaise",
+            "Italian": "Italienne", "Jamaican": "Jamaïcaine", "Japanese": "Japonaise", "Kenyan": "Kényane",
+            "Malaysian": "Malaise", "Mexican": "Mexicaine", "Moroccan": "Marocaine", "Polish": "Polonaise",
+            "Portuguese": "Portugaise", "Russian": "Russe", "Spanish": "Espagnole", "Thai": "Thaïlandaise",
+            "Tunisian": "Tunisienne", "Turkish": "Turque", "Ukrainian": "Ukrainienne", "Vietnamese": "Vietnamienne"
+        };
+        const provenanceCuisine = dicoPays[meal.strArea] ? `CUISINE ${dicoPays[meal.strArea].toUpperCase()}` : (meal.strArea ? `CUISINE ${meal.strArea.toUpperCase()}` : "RECETTE DU MONDE");
+
+        // 2. Estimation intelligente du temps de cuisson selon le type de plat
+        let tempsEstime = "30 min";
+        const cat = (meal.strCategory || "").toLowerCase();
+        if (cat.includes("dessert")) tempsEstime = "45 min";
+        else if (cat.includes("beef") || cat.includes("lamb") || cat.includes("pork")) tempsEstime = "40 min";
+        else if (cat.includes("seafood")) tempsEstime = "20 min";
+        else if (cat.includes("chicken")) tempsEstime = "30 min";
+        else if (cat.includes("vegetarian") || cat.includes("side")) tempsEstime = "25 min";
+
+        // 3. Génération du Conseil du Chef clinique bienveillant
+        let conseilChefTexte = "";
+        if (analyse.alertes.length > 0) {
+            conseilChefTexte = `Pour votre confort digestif, n'hésitez pas à modérer ou remplacer ${analyse.alertes.join(' et ')}.`;
+        } else {
+            conseilChefTexte = "Ingrédients doux et harmonieux. Privilégiez une cuisson modérée sans excès d'huile et dégustez tiède.";
+        }
+
+        // 4. Ingrédients analysés
         let ingredientsHTML = "";
         for (let i = 1; i <= 20; i++) {
             const ing = meal[`strIngredient${i}`];
@@ -6038,7 +6497,24 @@ async function voirDetailRecetteTheMealDB(idMeal, vientDeLaFiche = false) {
                     const alimentBase = legumes.find(l => removeAccents(l.nom.toLowerCase()).includes(nomFR));
                     if (alimentBase && isClinicallyBad(alimentBase, currentProfil)) {
                         puce = "🟡";
-                        conseil = ` <span style="font-size:0.75rem; color:#B5603F; font-weight:700;">(💡 À doser selon votre sensibilité)</span>`;
+                        
+                        // 💡 Cherche dans le Grand Dictionnaire d'Alternatives
+                        let alternativeTrouvee = "";
+                        const nomFRClean = removeAccents(nomFR.toLowerCase());
+                        if (typeof DICO_ALTERNATIVES_CLINIQUES !== 'undefined') {
+                            for (let [cle, remp] of Object.entries(DICO_ALTERNATIVES_CLINIQUES)) {
+                                if (nomFRClean.includes(cle) || cle.includes(nomFRClean)) {
+                                    alternativeTrouvee = remp;
+                                    break;
+                                }
+                            }
+                        }
+
+                        const texteConseil = alternativeTrouvee 
+                            ? `(💡 Remplacer par : ${alternativeTrouvee})` 
+                            : `(💡 À doser selon votre sensibilité)`;
+
+                        conseil = ` <span style="font-size:0.75rem; color:#B5603F; font-weight:700;">${texteConseil}</span>`;
                     }
                 }
 
@@ -6051,23 +6527,56 @@ async function voirDetailRecetteTheMealDB(idMeal, vientDeLaFiche = false) {
         let bannerBg = analyse.statut === '🟢' ? 'rgba(46,125,50,0.12)' : (analyse.statut === '🟡' ? 'rgba(245,127,23,0.12)' : 'rgba(216,67,21,0.12)');
         let bannerColor = analyse.statut === '🟢' ? '#1B5E20' : (analyse.statut === '🟡' ? '#E65100' : '#B5603F');
 
+        // Lien de source (TheMealDB ou site externe)
+        const urlSourceFinale = meal.strSource || meal.strYoutube || `https://www.themealdb.com/meal/${meal.idMeal}`;
+        const nomSourceFinale = meal.strSource ? "TheMealDB / Source web" : "TheMealDB";
+
         detailZone.innerHTML = `
-            <img src="${meal.strMealThumb}" alt="${meal.strMeal}" style="width: 100%; height: 160px; object-fit: cover; border-radius: 12px; margin-bottom: 12px;">
+            <img src="${meal.strMealThumb}" alt="${meal.strMeal}" style="width: 100%; height: 170px; object-fit: cover; border-radius: 14px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+            
+            <!-- 1. EN-TÊTE PROVENANCE & DIAGNOSTIC CLINIQUE -->
             <div style="text-align: center; margin-bottom: 12px;">
+                <div style="font-size: 0.68rem; color: #1565C0; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">
+                    🌍 BASE INTERNATIONALE • ${provenanceCuisine}
+                </div>
                 <span style="display: inline-block; padding: 5px 14px; border-radius: 20px; font-weight: 800; font-size: 0.78rem; background: ${bannerBg}; color: ${bannerColor}; border: 1.5px solid ${bannerColor};">
                     ${analyse.verdict} • PROFIL : ${currentProfil ? currentProfil.toUpperCase() : 'NEUTRE'}
                 </span>
-                ${analyse.alertes.length > 0 ? `<div style="font-size:0.72rem; color:#B5603F; font-weight:700; margin-top:4px;">${analyse.scoreTexte}</div>` : ''}
+                ${analyse.alertes.length > 0 ? `<div style="font-size:0.75rem; color:#B5603F; font-weight:700; margin-top:4px;">${analyse.scoreTexte}</div>` : ''}
+                
+                <!-- 2. CONSEIL DU CHEF BIENVEILLANT -->
+                <div style="font-size:0.75rem; color:#2E7D32; font-weight:700; margin-top:6px; background:rgba(46,125,50,0.08); padding:5px 10px; border-radius:10px;">
+                    🌿 Conseil chef : ${conseilChefTexte}
+                </div>
             </div>
-            <h4 id="rec-titre-detail" style="margin: 0 0 12px 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.25rem; text-align: center;">${meal.strMeal}</h4>
+
+            <!-- 3. DUO PORTIONS ET TEMPS PARFAITEMENT ALIGNÉ -->
+            <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 12px;">
+                <span style="background: rgba(212, 163, 115, 0.15); color: var(--accent-dark); padding: 4px 12px; border-radius: 14px; font-size: 0.75rem; font-weight: 800;">
+                    🍽️ ~ 4 personnes
+                </span>
+                <span style="background: rgba(212, 163, 115, 0.15); color: var(--accent-dark); padding: 4px 12px; border-radius: 14px; font-size: 0.75rem; font-weight: 800;">
+                    ⏱️ ~ ${tempsEstime}
+                </span>
+            </div>
+
+            <h4 id="rec-titre-detail" style="margin: 0 0 12px 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.3rem; text-align: center;">${meal.strMeal}</h4>
             
-            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">🛒 Ingrédients :</div>
-            <ul id="rec-ingredients-detail" style="font-size: 0.85rem; margin: 0 0 16px 0; padding-left: 10px; list-style: none;">
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">🛒 Ingrédients analysés :</div>
+            <ul id="rec-ingredients-detail" style="font-size: 0.88rem; margin: 0 0 16px 0; padding-left: 15px; list-style: none; line-height: 1.5;">
                 ${ingredientsHTML}
             </ul>
 
             <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">👨‍🍳 Instructions :</div>
-            <p id="rec-instructions-detail" style="font-size: 0.85rem; color: var(--text-main); line-height: 1.45; white-space: pre-line; margin: 0;">${meal.strInstructions}</p>
+            <p id="rec-instructions-detail" style="font-size: 0.88rem; color: var(--text-main); line-height: 1.55; white-space: pre-line; margin: 0;">${meal.strInstructions}</p>
+            
+            <!-- 4. LIEN DE SOURCE ORIGINAL EN BAS -->
+            <div style="margin-top: 18px; padding-top: 10px; border-top: 1px dashed var(--border-color); text-align: center;">
+                <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">Source originale : </span>
+                <a href="${urlSourceFinale}" target="_blank" rel="noopener noreferrer" style="font-size: 0.75rem; color: var(--accent-dark); font-weight: 800; text-decoration: underline;">
+                    ${nomSourceFinale} ↗
+                </a>
+            </div>
         `;
 
     } catch (e) {
@@ -6303,9 +6812,447 @@ const dicoTraductionTheMealDB = {
 let pageRecettesIndex = 0;
 let listeRecettesUniquesGlobal = [];
 
-// ========================================================
-// MOTEUR THEMEALDB BLINDÉ (PROTECTION CONTRE LES PAGES VIDES)
-// ========================================================
+// =========================================================================
+// 📚 LE GRAND GUIDE OFFICIEL DES ALTERNATIVES ET SUBSTITUTIONS CLINIQUES
+// Dictionnaire intégral calibré sur les 300 aliments du Petit Marché
+// =========================================================================
+const DICO_ALTERNATIVES_CLINIQUES = {
+
+    // --- 1. ALLIACÉS & SULFURÉS (Côlon / FODMAPs / Spasmes) ---
+    "ail": "ciboulette fraîche ou huile infusée à l'ail (filtrée)",
+    "gousse d'ail": "ciboulette fraîche ou vert de poireau",
+    "gousses d'ail": "ciboulette fraîche ou vert de poireau",
+    "oignon": "vert de poireau ou ciboulette ciselée",
+    "oignons": "vert de poireau ou ciboulette ciselée",
+    "oignon rouge": "vert de poireau ou ciboulette",
+    "oignons rouges": "vert de poireau ou ciboulette",
+    "oignon blanc": "ciboulette fraîche ou vert de poireau",
+    "echalote": "ciboulette fraîche ou vert d'oignon",
+    "echalotes": "ciboulette fraîche ou vert d'oignon",
+    "ail des ours": "ciboulette fraîche ou persil plat",
+
+    // --- 2. CRUCIFÈRES & COMPOSÉS SOUFRÉS (Ballonnements / Gaz) ---
+    "brocoli": "courgette pelée ou carotte fondante",
+    "brocolis": "courgette pelée ou carotte fondante",
+    "chou-fleur": "courgette pelée ou panais fondant",
+    "chou vert": "pak-choï ou blanc de poireau fondant",
+    "chou frise": "blanc de poireau ou courgette",
+    "chou blanc": "courgette ou carottes fondantes",
+    "chou rouge": "betterave rouge cuite ou carotte",
+    "chou kale": "jeunes pousses d'épinards fondantes",
+    "choux de bruxelles": "haricots verts extra-fins ou courgettes",
+    "chou-rave": "navet nouveau bien cuit ou panais",
+    "radis": "carotte râpée ou concombre pelé sans pépins",
+    "radis blanc": "carotte cuite ou navet doux",
+
+    // --- 3. SOLANACÉES, PÉPINS & FIBRES DURES (Diverticules / Estomac / RGO) ---
+    "poivron": "courgette pelée cuite",
+    "poivrons": "courgettes pelées cuites",
+    "piment": "paprika doux ou curcuma doux",
+    "piments": "paprika doux ou curcuma doux",
+    "chilli": "paprika doux ou curcuma",
+    "tomate": "passata cuite sans pépins ou coulis de carotte",
+    "tomates": "passata cuite sans graines ou carottes",
+    "tomates cerises": "tomates pelées épépinées ou coulis doux",
+    "coulis de tomate": "passata douce sans pépins ou coulis de carotte",
+    "aubergine": "courgette pelée bien cuite",
+    "aubergines": "courgettes pelées très fondantes",
+    "concombre": "courgette pelée très tendre sans pépins",
+    "concombres": "courgettes pelées sans pépins",
+    "celeri-branche": "blanc de poireau ou carotte cuite",
+    "celeri": "blanc de poireau ou carotte fondante",
+    "celeri-rave": "panais ou purée de pomme de terre",
+    "fenouil": "blanc de poireau braisé ou courgette",
+    "artichaut": "fond d'artichaut très cuit sans feuilles",
+    "salade frisee": "laitue pommée tendre ou mâche",
+    "scarole": "salade pommée ou jeunes pousses de batavia",
+    "trevise": "mâche ou cœur de batavia tendre",
+    "laitue": "mâche fondante ou laitue braisée",
+    "roquette": "jeunes pousses d'épinards ou mâche",
+    "cresson": "persil plat ou cerfeuil doux",
+    "cotes de bettes": "jeunes épinards cuits ou vert de poireau",
+    "asperge": "pointes d'asperges seules très cuites ou haricots verts fins",
+    "asperges": "pointes d'asperges seules très cuites ou haricots verts fins",
+    "rhubarbe": "compote de pomme douce sans acidité",
+
+    // --- 4. LÉGUMINEUSES & GRAINS FERMENTESCIBLES (FODMAPs / GOS) ---
+    "pois chiches": "lentilles corail mixées ou patate douce",
+    "haricots blancs": "lentilles corail fondantes ou courge",
+    "haricots rouges": "lentilles corail bien cuites",
+    "haricots borlotti": "courge butternut ou patate douce",
+    "haricots mungo": "lentilles corail ou purée de carotte",
+    "flageolets": "haricots verts extra-fins bien cuits",
+    "lentilles vertes": "lentilles corail fondantes sans peau",
+    "lentilles noires": "lentilles corail douces",
+    "lentilles corail": "riz basmati ou purée de carotte",
+    "feves": "edamame très jeunes ou lentilles corail",
+    "petits pois": "haricots verts extra-fins ou courgette",
+    "pois mange-tout": "haricots verts extra-fins équeutés",
+    "mais": "polenta fine ou riz basmati",
+    "edamame": "tofu ferme ou lentilles corail",
+    "soja": "tofu ferme ou volaille maigre",
+
+    // --- 5. FÉCULENTS & CÉRÉALES (Gluten / Charge Glycémique / Diabète) ---
+    "pomme de terre": "patate douce (IG bas) ou panais",
+    "pommes de terre": "patate douce (IG bas) ou panais",
+    "patate douce": "panais ou courge butternut (IG plus bas)",
+    "panais": "carotte ou courge butternut (IG plus bas)",
+    "topinambour": "panais ou patate douce fondante",
+    "pates": "pâtes sans gluten ou nouilles de riz",
+    "spaghetti": "spaghetti sans gluten ou de riz",
+    "macaroni": "macaroni de riz ou sans gluten",
+    "nouilles de riz": "nouilles de sarrasin (IG bas) ou courgettes spiralées",
+    "nouilles": "nouilles de riz ou nouilles de sarrasin",
+    "riz": "riz basmati (IG plus bas) ou sarrasin",
+    "riz blanc": "riz basmati doux ou sarrasin",
+    "riz complet": "riz basmati blanc ou quinoa bien rincé",
+    "semoule": "quinoa ou polenta sans gluten",
+    "couscous": "quinoa doux ou millet sans gluten",
+    "boulgour": "sarrasin ou riz basmati",
+    "orge": "riz complet ou sarrasin sans gluten",
+    "farine": "fécule de maïs (Maïzena) ou farine de riz",
+    "chapelure": "flocons d'avoine sans gluten mixés",
+    "pain": "pain sans gluten ou galettes de riz",
+    "pain de mie": "pain au levain sans gluten ou galettes de sarrasin",
+	"creme d'avoine": "crème de riz sans gluten ou lait de coco",
+    "avoine": "flocons de sarrasin sans gluten",
+    "polenta": "purée de patate douce ou riz basmati",
+    "quinoa": "riz basmati ou sarrasin doux",
+    "manioc": "fécule de pomme de terre ou Maïzena",
+    "tapioca": "Maïzena ou farine de riz",
+
+    // --- 6. PRODUITS LAITIERS (Intolérance Lactose / Graisses saturées) ---
+    "creme": "crème sans lactose, crème d'avoine ou lait de coco léger",
+    "creme entiere": "crème sans lactose ou crème d'amande",
+    "creme fraiche": "crème acidulée sans lactose ou yaourt de coco",
+    "lait": "lait d'amande, lait d'avoine ou lait sans lactose",
+    "lait entier": "lait d'amande doux ou lait sans lactose",
+    "beurre": "ghee (beurre clarifié) ou huile d'olive douce",
+    "margarine": "huile d'olive extra-vierge ou ghee",
+    "mascarpone": "séré maigre sans lactose battu",
+    "fromage": "fromage à pâte dure affiné (Sbrinz/Gruyère sans lactose)",
+    "fromage frais": "cottage cheese égoutté ou sans lactose",
+    "tartare": "fromage frais sans lactose avec ciboulette pure",
+    "brie": "fromage à pâte dure affiné sans lactose",
+    "gorgonzola": "parmesan affiné ou chèvre pressé doux",
+    "mozzarella": "mozzarella sans lactose ou mozzarella végétale",
+    "feta": "feta égouttée ou fromage de chèvre frais",
+    "yaourt": "yaourt nature sans lactose ou yaourt de coco",
+    "yaourt grec": "yaourt sans lactose égoutté",
+
+    // --- 7. VIANDES GRASSES & CHARCUTERIES (Vidange gastrique / RGO) ---
+    "porc": "filet de porc maigre ou escalope de dinde",
+    "cotelette de porc": "filet de porc maigre ou escalope de veau",
+    "lard": "viande séchée du Valais dégraissée ou bresaola",
+    "bacon": "jambon cuit blanc dégraissé ou bresaola",
+    "saucisse": "filet de poulet doré ou émincé de veau",
+    "saucisson": "viande séchée maigre ou bresaola",
+    "merguez": "steak de bœuf haché maigre aux herbes douces",
+    "cervelas": "blanc de dinde ou jambon blanc dégraissé",
+    "viande hachee": "viande hachée de bœuf 5% ou de volaille",
+    "steak": "émincé de veau ou filet de poulet",
+    "entrecote": "steak de bœuf maigre ou filet de veau",
+    "ragout de boeuf": "ragoût mijoté très longuement (2h) dégraissé",
+    "foie": "filet de poulet tendre ou poisson blanc",
+    "abats": "filet de volaille ou cabillaud",
+    "agneau": "filet d'agneau dégraissé ou volaille",
+    "canard": "filet de dinde ou poulet sans peau",
+
+    // --- 8. POISSONS FUMÉS & MATIÈRES GRASSES (Irritation / Reflux) ---
+    "saumon": "filet de cabillaud, colin ou truite fraîche pochée",
+    "saumon fume": "filet de truite fraîche ou saumon frais poché",
+    "truite fumee": "filet de truite fraîche cuit à la vapeur",
+    "thon": "filet de poisson blanc maigre (cabillaud, dorade)",
+    "thon a l'huile": "thon blanc au naturel",
+    "sardine": "filet de poisson blanc ou sardine fraîche grillée",
+    "sardine a l'huile": "poisson blanc vapeur ou thon au naturel",
+    "anchois": "herbes douces (thym, estragon) ou olives rincées",
+    "calamar": "filet de cabillaud ou poisson blanc fondant",
+    "poulpe": "filets de perche ou poisson blanc tendre",
+    "moules": "poisson blanc très frais ou crevettes douces",
+
+    // --- 9. CONDIMENTS, ACIDES, GRAINES & SAUCES (Brûlures / RGO) ---
+    "citron": "zeste d'orange douce ou omettre si reflux",
+    "jus de citron": "zeste doux ou filet de jus de grenade",
+    "lime": "zeste doux ou une larme de jus d'orange",
+    "vinaigre": "vinaigre de cidre doux ou jus de pomme",
+    "vinaigre balsamique": "sirop d'érable très dilué ou coulis doux",
+    "moutarde": "sauce yaourt sans lactose aux fines herbes",
+    "mayonnaise": "purée d'avocat lisse ou yaourt sans lactose",
+    "ketchup": "coulis de carotte doux ou passata sans pépins",
+    "sauce soja": "sauce Tamari (100% sans gluten)",
+    "poivre": "thym, origan, sarriette ou persil frais",
+    "poivre noir": "herbes de Provence ou curcuma doux",
+    "poivre blanc": "curcuma doux ou thym",
+    "olives": "olives rincées à l'eau ou dés d'avocat",
+    "cacahuete": "purée d'amande blanche lisse ou graines de lin",
+    "cacahuetes": "purée d'amande blanche lisse ou graines de lin",
+    "noix": "purée d'amande blanche lisse ou graines de chia",
+    "noisettes": "purée d'amande blanche lisse",
+    "amandes": "purée d'amande blanche lisse sans peau",
+    "graines de tournesol": "graines de lin moulues",
+    "graines de courge": "graines de chia ou de lin moulues",
+    "graines de sesame": "purée de sésame (tahini blanc lisse)",
+
+    // --- 10. FRUITS (Fructose / Acidité / Fibres dures / Pépins) ---
+    "pomme": "compote de pomme cuite lisse sans sucre",
+    "pommes": "compote de pommes cuite lisse sans sucre",
+    "poire": "poire pochée fondante sans peau",
+    "poires": "poires pochées fondantes ou compote",
+    "banane": "banane écrasée bien mûre ou compote de pomme",
+    "fraise": "banane mûre ou compote de pomme douce",
+    "fraises": "compote tamisée sans pépins ou banane",
+    "framboise": "compote cuite tamisée sans grains",
+    "framboises": "compote cuite tamisée sans grains",
+    "myrtille": "compote de myrtilles cuite lisse",
+    "myrtilles": "compote de myrtilles cuite lisse",
+    "mure": "compote tamisée sans grains",
+    "mures": "compote tamisée sans grains",
+    "cerise": "compote cuite de pêches ou compote de pommes",
+    "cerises": "compote de pêches ou pommes cuites",
+    "prune": "compote de prunes pelées",
+    "prunes": "compote de prunes pelées ou pruneaux cuits",
+    "pruneau": "compote de pruneaux bien cuite",
+    "pruneaux": "compote de pruneaux cuite lisse",
+    "peche": "pêche pelée pochée ou compote",
+    "peches": "pêches pelées pochées ou compote",
+    "nectarine": "pêche pelée ou compote douce",
+    "nectarines": "pêches pelées ou compote douce",
+    "abricot": "compote d'abricots bien cuite sans acidité",
+    "abricots": "compote d'abricots bien cuite",
+    "melon": "banane mûre ou compote de poire douce",
+    "pasteque": "banane mûre ou compote de pomme",
+    "kiwi": "banane mûre ou papaye très mûre",
+    "ananas": "mangue mûre ou compote de poire",
+    "mangue": "compote de pomme ou banane mûre",
+    "papaye": "banane bien mûre",
+    "raisin": "melon doux ou compote lisse",
+    "raisins": "melon doux ou compote lisse",
+    "figue": "compote de pomme lisse sans grains",
+    "figues": "compote de pomme lisse sans grains",
+    "orange": "compote de pêche douce ou jus de pomme doux",
+    "oranges": "compote de pêches ou jus de pomme doux",
+    "clementine": "compote douce de poires ou bananes",
+    "clementines": "compote douce de poires",
+    "mandarine": "compote de pêche ou jus de pomme",
+    "mandarines": "compote de pêche douce",
+    "pamplemousse": "compote de poires douces",
+    "coing": "gelée de coing lisse sans morceaux",
+    "chataigne": "patate douce ou panais fondant",
+    "chataignes": "purée de patate douce ou panais",
+    "kaki": "kaki très mûr à la cuillère ou compote",
+
+    // --- 11. SUCRES RAPIDES & DOUCEURS (Glycémie / Fermentation) ---
+    "sucre": "réduire de moitié ou pointe de stévia",
+    "sucre blanc": "réduire de moitié ou compote de pommes",
+    "sucre de canne": "réduire de moitié ou compote sans sucre",
+    "sucre de palme": "réduire de moitié ou compote douce",
+    "sucre roux": "réduire de moitié ou compote sans sucre",
+    "miel": "sirop d'érable pur à toute petite dose",
+    "melasse": "sirop d'érable doux à petite dose",
+    "chocolat": "caroube ou compote gourmande",
+    "chocolat noir": "caroube ou compote douce sans cacao",
+    "chocolat au lait": "compote gourmande ou caroube au lait d'amande",
+    "nutella": "purée d'amande blanche avec une larme de sirop d'érable",
+    "pate a tartiner": "purée d'amande blanche douce",
+    "biscuits": "galettes de riz ou flocons d'avoine maison sans gluten",
+    "edulcorant": "sucre de canne à très petite dose ou stévia pure"
+};
+
+// 1. Cherche dans tous nos classeurs de recettes maison si un aliment correspond
+function trouverRecettesMaison(termeRecherche) {
+    if (!window.RECETTES_MAISON || !Array.isArray(window.RECETTES_MAISON)) return [];
+    
+    const motNettoye = removeAccents(termeRecherche.toLowerCase().trim());
+
+    return window.RECETTES_MAISON.filter(rec => {
+        // A. Vérifie dans le nom de la recette
+        const nomRecette = removeAccents(rec.nom.toLowerCase());
+        if (nomRecette.includes(motNettoye)) return true;
+
+        // B. Vérifie dans les aliments associés
+        if (rec.alimentsAssocies && Array.isArray(rec.alimentsAssocies)) {
+            return rec.alimentsAssocies.some(alim => {
+                if (!alim) return false;
+                const alimClean = removeAccents(alim.toLowerCase().trim());
+                return alimClean.includes(motNettoye) || motNettoye.includes(alimClean);
+            });
+        }
+        return false;
+    });
+}
+
+// 2. Afficher la fiche détaillée avec PROPOSITIONS DE REMPLACEMENT INTELLIGENTES
+function voirDetailRecetteMaison(idRecette) {
+    if (!window.RECETTES_MAISON) return;
+    const rec = window.RECETTES_MAISON.find(r => r.id === idRecette);
+    if (!rec) return;
+    
+    let alertesCliniques = [];
+    let ingredientsHTML = "";
+
+    rec.ingredients.forEach(ligneBrute => {
+        const textePropre = ligneBrute.replace(/^(🟢|🟡|🟠|🔴|⚪|\s)+/gu, '').trim();
+        const texteClean = removeAccents(textePropre.toLowerCase());
+
+        let estSensible = false;
+        let nomSensible = "";
+
+        if (currentProfil && currentProfil !== 'neutre') {
+            const legumesTries = [...legumes].sort((a, b) => b.nom.length - a.nom.length);
+
+            for (let alim of legumesTries) {
+                if (!alim || !alim.nom) continue;
+                const nomAlimClean = removeAccents(alim.nom.toLowerCase().trim());
+                // Gère le singulier et le pluriel (retire le 's' final s'il existe)
+                const nomAlimSingulier = nomAlimClean.replace(/s\b/g, '');
+                
+                // 🛡️ Détecte l'aliment au singulier OU au pluriel en mot entier
+                const regexMotEntier = new RegExp(`(^|[^a-zÀ-ÿ])(${nomAlimClean}|${nomAlimSingulier})([^a-zÀ-ÿ]|$)`, 'i');
+
+                if (regexMotEntier.test(texteClean)) {
+                    if (isClinicallyBad(alim, currentProfil)) {
+                        estSensible = true;
+                        nomSensible = alim.nom;
+                    }
+					break;
+                }
+            }
+        }
+
+        if (estSensible) {
+            if (!alertesCliniques.includes(nomSensible)) alertesCliniques.push(nomSensible);
+
+            // 💡 Cherche l'alternative DU VRAI ALIMENT SENSIBLE (et non plus dans la phrase !)
+            let alternativeTrouvee = "";
+            const nomSensibleClean = removeAccents(nomSensible.toLowerCase().trim());
+            const nomSensibleSingulier = nomSensibleClean.replace(/s\b/g, '');
+
+            if (typeof DICO_ALTERNATIVES_CLINIQUES !== 'undefined') {
+                for (let [cle, remp] of Object.entries(DICO_ALTERNATIVES_CLINIQUES)) {
+                    if (nomSensibleClean === cle || nomSensibleSingulier === cle || nomSensibleClean.includes(cle)) {
+                        alternativeTrouvee = remp;
+                        break;
+                    }
+                }
+            }
+
+            const conseilTexte = alternativeTrouvee 
+                ? `(💡 Remplacer par : ${alternativeTrouvee})` 
+                : `(💡 À doser selon votre sensibilité)`;
+
+            ingredientsHTML += `
+                <li style="margin-bottom: 5px;">
+                    🟡 <strong>${textePropre}</strong> <span style="font-size:0.75rem; color:#B5603F; font-weight:700;">${conseilTexte}</span>
+                </li>
+            `;
+        } else {
+            ingredientsHTML += `
+                <li style="margin-bottom: 5px;">
+                    🟢 ${textePropre}
+                </li>
+            `;
+        }
+    });
+
+    let statutBadge = '🟢';
+    let verdictTexte = '🟢 RECETTE IDÉALE';
+    let bannerBg = 'rgba(46,125,50,0.12)';
+    let bannerColor = '#1B5E20';
+    let astuceSousTitre = '';
+
+    if (alertesCliniques.length > 0 && alertesCliniques.length <= 2) {
+        statutBadge = '🟡';
+        verdictTexte = '🟡 FACILEMENT ADAPTABLE';
+        bannerBg = 'rgba(245,127,23,0.12)';
+        bannerColor = '#E65100';
+        astuceSousTitre = `<div style="font-size:0.75rem; color:#B5603F; font-weight:700; margin-top:4px;">💡 Astuce : modérez ou adaptez ${alertesCliniques.join(' et ')}</div>`;
+    } else if (alertesCliniques.length > 2) {
+        statutBadge = '🟠';
+        verdictTexte = '🟠 SENSIBLE EN CRISE';
+        bannerBg = 'rgba(216,67,21,0.12)';
+        bannerColor = '#B5603F';
+        astuceSousTitre = `<div style="font-size:0.75rem; color:#B5603F; font-weight:700; margin-top:4px;">💡 Plusieurs ingrédients sensibles (${alertesCliniques.slice(0, 2).join(', ')}...)</div>`;
+    }
+
+    const profilAffiche = currentProfil ? currentProfil.toUpperCase() : 'NEUTRE';
+
+    recetteTheMealDBEnCours = {
+        strMeal: rec.nom,
+        nom: rec.nom,
+        strMealThumb: rec.image,
+        thumb: rec.image,
+        strInstructions: rec.instructions,
+        instructions: rec.instructions,
+        portions: rec.portions,
+        statut: statutBadge,
+        ingredients: ingredientsHTML,
+        sourceNom: rec.sourceNom || "",
+        sourceUrl: rec.sourceUrl || ""
+    };
+
+    const detailZone = document.getElementById('rec-detail-contenu');
+    if (!detailZone) return;
+
+    document.getElementById('rec-vue-choix').style.display = 'none';
+    document.getElementById('rec-vue-liste').style.display = 'none';
+    document.getElementById('rec-vue-detail').style.display = 'block';
+
+    const btnRetour = document.getElementById('btn-retour-liste');
+    const btnFermer = document.getElementById('btn-fermer-detail');
+    if (btnRetour) btnRetour.style.display = 'block';
+    if (btnFermer) btnFermer.style.display = 'none';
+
+    const btnTrad = document.getElementById('btn-traduire-recette');
+    if (btnTrad) btnTrad.style.display = 'none';
+
+    const dejaEnregistree = alimentRecetteActif?.recettesList?.some(r => r.nom === rec.nom);
+    const btnSave = document.getElementById('btn-enregistrer-recette');
+    if (btnSave) btnSave.style.display = dejaEnregistree ? 'none' : 'block';
+
+    detailZone.innerHTML = `
+        <img src="${rec.image}" alt="${rec.nom}" style="width: 100%; height: 170px; object-fit: cover; border-radius: 14px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+        
+        <div style="text-align: center; margin-bottom: 12px;">
+            <div style="font-size: 0.68rem; color: #B78103; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">⭐ RECETTE OFFICIELLE MAISON</div>
+            <span style="display: inline-block; padding: 5px 14px; border-radius: 20px; font-weight: 800; font-size: 0.78rem; background: ${bannerBg}; color: ${bannerColor}; border: 1.5px solid ${bannerColor};">
+                ${verdictTexte} • PROFIL : ${profilAffiche}
+            </span>
+            ${astuceSousTitre}
+            ${rec.conseilDigestif ? `<div style="font-size:0.75rem; color:#2E7D32; font-weight:700; margin-top:6px; background:rgba(46,125,50,0.08); padding:5px 10px; border-radius:10px;">🌿 Conseil chef : ${rec.conseilDigestif}</div>` : ''}
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 12px;">
+            <span style="background: rgba(212, 163, 115, 0.15); color: var(--accent-dark); padding: 4px 12px; border-radius: 14px; font-size: 0.75rem; font-weight: 800;">
+                🍽️ ${rec.portions}
+            </span>
+            <span style="background: rgba(212, 163, 115, 0.15); color: var(--accent-dark); padding: 4px 12px; border-radius: 14px; font-size: 0.75rem; font-weight: 800;">
+                ⏱️ ${rec.temps}
+            </span>
+        </div>
+
+        <h4 id="rec-titre-detail" style="margin: 0 0 12px 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.3rem; text-align: center;">${rec.nom}</h4>
+        
+        <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">🛒 Ingrédients analysés :</div>
+        <ul id="rec-ingredients-detail" style="font-size: 0.88rem; margin: 0 0 16px 0; padding-left: 15px; list-style: none; line-height: 1.5;">
+            ${ingredientsHTML}
+        </ul>
+
+        <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">👨‍🍳 Préparation étape par étape :</div>
+        <p id="rec-instructions-detail" style="font-size: 0.88rem; color: var(--text-main); line-height: 1.55; white-space: pre-line; margin: 0;">${rec.instructions}</p>
+        
+        ${rec.sourceNom && rec.sourceUrl ? `
+            <div style="margin-top: 18px; padding-top: 10px; border-top: 1px dashed var(--border-color); text-align: center;">
+                <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">Inspiration originale : </span>
+                <a href="${rec.sourceUrl}" target="_blank" rel="noopener noreferrer" style="font-size: 0.75rem; color: var(--accent-dark); font-weight: 800; text-decoration: underline;">
+                    ${rec.sourceNom} ↗
+                </a>
+            </div>
+        ` : ''}
+    `;
+}
+
+// MOTEUR DE RECHERCHE INTELLIGENT (COMPREND LES DÉCOUPES ET GARANTIT LES RECETTES MAISON)
 async function chargerRecettesTheMealDB(leg) {
     const conteneur = document.getElementById('rec-liste-container');
     const loader = document.getElementById('rec-loading');
@@ -6319,38 +7266,62 @@ async function chargerRecettesTheMealDB(leg) {
 
     const nomBrut = (typeof leg === 'string') ? leg : (leg.nom || "");
     const nomClean = removeAccents(nomBrut.toLowerCase().trim());
-    let motAnglais = dicoTraductionTheMealDB[nomClean] || nomClean;
+    
+    // 🧠 ASPIRATEUR UNIVERSEL DE MOTS COMPOSÉS (Crevettes cocktail, Blanc de poireau, etc.)
+    let motAnglais = dicoTraductionTheMealDB[nomClean] || "";
 
-    // Lecteur intelligent qui ne plante jamais sur du vide
+// 👑 PRIORITÉ ABSOLUE À L'ANIMAL SUR LE MORCEAU (Agneau gagne sur Côtelette !)
+    if (nomClean.includes("agneau") || nomClean.includes("mouton")) motAnglais = "lamb";
+    else if (nomClean.includes("poulet")) motAnglais = "chicken";
+    else if (nomClean.includes("boeuf") || nomClean.includes("bœuf")) motAnglais = "beef";
+    else if (nomClean.includes("porc") || nomClean.includes("lard") || nomClean.includes("bacon")) motAnglais = "pork";
+    else if (nomClean.includes("veau")) motAnglais = "veal";
+    else if (nomClean.includes("canard")) motAnglais = "duck";
+    else if (nomClean.includes("dinde")) motAnglais = "turkey";
+    else if (nomClean.includes("cheval")) motAnglais = "horse meat";
+    else if (nomClean.includes("crevette") || nomClean.includes("gambas")) motAnglais = "prawns";
+    else if (nomClean.includes("saumon")) motAnglais = "salmon";
+    else if (nomClean.includes("cabillaud") || nomClean.includes("colin")) motAnglais = "cod";
+    else if (nomClean.includes("truite")) motAnglais = "trout";
+
+    // Si pas trouvé mot pour mot, cherche si un mot-clé du dictionnaire est contenu dans le nom
+    if (!motAnglais) {
+        for (let [cleFr, tradEn] of Object.entries(dicoTraductionTheMealDB)) {
+            if (cleFr.length >= 4 && nomClean.includes(cleFr)) {
+                motAnglais = tradEn;
+                break;
+            }
+        }
+    }
+
+    // Si toujours rien trouvé, garde le mot nettoyé par défaut
+    if (!motAnglais) motAnglais = nomClean;
+    
+
     const safeFetchJSON = async (url) => {
         try {
             const rep = await fetch(url);
             const texte = await rep.text();
             return (texte && texte.trim().length > 0) ? JSON.parse(texte) : null;
-        } catch(e) {
-            return null;
-        }
+        } catch(e) { return null; }
     };
 
     try {
         let meals = [];
 
-        // 1. Recherche par ingrédient exact
+        // 1. Recherche TheMealDB
         const data1 = await safeFetchJSON(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${encodeURIComponent(motAnglais)}`);
         if (data1 && data1.meals) meals.push(...data1.meals);
 
-        // 2. Recherche pluriel si besoin
         if (!motAnglais.endsWith('s')) {
             const pluriel = motAnglais.endsWith('o') ? motAnglais + 'es' : motAnglais + 's';
             const dataS = await safeFetchJSON(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${encodeURIComponent(pluriel)}`);
             if (dataS && dataS.meals) meals.push(...dataS.meals);
         }
 
-        // 3. Recherche par titre de recette
         const dataTitre = await safeFetchJSON(`https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(motAnglais)}`);
         if (dataTitre && dataTitre.meals) meals.push(...dataTitre.meals);
 
-        // Déduplication exacte
         const idsVus = new Set();
         meals.forEach(m => {
             if (m && m.idMeal && !idsVus.has(m.idMeal)) {
@@ -6361,19 +7332,22 @@ async function chargerRecettesTheMealDB(leg) {
 
         if (loader) loader.style.display = "none";
 
-        // Si vraiment aucun résultat n'existe pour ce mot
-        if (listeRecettesUniquesGlobal.length === 0) {
+        // 🛡️ SÉCURITÉ : Vérifie si on a au moins une recette Maison pour cet aliment
+        const aDesRecettesMaison = (typeof trouverRecettesMaison === 'function') && (trouverRecettesMaison(nomBrut).length > 0);
+
+        // Si TheMealDB n'a rien MAIS qu'on a une recette maison : on affiche quand même notre recette !
+        if (listeRecettesUniquesGlobal.length === 0 && !aDesRecettesMaison) {
             conteneur.innerHTML = `
                 <div style="text-align: center; padding: 25px 15px; color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">
                     Aucune recette TheMealDB trouvée pour <strong>"${nomBrut}"</strong>.<br>
-                    <span style="font-size: 0.78rem;">(Essayez un ingrédient plus simple comme <em>"Butternut"</em> ou <em>"Courge"</em>)</span><br><br>
+                    <span style="font-size: 0.78rem;">(Essayez un ingrédient plus simple comme <em>"Poulet"</em>, <em>"Courge"</em> ou <em>"Riz"</em>)</span><br><br>
                     <button type="button" class="btn" style="font-weight:800;" onclick="retourAuHubChoix()">← Explorer nos partenaires suisses/français</button>
                 </div>
             `;
             return;
         }
 
-        // Affiche les recettes trouvées proprement
+        // Affiche proprement nos recettes Maison ET les recettes TheMealDB
         afficherPageRecettesCourante();
 
     } catch (e) {
@@ -6411,7 +7385,98 @@ async function afficherPageRecettesCourante() {
 
     if (loader) loader.style.display = "none";
 
-    // Dessine les 20 cartes
+    // ========================================================
+    // ⭐ 1. INJECTION DES RECETTES "MAISON" EN TÊTE DE LISTE
+    // ========================================================
+    if (pageRecettesIndex === 0) {
+        const inputRecherche = document.getElementById('rec-input-recherche-perso');
+        const motCherche = (inputRecherche && inputRecherche.value.trim().length > 0) 
+            ? inputRecherche.value.trim() 
+            : (alimentRecetteActif ? alimentRecetteActif.nom : "");
+        
+        const recettesMaisonTrouvees = (typeof trouverRecettesMaison === 'function') ? trouverRecettesMaison(motCherche) : [];
+        
+        if (recettesMaisonTrouvees.length > 0) {
+            recettesMaisonTrouvees.forEach(recM => {
+                // Analyse clinique des ingrédients de la recette maison
+                let alertesM = [];
+                if (currentProfil && currentProfil !== 'neutre' && recM.ingredients && Array.isArray(recM.ingredients)) {
+                    const legumesTries = [...legumes].sort((a, b) => b.nom.length - a.nom.length);
+
+                    recM.ingredients.forEach(ligne => {
+                        const texteClean = removeAccents(ligne.toLowerCase());
+                        for (let alim of legumesTries) {
+                            if (!alim || !alim.nom) continue;
+                            const nomAlim = removeAccents(alim.nom.toLowerCase().trim());
+                            const regexMotEntier = new RegExp(`(^|[^a-zÀ-ÿ])${nomAlim}([^a-zÀ-ÿ]|$)`, 'i');
+
+                            if (regexMotEntier.test(texteClean)) {
+                                if (isClinicallyBad(alim, currentProfil)) {
+                                    if (!alertesM.includes(alim.nom)) alertesM.push(alim.nom);
+                                    }
+									break;
+                             }
+                        }
+                    });
+                }
+
+                let verdictM = '🟢 RECETTE IDÉALE';
+                let bgBadgeM = 'rgba(46, 125, 50, 0.12)';
+                let bordBadgeM = '#2E7D32';
+                let txtBadgeM = '#1B5E20';
+                let astuceM = '';
+
+                if (alertesM.length > 0 && alertesM.length <= 2) {
+                    verdictM = '🟡 FACILEMENT ADAPTABLE';
+                    bgBadgeM = 'rgba(245, 127, 23, 0.12)';
+                    bordBadgeM = '#F57F17';
+                    txtBadgeM = '#E65100';
+                    astuceM = `Astuce : modérez ou adaptez ${alertesM.join(' et ')}`;
+                } else if (alertesM.length > 2) {
+                    verdictM = '🟠 SENSIBLE EN CRISE';
+                    bgBadgeM = 'rgba(216, 67, 21, 0.12)';
+                    bordBadgeM = '#D84315';
+                    txtBadgeM = '#B5603F';
+                    astuceM = `Plusieurs ingrédients sensibles (${alertesM.slice(0, 2).join(', ')}...)`;
+                }
+
+                const cardM = document.createElement('div');
+                cardM.style.cssText = "display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #FFFDF8; border: 2px solid var(--accent); border-radius: 16px; padding: 12px; box-shadow: 0 4px 12px rgba(212,163,115,0.15); margin-bottom: 8px;";
+                
+                cardM.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;">
+                        <img src="${recM.image}" alt="${recM.nom}" style="width: 56px; height: 56px; border-radius: 12px; object-fit: cover; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                        <div style="min-width: 0;">
+                            <div style="font-weight: 800; font-size: 0.92rem; color: var(--text-title); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${recM.nom}</div>
+                            <div style="display: flex; gap: 6px; align-items: center; margin-top: 4px; flex-wrap: wrap;">
+                                <span style="font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: 10px; border: 1.5px solid #F6C343; background: #FFF8E1; color: #B78103;">
+                                    ⭐ RECETTE MAISON
+                                </span>
+                                <span style="font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: 10px; border: 1px solid ${bordBadgeM}; background: ${bgBadgeM}; color: ${txtBadgeM};">
+                                    ${verdictM}
+                                </span>
+                                <span style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 700;">🍽️ ${recM.portions}</span>
+                            </div>
+                            ${astuceM ? `<div style="font-size: 0.68rem; color: #D84315; font-weight: 700; margin-top: 3px;">💡 ${astuceM}</div>` : ''}
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 6px; flex-shrink: 0;">
+                        <button type="button" class="btn" style="padding: 7px 12px; font-size: 0.78rem; font-weight: 800; border-color: var(--accent); color: var(--accent-dark); background: #FFF;" onclick="voirDetailRecetteMaison('${recM.id}')">👁️ Voir</button>
+                    </div>
+                `;
+                conteneur.appendChild(cardM);
+            });
+
+            const sep = document.createElement('div');
+            sep.style.cssText = "font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; text-align: center; margin: 12px 0 8px 0; letter-spacing: 0.5px;";
+            sep.innerText = "── 🌍 Autres suggestions du Web (TheMealDB) ──";
+            conteneur.appendChild(sep);
+        }
+    }
+
+    // ========================================================
+    // 🌍 2. DESSINE LES 20 CARTES THEMEALDB (SANS BOUTON DISQUETTE)
+    // ========================================================
     recettesCompletes.forEach(m => {
         const analyse = (typeof analyserCliniqueRecette === 'function') 
             ? analyserCliniqueRecette(m, currentProfil) 
@@ -6432,7 +7497,7 @@ async function afficherPageRecettesCourante() {
         }
 
         const card = document.createElement('div');
-        card.style.cssText = "display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 14px; padding: 10px 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.03);";
+        card.style.cssText = "display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 14px; padding: 10px 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); margin-bottom: 8px;";
         
         card.innerHTML = `
             <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;">
@@ -6445,15 +7510,14 @@ async function afficherPageRecettesCourante() {
                     ${analyse.alertes.length > 0 ? `<div style="font-size: 0.68rem; color: #D84315; font-weight: 700; margin-top: 2px;">💡 ${analyse.scoreTexte}</div>` : ''}
                 </div>
             </div>
-            <div style="display: flex; gap: 5px; flex-shrink: 0;">
-                <button type="button" class="btn" style="padding: 6px 10px; font-size: 0.75rem; font-weight: 800;" onclick="voirDetailRecetteTheMealDB('${m.idMeal}')">👁️ Voir</button>
-                <button type="button" class="btn btn-primary" style="padding: 6px 10px; font-size: 0.75rem; font-weight: 800;" onclick="enregistrerDirectTheMealDB('${m.idMeal}', '${m.strMeal.replace(/'/g, "\\'")}')">💾</button>
+            <div style="display: flex; gap: 6px; flex-shrink: 0;">
+                <button type="button" class="btn" style="padding: 6px 12px; font-size: 0.75rem; font-weight: 800;" onclick="voirDetailRecetteTheMealDB('${m.idMeal}')">👁️ Voir</button>
             </div>
         `;
         conteneur.appendChild(card);
     });
 
-    // BARRE DE PAGINATION EN BAS (Précédente / Page X sur Y / Suivante)
+    // BARRE DE PAGINATION EN BAS
     if (total > parPage) {
         const navBox = document.createElement('div');
         navBox.style.cssText = "display: flex; justify-content: space-between; align-items: center; margin-top: 15px; padding-top: 12px; border-top: 1px dashed var(--border-color);";
@@ -6638,15 +7702,12 @@ function ouvrirLecteurRecetteInApp(alimentId, indexRecette) {
     if (!leg || !leg.recettesList || !leg.recettesList[indexRecette]) return;
 
     const rec = leg.recettesList[indexRecette];
-	
-	alimentRecetteActif = leg;
+    alimentRecetteActif = leg;
     recetteTheMealDBEnCours = rec;
 
-    // RÈGLE 1 : La recette est déjà sur la carte -> On masque le bouton Enregistrer
     const btnSave = document.getElementById('btn-enregistrer-recette');
     if (btnSave) btnSave.style.display = 'none';
 
-    // RÈGLE 2 : On vient de la fiche -> On cache "Retour", on affiche "Fermer" ou "Retour au Carnet"
     const btnRetour = document.getElementById('btn-retour-liste');
     const btnFermer = document.getElementById('btn-fermer-detail');
     if (btnRetour) btnRetour.style.display = 'none';
@@ -6654,7 +7715,6 @@ function ouvrirLecteurRecetteInApp(alimentId, indexRecette) {
         btnFermer.style.display = 'block';
         btnFermer.innerText = vientDuCarnet ? "← Retour au Carnet" : "← Fermer";
     }
-    
 
     const btnTrad = document.getElementById('btn-traduire-recette');
     if (btnTrad) {
@@ -6664,7 +7724,6 @@ function ouvrirLecteurRecetteInApp(alimentId, indexRecette) {
         btnTrad.style.color = "var(--accent-dark)";
     }
 
-    // Affiche la liseuse interne avec ingrédients et étapes
     if (rec.instructions) {
         const vueChoix = document.getElementById('rec-vue-choix');
         if (vueChoix) vueChoix.style.display = 'none';
@@ -6684,6 +7743,13 @@ function ouvrirLecteurRecetteInApp(alimentId, indexRecette) {
                         ${rec.statut || '🟢'} RECETTE SAUVEGARDÉE
                     </span>
                 </div>
+                
+                <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 12px;">
+                    <span style="background: rgba(212, 163, 115, 0.15); color: var(--accent-dark); padding: 4px 12px; border-radius: 14px; font-size: 0.75rem; font-weight: 800;">
+                        🍽️ Portions : ${rec.portions || "~ 4 personnes"}
+                    </span>
+                </div>
+                
                 <h4 id="rec-titre-detail" style="margin: 0 0 10px 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.2rem; text-align: center;">${rec.nom}</h4>
                 <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">🛒 Ingrédients :</div>
                 <ul id="rec-ingredients-detail" style="font-size: 0.85rem; color: var(--text-main); margin: 0 0 14px 0; padding-left: 20px;">
@@ -6691,6 +7757,14 @@ function ouvrirLecteurRecetteInApp(alimentId, indexRecette) {
                 </ul>
                 <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">👨‍🍳 Instructions :</div>
                 <p id="rec-instructions-detail" style="font-size: 0.85rem; color: var(--text-main); line-height: 1.45; white-space: pre-line; margin: 0;">${rec.instructions}</p>
+                ${rec.sourceNom && rec.sourceUrl ? `
+                    <div style="margin-top: 18px; padding-top: 10px; border-top: 1px dashed var(--border-color); text-align: center;">
+                        <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">Inspiration originale : </span>
+                        <a href="${rec.sourceUrl}" target="_blank" rel="noopener noreferrer" style="font-size: 0.75rem; color: var(--accent-dark); font-weight: 800; text-decoration: underline;">
+                            ${rec.sourceNom} ↗
+                        </a>
+                    </div>
+                ` : ''}
             `;
         }
 
@@ -6699,10 +7773,9 @@ function ouvrirLecteurRecetteInApp(alimentId, indexRecette) {
     } else if ((rec.idMeal || rec.m) && typeof voirDetailRecetteTheMealDB === 'function') {
         const idAEnvoyer = rec.idMeal || rec.m;
         voirDetailRecetteTheMealDB(idAEnvoyer, true);
-		
-		const modal = document.getElementById('modal-recipe-search');
-    if (modal) modal.style.display = 'block';
-		
+        
+        const modal = document.getElementById('modal-recipe-search');
+        if (modal) modal.style.display = 'block';
     } else if (rec.url) {
         window.open(rec.url, '_blank', 'noopener,noreferrer');
     }

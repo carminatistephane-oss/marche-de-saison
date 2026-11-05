@@ -1,9 +1,9 @@
 // ========================================================
 // SERVICE WORKER - LE PETIT MARCHÉ DE MON ESTOMAC
-// VERSION DU CACHE : v13.05 (Nouvelle Refonte Cru/Cuit & Recettes)
+// VERSION DU CACHE : v14.00 (Intégration des 10 Classeurs Recettes Maison)
 // ========================================================
 
-const CACHE_NAME = 'marche-cache-v13.05';
+const CACHE_NAME = 'marche-cache-v14.00';
 
 // Fichiers vitaux à stocker pour le fonctionnement 100% hors-ligne
 const urlsToCache = [
@@ -17,7 +17,19 @@ const urlsToCache = [
   './icones/favoris_02.png',
   './icones/recommandes_02.png',
   './icones/icn-192.png',
-  './icones/icn-512.png'
+  './icones/icn-512.png',
+
+  // LES 10 CLASSEURS OFFICIELS DE RECETTES MAISON
+  './donnees/recettes_printemps.js',
+  './donnees/recettes_ete.js',
+  './donnees/recettes_automne.js',
+  './donnees/recettes_hiver.js',
+  './donnees/recettes_feculents.js',
+  './donnees/recettes_legumineuses.js',
+  './donnees/recettes_viandes.js',
+  './donnees/recettes_poissons.js',
+  './donnees/recettes_laitages.js',
+  './donnees/recettes_douceurs.js'
 ];
 
 // 1. INSTALLATION : Téléchargement des fichiers essentiels (avec sécurité tolérante)
@@ -25,7 +37,7 @@ self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME).then((cache) => {
             return Promise.allSettled(
-                URLS_A_METTRE_EN_CACHE.map(url => 
+                urlsToCache.map(url => 
                     cache.add(url).catch(err => console.log('⚠️ Fichier ignoré au cache :', url))
                 )
             );
@@ -33,7 +45,7 @@ self.addEventListener('install', (event) => {
     );
 });
 
-// 2. ACTIVATION : Nettoyage automatique des anciens caches (v11.11, v10, etc.)
+// 2. ACTIVATION : Nettoyage automatique des anciens caches (v13.05, v12, etc.)
 self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((listeCaches) => {
@@ -49,7 +61,7 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// 3. DISTRIBUTION (RÉSEAU D'ABORD, CACHE EN SECOURS)
+// 3. DISTRIBUTION (RÉSEAU D'ABORD, CACHE EN SECOURS + MISE EN CACHE AUTOMATIQUE DES PHOTOS)
 self.addEventListener('fetch', (event) => {
     // Sécurité : Ignorer les requêtes non-GET ou externes non-HTTP
     if (event.request.method !== 'GET' || !event.request.url.startsWith('http')) return;
@@ -57,7 +69,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
         fetch(event.request)
             .then((reponseReseau) => {
-                // Si la connexion marche, on met à jour le cache
+                // Dès qu'une photo de recette est vue, elle est stockée en cache hors-ligne !
                 if (reponseReseau && reponseReseau.status === 200) {
                     const copieReponse = reponseReseau.clone();
                     caches.open(CACHE_NAME).then((cache) => {
@@ -67,7 +79,7 @@ self.addEventListener('fetch', (event) => {
                 return reponseReseau;
             })
             .catch(() => {
-                // Si pas d'internet (hors-ligne/métro), on sert le cache
+                // Si pas d'internet (hors-ligne/métro), on sert la réserve du cache
                 return caches.match(event.request).then((reponseEnCache) => {
                     if (reponseEnCache) {
                         return reponseEnCache;
