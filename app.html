@@ -1,5 +1,5 @@
 <!-- ================================================================================== -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 14.03 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 14.05 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -1858,6 +1858,30 @@ body.dark-mode #rec-liste-container div[style*="color: var(--text-muted)"] em {
     color: #5C5248 !important; /* Moka bien net pour la parenthèse */
 }
 
+/* Les deux titres de sections en Moka noir profond (Par position physique) */
+body.dark-mode #resultats-explorer-global > div:first-child,
+body.dark-mode #resultats-explorer-global div[style*="justify-content: space-between"] > div {
+    color: #231F1A !important; /* Moka noir profond garanti à 100% ! */
+    font-weight: 800 !important;
+}
+
+/* Séparateur 'AUTRES SUGGESTIONS DU WEB' : Sans boîte blanche et Moka noir */
+body.dark-mode #rec-liste-container > div[style*="letter-spacing: 0.5px"] {
+    background: transparent !important; /* Retire le cadre blanc */
+    border: none !important;
+    box-shadow: none !important;
+    color: #231F1A !important;          /* Moka noir profond uni */
+}
+
+/* Retirer les boîtes blanches des 2 titres et les passer en Moka noir */
+body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
+    background: transparent !important; /* Fini la boîte blanche ! */
+    border: none !important;
+    box-shadow: none !important;
+    color: #231F1A !important;          /* Moka noir profond bien net */
+    font-weight: 800 !important;
+}
+
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
@@ -1931,7 +1955,7 @@ body.dark-mode #rec-liste-container div[style*="color: var(--text-muted)"] em {
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v14.03</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v14.05</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -2993,7 +3017,7 @@ body.dark-mode #rec-liste-container div[style*="color: var(--text-muted)"] em {
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "14.03";
+    const APP_VERSION = "14.05";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -7879,7 +7903,7 @@ async function afficherPageRecettesCourante() {
     if (loader) loader.style.display = "none";
 
     // ========================================================
-    // ⭐ 1. INJECTION DES RECETTES "MAISON" EN TÊTE DE LISTE
+    // 1. INJECTION DES RECETTES "MAISON" EN TÊTE DE LISTE
     // ========================================================
     if (pageRecettesIndex === 0) {
         const inputRecherche = document.getElementById('rec-input-recherche-perso');
@@ -7890,8 +7914,13 @@ async function afficherPageRecettesCourante() {
         const recettesMaisonTrouvees = (typeof trouverRecettesMaison === 'function') ? trouverRecettesMaison(motCherche) : [];
         
         if (recettesMaisonTrouvees.length > 0) {
+            // Titre '⭐ RECETTES MAISON' aligné à gauche (comme Image 1)
+            const tMaison = document.createElement('div');
+            tMaison.style.cssText = "font-size: 0.72rem; color: #B78103; font-weight: 800; text-transform: uppercase; margin: 4px 0 6px 2px;";
+            tMaison.innerText = `⭐ Recettes Officielles Maison (${recettesMaisonTrouvees.length})`;
+            conteneur.appendChild(tMaison);
+
             recettesMaisonTrouvees.forEach(recM => {
-                // Analyse clinique des ingrédients de la recette maison
                 let alertesM = [];
                 if (currentProfil && currentProfil !== 'neutre' && recM.ingredients && Array.isArray(recM.ingredients)) {
                     const legumesTries = [...legumes].sort((a, b) => b.nom.length - a.nom.length);
@@ -7906,9 +7935,9 @@ async function afficherPageRecettesCourante() {
                             if (regexMotEntier.test(texteClean)) {
                                 if (isClinicallyBad(alim, currentProfil)) {
                                     if (!alertesM.includes(alim.nom)) alertesM.push(alim.nom);
-                                    }
-									break;
-                             }
+                                }
+                                break;
+                            }
                         }
                     });
                 }
@@ -7960,15 +7989,16 @@ async function afficherPageRecettesCourante() {
                 conteneur.appendChild(cardM);
             });
 
+            // Titre '🌍 RECETTES / THEMEALDB' aligné à gauche
             const sep = document.createElement('div');
-            sep.style.cssText = "font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; text-align: center; margin: 12px 0 8px 0; letter-spacing: 0.5px;";
-            sep.innerText = "── 🌍 Autres suggestions du Web (TheMealDB) ──";
+            sep.style.cssText = "font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin: 14px 0 8px 2px;";
+            sep.innerText = `🌍 Recettes / TheMealDB (${total})`;
             conteneur.appendChild(sep);
         }
     }
 
     // ========================================================
-    // 🌍 2. DESSINE LES 20 CARTES THEMEALDB (SANS BOUTON DISQUETTE)
+    // 2. DESSINE LES 20 CARTES THEMEALDB
     // ========================================================
     recettesCompletes.forEach(m => {
         const analyse = (typeof analyserCliniqueRecette === 'function') 
