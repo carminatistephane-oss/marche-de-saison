@@ -1,5 +1,5 @@
 <!-- ================================================================================== -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 14.00 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 14.01 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -1593,7 +1593,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v14.00</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v14.01</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -2005,7 +2005,7 @@
             <ul style="padding-left: 15px; margin: 0; color: #555; line-height: 1.4;">
                 <li style="margin-bottom: 4px;"><strong>Sous-titre :</strong> Spécifiez une variété précise (ex : "Citrons Beldi").</li>
                 <li style="margin-bottom: 4px;"><strong>Notes :</strong> Consignez vos observations de préparation.</li>
-                <li style="margin-bottom: 0;"><strong>Lien de la recette :</strong> Insérez directement l'adresse URL de votre recette favorite pour y accéder d'un clic.</li>
+                <li style="margin-bottom: 0;"><strong>Lien de la recette :</strong> Insérez directement l'adresse URL de votre recette favorite. <em>(Attention : contrairement aux recettes intégrées, ce lien ouvrira directement le site internet d'où provient la recette, et non une jolie page interne).</em></li>
             </ul>
         </div>
 
@@ -2019,7 +2019,7 @@
                 <li style="margin-bottom: 0;"><strong>Détails et Liens :</strong> Remplissez le sous-titre, vos notes et l'URL d'une recette associée.</li>
             </ul>
         </div>
-
+		
         <!-- 5. Fiches Masquées -->
         <div style="background: #FFF8E1; border-left: 4px solid #F57F17; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
             <p style="color: #E65100; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0; display: flex; align-items: center; gap: 6px;">
@@ -2039,50 +2039,80 @@
 
         <!-- 7. LE MOTEUR DE RECETTES & LE CARNET GLOBAL -->
         <div style="background: #E3F2FD; border-left: 4px solid #1976D2; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
-            <p style="color: #1565C0; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0;">7. Moteur de Recettes & Carnet Global 🍲</p>
-            <p style="margin: 0 0 5px 0; color: #555; line-height: 1.4;">Cliquez sur <strong>🔍 Chercher une recette</strong> dans n'importe quelle fiche !</p>
-            <ul style="margin: 0 0 10px 0; padding-left: 15px; color: #555; line-height: 1.4;">
-                <li style="margin-bottom: 4px;"><strong>⭐ Recettes Maison :</strong> Recettes officielles 100% en français, vérifiées cliniquement, avec le nombre exact de portions et des conseils digestifs bienveillants (accessibles même hors-ligne).</li>
-                <li style="margin-bottom: 4px;"><strong>TheMealDB :</strong> Lisez, traduisez 🌐, et enregistrez 💾 des recettes mondiales en un clic, directement sur la fiche de l'aliment.</li>
-                <li style="margin-bottom: 4px;"><strong>Sites 🇫🇷 & 🇨🇭 :</strong> Des liens directs à leur plateforme vers Marmiton, FOOBY, Migusto, etc.</li>
-            </ul>
-            <p style="margin: 0 0 5px 0; color: #1565C0; font-weight: 800; font-size: 0.85rem;">📖 Mon Carnet de Recettes :</p>
-            <p style="margin: 0; color: #555; line-height: 1.4; font-size: 0.85rem;">
-                Toutes les recettes que vous enregistrez sont automatiquement regroupées dans votre <strong>Carnet de Recettes</strong> (accessible tout en bas de la page d'accueil). Depuis ce carnet, vous pouvez consulter vos recettes 👁️, les supprimer 🗑️, ou même les déplacer 🔄 vers un autre aliment en cas d'erreur !
+            <p style="color: #1565C0; font-weight: 800; font-size: 0.95rem; margin: 0 0 10px 0;">7. Moteur de Recettes & Carnet Global 🍲</p>
+            
+            <p style="margin: 0 0 4px 0; color: #1565C0; font-weight: 800; font-size: 0.85rem;">🔍 1. Chercher depuis un aliment :</p>
+            <p style="margin: 0 0 6px 0; color: #555; line-height: 1.45; font-size: 0.85rem;">
+                Sur chaque fiche aliment, cliquez sur le bouton <strong>"🔍 Chercher une recette"</strong>. Cette recherche ciblée vous proposera uniquement deux types de recettes intégrées :
             </p>
+            <ul style="margin: 0 0 10px 0; padding-left: 15px; color: #555; line-height: 1.45; font-size: 0.85rem;">
+                <li style="margin-bottom: 4px;">⭐ <strong>Recettes Maison :</strong> 100% en français, avec portions et conseils digestifs.</li>
+                <li style="margin-bottom: 0;">🌍 <strong>TheMealDB :</strong> Base mondiale, traduisible d'un clic (🌐).</li>
+            </ul>
+
+            <p style="margin: 0 0 4px 0; color: #1565C0; font-weight: 800; font-size: 0.85rem;">💾 2. Comment enregistrer une recette ?</p>
+            <p style="margin: 0 0 10px 0; color: #555; line-height: 1.45; font-size: 0.85rem;">
+                Lorsque vous lisez une recette dans l'application, allez tout en bas et cliquez sur <strong>"💾 Enregistrer sur la fiche"</strong>. <br>
+                Une petite fenêtre apparaît : vous pouvez y <strong>renommer la recette</strong> comme bon vous semble ! Une fois validée, elle s'accroche automatiquement à l'aliment que vous étiez en train de consulter, et se range aussi dans <em>Mon Carnet</em>.
+            </p>
+
+            <p style="margin: 0 0 4px 0; color: #1565C0; font-weight: 800; font-size: 0.85rem;">📖 3. Le bouton "Mes Recettes" (Accueil) :</p>
+            <p style="margin: 0 0 6px 0; color: #555; line-height: 1.45; font-size: 0.85rem;">
+                C'est votre grand marché gourmand, séparé en <strong>2 onglets</strong> :
+            </p>
+            <ul style="margin: 0 0 5px 0; padding-left: 15px; color: #555; line-height: 1.45; font-size: 0.85rem;">
+                <li style="margin-bottom: 6px;"><strong>Mon Carnet :</strong> Il regroupe toutes vos recettes enregistrées. Vous pouvez les relire 👁️, les supprimer 🗑️, ou les <strong>déplacer 🔄</strong> vers un autre aliment en cas d'erreur.</li>
+                <li style="margin-bottom: 0;"><strong>Découvrir & Explorer :</strong> Recherche libre mondiale (tapez "Poulet", "Curry"...). C'est aussi ici que se trouvent les liens web des sites culinaires <strong>Suisses 🇨🇭 et Français 🇫🇷</strong> les plus connus (Migusto, Fooby, Marmiton...).</li>
+            </ul>
         </div>
-        <!-- 8. Sauvegardes & Partages -->
+
+        <!-- 8. LE SCANNER ALIMENTAIRE (NOUVEAU) -->
+        <div style="background: #E0F2F1; border-left: 4px solid #00897B; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+            <p style="color: #00695C; font-weight: 800; font-size: 0.95rem; margin: 0 0 6px 0; display: flex; align-items: center; gap: 6px;">
+                8. Le Scanner Alimentaire 📸
+            </p>
+            <p style="margin: 0 0 6px 0; color: #555; line-height: 1.4;">
+                Accessible directement depuis le bouton <strong>MON SCANNER</strong> de l'accueil, il vous permet d'analyser instantanément n'importe quel produit en rayon de supermarché via son code-barres :
+            </p>
+            <ul style="padding-left: 15px; margin: 0 0 8px 0; color: #555; line-height: 1.45; font-size: 0.82rem;">
+                <li style="margin-bottom: 4px;"><strong>Scan Caméra & Clavier :</strong> Visez simplement le code-barres (détection automatique) ou tapez manuellement les 13 chiffres si vous êtes sur ordinateur.</li>
+                <li style="margin-bottom: 4px;"><strong>Arbitrage Clinique Instantané :</strong> L'application analyse la liste des ingrédients et les valeurs nutritionnelles par rapport à vos sensibilités cochées (Gluten, Lactose, FODMAPs, Acidité, Sucre, Graisses).</li>
+                <li style="margin-bottom: 4px;"><strong>Verdict Bienveillant :</strong> L'aliment est qualifié en vert 🟢 (Compatible), jaune 🟡 (À modérer avec astuce) ou rouge 🔴 (Déconseillé), avec 4 repères clés bien alignés.</li>
+                <li style="margin-bottom: 0;"><strong>Mémoire Hors-Ligne :</strong> Chaque produit scanné est mémorisé dans le téléphone. Si vous retournez au supermarché dans un rayon sans réseau, le résultat s'affiche en 0,05 seconde !</li>
+            </ul>
+        </div>
+
+        <!-- 9. Sauvegardes, Cloud & Partages -->
         <div style="background: #EFEBE9; border-left: 4px solid #795548; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
             <p style="color: #4E342E; font-weight: 800; font-size: 0.95rem; margin: 0 0 8px 0; display: flex; align-items: center; gap: 6px;">
-                8. Sauvegardes, Cloud & Partages 💾 
+                9. Sauvegardes, Cloud & Partages 💾 
             </p>
             
             <p style="margin: 0 0 6px 0; color: #3E2723; font-weight: bold; font-size: 0.85rem;">☁️ LE COFFRE-FORT CLOUD (Protection & Synchronisation) :</p>
             
-            <!-- ENCADRÉ RÈGLE D'OR MULTI-APPAREILS -->
             <div style="background: #FFF8E1; border: 2px dashed #FFC107; border-radius: 10px; padding: 10px; margin: 8px 0 12px 0; font-size: 0.8rem; color: #5D4037; line-height: 1.45;">
                 ⚠️ <strong>RÈGLE D'OR MULTI-APPAREILS :</strong><br>
                 Si vous utilisez l'application sur plusieurs appareils (ex: un téléphone et une tablette), commencez <strong>TOUJOURS</strong> par cliquer sur <strong>⬇️ Récupérer</strong> en ouvrant votre tablette, avant d'ajouter de nouvelles recettes. Cela permet de fusionner vos données sans jamais écraser le travail fait sur votre téléphone !
             </div>
 
             <ul style="padding-left: 15px; margin: 0 0 15px 0; color: #555; line-height: 1.45; font-size: 0.8rem;">
-                <li style="margin-bottom: 4px;"><strong>Pourquoi l'activer ?</strong> L'application stocke vos données localement sur votre appareil. Si vous effectuez un nettoyage du navigateur ou perdez votre téléphone, vos personnalisations disparaissent. Le Coffre-Fort Cloud permet de tout récupérer en un éclair.</li>
-                <li style="margin-bottom: 4px;"><strong>Votre Clé Mémorisable :</strong> Elle combine un Prénom (ou Pseudo), un Nom (ou Mot favori) et une Année (ou 4 chiffres secrets). 100% anonyme, vous êtes libre d'utiliser un nom d'emprunt.</li>
-                <li style="margin-bottom: 4px;"><strong>Le Bouton 1-Clic « ☁️ Sauver » :</strong> Une fois activé, ce bouton apparaît discrètement en haut de l'écran. Un simple clic dessus met à jour votre sauvegarde en 1 seconde.</li>
-                <li style="margin-bottom: 4px;"><strong>Synchroniser un nouvel appareil :</strong> Ouvrez l'application sur votre tablette ou nouveau téléphone, entrez exactement la même combinaison : l'application reconnaîtra votre coffre et restaurera tout votre marché !</li>
-                <li style="margin-bottom: 0;"><strong>Contrôle et Suppression :</strong> Vous pouvez à tout moment effacer définitivement votre coffre des serveurs Google depuis les Paramètres ⚙️.</li>
+                <li style="margin-bottom: 4px;"><strong>Pourquoi l'activer ?</strong> L'application stocke vos données localement sur votre appareil. Le Coffre-Fort Cloud permet de tout récupérer en 1 clic en cas de changement de mobile.</li>
+                <li style="margin-bottom: 4px;"><strong>Votre Clé Mémorisable :</strong> Combine Prénom + Mot favori + 4 chiffres. 100% anonyme.</li>
+                <li style="margin-bottom: 4px;"><strong>Le Bouton 1-Clic « ☁️ Sauver » :</strong> Une fois activé, une pression sauvegarde tout votre marché en 1 seconde.</li>
+                <li style="margin-bottom: 0;"><strong>Code PIN 5 chiffres :</strong> Permet d'envoyer instantanément vos fiches vers un autre appareil sans fil ni câble.</li>
             </ul>
-		</div>
-        <!-- 9. Réparation -->
-        <div style="background: #E0F7FA; border-left: 4px solid #0097A7; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
-            <p style="color: #006064; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0;">9. Réparation & Restauration des fiches de base 🔄</p>
-            <p style="margin: 0; color: #555; line-height: 1.4;">Si vous supprimez par mégarde un aliment officiel (ex: la carotte ou le riz), rendez-vous dans les <strong>Paramètres ⚙️</strong> et cliquez sur <strong>"Réparer / Restaurer les fiches de base"</strong>. Le système réinjecte uniquement les fiches manquantes <strong>sans jamais écraser vos créations personnelles, vos notes ou vos liens de recettes</strong>.</p>
         </div>
 
-        <!-- 10. Mode Sombre -->
+        <!-- 10. Réparation -->
+        <div style="background: #E0F7FA; border-left: 4px solid #0097A7; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
+            <p style="color: #006064; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0;">10. Réparation & Restauration des fiches de base 🔄</p>
+            <p style="margin: 0; color: #555; line-height: 1.4;">Si vous supprimez par mégarde un aliment officiel, rendez-vous dans les <strong>Paramètres ⚙️</strong> et cliquez sur <strong>"Réparer / Restaurer les fiches de base"</strong>. Le système réinjecte les fiches manquantes sans jamais toucher à vos notes ou recettes personnelles.</p>
+        </div>
+
+        <!-- 11. Mode Sombre -->
         <div style="background: #EDE7F6; border-left: 4px solid #5E35B1; padding: 12px; margin-bottom: 5px; border-radius: 0 8px 8px 0;">
-            <p style="color: #311B92; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0;">10. Mode Sombre (Édition Nocturne) 🌙</p>
-            <p style="margin: 0; color: #555; line-height: 1.4;">Activez le Mode Sombre 🌙 dans les Paramètres ⚙️. L'interface bascule dans une ambiance chaleureuse avec un effet verre fumé sur les cartes.</p>
+            <p style="color: #311B92; font-weight: 800; font-size: 0.95rem; margin: 0 0 5px 0;">11. Mode Sombre (Édition Nocturne) 🌙</p>
+            <p style="margin: 0; color: #555; line-height: 1.4;">Activez le Mode Sombre 🌙 dans les Paramètres ⚙️ pour basculer l'interface dans une ambiance moka et biscuit très douce pour les yeux le soir.</p>
         </div>
 
         </div>
@@ -2195,92 +2225,7 @@
                     🍲 Explorer les recettes TheMealDB
                 </button>
             </div>
-
-            <!-- GUIDE DÉROULANT : COMMENT ENREGISTRER UNE RECETTE CH & FR -->
-            <div style="background: #FFFDF8; border: 1.5px dashed var(--accent); border-radius: 16px; margin-bottom: 16px; text-align: left; box-shadow: 0 2px 6px rgba(0,0,0,0.02); overflow: hidden;">
-                
-                <!-- En-tête cliquable avec la flèche -->
-                <div onclick="toggleGuideRecettesWeb()" style="padding: 12px 14px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none;">
-                    <div style="font-weight: 800; color: var(--accent-dark); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.8px; display: flex; align-items: center; gap: 6px;">
-                        💡 Enregistrer une recette CH & FR ?
-                    </div>
-                    <svg id="chevron-guide-web" viewBox="0 0 24 24" width="18" height="18" style="fill: var(--accent-dark); transition: transform 0.3s ease; flex-shrink: 0;">
-                        <path d="M7 10l5 5 5-5z"/>
-                    </svg>
-                </div>
-
-                <!-- Contenu qui se déroule au clic -->
-                <div id="contenu-guide-web" style="max-height: 0px; opacity: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease, padding 0.3s ease; padding: 0 14px;">
-                    <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.76rem; color: var(--text-main); line-height: 1.35; padding-bottom: 12px; border-top: 1px dashed rgba(212, 163, 115, 0.3); padding-top: 10px;">
-                        
-                        <!-- 1 -->
-                        <div style="display: flex; align-items: flex-start; gap: 8px;">
-                            <span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">1</span>
-                            <span><strong>Ouvrez le site :</strong> Touchez l'un des boutons ci-dessous (la page s'ouvre dans l'application).</span>
-                        </div>
-
-                        <!-- 2 -->
-                        <div style="display: flex; align-items: flex-start; gap: 8px;">
-                            <span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">2</span>
-                            <div>
-                                <strong>Passez sur votre navigateur :</strong> Pour accéder à la barre d'adresse :<br>
-                                • 🍎 <em>iPhone/iPad :</em> touchez la boussole 🧭 (en bas à droite).<br>
-                                • 🤖 <em>Android :</em> touchez les 3 points ⋮ (en haut) puis <em>"Ouvrir dans Chrome"</em>.
-                            </div>
-                        </div>
-
-                        <!-- 3 -->
-                        <div style="display: flex; align-items: flex-start; gap: 8px;">
-                            <span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">3</span>
-                            <span><strong>Cherchez votre plat :</strong> Trouvez la recette qui vous fait envie sur le site.</span>
-                        </div>
-
-                        <!-- 4 -->
-                        <div style="display: flex; align-items: flex-start; gap: 8px;">
-                            <span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">4</span>
-                            <span><strong>Copiez le lien :</strong> Touchez la barre d'adresse en haut du navigateur et faites <strong>Copier</strong> (l'URL).</span>
-                        </div>
-
-                        <!-- 5 -->
-                        <div style="display: flex; align-items: flex-start; gap: 8px;">
-                            <span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">5</span>
-                            <span><strong>Éditez la fiche :</strong> Revenez dans l'application sur l'aliment et touchez le crayon ✏️ (Modifier).</span>
-                        </div>
-
-                        <!-- 6 -->
-                        <div style="display: flex; align-items: flex-start; gap: 8px;">
-                            <span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">6</span>
-                            <span><strong>Collez & sauvez :</strong> Tout en bas, collez le lien dans le champ recette, donnez-lui un titre et touchez <strong>Enregistrer la fiche</strong> !</span>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- 2. SITES CULINAIRES SUISSES -->
-            <div style="border-top: 1px dashed var(--border-color); padding-top: 12px; margin-bottom: 14px;">
-                <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; text-align: center;">🇨🇭 Grands Sites Culinaires Suisses</div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <a href="https://migusto.migros.ch" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #D4A373; background: #FFFDF8; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box; color: var(--text-main);">🇨🇭 Migusto</a>
-                    <a href="https://fooby.ch" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #4CAF50; background: #FFFDF8; color: #2E7D32; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇨🇭 FOOBY</a>
-                    <a href="https://www.bettybossi.ch" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #D84315; background: #FFFDF8; color: #D84315; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇨🇭 Betty Bossi</a>
-                    <a href="https://www.swissmilk.ch/fr/recettes/" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #1976D2; background: #FFFDF8; color: #1565C0; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇨🇭 Swissmilk</a>
-                </div>
-            </div>
-
-            <!-- 3. SITES CULINAIRES FRANÇAIS -->
-            <div style="border-top: 1px dashed var(--border-color); padding-top: 12px;">
-                <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; text-align: center;">🇫🇷 Grands Sites Culinaires Français</div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <a href="https://www.marmiton.org" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #E65100; background: #FFFDF8; color: #E65100; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇫🇷 Marmiton</a>
-                    <a href="https://www.cuisineaz.com" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #8E24AA; background: #FFFDF8; color: #6A1B9A; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇫🇷 Cuisine AZ</a>
-                    <a href="https://www.750g.com" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #D32F2F; background: #FFFDF8; color: #C62828; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇫🇷 750g</a>
-                    <a href="https://www.cuisineactuelle.fr" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #0288D1; background: #FFFDF8; color: #0288D1; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇫🇷 Cuisine Actuelle</a>
-                </div>
-            </div>
-        </div>
-
+		</div>
         <!-- ========================================== -->
         <!-- ÉCRAN 2 : LISTE DES RECETTES THEMEALDB    -->
         <!-- ========================================== -->
@@ -2317,7 +2262,7 @@
             <div id="rec-detail-contenu" style="background: #FFFFFF; border-radius: 16px; padding: 16px; border: 1px solid var(--border-color); margin-bottom: 15px;"></div>
             
             <!-- Bas : Bouton Enregistrer EN PLEINE LARGEUR ! -->
-            <div style="margin-top: 15px; margin-bottom: 10px;">
+            <div style="margin-top: 15px; margin-bottom: 35px;"> <!-- MODIFICATION ICI : 35px -->
                 <button type="button" id="btn-enregistrer-recette" class="btn btn-primary" onclick="enregistrerRecetteTheMealDB()" style="width: 100%; padding: 14px; font-weight: 800; font-size: 0.95rem; box-shadow: 0 4px 12px rgba(212,163,115,0.3);">
                     💾 Enregistrer sur la fiche
                 </button>
@@ -2378,25 +2323,131 @@
     </div>
 </div>
 
-<!-- MODALE CARNET DE RECETTES GLOBAL -->
+<!-- MODALE CARNET DE RECETTES GLOBAL (AVEC 2 ONGLETS) -->
 <div id="modal-carnet-recettes" class="modal" style="display: none;">
     <div class="modal-content" style="max-width: 500px; max-height: 85vh; overflow-y: auto; padding: 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-            <h3 style="margin: 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.4rem;">📖 Mes Recettes</h3>
+        
+        <!-- En-tête : Titre + Croix ❌ -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h3 style="margin: 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.35rem;">🍲 Le Marché Gourmand</h3>
             <button type="button" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; padding: 0;" onclick="fermerCarnetRecettes()">❌</button>
         </div>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0; margin-bottom: 15px;">Retrouvez ici toutes les recettes que vous avez enregistrées, classées par ordre alphabétique.</p>
-        
-        <!-- NOUVEAU : CHAMP DE RECHERCHE -->
-        <div style="margin-bottom: 15px;">
-            <input type="text" id="search-carnet" class="form-control" placeholder="🔍 Chercher une recette ou un ingrédient..." oninput="filtrerCarnetRecettes()" style="padding: 10px 15px; font-size: 0.9rem; border-radius: 12px; width: 100%; box-sizing: border-box; border: 1px solid var(--border-color); background: #FFFDF8; color: var(--text-title); font-weight: 700;">
+
+        <!-- LES 2 ONGLETS ÉLÉGANTS -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: rgba(0,0,0,0.04); padding: 5px; border-radius: 16px; margin-bottom: 15px;">
+            <button type="button" id="tab-btn-mon-carnet" class="btn" onclick="basculerOngletCarnet('carnet')" style="border-radius: 12px; font-weight: 800; font-size: 0.8rem; padding: 10px 6px; text-align: center; border: none; background: var(--text-title); color: #FFF; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                📖 Mon Carnet
+            </button>
+            <button type="button" id="tab-btn-decouvrir" class="btn" onclick="basculerOngletCarnet('explorer')" style="border-radius: 12px; font-weight: 800; font-size: 0.8rem; padding: 10px 6px; text-align: center; border: none; background: transparent; color: var(--text-muted); box-shadow: none;">
+                🔍 Découvrir & Explorer
+            </button>
         </div>
 
-        <!-- C'est ici que la liste va s'afficher -->
-        <div id="liste-carnet-recettes" style="display: flex; flex-direction: column; gap: 10px;"></div>
+        <!-- ========================================== -->
+        <!-- ONGLET 1 : MON CARNET DE RECETTES PERSO    -->
+        <!-- ========================================== -->
+        <div id="vue-onglet-carnet">
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0; margin-bottom: 12px;">Vos recettes enregistrées et vos pépites personnelles :</p>
+            
+            <div style="margin-bottom: 12px;">
+                <input type="text" id="search-carnet" class="form-control" placeholder="🔍 Filtrer dans mon carnet..." oninput="filtrerCarnetRecettes()" style="padding: 10px 14px; font-size: 0.88rem; border-radius: 12px; width: 100%; box-sizing: border-box; border: 1px solid var(--border-color); background: #FFFDF8; color: var(--text-title); font-weight: 700;">
+            </div>
+
+            <!-- Liste des recettes enregistrées -->
+            <div id="liste-carnet-recettes" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ONGLET 2 : DÉCOUVRIR & EXPLORER (GLOBAL)   -->
+        <!-- ========================================== -->
+        <div id="vue-onglet-explorer" style="display: none;">
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0; margin-bottom: 12px;">Trouvez l'inspiration par ingrédient ou par envie (Soupe, Curry, Gratin...) :</p>
+            
+            <div style="display: flex; gap: 6px; margin-bottom: 14px;">
+                <input type="text" id="input-explorer-libre" class="form-control" placeholder="Ex: Poulet, Curry, Courge..." style="padding: 10px 14px; font-size: 0.9rem; border-radius: 12px; flex: 1; border: 1.5px solid var(--accent); background: #FFFDF8; font-weight: 800; color: var(--accent-dark);">
+                <button type="button" class="btn btn-primary" onclick="lancerRechercheGlobaleDepuisCarnet()" style="padding: 10px 14px; font-weight: 800; font-size: 0.85rem; border-radius: 12px; white-space: nowrap;">
+                    Chercher
+                </button>
+            </div>
+
+            <!-- Résultats d'exploration -->
+            <div id="resultats-explorer-global" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
+                <div style="text-align: center; color: var(--text-muted); font-size: 0.82rem; padding: 20px 10px; font-style: italic;">
+                    Tapez un mot-clé ci-dessus pour explorer les recettes du monde et les recettes officielles du Marché !
+                </div>
+            </div>
+
+            <!-- GUIDE DÉROULANT : COMMENT ENREGISTRER UNE RECETTE CH & FR -->
+            <div style="background: #FFFDF8; border: 1.5px dashed var(--accent); border-radius: 16px; margin: 15px 0 16px 0; text-align: left; box-shadow: 0 2px 6px rgba(0,0,0,0.02); overflow: hidden;">
+                
+                <!-- En-tête cliquable avec la flèche -->
+                <div onclick="toggleGuideRecettesWeb()" style="padding: 12px 14px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none;">
+                    <div style="font-weight: 800; color: var(--accent-dark); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.8px; display: flex; align-items: center; gap: 6px;">
+                        💡 Enregistrer une recette CH & FR ?
+                    </div>
+                    <svg id="chevron-guide-web" viewBox="0 0 24 24" width="18" height="18" style="fill: var(--accent-dark); transition: transform 0.3s ease; flex-shrink: 0;">
+                        <path d="M7 10l5 5 5-5z"/>
+                    </svg>
+                </div>
+
+                <!-- Contenu qui se déroule au clic -->
+                <div id="contenu-guide-web" style="max-height: 0px; opacity: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease, padding 0.3s ease; padding: 0 14px;">
+                    <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.76rem; color: var(--text-main); line-height: 1.35; padding-bottom: 12px; border-top: 1px dashed rgba(212, 163, 115, 0.3); padding-top: 10px;">
+                        
+                        <!-- 1 -->
+                        <div style="display: flex; align-items: flex-start; gap: 8px;">
+                            <span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">1</span>
+                            <span><strong>Ouvrez le site :</strong> Touchez l'un des boutons ci-dessous (la page s'ouvre dans votre navigateur).</span>
+                        </div>
+
+                        <!-- 2 -->
+                        <div style="display: flex; align-items: flex-start; gap: 8px;">
+                            <span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">2</span>
+                            <span><strong>Cherchez votre plat :</strong> Trouvez la recette qui vous fait envie sur le site partenaire.</span>
+                        </div>
+
+                        <!-- 3 -->
+                        <div style="display: flex; align-items: flex-start; gap: 8px;">
+                            <span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">3</span>
+                            <span><strong>Copiez le lien :</strong> Touchez la barre d'adresse en haut du navigateur et faites <strong>Copier</strong> (l'URL).</span>
+                        </div>
+
+                        <!-- 4 -->
+                        <div style="display: flex; align-items: flex-start; gap: 8px;">
+                            <span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">4</span>
+                            <span><strong>Collez & sauvez :</strong> Revenez dans l'application sur la fiche de l'aliment (✏️ Modifier), collez le lien et enregistrez !</span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 2. SITES CULINAIRES SUISSES -->
+            <div style="border-top: 1px dashed var(--border-color); padding-top: 12px; margin-bottom: 14px;">
+                <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; text-align: center;">🇨🇭 Grands Sites Culinaires Suisses</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <a href="https://migusto.migros.ch" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #D4A373; background: #FFFDF8; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box; color: var(--text-main);">🇨🇭 Migusto</a>
+                    <a href="https://fooby.ch" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #4CAF50; background: #FFFDF8; color: #2E7D32; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇨🇭 FOOBY</a>
+                    <a href="https://www.bettybossi.ch" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #D84315; background: #FFFDF8; color: #D84315; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇨🇭 Betty Bossi</a>
+                    <a href="https://www.swissmilk.ch/fr/recettes/" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #1976D2; background: #FFFDF8; color: #1565C0; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇨🇭 Swissmilk</a>
+                </div>
+            </div>
+
+            <!-- 3. SITES CULINAIRES FRANÇAIS -->
+            <div style="border-top: 1px dashed var(--border-color); padding-top: 12px; margin-bottom: 10px;">
+                <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; text-align: center;">🇫🇷 Grands Sites Culinaires Français</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <a href="https://www.marmiton.org" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #E65100; background: #FFFDF8; color: #E65100; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇫🇷 Marmiton</a>
+                    <a href="https://www.cuisineaz.com" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #8E24AA; background: #FFFDF8; color: #6A1B9A; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇫🇷 Cuisine AZ</a>
+                    <a href="https://www.750g.com" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #D32F2F; background: #FFFDF8; color: #C62828; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇫🇷 750g</a>
+                    <a href="https://www.cuisineactuelle.fr" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #0288D1; background: #FFFDF8; color: #0288D1; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇫🇷 Cuisine Actuelle</a>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
-
 <!-- MODALE DÉPLACER UNE RECETTE -->
 <div id="modal-deplacer-recette" class="modal-overlay hidden">
     <div class="modal-box" style="max-width: 400px; text-align: center;">
@@ -2521,7 +2572,7 @@
     <button class="close-btn" onclick="fermerScannerModal()">❌</button>
 
     <h3 style="margin-top: 0; margin-bottom: 4px; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.35rem;">
-        📸 Scanner de Produits
+        📸 Scanner Alimentaire
     </h3>
     <div id="scan-badge-profil" style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
         Profil actif
@@ -2605,7 +2656,7 @@
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "14.00";
+    const APP_VERSION = "14.01";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -3905,6 +3956,28 @@ function lancerScanManuel() {
 
 // 7. MOTEUR TURBO SPÉCIAL SUPERMARCHÉ (Mémoire permanente hors-ligne & requête ultra-légère)
 async function traiterCodeBarresDetecte(codeBarres) {
+    
+    // --- 🔊 RETOUR SENSORIEL : Bip sonore et Vibration ---
+    try {
+        // Le petit bip (100 millisecondes, son doux)
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = 880; // Note agréable (La)
+        osc.type = 'sine';
+        gain.gain.setValueAtTime(0.1, ctx.currentTime); // Volume discret
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 0.1); 
+    } catch(e) {}
+    
+    // La vibration (si le smartphone l'autorise)
+    if (navigator.vibrate) {
+        navigator.vibrate(100); 
+    }
+    // ------------------------------------------------------
+
     // 1. Réactivité immédiate : affichage du sablier sans délai
     document.getElementById('scan-vue-camera').style.display = 'none';
     document.getElementById('scan-vue-resultat').style.display = 'none';
@@ -3977,24 +4050,46 @@ function afficherResultatProduitScan(product) {
     if (!zoneContenu) return;
 
     // A. Extraction des informations de base
-    const nomProduit = product.product_name_fr || product.product_name || "Produit sans nom";
+    const nomProduit = product.product_name_fr || product.product_name || "";
     const marque = product.brands || "";
     const quantite = product.quantity || "";
-    // 📷 Priorité à la miniature légère, sinon repli sur la photo normale
     const photoUrl = product.image_front_small_url 
                   || product.image_front_url 
                   || product.selected_images?.front?.display?.fr 
                   || product.selected_images?.front?.display?.de 
                   || product.image_url 
                   || "";
-    const ingredientsBruts = product.ingredients_text_fr || product.ingredients_text || "Liste des ingrédients non renseignée.";
-    const ingredientsClean = removeAccents(ingredientsBruts.toLowerCase());
+    const ingredientsBruts = product.ingredients_text_fr || product.ingredients_text || "";
 
     const nutriments = product.nutriments || {};
     const sucres = nutriments.sugars_100g !== undefined ? parseFloat(nutriments.sugars_100g) : (nutriments.sugars !== undefined ? parseFloat(nutriments.sugars) : null);
     const graisses = nutriments.fat_100g !== undefined ? parseFloat(nutriments.fat_100g) : null;
-    const graissesSat = nutriments['saturated-fat_100g'] !== undefined ? parseFloat(nutriments['saturated-fat_100g']) : null;
+    const proteines = nutriments.proteins_100g !== undefined ? parseFloat(nutriments.proteins_100g) : null;
+    const energie = nutriments['energy-kcal_100g'] !== undefined ? parseFloat(nutriments['energy-kcal_100g']) : null;
 
+    // 🛡️ DÉTECTION SÉCURITÉ : PRODUIT NON ALIMENTAIRE OU FICHE INCOMPLÈTE
+    const sansIngredients = !ingredientsBruts || ingredientsBruts.trim().length === 0;
+    const sansNutriments = (sucres === null || isNaN(sucres)) && (graisses === null || isNaN(graisses)) && (proteines === null || isNaN(proteines)) && (energie === null || isNaN(energie));
+    const categoriesTags = (product.categories_tags || []).join(' ').toLowerCase();
+    const estNonAlimentaire = categoriesTags.includes('non-food') || categoriesTags.includes('cosmetics') || categoriesTags.includes('hygiene') || (sansIngredients && sansNutriments);
+
+    if (estNonAlimentaire) {
+        zoneContenu.innerHTML = `
+            <div style="background: #FFFDF8; border: 2px dashed var(--accent); border-radius: 16px; padding: 25px 15px; text-align: center;">
+                <div style="font-size: 2.2rem; margin-bottom: 8px;">ℹ️</div>
+                <h4 style="color: var(--text-title); margin: 0 0 8px 0; font-family: 'Playfair Display', serif; font-size: 1.15rem;">
+                    Produit non alimentaire ou fiche incomplète
+                </h4>
+                ${nomProduit ? `<div style="font-size: 0.85rem; font-weight: 800; color: var(--accent-dark); margin-bottom: 8px;">${marque ? marque + ' - ' : ''}${nomProduit}</div>` : ''}
+                <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.45; font-style: italic;">
+                    "Ce code-barres ne semble pas correspondre à un aliment utilisable pour l'analyse nutritionnelle."
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    const ingredientsClean = removeAccents(ingredientsBruts.toLowerCase());
     const allergenesTags = (product.allergens_tags || []).join(' ').toLowerCase();
 
     // B. SCANNER CLINIQUE : Détection des alertes selon le profil actif
@@ -4063,11 +4158,26 @@ function afficherResultatProduitScan(product) {
         conseilDigestif = "Ce produit est généralement toléré en quantité raisonnable, mais contient des éléments à surveiller selon votre confort.";
     }
 
-    // D. Les 4 pastilles d'analyse rapide
-    const badgeLactose = aLactose ? '<span style="color:#C62828; font-weight:800;">🔴 Présence de lait</span>' : '<span style="color:#2E7D32; font-weight:800;">🟢 Sans lactose</span>';
-    const badgeGluten = aGluten ? '<span style="color:#C62828; font-weight:800;">🔴 Contient du gluten</span>' : '<span style="color:#2E7D32; font-weight:800;">🟢 Sans gluten</span>';
-    const badgeSucres = sucres !== null ? `${sucres.toFixed(1)}g / 100g ${sucres > 12 ? '🔴' : (sucres > 5 ? '🟡' : '🟢')}` : 'Non précisé ⚪';
-    const badgeGraisses = graisses !== null ? `${graisses.toFixed(1)}g / 100g ${graisses > 15 ? '🔴' : (graisses > 5 ? '🟡' : '🟢')}` : 'Non précisé ⚪';
+    // D. Les 4 pastilles d'analyse rapide (Pastilles alignées à GAUCHE)
+    const badgeLactose = aLactose 
+        ? '<span style="color:#C62828; font-weight:800;">🔴 Présence de lait</span>' 
+        : '<span style="color:#2E7D32; font-weight:800;">🟢 Sans lactose</span>';
+        
+    const badgeGluten = aGluten 
+        ? '<span style="color:#C62828; font-weight:800;">🔴 Contient du gluten</span>' 
+        : '<span style="color:#2E7D32; font-weight:800;">🟢 Sans gluten</span>';
+        
+    const emojiSucre = sucres > 12 ? '🔴' : (sucres > 5 ? '🟡' : '🟢');
+    const couleurSucre = sucres > 12 ? '#C62828' : (sucres > 5 ? '#E65100' : '#2E7D32');
+    const badgeSucres = sucres !== null 
+        ? `<span style="color:${couleurSucre}; font-weight:800;">${emojiSucre} ${sucres.toFixed(1)}g / 100g</span>` 
+        : '<span style="color:#8D99AE; font-weight:800;">⚪ Non précisé</span>';
+        
+    const emojiGraisse = graisses > 15 ? '🔴' : (graisses > 5 ? '🟡' : '🟢');
+    const couleurGraisse = graisses > 15 ? '#C62828' : (graisses > 5 ? '#E65100' : '#2E7D32');
+    const badgeGraisses = graisses !== null 
+        ? `<span style="color:${couleurGraisse}; font-weight:800;">${emojiGraisse} ${graisses.toFixed(1)}g / 100g</span>` 
+        : '<span style="color:#8D99AE; font-weight:800;">⚪ Non précisé</span>';
 
     const profilAffiche = currentProfil ? currentProfil.toUpperCase() : 'NEUTRE';
 
@@ -4077,7 +4187,7 @@ function afficherResultatProduitScan(product) {
 
         <div style="text-align: center; margin-bottom: 12px;">
             <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">${marque} ${quantite ? '• ' + quantite : ''}</div>
-            <h4 style="margin: 2px 0 10px 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.25rem;">${nomProduit}</h4>
+            <h4 style="margin: 2px 0 10px 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.25rem;">${nomProduit || "Produit sans nom"}</h4>
             
             <div style="display: inline-block; padding: 6px 14px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; background: ${verdictBg}; color: ${verdictColor}; border: 1.5px solid ${verdictColor};">
                 ${verdictTitre}
@@ -4114,7 +4224,7 @@ function afficherResultatProduitScan(product) {
         <!-- LISTE COMPLÈTE DES INGRÉDIENTS D'ORIGINE -->
         <details style="font-size: 0.72rem; color: var(--text-muted); cursor: pointer; border-top: 1px dashed var(--border-color); padding-top: 8px;">
             <summary style="font-weight: 800; text-transform: uppercase;">🛒 Ingrédients complets du fabricant</summary>
-            <p style="margin: 6px 0 0 0; color: var(--text-main); line-height: 1.4; font-size: 0.75rem;">${ingredientsBruts}</p>
+            <p style="margin: 6px 0 0 0; color: var(--text-main); line-height: 1.4; font-size: 0.75rem;">${ingredientsBruts || "Non renseignés."}</p>
         </details>
     `;
 }
@@ -4806,14 +4916,22 @@ function renderCards() {
 
             let recipesArray = leg.recettesList || [];
         let linksHTML = recipesArray.map((r, rIndex) => {
-            // Si la recette a été enregistrée avec ses données internes TheMealDB :
+            // Si la recette a été enregistrée avec ses données internes :
             if (r.instructions || r.idMeal) {
-                return `<button type="button" class="recipe-link" style="border:none; cursor:pointer; width:100%; text-align:left;" onclick="ouvrirLecteurRecetteInApp(${leg.id}, ${rIndex})">🍲 ${r.nom} <span style="margin-left:auto;">${r.statut || '🟢'}</span></button>`;
+                return `<button type="button" class="recipe-link" style="border:none; cursor:pointer; width:100%; box-sizing:border-box; display:flex; align-items:center; gap:10px;" onclick="ouvrirLecteurRecetteInApp(${leg.id}, ${rIndex})">
+                    <span style="font-size: 1.15rem; flex-shrink: 0;">🍲</span>
+                    <span style="flex: 1; text-align: left; line-height: 1.35;">${r.nom}</span>
+                    <span style="flex-shrink: 0; margin-left: 6px;">${r.statut || '🟢'}</span>
+                </button>`;
             } 
             // Sinon (si c'est un lien web classique copié à la main) :
             else if (r.nom && r.url) {
                 let validUrl = r.url.startsWith('http') ? r.url : 'https://' + r.url;
-                return `<a href="${validUrl}" target="_blank" rel="noopener noreferrer" class="recipe-link">🍲 ${r.nom}</a>`;
+                return `<a href="${validUrl}" target="_blank" rel="noopener noreferrer" class="recipe-link" style="width:100%; box-sizing:border-box; display:flex; align-items:center; gap:10px;">
+                    <span style="font-size: 1.15rem; flex-shrink: 0;">🍲</span>
+                    <span style="flex: 1; text-align: left; line-height: 1.35;">${r.nom}</span>
+                    <span style="flex-shrink: 0; margin-left: 6px; font-size: 0.8rem;">↗</span>
+                </a>`;
             }
             return '';
         }).join('');
@@ -6435,10 +6553,12 @@ async function voirDetailRecetteTheMealDB(idMeal, vientDeLaFiche = false) {
     const btnTrad = document.getElementById('btn-traduire-recette');
     if (btnTrad) {
         btnTrad.style.display = 'block';
-        btnTrad.innerText = "🌐 Traduire";
+        // 🔄 RÉINITIALISATION FORCÉE DU BOUTON
+        btnTrad.innerHTML = "🌐 Traduire";
         btnTrad.disabled = false;
         btnTrad.style.borderColor = "var(--accent)";
         btnTrad.style.color = "var(--accent-dark)";
+        btnTrad.style.background = "#FFFDF8"; // Remet le fond clair
     }
 
     try {
@@ -6616,52 +6736,54 @@ async function enregistrerDirectTheMealDB(idMeal, nomRecette) {
     }
 }
 
-// Enregistrement avec statut clinique conservé (Image 5)
+// Enregistrement avec titre pré-rempli et fiche cible automatique
 function enregistrerRecetteTheMealDB() {
-    if (!recetteTheMealDBEnCours || !alimentRecetteActif) return;
-    
-    const sourceLien = recetteTheMealDBEnCours.strSource || recetteTheMealDBEnCours.strYoutube || `https://www.themealdb.com/meal/${recetteTheMealDBEnCours.idMeal}`;
-    const nomParDefaut = recetteTheMealDBEnCours.strMeal;
+    if (!recetteTheMealDBEnCours) return;
 
-    const nomChoisi = prompt("Nom sous lequel enregistrer cette recette sur la fiche :", nomParDefaut);
+    // 1. Détection de l'aliment cible (ex: Carottes) si besoin
+    if (!alimentRecetteActif) {
+        if (recetteTheMealDBEnCours.alimentsAssocies && recetteTheMealDBEnCours.alimentsAssocies.length > 0) {
+            const nomCible = recetteTheMealDBEnCours.alimentsAssocies[0];
+            alimentRecetteActif = legumes.find(l => removeAccents(l.nom.toLowerCase()).includes(removeAccents(nomCible.toLowerCase())));
+        }
+        if (!alimentRecetteActif) {
+            const inputExp = document.getElementById('input-explorer-libre');
+            const mot = inputExp ? inputExp.value.trim() : "";
+            if (mot) {
+                alimentRecetteActif = legumes.find(l => removeAccents(l.nom.toLowerCase()).includes(removeAccents(mot.toLowerCase())));
+            }
+        }
+    }
+
+    if (!alimentRecetteActif) {
+        alert("⚠️ Veuillez d'abord choisir un aliment du marché auquel rattacher cette recette.");
+        return;
+    }
+
+    // 2. 🎯 Reprend le VRAI titre de la recette (français ou anglais)
+    const nomParDefaut = recetteTheMealDBEnCours.nom || recetteTheMealDBEnCours.strMeal || "Nouvelle recette";
+    const nomAlim = alimentRecetteActif.nom;
+
+    // 3. Ouvre la boîte avec le titre DÉJÀ ÉCRIT dedans !
+    const nomChoisi = prompt(`Nom sous lequel enregistrer cette recette sur la fiche de "${nomAlim}" :`, nomParDefaut);
     if (!nomChoisi) return;
 
-    const analyse = analyserCliniqueRecette(recetteTheMealDBEnCours, currentProfil);
+    const analyse = (typeof analyserCliniqueRecette === 'function') 
+        ? analyserCliniqueRecette(recetteTheMealDBEnCours, currentProfil) 
+        : { statut: '🟢' };
 
     const objetRecetteComplet = {
         nom: nomChoisi,
-        url: sourceLien,
-        idMeal: recetteTheMealDBEnCours.idMeal,
-        thumb: recetteTheMealDBEnCours.strMealThumb,
+        url: recetteTheMealDBEnCours.sourceUrl || recetteTheMealDBEnCours.strSource || recetteTheMealDBEnCours.strYoutube || (recetteTheMealDBEnCours.idMeal ? `https://www.themealdb.com/meal/${recetteTheMealDBEnCours.idMeal}` : ""),
+        idMeal: recetteTheMealDBEnCours.idMeal || "",
+        thumb: recetteTheMealDBEnCours.image || recetteTheMealDBEnCours.strMealThumb || "",
         ingredients: document.getElementById('rec-ingredients-detail')?.innerHTML || '',
-        instructions: recetteTheMealDBEnCours.strInstructions,
-        statut: analyse.statut
+        instructions: recetteTheMealDBEnCours.instructions || recetteTheMealDBEnCours.strInstructions || "",
+        statut: recetteTheMealDBEnCours.statut || analyse.statut || '🟢'
     };
 
     sauvegarderObjetRecetteSurAliment(alimentRecetteActif.id, objetRecetteComplet);
 }
-
-function sauvegarderObjetRecetteSurAliment(idAliment, objetRecette) {
-    const index = legumes.findIndex(l => l.id == idAliment);
-    if (index > -1) {
-        if (!Array.isArray(legumes[index].recettesList)) {
-            legumes[index].recettesList = [];
-        }
-        legumes[index].recettesList.push(objetRecette);
-        saveToLocal();
-        
-        // On actualise la liste en arrière-plan
-        if (document.getElementById('view-list').style.display === 'block') renderCards();
-        
-        // On affiche le succès
-        alert(`✅ Fiche recette "${objetRecette.nom}" enregistrée avec son diagnostic clinique !`);
-        
-        // On masque immédiatement le bouton Enregistrer sous tes yeux !
-        const btnSave = document.getElementById('btn-enregistrer-recette');
-        if (btnSave) btnSave.style.display = 'none';
-    }
-}
-
 // === OUVERTURE DIRECTE DES PAGES D'ACCUEIL OFFICIELLES (ZÉRO ERREUR 404) ===
 function ouvrirPartenaireWeb(urlBase) {
     if (urlBase) {
@@ -7583,11 +7705,12 @@ function toggleGuideRecettesWeb() {
 async function traduireTexteEnFrancais(texte) {
     if (!texte || texte.trim() === "") return "";
     try {
-        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=fr&dt=t&q=${encodeURIComponent(texte.slice(0, 1500))}`;
+        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=fr&dt=t&q=${encodeURIComponent(texte.trim())}`;
         const res = await fetch(url);
+        if (!res.ok) return texte;
         const data = await res.json();
-        if (data && data[0]) {
-            return data[0].map(item => item[0]).join('');
+        if (data && Array.isArray(data[0])) {
+            return data[0].map(item => (item && item[0]) ? item[0] : '').join('');
         }
         return texte;
     } catch (e) {
@@ -7595,31 +7718,29 @@ async function traduireTexteEnFrancais(texte) {
     }
 }
 
-// Traduit tous les titres de la liste de recettes (Image 1)
-async function traduireListeTitresTheMealDB() {
-    const btn = document.getElementById('btn-traduire-liste');
-    const titreEls = document.querySelectorAll('.meal-title-text');
-    if (!titreEls || titreEls.length === 0) return;
-
-    if (btn) {
-        btn.innerText = "⏳ En cours...";
-        btn.disabled = true;
+// Découpeur en 2 parties si le texte est très long (zéro blocage Google !)
+async function traduireTexteLong(texte) {
+    if (!texte || texte.trim() === "") return "";
+    
+    // Si moins de 1000 lettres : 1 seule requête directe
+    if (texte.length <= 1000) {
+        return await traduireTexteEnFrancais(texte);
     }
 
-    for (let el of titreEls) {
-        const fr = await traduireTexteEnFrancais(el.innerText);
-        if (fr) el.innerText = fr;
+    // Si très long : on coupe en deux au niveau d'un point
+    const milieu = texte.indexOf('.', 900);
+    if (milieu > 0 && milieu < texte.length - 100) {
+        const p1 = texte.slice(0, milieu + 1).trim();
+        const p2 = texte.slice(milieu + 1).trim();
+        const t1 = await traduireTexteEnFrancais(p1);
+        const t2 = await traduireTexteEnFrancais(p2);
+        return t1 + "\n\n" + t2;
     }
 
-    if (btn) {
-        btn.innerText = "✅ Liste traduite";
-        btn.style.borderColor = "#2E7D32";
-        btn.style.color = "#2E7D32";
-        btn.disabled = false;
-    }
+    return await traduireTexteEnFrancais(texte.slice(0, 1500));
 }
 
-// Traduit la recette complète en détail : Titre + Ingrédients + Étapes (Image 2)
+// Traduction complète en 3 requêtes légères (Titre + Ingrédients groupés + Étapes)
 async function traduireRecetteActuelle() {
     if (!recetteTheMealDBEnCours) return;
 
@@ -7641,31 +7762,32 @@ async function traduireRecetteActuelle() {
         recetteTheMealDBEnCours.nom = titreTraduit;
     }
 
-    // 2. Ingrédients
+    // 2. Ingrédients (envoyés en 1 SEUL paquet groupé !)
     if (ingredientsEl) {
         const items = ingredientsEl.querySelectorAll('li');
         if (items.length > 0) {
-            const texteIngredients = Array.from(items).map(li => li.innerText.trim()).join('\n');
-            const tradIngredients = await traduireTexteEnFrancais(texteIngredients);
-            if (tradIngredients) {
-                const lignes = tradIngredients.split('\n');
-                let nouveauHTML = "";
-                lignes.forEach(l => {
-                    if (l.trim().length > 0) nouveauHTML += `<li style="margin-bottom: 5px;">${l.trim()}</li>`;
+            const texteGroup = Array.from(items).map(li => li.innerText.replace(/^(🟢|🟡|🟠|🔴|⚪|\s)+/gu, '').trim()).join('\n');
+            const tradGroup = await traduireTexteEnFrancais(texteGroup);
+            if (tradGroup) {
+                const lignes = tradGroup.split('\n');
+                items.forEach((li, idx) => {
+                    if (lignes[idx]) {
+                        li.innerHTML = `🟢 ${lignes[idx].trim()}`;
+                    }
                 });
-                ingredientsEl.innerHTML = nouveauHTML;
-                recetteTheMealDBEnCours.ingredients = nouveauHTML;
             }
         }
     }
 
-    // 3. Instructions
+    // 3. Instructions complètes
     const texteInstructions = recetteTheMealDBEnCours.strInstructions || recetteTheMealDBEnCours.instructions;
-    const instructionsTraduites = await traduireTexteEnFrancais(texteInstructions);
-    if (instructionsEl && instructionsTraduites) {
-        instructionsEl.innerText = instructionsTraduites;
-        recetteTheMealDBEnCours.strInstructions = instructionsTraduites;
-        recetteTheMealDBEnCours.instructions = instructionsTraduites;
+    if (instructionsEl && texteInstructions) {
+        const instructionsTraduites = await traduireTexteLong(texteInstructions);
+        if (instructionsTraduites) {
+            instructionsEl.innerText = instructionsTraduites;
+            recetteTheMealDBEnCours.strInstructions = instructionsTraduites;
+            recetteTheMealDBEnCours.instructions = instructionsTraduites;
+        }
     }
 
     if (btnTraduire) {
@@ -7680,11 +7802,11 @@ function fermerModalRecetteSmart() {
     if (modal) modal.style.display = 'none';
 
     if (vientDuCarnet) {
-        // Si on venait du carnet, on y retourne !
-        vientDuCarnet = false; // On réinitialise la mémoire
-        ouvrirCarnetRecettes();
+        vientDuCarnet = false;
+        ouvrirCarnetRecettes(vientDeLOngletExplorer ? 'explorer' : 'carnet');
+        vientDeLOngletExplorer = false;
     } else {
-        // Sinon, AIMANT : On replace immédiatement l'écran sur la fiche que tu consultais !
+        // Sinon, replace l'écran sur la fiche consultée
         if (alimentRecetteActif) {
             const carteCible = document.querySelector(`button[onclick*="openForm(${alimentRecetteActif.id})"]`)?.closest('.card');
             if (carteCible) {
@@ -7817,12 +7939,35 @@ function ouvrirRechercheRecetteSmart(alimentId) {
 function lancerExplorationTheMealDB() {
     if (!alimentRecetteActif) return;
     
-    // Récupère le mot tapé (ou le nom par défaut)
+    // 1. Récupère le mot tapé par l'utilisateur
     const inputRecherche = document.getElementById('rec-input-recherche-perso');
     const termePerso = (inputRecherche && inputRecherche.value.trim().length > 0) 
         ? inputRecherche.value.trim() 
         : alimentRecetteActif.nom;
     
+    // 2. 🧠 DÉTECTION INTELLIGENTE :
+    // Si l'utilisateur a changé le mot (ex: "avocat" au lieu d'"aubergine"),
+    // on vérifie si ce nouvel aliment existe dans le Petit Marché !
+    const termeClean = removeAccents(termePerso.toLowerCase().trim());
+    let alimentCorrespondant = legumes.find(l => removeAccents(l.nom.toLowerCase().trim()) === termeClean);
+    
+    if (!alimentCorrespondant) {
+        // Recherche partielle (ex: "poulet" trouve "Filet de poulet")
+        alimentCorrespondant = legumes.find(l => {
+            const nomL = removeAccents(l.nom.toLowerCase().trim());
+            return nomL.includes(termeClean) || termeClean.includes(nomL);
+        });
+    }
+
+    // 3. Si l'aliment existe, on bascule IMMÉDIATEMENT la fiche cible vers lui !
+    if (alimentCorrespondant) {
+        alimentRecetteActif = alimentCorrespondant;
+        
+        // Met à jour les titres de la modale en direct
+        const titreHub = document.getElementById('rec-hub-titre-aliment');
+        if (titreHub) titreHub.innerText = `🍲 Recettes pour : ${alimentCorrespondant.nom}`;
+    }
+
     const vueChoix = document.getElementById('rec-vue-choix');
     if (vueChoix) vueChoix.style.display = 'none';
     
@@ -7830,7 +7975,7 @@ function lancerExplorationTheMealDB() {
     if (vueListe) vueListe.style.display = 'block';
     
     const titreListe = document.getElementById('rec-liste-titre');
-    if (titreListe) titreListe.innerText = `Recettes avec : ${termePerso}`;
+    if (titreListe) titreListe.innerText = `Recettes avec : ${alimentRecetteActif.nom}`;
     
     const btnTrad = document.getElementById('btn-traduire-liste');
     if (btnTrad) {
@@ -7840,9 +7985,9 @@ function lancerExplorationTheMealDB() {
         btnTrad.style.color = "var(--accent-dark)";
     }
 
-    // Envoie le mot personnalisé au dictionnaire et à TheMealDB !
+    // 4. Lance l'exploration
     chargerRecettesTheMealDB(termePerso);
-	}
+}
 
 // 3. Bouton Retour pour revenir au Hub de choix
 function retourAuHubChoix() {
@@ -7880,63 +8025,129 @@ function ouvrirRecetteDepuisCarnet(idAliment, index) {
 }
 
 // ========================================================
-// LE CARNET DE RECETTES GLOBAL & DÉPLACEMENT
+// 1. GESTION DES 2 ONGLETS DU CARNET
 // ========================================================
-function ouvrirCarnetRecettes() {
+function basculerOngletCarnet(nomOnglet) {
+    const vueCarnet = document.getElementById('vue-onglet-carnet');
+    const vueExplorer = document.getElementById('vue-onglet-explorer');
+    const btnCarnet = document.getElementById('tab-btn-mon-carnet');
+    const btnExplorer = document.getElementById('tab-btn-decouvrir');
+
+    if (nomOnglet === 'carnet') {
+        if (vueCarnet) vueCarnet.style.display = 'block';
+        if (vueExplorer) vueExplorer.style.display = 'none';
+
+        if (btnCarnet) {
+            btnCarnet.style.background = 'var(--text-title)';
+            btnCarnet.style.color = '#FFF';
+            btnCarnet.style.boxShadow = '0 4px 10px rgba(0,0,0,0.1)';
+        }
+        if (btnExplorer) {
+            btnExplorer.style.background = 'transparent';
+            btnExplorer.style.color = 'var(--text-muted)';
+            btnExplorer.style.boxShadow = 'none';
+        }
+    } else {
+        if (vueCarnet) vueCarnet.style.display = 'none';
+        if (vueExplorer) vueExplorer.style.display = 'block';
+
+        if (btnExplorer) {
+            btnExplorer.style.background = 'var(--text-title)';
+            btnExplorer.style.color = '#FFF';
+            btnExplorer.style.boxShadow = '0 4px 10px rgba(0,0,0,0.1)';
+        }
+        if (btnCarnet) {
+            btnCarnet.style.background = 'transparent';
+            btnCarnet.style.color = 'var(--text-muted)';
+            btnCarnet.style.boxShadow = 'none';
+        }
+        const inputExp = document.getElementById('input-explorer-libre');
+        if (inputExp) inputExp.focus();
+    }
+}
+
+// ========================================================
+// 2. OUVERTURE DU CARNET (ONGLET 1 : MES RECETTES PERSO)
+// ========================================================
+let vientDeLOngletExplorer = false;
+
+function ouvrirCarnetRecettes(ongletCible = 'carnet') {
+    // 🛡️ OUVRE LA MODALE IMMÉDIATEMENT EN PREMIER !
+    const modal = document.getElementById('modal-carnet-recettes');
+    if (modal) modal.style.display = 'block';
+
     const conteneur = document.getElementById('liste-carnet-recettes');
     if (!conteneur) return;
     conteneur.innerHTML = '';
 	
-	const searchInput = document.getElementById('search-carnet');
+    const searchInput = document.getElementById('search-carnet');
     if (searchInput) searchInput.value = '';
-    
-    let toutesRecettes = [];
 
-    // 1. On parcourt tous les aliments pour récolter les recettes
-    legumes.forEach(leg => {
-        if (leg.recettesList && leg.recettesList.length > 0) {
-            leg.recettesList.forEach((rec, index) => {
-                toutesRecettes.push({ rec: rec, leg: leg, index: index });
-            });
-        }
-    });
+    // Bascule sur l'onglet demandé
+    if (typeof basculerOngletCarnet === 'function') {
+        basculerOngletCarnet(ongletCible);
+    }
+    
+    // 1. Récolte de vos recettes personnelles enregistrées
+    let toutesRecettes = [];
+    if (Array.isArray(legumes)) {
+        legumes.forEach(leg => {
+            if (leg && leg.recettesList && Array.isArray(leg.recettesList)) {
+                leg.recettesList.forEach((rec, index) => {
+                    if (rec) toutesRecettes.push({ rec: rec, leg: leg, index: index });
+                });
+            }
+        });
+    }
+
+    // Met à jour le nombre sur le bouton d'onglet
+    const btnTabCarnet = document.getElementById('tab-btn-mon-carnet');
+    if (btnTabCarnet) btnTabCarnet.innerText = `📖 Mon Carnet (${toutesRecettes.length})`;
 
     if (toutesRecettes.length === 0) {
-        conteneur.innerHTML = '<div style="text-align:center; padding: 20px; color:#888; font-style:italic; line-height: 1.5;">Aucune recette sauvegardée pour le moment.<br><br>Allez sur la fiche d\'un aliment et cliquez sur "🔍 Chercher une recette" !</div>';
+        conteneur.innerHTML = `
+            <div style="text-align: center; padding: 25px 15px; color: var(--text-muted); line-height: 1.5;">
+                <div style="font-size: 1.8rem; margin-bottom: 6px;">📖✨</div>
+                <strong>Votre carnet est prêt à accueillir vos recettes !</strong><br><br>
+                <button type="button" class="btn btn-primary" onclick="basculerOngletCarnet('explorer')" style="padding: 10px 18px; font-weight: 800; font-size: 0.85rem; border-radius: 14px;">
+                    🔍 Découvrir des recettes
+                </button>
+            </div>
+        `;
     } else {
-        // 2. Tri alphabétique par nom de recette
-        toutesRecettes.sort((a, b) => a.rec.nom.localeCompare(b.rec.nom));
+        // Tri alphabétique 100% sécurisé (anti-plantage)
+        toutesRecettes.sort((a, b) => {
+            const nomA = (a.rec && a.rec.nom) ? a.rec.nom : "";
+            const nomB = (b.rec && b.rec.nom) ? b.rec.nom : "";
+            return nomA.localeCompare(nomB);
+        });
 
-        // 3. Affichage
         toutesRecettes.forEach(item => {
             const div = document.createElement('div');
-            div.className = 'carnet-row'; // Permet de les cibler pour la recherche
-            // On cache le texte de recherche (sans accents) dans la balise pour que le moteur le lise
-            const texteRecherche = removeAccents((item.rec.nom + " " + item.leg.nom).toLowerCase());
+            div.className = 'carnet-row';
+            const nomRecette = (item.rec && item.rec.nom) ? item.rec.nom : "Recette";
+            const nomAliment = (item.leg && item.leg.nom) ? item.leg.nom : "";
+            const texteRecherche = removeAccents((nomRecette + " " + nomAliment).toLowerCase());
             div.setAttribute('data-search', texteRecherche);
-            div.style.cssText = "background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);";
+            div.style.cssText = "background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 8px;";
             
             let actionClick = "";
             let styleBoutonVoir = "border-color: var(--accent); color: var(--accent-dark); background: #FFFDF8;";
             
-            if (item.rec.instructions || item.rec.idMeal) {
-                // Ouvre la liseuse interne
+            if (item.rec && (item.rec.instructions || item.rec.idMeal)) {
                 actionClick = `onclick="ouvrirRecetteDepuisCarnet(${item.leg.id}, ${item.index})"`;
-            } else if (item.rec.url && typeof item.rec.url === 'string' && item.rec.url.trim() !== "") {
-                // Ouvre le lien web (Sécurité : on vérifie que c'est bien une chaîne de texte)
+            } else if (item.rec && item.rec.url && typeof item.rec.url === 'string' && item.rec.url.trim() !== "") {
                 let validUrl = item.rec.url.startsWith('http') ? item.rec.url : 'https://' + item.rec.url;
-                // Sécurité anti-guillemets pour le onclick
                 actionClick = `onclick="window.open('${validUrl.replace(/'/g, "\\'")}', '_blank')"`;
             } else {
-                // Recette vide
-                actionClick = `onclick="alert('Cette recette n\\'a pas encore de lien ou d\\'instructions.\\n\\nAllez sur la fiche de l\\'aliment (✏️) pour lui ajouter une adresse web !')"`;
+                actionClick = `onclick="alert('Cette recette n\\'a pas encore de lien ou d\\'instructions.')"`;
                 styleBoutonVoir = "border-color: #E8E0D2; color: #8D99AE; background: #F9F7F2;";
             }
 			
             div.innerHTML = `
                 <div style="flex: 1; min-width: 0; cursor: pointer;" ${actionClick}>
-                    <div style="font-weight: 800; color: var(--text-title); font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${item.rec.nom}</div>
-                    <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">📌 Fiche : <strong style="color: var(--accent-dark);">${item.leg.nom}</strong></div>
+                    <div style="font-weight: 800; color: var(--text-title); font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${nomRecette}</div>
+                    <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">📌 Fiche : <strong style="color: var(--accent-dark);">${nomAliment}</strong></div>
                 </div>
                 <div style="display: flex; gap: 6px; flex-shrink: 0; margin-left: 10px;">
                     <button class="btn" style="padding: 8px; font-size: 0.9rem; ${styleBoutonVoir}" ${actionClick} title="Voir la recette">👁️</button>
@@ -7947,14 +8158,369 @@ function ouvrirCarnetRecettes() {
             conteneur.appendChild(div);
         });
     }
-
-    const modal = document.getElementById('modal-carnet-recettes');
-    if (modal) modal.style.display = 'block';
 }
 
+// ========================================================
+// 3. RECHERCHE LIBRE & AFFICHAGE DIRECT DANS LE CARNET
+// ========================================================
+let dernieresMaisonTrouvees = [];
+let dernieresMealDBTrouvees = [];
+
+async function lancerRechercheGlobaleDepuisCarnet() {
+    const input = document.getElementById('input-explorer-libre');
+    const conteneur = document.getElementById('resultats-explorer-global');
+    if (!input || !conteneur) return;
+
+    const mot = input.value.trim();
+    if (!mot) {
+        alert("⚠️ Veuillez entrer un mot-clé (ex: Poulet, Curry, Soupe, Boeuf) !");
+        return;
+    }
+
+    conteneur.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.88rem; padding: 25px 10px;">⏳ Recherche en cours pour "${mot}"...</div>`;
+
+    const motClean = removeAccents(mot.toLowerCase());
+
+    // 1. Recherche dans les RECETTES MAISON
+    dernieresMaisonTrouvees = (typeof trouverRecettesMaison === 'function') ? trouverRecettesMaison(mot) : [];
+
+    // 2. Traduction pour TheMealDB
+    let motAnglais = dicoTraductionTheMealDB[motClean] || "";
+    if (!motAnglais) {
+        for (let [cleFr, tradEn] of Object.entries(dicoTraductionTheMealDB)) {
+            if (cleFr.length >= 4 && motClean.includes(cleFr)) {
+                motAnglais = tradEn;
+                break;
+            }
+        }
+    }
+    if (!motAnglais) motAnglais = motClean;
+
+    // 3. Appel TheMealDB COMPLET (Ingrédient + Titre combinés)
+    dernieresMealDBTrouvees = [];
+    try {
+        let mealsRaw = [];
+        
+        // A. Recherche par ingrédient (ex: toutes les recettes avec carottes)
+        const repIng = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${encodeURIComponent(motAnglais)}`);
+        const dataIng = await repIng.json();
+        if (dataIng && dataIng.meals) mealsRaw.push(...dataIng.meals);
+
+        // B. Recherche par nom de plat (ex: Carrot Cake)
+        const repTitre = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(motAnglais)}`);
+        const dataTitre = await repTitre.json();
+        if (dataTitre && dataTitre.meals) mealsRaw.push(...dataTitre.meals);
+
+        // C. Élimine les doublons
+        const idsVus = new Set();
+        mealsRaw.forEach(m => {
+            if (m && m.idMeal && !idsVus.has(m.idMeal)) {
+                idsVus.add(m.idMeal);
+                dernieresMealDBTrouvees.push(m);
+            }
+        });
+    } catch(e) {}
+
+    // Si aucun résultat
+    if (dernieresMaisonTrouvees.length === 0 && dernieresMealDBTrouvees.length === 0) {
+        conteneur.innerHTML = `
+            <div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 20px 10px; line-height: 1.45;">
+                Aucune recette trouvée pour <strong>"${mot}"</strong>.<br><br>
+                <span style="font-size:0.75rem;">💡 Essayez un aliment simple (ex: <em>Poulet</em>, <em>Courge</em>, <em>Riz</em>, <em>Boeuf</em>) ou explorez nos partenaires suisses et français ci-dessous !</span>
+            </div>
+        `;
+        return;
+    }
+
+    conteneur.innerHTML = '';
+
+    // A. Affichage des Recettes Maison trouvées
+    if (dernieresMaisonTrouvees.length > 0) {
+        const tMaison = document.createElement('div');
+        tMaison.style.cssText = "font-size: 0.72rem; color: #B78103; font-weight: 800; text-transform: uppercase; margin: 4px 0 6px 2px;";
+        tMaison.innerText = `⭐ Recettes Officielles Maison (${dernieresMaisonTrouvees.length})`;
+        conteneur.appendChild(tMaison);
+
+        dernieresMaisonTrouvees.forEach((recM, indexM) => {
+            const card = document.createElement('div');
+            card.style.cssText = "display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #FFFDF8; border: 1.5px solid rgba(212,163,115,0.4); border-radius: 14px; padding: 10px 12px; margin-bottom: 6px;";
+            card.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; cursor: pointer;" onclick="afficherDetailRecetteDirect(dernieresMaisonTrouvees[${indexM}], true)">
+                    <img src="${recM.image}" alt="${recM.nom}" style="width: 44px; height: 44px; border-radius: 10px; object-fit: cover; flex-shrink: 0;">
+                    <div style="min-width: 0;">
+                        <div style="font-weight: 800; color: var(--text-title); font-size: 0.88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${recM.nom}</div>
+                        <div style="font-size: 0.7rem; color: var(--accent-dark); font-weight: 700; margin-top: 2px;">🍽️ ${recM.portions} • ⏱️ ${recM.temps}</div>
+                    </div>
+                </div>
+                <button type="button" class="btn" style="padding: 7px 12px; font-size: 0.78rem; font-weight: 800; border-color: var(--accent); color: var(--accent-dark); background: #FFF;" onclick="afficherDetailRecetteDirect(dernieresMaisonTrouvees[${indexM}], true)">👁️ Voir</button>
+            `;
+            conteneur.appendChild(card);
+        });
+    }
+
+    // B. Affichage des Recettes TheMealDB trouvées (avec bouton Traduire la liste !)
+    if (dernieresMealDBTrouvees.length > 0) {
+        const headerMealDB = document.createElement('div');
+        headerMealDB.style.cssText = "display: flex; justify-content: space-between; align-items: center; margin: 14px 0 8px 2px;";
+        headerMealDB.innerHTML = `
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase;">
+                🌍 Recettes / TheMealDB (${dernieresMealDBTrouvees.length})
+            </div>
+            <button type="button" id="btn-traduire-liste-carnet" class="btn" onclick="traduireTitresCarnetExplorer()" style="padding: 4px 10px; font-size: 0.72rem; font-weight: 800; border-color: var(--accent); color: var(--accent-dark); background: #FFFDF8;">
+                🌐 Traduire la liste
+            </button>
+        `;
+        conteneur.appendChild(headerMealDB);
+
+        dernieresMealDBTrouvees.forEach((m, indexDB) => {
+            const card = document.createElement('div');
+            card.style.cssText = "display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 14px; padding: 10px 12px; margin-bottom: 6px;";
+            card.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; cursor: pointer;" onclick="afficherDetailRecetteDirect(dernieresMealDBTrouvees[${indexDB}], false)">
+                    <img src="${m.strMealThumb}/preview" alt="${m.strMeal}" style="width: 44px; height: 44px; border-radius: 10px; object-fit: cover; flex-shrink: 0;">
+                    <div style="min-width: 0;">
+                        <div class="meal-title-text" style="font-weight: 800; color: var(--text-title); font-size: 0.88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${m.strMeal}</div>
+                        <div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 2px;">🌍 TheMealDB</div>
+                    </div>
+                </div>
+                <button type="button" class="btn" style="padding: 7px 12px; font-size: 0.78rem; font-weight: 800;" onclick="afficherDetailRecetteDirect(dernieresMealDBTrouvees[${indexDB}], false)">👁️ Voir</button>
+            `;
+            conteneur.appendChild(card);
+        });
+    }
+}
+
+// Fonction de traduction rapide pour la liste TheMealDB du carnet
+async function traduireTitresCarnetExplorer() {
+    const btn = document.getElementById('btn-traduire-liste-carnet');
+    const titreEls = document.querySelectorAll('#resultats-explorer-global .meal-title-text');
+    if (!titreEls || titreEls.length === 0) return;
+
+    if (btn) {
+        btn.innerText = "⏳ En cours...";
+        btn.disabled = true;
+    }
+
+    for (let el of titreEls) {
+        const fr = await traduireTexteEnFrancais(el.innerText);
+        if (fr) el.innerText = fr;
+    }
+
+    if (btn) {
+        btn.innerText = "✅ Liste traduite";
+        btn.style.borderColor = "#2E7D32";
+        btn.style.color = "#2E7D32";
+        btn.disabled = false;
+    }
+}
+
+// === NOUVEAU MOTEUR DE TRADUCTION POUR LA LISTE "RECHERCHE PAR ALIMENT" ===
+async function traduireListeTitresTheMealDB() {
+    const btn = document.getElementById('btn-traduire-liste');
+    const titreEls = document.querySelectorAll('#rec-liste-container .meal-title-text');
+    if (!titreEls || titreEls.length === 0) return;
+
+    if (btn) {
+        btn.innerText = "⏳ En cours...";
+        btn.disabled = true;
+    }
+
+    for (let el of titreEls) {
+        const fr = await traduireTexteEnFrancais(el.innerText);
+        if (fr) el.innerText = fr;
+    }
+
+    if (btn) {
+        btn.innerText = "✅ Liste traduite";
+        btn.style.borderColor = "#2E7D32";
+        btn.style.color = "#2E7D32";
+        btn.disabled = false;
+    }
+}
+
+// ========================================================
+// 4. LECTEUR UNIFIÉ ET DIRECT (0 ERREUR, 0 DÉLAI)
+// ========================================================
+
+// ========================================================
+// 4. LECTEUR UNIFIÉ ET DIRECT (0 ERREUR, 0 DÉLAI)
+// ========================================================
+async function afficherDetailRecetteDirect(rec, estMaison = true) {
+    if (!rec) return;
+
+    vientDuCarnet = true;
+	vientDeLOngletExplorer = true;
+
+    // 1. Ferme la fenêtre du carnet
+    const modalCarnet = document.getElementById('modal-carnet-recettes');
+    if (modalCarnet) modalCarnet.style.display = 'none';
+
+    // 2. Ouvre la fenêtre de lecture
+    const modalRecette = document.getElementById('modal-recipe-search');
+    if (modalRecette) modalRecette.style.display = 'block';
+
+    const vueChoix = document.getElementById('rec-vue-choix');
+    if (vueChoix) vueChoix.style.display = 'none';
+    const vueListe = document.getElementById('rec-vue-liste');
+    if (vueListe) vueListe.style.display = 'none';
+    const vueDetail = document.getElementById('rec-vue-detail');
+    if (vueDetail) vueDetail.style.display = 'block';
+
+    // 3. Bouton Retour au Carnet
+    const btnRetour = document.getElementById('btn-retour-liste');
+    const btnFermer = document.getElementById('btn-fermer-detail');
+    if (btnRetour) btnRetour.style.display = 'none';
+    if (btnFermer) {
+        btnFermer.style.display = 'block';
+        btnFermer.innerText = "← Retour au Carnet";
+    }
+
+    const btnTrad = document.getElementById('btn-traduire-recette');
+    if (btnTrad) {
+        btnTrad.style.display = estMaison ? 'none' : 'block';
+        // 🔄 RÉINITIALISATION DU BOUTON POUR CHAQUE NOUVELLE RECETTE !
+        btnTrad.innerText = "🌐 Traduire";
+        btnTrad.disabled = false;
+        btnTrad.style.borderColor = "var(--accent)";
+        btnTrad.style.color = "var(--accent-dark)";
+    }
+
+    // C'EST CETTE LIGNE QUI FAISAIT DÉFAUT POUR LA TRADUCTION !
+    recetteTheMealDBEnCours = rec;
+
+    // 🎯 Trouve automatiquement l'aliment associé (ex: Carottes) pour enregistrer sur la bonne fiche !
+    if (estMaison && rec.alimentsAssocies && rec.alimentsAssocies.length > 0) {
+        const nomAlimCible = rec.alimentsAssocies[0];
+        const alimTrouve = legumes.find(l => removeAccents(l.nom.toLowerCase()).includes(removeAccents(nomAlimCible.toLowerCase())));
+        if (alimTrouve) alimentRecetteActif = alimTrouve;
+    }
+
+    const btnSave = document.getElementById('btn-enregistrer-recette');
+    if (btnSave) btnSave.style.display = 'block'; // Toujours visible pour tout le monde !
+
+    recetteTheMealDBEnCours = rec;
+
+    const detailZone = document.getElementById('rec-detail-contenu');
+    if (!detailZone) return;
+
+    const profilAffiche = currentProfil ? currentProfil.toUpperCase() : 'NEUTRE';
+
+    if (estMaison) {
+        // --- RECETTE MAISON ---
+        let ingredientsHTML = "";
+        if (rec.ingredients && Array.isArray(rec.ingredients)) {
+            rec.ingredients.forEach(ligneBrute => {
+                const textePropre = ligneBrute.replace(/^(🟢|🟡|🟠|🔴|⚪|\s)+/gu, '').trim();
+                ingredientsHTML += `<li style="margin-bottom: 5px;">🟢 ${textePropre}</li>`;
+            });
+        }
+
+        detailZone.innerHTML = `
+            <img src="${rec.image || ''}" alt="${rec.nom}" style="width: 100%; height: 170px; object-fit: cover; border-radius: 14px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+            
+            <div style="text-align: center; margin-bottom: 12px;">
+                <div style="font-size: 0.68rem; color: #B78103; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">⭐ RECETTE OFFICIELLE MAISON</div>
+                <span style="display: inline-block; padding: 5px 14px; border-radius: 20px; font-weight: 800; font-size: 0.78rem; background: rgba(46,125,50,0.12); color: #1B5E20; border: 1.5px solid #1B5E20;">
+                    🟢 RECETTE IDÉALE • PROFIL : ${profilAffiche}
+                </span>
+                ${rec.conseilDigestif ? `<div style="font-size:0.75rem; color:#2E7D32; font-weight:700; margin-top:6px; background:rgba(46,125,50,0.08); padding:5px 10px; border-radius:10px;">🌿 Conseil chef : ${rec.conseilDigestif}</div>` : ''}
+            </div>
+
+            <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 12px;">
+                <span style="background: rgba(212, 163, 115, 0.15); color: var(--accent-dark); padding: 4px 12px; border-radius: 14px; font-size: 0.75rem; font-weight: 800;">🍽️ ${rec.portions || '~ 4 personnes'}</span>
+                <span style="background: rgba(212, 163, 115, 0.15); color: var(--accent-dark); padding: 4px 12px; border-radius: 14px; font-size: 0.75rem; font-weight: 800;">⏱️ ${rec.temps || '~ 30 min'}</span>
+            </div>
+
+            <h4 id="rec-titre-detail" style="margin: 0 0 12px 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.3rem; text-align: center;">${rec.nom}</h4>
+            
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">🛒 Ingrédients analysés :</div>
+            <ul id="rec-ingredients-detail" style="font-size: 0.88rem; margin: 0 0 16px 0; padding-left: 15px; list-style: none; line-height: 1.5;">${ingredientsHTML}</ul>
+
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">👨‍🍳 Préparation étape par étape :</div>
+            <p id="rec-instructions-detail" style="font-size: 0.88rem; color: var(--text-main); line-height: 1.55; white-space: pre-line; margin: 0;">${rec.instructions}</p>
+            
+            ${rec.sourceNom && rec.sourceUrl ? `
+                <div style="margin-top: 18px; padding-top: 10px; border-top: 1px dashed var(--border-color); text-align: center;">
+                    <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">Inspiration originale : </span>
+                    <a href="${rec.sourceUrl}" target="_blank" rel="noopener noreferrer" style="font-size: 0.75rem; color: var(--accent-dark); font-weight: 800; text-decoration: underline;">
+                        ${rec.sourceNom} ↗
+                    </a>
+                </div>
+            ` : ''}
+        `;
+
+    } else {
+        // --- RECETTE THEMEALDB ---
+        let meal = rec;
+
+        // Si la recette n'a pas encore ses instructions en mémoire, on les récupère en 0.2 seconde !
+        if (!meal.strInstructions && meal.idMeal) {
+            try {
+                const rep = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${meal.idMeal}`);
+                const d = await rep.json();
+                if (d && d.meals && d.meals[0]) meal = d.meals[0];
+            } catch(e) {}
+        }
+        
+        // 🎯 ON DONNE LA RECETTE COMPLÈTE AU TRADUCTEUR !
+        recetteTheMealDBEnCours = meal;
+
+        let ingredientsHTML = "";
+        for (let i = 1; i <= 20; i++) {
+            const ing = meal[`strIngredient${i}`];
+            const qte = meal[`strMeasure${i}`];
+            if (ing && ing.trim().length > 0) {
+                ingredientsHTML += `<li style="margin-bottom: 5px;">🟢 <strong>${qte ? qte.trim() : ''}</strong> ${ing.trim()}</li>`;
+            }
+        }
+
+        detailZone.innerHTML = `
+            <img src="${meal.strMealThumb}" alt="${meal.strMeal}" style="width: 100%; height: 170px; object-fit: cover; border-radius: 14px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+            
+            <div style="text-align: center; margin-bottom: 12px;">
+                <div style="font-size: 0.68rem; color: #1565C0; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">🌍 BASE THEMEALDB</div>
+                <span style="display: inline-block; padding: 5px 14px; border-radius: 20px; font-weight: 800; font-size: 0.78rem; background: rgba(46,125,50,0.12); color: #1B5E20; border: 1.5px solid #1B5E20;">
+                    🟢 RECETTE DU MONDE • PROFIL : ${profilAffiche}
+                </span>
+            </div>
+
+            <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 12px;">
+                <span style="background: rgba(212, 163, 115, 0.15); color: var(--accent-dark); padding: 4px 12px; border-radius: 14px; font-size: 0.75rem; font-weight: 800;">🍽️ ~ 4 personnes</span>
+                <span style="background: rgba(212, 163, 115, 0.15); color: var(--accent-dark); padding: 4px 12px; border-radius: 14px; font-size: 0.75rem; font-weight: 800;">⏱️ ~ 30 min</span>
+            </div>
+
+            <h4 id="rec-titre-detail" style="margin: 0 0 12px 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.3rem; text-align: center;">${meal.strMeal}</h4>
+            
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">🛒 Ingrédients analysés :</div>
+            <ul id="rec-ingredients-detail" style="font-size: 0.88rem; margin: 0 0 16px 0; padding-left: 15px; list-style: none; line-height: 1.5;">${ingredientsHTML}</ul>
+
+            <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">👨‍🍳 Instructions :</div>
+            <p id="rec-instructions-detail" style="font-size: 0.88rem; color: var(--text-main); line-height: 1.55; white-space: pre-line; margin: 0;">${meal.strInstructions}</p>
+            
+            <div style="margin-top: 18px; padding-top: 10px; border-top: 1px dashed var(--border-color); text-align: center;">
+                <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">Source originale : </span>
+                <a href="${meal.strSource || meal.strYoutube || `https://www.themealdb.com/meal/${meal.idMeal}`}" target="_blank" rel="noopener noreferrer" style="font-size: 0.75rem; color: var(--accent-dark); font-weight: 800; text-decoration: underline;">
+                    ${meal.strSource ? "TheMealDB / Source web" : "TheMealDB"} ↗
+                </a>
+            </div>
+        `;
+    }
+}
 function fermerCarnetRecettes() {
     const modal = document.getElementById('modal-carnet-recettes');
     if (modal) modal.style.display = 'none';
+
+    // 🧹 Réinitialise proprement le champ de recherche pour la prochaine ouverture depuis l'accueil !
+    const inputExp = document.getElementById('input-explorer-libre');
+    if (inputExp) inputExp.value = '';
+    const resExp = document.getElementById('resultats-explorer-global');
+    if (resExp) {
+        resExp.innerHTML = `
+            <div style="text-align: center; color: var(--text-muted); font-size: 0.82rem; padding: 20px 10px; font-style: italic;">
+                Tapez un mot-clé ci-dessus pour explorer les recettes du monde et les recettes officielles du Marché !
+            </div>
+        `;
+    }
 }
 
 // ========================================================
