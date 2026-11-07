@@ -1,5 +1,5 @@
 <!-- ================================================================================== -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 14.02 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 14.03 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -1520,6 +1520,344 @@
     background: var(--accent-dark) !important;
 }
 
+/* ======================================================== */
+/* CORRECTION DARK MODE : CARNET & EXPLORATEUR GOURMAND     */
+/* ======================================================== */
+
+/* 1. Les petites cartes de recettes (Fond Moka foncé) */
+body.dark-mode .carnet-row,
+body.dark-mode #resultats-explorer-global div[style*="background: #FFFDF8"],
+body.dark-mode #resultats-explorer-global div[style*="background: #FFFFFF"] {
+    background-color: #38312B !important; 
+    border-color: #5C5248 !important;
+}
+
+/* 2. Textes dans les cartes (Blanc pur et Sable) */
+body.dark-mode .carnet-row div[style*="color: var(--text-title)"],
+body.dark-mode #resultats-explorer-global div[style*="color: var(--text-title)"] {
+    color: #FFFFFF !important;
+}
+body.dark-mode .carnet-row div[style*="color: var(--text-muted)"],
+body.dark-mode #resultats-explorer-global div[style*="color: var(--text-muted)"] {
+    color: #D4C7B8 !important; 
+}
+body.dark-mode .carnet-row strong[style*="color: var(--accent-dark)"] {
+    color: #F0E6D8 !important; 
+}
+
+/* 3. Les boutons d'action dans les cartes (Voir, Déplacer, Poubelle) */
+body.dark-mode .carnet-row button,
+body.dark-mode #resultats-explorer-global button {
+    background-color: #4A423A !important;
+    color: #FFF8F0 !important;
+    border-color: #5C5248 !important;
+}
+body.dark-mode .carnet-row button[onclick*="supprimerRecette"] {
+    color: #EF9A9A !important;
+}
+
+/* 4. Le Champ de Recherche (Input) */
+body.dark-mode #modal-carnet-recettes input.form-control {
+    background-color: #4A423A !important; 
+    color: #FFFFFF !important; 
+    border-color: #D4A373 !important; 
+}
+body.dark-mode #modal-carnet-recettes input.form-control::placeholder {
+    color: #A89C8F !important; 
+}
+
+/* 5. TEXTES GÉNÉRAUX & TITRES DES BOUTONS (Bien foncés comme l'Image 4) */
+body.dark-mode #modal-carnet-recettes h3 {
+    color: #231F1A !important;
+    font-weight: 800 !important;
+}
+body.dark-mode #modal-carnet-recettes p,
+body.dark-mode #vue-onglet-carnet > p,
+body.dark-mode #vue-onglet-explorer > p,
+body.dark-mode #resultats-explorer-global > div[style*="color: var(--text-muted)"] {
+    color: #4A423A !important;
+    font-weight: 800 !important;
+}
+/* Titres "CH GRANDS SITES..." et "FR GRANDS SITES..." bien foncés et nets */
+body.dark-mode #modal-carnet-recettes div[style*="font-size: 0.68rem"] {
+    color: #4A423A !important;
+    font-weight: 800 !important;
+}
+
+/* 6. LES BOUTONS CULINAIRES CH & FR (Validés Image 1) */
+body.dark-mode #vue-onglet-explorer a.btn {
+    background-color: #4A423A !important;
+    color: #FFFFFF !important;
+    border-color: #5C5248 !important;
+}
+
+/* 7. LES ONGLETS DU HAUT */
+body.dark-mode #modal-carnet-recettes div[style*="grid-template-columns: 1fr 1fr"] {
+    background: transparent !important; 
+    padding: 0 !important;
+}
+/* Onglet SÉLECTIONNÉ : Fond foncé, texte blanc sable (Image 1) */
+body.dark-mode #tab-btn-mon-carnet[style*="background: var(--text-title)"],
+body.dark-mode #tab-btn-decouvrir[style*="background: var(--text-title)"] {
+    background-color: #2C3E50 !important; 
+    color: #FFFFFF !important; 
+    border-radius: 12px !important;
+    border: 1px solid #5C5248 !important;
+}
+/* Onglet DÉSÉLECTIONNÉ : Fond blanc sable, texte foncé (comme Image 3) */
+body.dark-mode #tab-btn-mon-carnet[style*="background: transparent"],
+body.dark-mode #tab-btn-decouvrir[style*="background: transparent"] {
+    background-color: #FFFDF8 !important; 
+    color: #4A423A !important; 
+    border-radius: 12px !important;
+    border: 1px solid #D4A373 !important;
+}
+
+/* ======================================================== */
+/* CORRECTION DARK MODE : MODALE SCANNER                    */
+/* ======================================================== */
+
+/* 1. Titre et textes d'explication bien foncés et lisibles sur le fond Biscuit */
+body.dark-mode #modal-scanner h3 {
+    color: #231F1A !important;
+    font-weight: 800 !important;
+}
+body.dark-mode #scan-badge-profil {
+    color: #7E4B28 !important;
+    font-weight: 800 !important;
+}
+body.dark-mode #modal-scanner p,
+body.dark-mode #modal-scanner div[style*="border-top: 1px dashed"] div {
+    color: #4A423A !important; /* Moka foncé, très net ! */
+    font-weight: 800 !important;
+}
+
+/* 2. Champ de saisie manuel (comme la recherche du Marché Gourmand) */
+body.dark-mode #scan-input-manuel {
+    background-color: #4A423A !important;
+    color: #FFFFFF !important;
+    border-color: #D4A373 !important;
+}
+body.dark-mode #scan-input-manuel::placeholder {
+    color: #A89C8F !important;
+}
+
+/* 3. Bordure du viseur caméra */
+body.dark-mode #scanner-lecteur {
+    border-color: #D4A373 !important;
+}
+
+/* Message "Produit introuvable" bien foncé et numéro contrasté */
+body.dark-mode #scan-contenu-resultat h4 {
+    color: #231F1A !important; /* Titre en brun très foncé */
+    font-weight: 800 !important;
+}
+body.dark-mode #scan-contenu-resultat div {
+    color: #4A423A !important; /* Texte explicatif bien foncé et net */
+    font-weight: 700 !important;
+}
+body.dark-mode #scan-contenu-resultat strong {
+    color: #D84315 !important; /* Le numéro ressort en cuivre/caramel vif ! */
+}
+
+/* Guide dépliant : Texte des 4 étapes bien foncé et lisible */
+body.dark-mode #contenu-guide-web span,
+body.dark-mode #contenu-guide-web strong {
+    color: #231F1A !important;
+}
+
+/* ======================================================== */
+/* BOUTONS ACCUEIL : FOND SABLE UNIFIÉ (COULEUR IMAGE 1)    */
+/* ======================================================== */
+
+/* 1. On applique la couleur sable de l'Image 1 à TOUS les boutons sans exception */
+body.dark-mode .saison-btn,
+body.dark-mode .bouton-moitie,
+body.dark-mode .bouton-moitie[style*="background"],
+body.dark-mode .saison-btn[style*="background"] {
+    background: #CDBFA8 !important; /* Couleur exacte de ton Image 1 */
+    border: 1px solid #B5A58D !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45) !important; /* Ombre portée noire/grise */
+}
+
+/* 2. Couleurs des textes d'origine (bien nettes sur ce sable) */
+body.dark-mode .printemps { color: #1B5E20 !important; }
+body.dark-mode .ete { color: #D84315 !important; }
+body.dark-mode .automne { color: #BF360C !important; }
+body.dark-mode .hiver { color: #0D47A1 !important; }
+body.dark-mode .feculents { color: #3E2723 !important; }
+body.dark-mode .legumineuses { color: #4E342E !important; }
+body.dark-mode .bouton-moitie[onclick*="Viandes"] { color: #8B0000 !important; }
+body.dark-mode .bouton-moitie[onclick*="Poissons"] { color: #0D47A1 !important; }
+body.dark-mode .bouton-moitie[onclick*="Laitages"] { color: #A0522D !important; }
+body.dark-mode .bouton-moitie[onclick*="Condiments"] { color: #1B5E20 !important; }
+body.dark-mode .saison-btn[onclick*="Boissons"] { color: #3E2723 !important; }
+
+/* 3. Nombre d'éléments sous le titre bien lisible */
+body.dark-mode .saison-btn-count {
+    color: #4A423A !important;
+    font-weight: 700 !important;
+    opacity: 0.9 !important;
+}
+
+/* Bouton Filtres Cliniques en Mode Sombre */
+body.dark-mode .btn-toggle-filters {
+    background-color: #4A423A !important;
+    color: #FFF8F0 !important; /* Texte bien blanc */
+    border-color: #6B6055 !important;
+}
+body.dark-mode .btn-toggle-filters svg {
+    fill: #FFF8F0 !important; /* La petite flèche bien blanche */
+}
+
+/* Quand les filtres sont ouverts (Caramel doré) */
+body.dark-mode .btn-toggle-filters.open {
+    background-color: #D4A373 !important;
+    color: #231F1A !important;
+    border-color: #D4A373 !important;
+}
+body.dark-mode .btn-toggle-filters.open svg {
+    fill: #231F1A !important;
+}
+
+/* ======================================================== */
+/* FIX DU BLANC SUR BLANC DANS LES FILTRES CLINIQUES        */
+/* ======================================================== */
+
+/* 1. Bouton ACTIF (sélectionné) : Fini le fond blanc invisible ! */
+body.dark-mode .filter-btn.active,
+body.dark-mode .type-tab.active {
+    background-color: #2C3E50 !important; /* Bleu nuit élégant */
+    color: #FFFFFF !important;            /* Écriture blanche bien nette */
+    border-color: #2C3E50 !important;
+}
+
+/* 2. Le petit compteur (chiffre) dans le bouton actif */
+body.dark-mode .filter-btn.active .tol-badge-count {
+    background-color: rgba(255, 255, 255, 0.25) !important;
+    color: #FFFFFF !important;
+}
+
+/* 3. Boutons de tolérance INACTIFS (Texte bien foncé et lisible) */
+body.dark-mode .tol-btn:not(.active) {
+    background-color: #FAF7F2 !important;
+    color: #231F1A !important;
+    border-color: #D1C7B8 !important;
+}
+body.dark-mode .tol-btn:not(.active) .tol-badge-count {
+    background-color: rgba(0, 0, 0, 0.08) !important;
+    color: #231F1A !important;
+}
+
+/* 4. Le bouton '🥗 Tous' des types d'aliments quand il n'est pas sélectionné */
+body.dark-mode .type-tab:not(.active) {
+    background-color: #FAF7F2 !important;
+    color: #231F1A !important;
+    border-color: #D1C7B8 !important;
+}
+
+/* Bulle d'aide 'Vous pouvez en sélectionner d'autres' en Mode Sombre */
+body.dark-mode div[style*="animation: hintFadeInOut"] span {
+    background-color: #4A423A !important; /* Fond moka doux */
+    color: #FFE0B2 !important;            /* Écriture vanille dorée bien lumineuse */
+    border: 1px solid #D4A373 !important; /* Liseré doré élégant */
+}
+
+/* 1. Petits titres de la Matrice Clinique bien foncés et lisibles sur fond blanc */
+body.dark-mode #matrice-clinique-container label {
+    color: #4A423A !important; /* Moka foncé bien net */
+    font-weight: 800 !important;
+}
+
+/* 2. Textes d'aide grisés (Placeholders) bien clairs et lisibles partout */
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+    color: #A89C8F !important; /* Sable clair lumineux */
+    opacity: 1 !important;     /* Empêche le navigateur de l'assombrir */
+}
+
+/* Fond de la Matrice Clinique en couleur sable (Image 2) */
+body.dark-mode #modal-form div[style*="background-color: #FFFDF8"] {
+    background-color: #CDBFA8 !important; /* Couleur sable de ton Image 2 */
+    border: 1px solid #B5A58D !important;
+}
+
+/* Label 'Ingrédient cherché' bien foncé et lisible sur fond Biscuit */
+body.dark-mode #rec-vue-choix label {
+    color: #4A423A !important; /* Moka foncé très net */
+    font-weight: 800 !important;
+}
+
+/* Titres des recettes bien foncés et nets sur les cartes blanches */
+body.dark-mode #rec-liste-container div[style*="color: var(--text-title)"],
+body.dark-mode #rec-liste-container .meal-title-text,
+body.dark-mode #resultats-explorer-global div[style*="color: var(--text-title)"],
+body.dark-mode #resultats-explorer-global .meal-title-text {
+    color: #231F1A !important; /* Moka très foncé bien lisible */
+}
+
+/* Cartes de la liste d'aliments : Même fond blanc et titres nets que l'Image 1 */
+body.dark-mode #rec-liste-container > div {
+    background-color: #FFFDF8 !important; /* Même fond blanc crème ! */
+    border: 1px solid #E2D9CC !important;
+}
+body.dark-mode #rec-liste-container div[style*="color: var(--text-title)"],
+body.dark-mode #rec-liste-container .meal-title-text {
+    color: #231F1A !important;            /* Titre bien noir et lisible */
+}
+
+/* ======================================================== */
+/* RESTAURATION DES VRAIES COULEURS DES BADGES              */
+/* ======================================================== */
+
+/* 1. On retire l'ombre noire floue sur le fond blanc */
+body.dark-mode #rec-liste-container div,
+body.dark-mode #rec-liste-container span {
+    text-shadow: none !important;
+}
+
+/* 2. Badge '⭐ RECETTE MAISON' en beau doré */
+body.dark-mode #rec-liste-container span[style*="#F6C343"] {
+    color: #B78103 !important;
+}
+
+/* 3. Badges de verdict clinique (Orange, Jaune, Vert) */
+body.dark-mode #rec-liste-container span[style*="#D84315"],
+body.dark-mode #rec-liste-container div[style*="#D84315"] {
+    color: #B5603F !important;
+}
+body.dark-mode #rec-liste-container span[style*="#F57F17"],
+body.dark-mode #rec-liste-container div[style*="#F57F17"] {
+    color: #E65100 !important;
+}
+body.dark-mode #rec-liste-container span[style*="#2E7D32"],
+body.dark-mode #rec-liste-container div[style*="#2E7D32"] {
+    color: #1B5E20 !important;
+}
+
+/* 4. Nombre de portions (4 personnes) et astuce du bas */
+body.dark-mode #rec-liste-container span[style*="accent-dark"] {
+    color: #7A6F62 !important; /* Moka lisible */
+}
+body.dark-mode #rec-liste-container div[style*="color: #D84315"] {
+    color: #D84315 !important; /* Astuce orange bien nette */
+}
+
+/* Message 'Aucune recette trouvée' bien foncé et lisible */
+body.dark-mode #rec-liste-container div[style*="color: var(--text-muted)"] {
+    color: #4A423A !important; /* Moka foncé bien net */
+    font-weight: 700 !important;
+}
+body.dark-mode #rec-liste-container div[style*="color: var(--text-muted)"] strong {
+    color: #231F1A !important; /* Le nom de l'aliment bien noir */
+}
+
+/* La parenthèse d'aide '(Essayez un ingrédient...)' bien foncée */
+body.dark-mode #rec-liste-container div[style*="color: var(--text-muted)"] span,
+body.dark-mode #rec-liste-container div[style*="color: var(--text-muted)"] em {
+    color: #5C5248 !important; /* Moka bien net pour la parenthèse */
+}
+
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
@@ -1593,7 +1931,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v14.02</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v14.03</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -2213,16 +2551,15 @@
                 <input type="text" id="rec-input-recherche-perso" class="form-control" placeholder="Tapez un ingrédient..." style="padding: 8px 12px; font-size: 0.95rem; border-radius: 12px; text-align: center; font-weight: 800; color: var(--accent-dark); border: 1.5px solid var(--accent); background: #FFFDF8;">
             </div>
 
-            <!-- 1. TheMealDB (Intégrée) -->
-            <!-- TheMealDB (Base Internationale Collaborative) -->
+            <!-- Répertoire Culinaire : Maison & Monde -->
             <div style="background: #FFFDF8; border: 1.5px solid var(--accent); border-radius: 16px; padding: 15px; margin-bottom: 18px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.03);">
-                <div style="font-size: 0.75rem; color: var(--accent-dark); font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">🌍 Base internationale collaborative TheMealDB</div>
+                <div style="font-size: 0.75rem; color: var(--accent-dark); font-weight: 800; text-transform: uppercase; margin-bottom: 4px;">⭐ RECETTES MAISON & 🌍 BASE DU MONDE</div>
                 <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0 0 12px 0; line-height: 1.4;">
-                    Accès direct à près de <strong>800 repas</strong> et <strong>1000 ingrédients</strong>.<br>
-                    Consultez, traduisez et enregistrez vos recettes en 1 clic !
+                    Accédez à nos <strong>créations Maison</strong> adaptées à votre digestion, complétées par les idées de la base internationale <strong>TheMealDB</strong>.<br>
+                    Consultez, traduisez et enregistrez vos plats en 1 clic !
                 </p>
                 <button type="button" class="btn btn-primary" style="width: 100%; padding: 12px; font-weight: 800; font-size: 0.9rem;" onclick="lancerExplorationTheMealDB()">
-                    🍲 Explorer les recettes TheMealDB
+                    🍲 Explorer les recettes
                 </button>
             </div>
 		</div>
@@ -2329,7 +2666,7 @@
         
         <!-- En-tête : Titre + Croix ❌ -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <h3 style="margin: 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.35rem;">🍲 Le Marché Gourmand</h3>
+            <h3 style="margin: 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.35rem;">🍲 Mes Recettes</h3>
             <button type="button" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; padding: 0;" onclick="fermerCarnetRecettes()">❌</button>
         </div>
 
@@ -2656,7 +2993,7 @@
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "14.02";
+    const APP_VERSION = "14.03";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -4033,8 +4370,8 @@ function afficherProduitNonTrouve(codeBarres) {
                 <div style="font-size: 2.2rem; margin-bottom: 8px;">🧴❓</div>
                 <h4 style="color: var(--text-title); margin: 0 0 6px 0; font-family: 'Playfair Display', serif;">Produit introuvable</h4>
                 <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.45;">
-                    Le code-barres <strong>${codeBarres}</strong> n'est pas répertorié.<br><br>
-                    <span style="font-size: 0.75rem;">Il s'agit peut-être d'un <strong>produit non alimentaire</strong> (cosmétique, entretien...) ou d'un article trop récent pour la base de données libre.</span>
+                    Le code-barres <strong style="color: var(--accent-dark);">${codeBarres}</strong> n'est pas répertorié.<br><br>
+                    <span style="font-size: 0.75rem;">Il s'agit peut-être d'un <strong>produit non alimentaire</strong> (cosmétique, entretien...) ou d'un article trop récent pour notre base de données.</span>
                 </div>
             </div>
         `;
@@ -7493,9 +7830,11 @@ async function chargerRecettesTheMealDB(leg) {
         if (listeRecettesUniquesGlobal.length === 0 && !aDesRecettesMaison) {
             conteneur.innerHTML = `
                 <div style="text-align: center; padding: 25px 15px; color: var(--text-muted); font-size: 0.88rem; line-height: 1.5;">
-                    Aucune recette TheMealDB trouvée pour <strong>"${nomBrut}"</strong>.<br>
-                    <span style="font-size: 0.78rem;">(Essayez un ingrédient plus simple comme <em>"Poulet"</em>, <em>"Courge"</em> ou <em>"Riz"</em>)</span><br><br>
-                    <button type="button" class="btn" style="font-weight:800;" onclick="retourAuHubChoix()">← Explorer nos partenaires suisses/français</button>
+                    Aucune recette Maison ou TheMealDB trouvée pour <strong>"${nomBrut}"</strong>.<br>
+                    <span style="font-size: 0.78rem;">(Essayez un ingrédient comme <em>"Poulet"</em>, <em>"Courge"</em> ou <em>"Riz"</em>)</span><br><br>
+                    <button type="button" class="btn" style="font-weight:800;" onclick="fermerModalRecetteSmart(); ouvrirCarnetRecettes('explorer');">
+                        🔍 Explorer 🍲 Mes Recettes
+                    </button>
                 </div>
             `;
             return;
@@ -7794,17 +8133,52 @@ async function traduireRecetteActuelle() {
         recetteTheMealDBEnCours.nom = titreTraduit;
     }
 
-    // 2. Ingrédients (envoyés en 1 SEUL paquet groupé !)
+    // 2. Ingrédients (Traduction intégrale 100% propre)
     if (ingredientsEl) {
         const items = ingredientsEl.querySelectorAll('li');
         if (items.length > 0) {
-            const texteGroup = Array.from(items).map(li => li.innerText.replace(/^(🟢|🟡|🟠|🔴|⚪|\s)+/gu, '').trim()).join('\n');
+            let lignesAtraduire = [];
+            let sauvegardesLi = [];
+
+            items.forEach(li => {
+                const clone = li.cloneNode(true);
+                
+                // A. On isole et on retire le conseil clinique en français (le <span> orange)
+                let conseilHTML = "";
+                const spanEl = clone.querySelector('span');
+                if (spanEl) {
+                    conseilHTML = spanEl.outerHTML;
+                    spanEl.remove();
+                }
+
+                // B. On isole la pastille (🟢, 🟡, 🟠...)
+                let puce = "🟢";
+                const match = clone.textContent.match(/(🟢|🟡|🟠|🔴|⚪)/);
+                if (match) puce = match[1];
+
+                // C. On extrait TOUTE la phrase anglaise (Quantité + Ingrédient) en texte pur
+                let phraseAnglaise = clone.textContent.replace(/(🟢|🟡|🟠|🔴|⚪)/g, '').trim();
+
+                lignesAtraduire.push(phraseAnglaise);
+                sauvegardesLi.push({ puce: puce, conseil: conseilHTML });
+            });
+
+            // D. On envoie les phrases complètes à Google
+            const texteGroup = lignesAtraduire.join('\n');
             const tradGroup = await traduireTexteEnFrancais(texteGroup);
+
             if (tradGroup) {
-                const lignes = tradGroup.split('\n');
+                const lignesTraduites = tradGroup.split('\n');
                 items.forEach((li, idx) => {
-                    if (lignes[idx]) {
-                        li.innerHTML = `🟢 ${lignes[idx].trim()}`;
+                    if (lignesTraduites[idx]) {
+                        const sav = sauvegardesLi[idx];
+                        let texteTraduit = lignesTraduites[idx].trim();
+                        
+                        // Remet élégamment le premier chiffre ou mesure en gras (ex: "300g")
+                        texteTraduit = texteTraduit.replace(/^([\d\/\.,]+\s*[a-zA-ZÀ-ÿ]*)/, '<strong>$1</strong>');
+
+                        // E. On reconstruit la ligne : 1 pastille + Phrase 100% française + Conseil
+                        li.innerHTML = `${sav.puce} ${texteTraduit} ${sav.conseil}`;
                     }
                 });
             }
@@ -7890,27 +8264,105 @@ function ouvrirLecteurRecetteInApp(alimentId, indexRecette) {
 
         const detailZone = document.getElementById('rec-detail-contenu');
         if (detailZone) {
+            // 🧠 1. RECONSTRUCTION DU CONTEXTE (Est-ce une recette Maison ou Web ?)
+            let estMaison = false;
+            let conseilChefTexte = "";
+            let portionsTxt = rec.portions || "~ 4 personnes";
+            let tempsTxt = rec.temps || "~ 30 min";
+            let typeOrigine = "🌍 BASE INTERNATIONALE";
+
+            // Vérifie si c'est une recette officielle maison
+            if (typeof window.RECETTES_MAISON !== 'undefined') {
+                const recetteMaisonRef = window.RECETTES_MAISON.find(r => r.nom === rec.nom);
+                if (recetteMaisonRef) {
+                    estMaison = true;
+                    typeOrigine = "⭐ RECETTE OFFICIELLE MAISON";
+                    portionsTxt = recetteMaisonRef.portions || portionsTxt;
+                    tempsTxt = recetteMaisonRef.temps || tempsTxt;
+                    conseilChefTexte = recetteMaisonRef.conseilDigestif || "";
+                }
+            }
+
+            // 🧠 2. DÉFINITION DES COULEURS ET BADGES (RECALCULÉ POUR LES MAISONS !)
+            let statutBadge = rec.statut || '🟢'; // Statut par défaut TheMealDB
+            
+            // Si c'est une recette Maison, on recalcule le VRAI statut en direct en lisant les ingrédients !
+            if (estMaison && rec.ingredients) {
+                if (rec.ingredients.includes('🔴') || rec.ingredients.includes('🟠')) {
+                    statutBadge = '🟠';
+                } else if (rec.ingredients.includes('🟡')) {
+                    statutBadge = '🟡';
+                } else {
+                    statutBadge = '🟢';
+                }
+            }
+
+            let verdictTexte = '🟢 RECETTE SAUVEGARDÉE';
+            let bgBadge = "rgba(46, 125, 50, 0.12)";
+            let bordBadge = "#2E7D32";
+            let txtBadge = "#1B5E20";
+            let astuceSousTitre = '';
+
+            if (statutBadge === '🟢') {
+                verdictTexte = estMaison ? '🟢 RECETTE IDÉALE' : '🟢 RECETTE DU MONDE';
+            } else if (statutBadge === '🟡') {
+                verdictTexte = '🟡 FACILEMENT ADAPTABLE';
+                bgBadge = "rgba(245, 127, 23, 0.12)";
+                bordBadge = "#F57F17";
+                txtBadge = "#E65100";
+                astuceSousTitre = `<div style="font-size:0.75rem; color:#B5603F; font-weight:700; margin-top:4px;">💡 Astuce : modérez ou adaptez les ingrédients signalés ci-dessous.</div>`;
+            } else if (statutBadge === '🔴' || statutBadge === '🟠') {
+                verdictTexte = '🟠 SENSIBLE EN CRISE';
+                bgBadge = "rgba(216, 67, 21, 0.12)";
+                bordBadge = "#D84315";
+                txtBadge = "#B5603F";
+                astuceSousTitre = `<div style="font-size:0.75rem; color:#B5603F; font-weight:700; margin-top:4px;">💡 Attention : Plusieurs ingrédients sont déconseillés pour votre profil.</div>`;
+            }
+            
+            const profilAffiche = currentProfil ? currentProfil.toUpperCase() : 'NEUTRE';
+
+            // Si ce n'est pas une recette maison, on génère un conseil générique
+            if (!conseilChefTexte) {
+                if (statutBadge === '🟢') conseilChefTexte = "Ingrédients doux et harmonieux. Privilégiez une cuisson modérée sans excès d'huile et dégustez tiède.";
+                else conseilChefTexte = "Pour votre confort digestif, n'hésitez pas à modérer ou remplacer les ingrédients signalés.";
+            }
+
+            // 🧠 3. RENDU HTML FINAL
             detailZone.innerHTML = `
-                <img src="${rec.thumb || ''}" alt="${rec.nom}" style="width: 100%; height: 160px; object-fit: cover; border-radius: 12px; margin-bottom: 12px;">
+                <img src="${rec.thumb || ''}" alt="${rec.nom}" style="width: 100%; height: 170px; object-fit: cover; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                
                 <div style="text-align: center; margin-bottom: 12px;">
-                    <span style="display: inline-block; padding: 5px 14px; border-radius: 20px; font-weight: 800; font-size: 0.78rem; background: rgba(46,125,50,0.12); color: #1B5E20; border: 1.5px solid #1B5E20;">
-                        ${rec.statut || '🟢'} RECETTE SAUVEGARDÉE
+                    <div style="font-size: 0.68rem; color: ${estMaison ? '#B78103' : '#1565C0'}; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">
+                        ${typeOrigine}
+                    </div>
+                    <span style="display: inline-block; padding: 5px 14px; border-radius: 20px; font-weight: 800; font-size: 0.78rem; background: ${bgBadge}; color: ${txtBadge}; border: 1.5px solid ${bordBadge};">
+                        ${verdictTexte} • PROFIL : ${profilAffiche}
                     </span>
+                    ${astuceSousTitre}
+                    <div style="font-size:0.75rem; color:#2E7D32; font-weight:700; margin-top:6px; background:rgba(46,125,50,0.08); padding:5px 10px; border-radius:10px;">
+                        🌿 Conseil chef : ${conseilChefTexte}
+                    </div>
                 </div>
                 
                 <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 12px;">
                     <span style="background: rgba(212, 163, 115, 0.15); color: var(--accent-dark); padding: 4px 12px; border-radius: 14px; font-size: 0.75rem; font-weight: 800;">
-                        🍽️ Portions : ${rec.portions || "~ 4 personnes"}
+                        🍽️ ${portionsTxt}
+                    </span>
+                    <span style="background: rgba(212, 163, 115, 0.15); color: var(--accent-dark); padding: 4px 12px; border-radius: 14px; font-size: 0.75rem; font-weight: 800;">
+                        ⏱️ ${tempsTxt}
                     </span>
                 </div>
                 
-                <h4 id="rec-titre-detail" style="margin: 0 0 10px 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.2rem; text-align: center;">${rec.nom}</h4>
+                <h4 id="rec-titre-detail" style="margin: 0 0 10px 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.3rem; text-align: center;">${rec.nom}</h4>
+                
                 <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">🛒 Ingrédients :</div>
-                <ul id="rec-ingredients-detail" style="font-size: 0.85rem; color: var(--text-main); margin: 0 0 14px 0; padding-left: 20px;">
+                <ul id="rec-ingredients-detail" style="font-size: 0.85rem; color: var(--text-main); margin: 0 0 14px 0; padding-left: 15px; list-style: none; line-height: 1.5;">
                     ${rec.ingredients || '<li>Ingrédients enregistrés</li>'}
                 </ul>
+                
                 <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">👨‍🍳 Instructions :</div>
                 <p id="rec-instructions-detail" style="font-size: 0.85rem; color: var(--text-main); line-height: 1.45; white-space: pre-line; margin: 0;">${rec.instructions}</p>
+                
                 ${rec.sourceNom && rec.sourceUrl ? `
                     <div style="margin-top: 18px; padding-top: 10px; border-top: 1px dashed var(--border-color); text-align: center;">
                         <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">Inspiration originale : </span>
@@ -8233,17 +8685,14 @@ async function lancerRechercheGlobaleDepuisCarnet() {
     try {
         let mealsRaw = [];
         
-        // A. Recherche par ingrédient (ex: toutes les recettes avec carottes)
         const repIng = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${encodeURIComponent(motAnglais)}`);
         const dataIng = await repIng.json();
         if (dataIng && dataIng.meals) mealsRaw.push(...dataIng.meals);
 
-        // B. Recherche par nom de plat (ex: Carrot Cake)
         const repTitre = await fetch(`https://www.themealdb.com/api/json/v1/1/search.php?s=${encodeURIComponent(motAnglais)}`);
         const dataTitre = await repTitre.json();
         if (dataTitre && dataTitre.meals) mealsRaw.push(...dataTitre.meals);
 
-        // C. Élimine les doublons
         const idsVus = new Set();
         mealsRaw.forEach(m => {
             if (m && m.idMeal && !idsVus.has(m.idMeal)) {
@@ -8274,14 +8723,59 @@ async function lancerRechercheGlobaleDepuisCarnet() {
         conteneur.appendChild(tMaison);
 
         dernieresMaisonTrouvees.forEach((recM, indexM) => {
+            let alertesM = [];
+            if (currentProfil && currentProfil !== 'neutre' && recM.ingredients && Array.isArray(recM.ingredients)) {
+                const legumesTries = [...legumes].sort((a, b) => b.nom.length - a.nom.length);
+                recM.ingredients.forEach(ligne => {
+                    const texteClean = removeAccents(ligne.toLowerCase());
+                    for (let alim of legumesTries) {
+                        if (!alim || !alim.nom) continue;
+                        const nomAlim = removeAccents(alim.nom.toLowerCase().trim());
+                        const regexMotEntier = new RegExp(`(^|[^a-zÀ-ÿ])${nomAlim}([^a-zÀ-ÿ]|$)`, 'i');
+                        if (regexMotEntier.test(texteClean)) {
+                            if (isClinicallyBad(alim, currentProfil)) {
+                                if (!alertesM.includes(alim.nom)) alertesM.push(alim.nom);
+                            }
+                            break;
+                        }
+                    }
+                });
+            }
+
+            let verdictM = '🟢 RECETTE IDÉALE';
+            let bgBadgeM = 'rgba(46, 125, 50, 0.12)';
+            let bordBadgeM = '#2E7D32';
+            let txtBadgeM = '#1B5E20';
+            let astuceM = '';
+
+            if (alertesM.length > 0 && alertesM.length <= 2) {
+                verdictM = '🟡 FACILEMENT ADAPTABLE';
+                bgBadgeM = 'rgba(245, 127, 23, 0.12)';
+                bordBadgeM = '#F57F17';
+                txtBadgeM = '#E65100';
+                astuceM = `💡 Astuce : modérez ou retirez ${alertesM.join(' et ')}`;
+            } else if (alertesM.length > 2) {
+                verdictM = '🟠 SENSIBLE EN CRISE';
+                bgBadgeM = 'rgba(216, 67, 21, 0.12)';
+                bordBadgeM = '#D84315';
+                txtBadgeM = '#B5603F';
+                astuceM = `💡 Plusieurs ingrédients sensibles (${alertesM.slice(0, 2).join(', ')}...)`;
+            }
+
             const card = document.createElement('div');
             card.style.cssText = "display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #FFFDF8; border: 1.5px solid rgba(212,163,115,0.4); border-radius: 14px; padding: 10px 12px; margin-bottom: 6px;";
             card.innerHTML = `
                 <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; cursor: pointer;" onclick="afficherDetailRecetteDirect(dernieresMaisonTrouvees[${indexM}], true)">
-                    <img src="${recM.image}" alt="${recM.nom}" style="width: 44px; height: 44px; border-radius: 10px; object-fit: cover; flex-shrink: 0;">
+                    <img src="${recM.image}" alt="${recM.nom}" style="width: 56px; height: 56px; border-radius: 10px; object-fit: cover; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
                     <div style="min-width: 0;">
-                        <div style="font-weight: 800; color: var(--text-title); font-size: 0.88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${recM.nom}</div>
-                        <div style="font-size: 0.7rem; color: var(--accent-dark); font-weight: 700; margin-top: 2px;">🍽️ ${recM.portions} • ⏱️ ${recM.temps}</div>
+                        <div style="font-weight: 800; color: var(--text-title); font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${recM.nom}</div>
+                        <div style="display: flex; gap: 6px; align-items: center; margin-top: 4px; flex-wrap: wrap;">
+                            <span style="font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: 10px; border: 1px solid ${bordBadgeM}; background: ${bgBadgeM}; color: ${txtBadgeM};">
+                                ${verdictM}
+                            </span>
+                            <span style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 700;">🍽️ ${recM.portions}</span>
+                        </div>
+                        ${astuceM ? `<div style="font-size: 0.68rem; color: #D84315; font-weight: 700; margin-top: 3px;">${astuceM}</div>` : ''}
                     </div>
                 </div>
                 <button type="button" class="btn" style="padding: 7px 12px; font-size: 0.78rem; font-weight: 800; border-color: var(--accent); color: var(--accent-dark); background: #FFF;" onclick="afficherDetailRecetteDirect(dernieresMaisonTrouvees[${indexM}], true)">👁️ Voir</button>
@@ -8304,7 +8798,40 @@ async function lancerRechercheGlobaleDepuisCarnet() {
         `;
         conteneur.appendChild(headerMealDB);
 
+        // 🚨 NOUVEAU : On télécharge les ingrédients pour pouvoir faire l'analyse clinique
+        const aAnalyser = dernieresMealDBTrouvees.slice(0, 25);
+        const recettesCompletes = await Promise.all(aAnalyser.map(async m => {
+            if (m.strIngredient1) return m; 
+            try {
+                const r = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${m.idMeal}`);
+                const d = await r.json();
+                return d.meals[0] || m;
+            } catch(e) { return m; }
+        }));
+        
+        dernieresMealDBTrouvees = recettesCompletes;
+
+        // On dessine la liste avec l'intelligence clinique activée !
         dernieresMealDBTrouvees.forEach((m, indexDB) => {
+            const analyse = (typeof analyserCliniqueRecette === 'function') 
+                ? analyserCliniqueRecette(m, currentProfil) 
+                : { statut: '🟢', verdict: '🟢 RECETTE DU MONDE', alertes: [], scoreTexte: '' };
+            
+            let bgBadge = "rgba(46, 125, 50, 0.12)";
+            let bordBadge = "#2E7D32";
+            let txtBadge = "#1B5E20";
+            let verdictFinal = analyse.verdict === '🟢 RECETTE HARMONIEUSE' ? '🟢 RECETTE DU MONDE' : analyse.verdict;
+
+            if (analyse.statut === '🟡') {
+                bgBadge = "rgba(245, 127, 23, 0.12)";
+                bordBadge = "#F57F17";
+                txtBadge = "#E65100";
+            } else if (analyse.statut === '🔴' || analyse.statut === '🟠') {
+                bgBadge = "rgba(216, 67, 21, 0.12)";
+                bordBadge = "#D84315";
+                txtBadge = "#B5603F";
+            }
+
             const card = document.createElement('div');
             card.style.cssText = "display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 14px; padding: 10px 12px; margin-bottom: 6px;";
             card.innerHTML = `
@@ -8312,7 +8839,12 @@ async function lancerRechercheGlobaleDepuisCarnet() {
                     <img src="${m.strMealThumb}/preview" alt="${m.strMeal}" style="width: 44px; height: 44px; border-radius: 10px; object-fit: cover; flex-shrink: 0;">
                     <div style="min-width: 0;">
                         <div class="meal-title-text" style="font-weight: 800; color: var(--text-title); font-size: 0.88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${m.strMeal}</div>
-                        <div style="font-size: 0.68rem; color: var(--text-muted); margin-top: 2px;">🌍 TheMealDB</div>
+                        
+                        <div style="display: inline-block; font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: 10px; border: 1px solid ${bordBadge}; background: ${bgBadge}; color: ${txtBadge}; margin-top: 3px;">
+                            ${verdictFinal}
+                        </div>
+                        ${analyse.alertes.length > 0 ? `<div style="font-size: 0.68rem; color: #D84315; font-weight: 700; margin-top: 2px;">💡 ${analyse.scoreTexte}</div>` : ''}
+
                     </div>
                 </div>
                 <button type="button" class="btn" style="padding: 7px 12px; font-size: 0.78rem; font-weight: 800;" onclick="afficherDetailRecetteDirect(dernieresMealDBTrouvees[${indexDB}], false)">👁️ Voir</button>
@@ -8439,22 +8971,94 @@ async function afficherDetailRecetteDirect(rec, estMaison = true) {
 
     if (estMaison) {
         // --- RECETTE MAISON ---
+        
+        // 🧠 1. APPEL DU MOTEUR CLINIQUE MAISON POUR L'AFFICHAGE DÉTAILLÉ
+        let alertesM = [];
         let ingredientsHTML = "";
+        
         if (rec.ingredients && Array.isArray(rec.ingredients)) {
+            const legumesTries = [...legumes].sort((a, b) => b.nom.length - a.nom.length);
+
             rec.ingredients.forEach(ligneBrute => {
                 const textePropre = ligneBrute.replace(/^(🟢|🟡|🟠|🔴|⚪|\s)+/gu, '').trim();
-                ingredientsHTML += `<li style="margin-bottom: 5px;">🟢 ${textePropre}</li>`;
+                const texteClean = removeAccents(textePropre.toLowerCase());
+
+                let estSensible = false;
+                let nomSensible = "";
+
+                if (currentProfil && currentProfil !== 'neutre') {
+                    for (let alim of legumesTries) {
+                        if (!alim || !alim.nom) continue;
+                        const nomAlimClean = removeAccents(alim.nom.toLowerCase().trim());
+                        const nomAlimSingulier = nomAlimClean.replace(/s\b/g, '');
+                        const regexMotEntier = new RegExp(`(^|[^a-zÀ-ÿ])(${nomAlimClean}|${nomAlimSingulier})([^a-zÀ-ÿ]|$)`, 'i');
+
+                        if (regexMotEntier.test(texteClean)) {
+                            if (isClinicallyBad(alim, currentProfil)) {
+                                estSensible = true;
+                                nomSensible = alim.nom;
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                if (estSensible) {
+                    if (!alertesM.includes(nomSensible)) alertesM.push(nomSensible);
+
+                    // 💡 Cherche l'alternative
+                    let alternativeTrouvee = "";
+                    const nomSensibleClean = removeAccents(nomSensible.toLowerCase().trim());
+                    const nomSensibleSingulier = nomSensibleClean.replace(/s\b/g, '');
+
+                    if (typeof DICO_ALTERNATIVES_CLINIQUES !== 'undefined') {
+                        for (let [cle, remp] of Object.entries(DICO_ALTERNATIVES_CLINIQUES)) {
+                            if (nomSensibleClean === cle || nomSensibleSingulier === cle || nomSensibleClean.includes(cle)) {
+                                alternativeTrouvee = remp;
+                                break;
+                            }
+                        }
+                    }
+
+                    const conseilTexte = alternativeTrouvee ? `(💡 Remplacer par : ${alternativeTrouvee})` : `(💡 À doser selon votre sensibilité)`;
+                    ingredientsHTML += `<li style="margin-bottom: 5px;">🟡 <strong>${textePropre}</strong> <span style="font-size:0.75rem; color:#B5603F; font-weight:700;">${conseilTexte}</span></li>`;
+                } else {
+                    ingredientsHTML += `<li style="margin-bottom: 5px;">🟢 ${textePropre}</li>`;
+                }
             });
         }
 
+        // 🧠 2. DÉFINITION DES COULEURS ET BADGES MAISON
+        let statutBadge = '🟢';
+        let verdictTexte = '🟢 RECETTE IDÉALE';
+        let bannerBg = 'rgba(46,125,50,0.12)';
+        let bannerColor = '#1B5E20';
+        let astuceSousTitre = '';
+
+        if (alertesM.length > 0 && alertesM.length <= 2) {
+            statutBadge = '🟡';
+            verdictTexte = '🟡 FACILEMENT ADAPTABLE';
+            bannerBg = 'rgba(245,127,23,0.12)';
+            bannerColor = '#E65100';
+            astuceSousTitre = `<div style="font-size:0.75rem; color:#B5603F; font-weight:700; margin-top:4px;">💡 Astuce : modérez ou adaptez ${alertesM.join(' et ')}</div>`;
+        } else if (alertesM.length > 2) {
+            statutBadge = '🟠';
+            verdictTexte = '🟠 SENSIBLE EN CRISE';
+            bannerBg = 'rgba(216,67,21,0.12)';
+            bannerColor = '#B5603F';
+            astuceSousTitre = `<div style="font-size:0.75rem; color:#B5603F; font-weight:700; margin-top:4px;">💡 Plusieurs ingrédients sensibles (${alertesM.slice(0, 2).join(', ')}...)</div>`;
+        }
+
+        // 🧠 3. RENDU HTML
         detailZone.innerHTML = `
             <img src="${rec.image || ''}" alt="${rec.nom}" style="width: 100%; height: 170px; object-fit: cover; border-radius: 14px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
             
             <div style="text-align: center; margin-bottom: 12px;">
                 <div style="font-size: 0.68rem; color: #B78103; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">⭐ RECETTE OFFICIELLE MAISON</div>
-                <span style="display: inline-block; padding: 5px 14px; border-radius: 20px; font-weight: 800; font-size: 0.78rem; background: rgba(46,125,50,0.12); color: #1B5E20; border: 1.5px solid #1B5E20;">
-                    🟢 RECETTE IDÉALE • PROFIL : ${profilAffiche}
+                <span style="display: inline-block; padding: 5px 14px; border-radius: 20px; font-weight: 800; font-size: 0.78rem; background: ${bannerBg}; color: ${bannerColor}; border: 1.5px solid ${bannerColor};">
+                    ${verdictTexte} • PROFIL : ${profilAffiche}
                 </span>
+                ${astuceSousTitre}
                 ${rec.conseilDigestif ? `<div style="font-size:0.75rem; color:#2E7D32; font-weight:700; margin-top:6px; background:rgba(46,125,50,0.08); padding:5px 10px; border-radius:10px;">🌿 Conseil chef : ${rec.conseilDigestif}</div>` : ''}
             </div>
 
@@ -8470,15 +9074,6 @@ async function afficherDetailRecetteDirect(rec, estMaison = true) {
 
             <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">👨‍🍳 Préparation étape par étape :</div>
             <p id="rec-instructions-detail" style="font-size: 0.88rem; color: var(--text-main); line-height: 1.55; white-space: pre-line; margin: 0;">${rec.instructions}</p>
-            
-            ${rec.sourceNom && rec.sourceUrl ? `
-                <div style="margin-top: 18px; padding-top: 10px; border-top: 1px dashed var(--border-color); text-align: center;">
-                    <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">Inspiration originale : </span>
-                    <a href="${rec.sourceUrl}" target="_blank" rel="noopener noreferrer" style="font-size: 0.75rem; color: var(--accent-dark); font-weight: 800; text-decoration: underline;">
-                        ${rec.sourceNom} ↗
-                    </a>
-                </div>
-            ` : ''}
         `;
 
     } else {
@@ -8494,26 +9089,81 @@ async function afficherDetailRecetteDirect(rec, estMaison = true) {
             } catch(e) {}
         }
         
-        // 🎯 ON DONNE LA RECETTE COMPLÈTE AU TRADUCTEUR !
         recetteTheMealDBEnCours = meal;
 
+        // 🧠 1. APPEL DU MOTEUR CLINIQUE (C'est ce qui manquait ici !)
+        const analyse = (typeof analyserCliniqueRecette === 'function') 
+            ? analyserCliniqueRecette(meal, currentProfil) 
+            : { statut: '🟢', verdict: '🟢 RECETTE DU MONDE', alertes: [], scoreTexte: '' };
+
+        // Génération du Conseil du Chef
+        let conseilChefTexte = "";
+        if (analyse.alertes.length > 0) {
+            conseilChefTexte = `Pour votre confort digestif, n'hésitez pas à modérer ou remplacer ${analyse.alertes.join(' et ')}.`;
+        } else {
+            conseilChefTexte = "Ingrédients doux et harmonieux. Privilégiez une cuisson modérée sans excès d'huile et dégustez tiède.";
+        }
+
+        // 🧠 2. ANALYSE INDIVIDUELLE DES INGRÉDIENTS (Pastilles + Alternatives)
         let ingredientsHTML = "";
         for (let i = 1; i <= 20; i++) {
             const ing = meal[`strIngredient${i}`];
             const qte = meal[`strMeasure${i}`];
             if (ing && ing.trim().length > 0) {
-                ingredientsHTML += `<li style="margin-bottom: 5px;">🟢 <strong>${qte ? qte.trim() : ''}</strong> ${ing.trim()}</li>`;
+                const ingClean = ing.toLowerCase().trim();
+                const nomFR = dicoAnglaisVersFrancais[ingClean];
+                let puce = "🟢";
+                let conseil = "";
+
+                if (nomFR) {
+                    const alimentBase = legumes.find(l => removeAccents(l.nom.toLowerCase()).includes(nomFR));
+                    if (alimentBase && isClinicallyBad(alimentBase, currentProfil)) {
+                        puce = "🟡";
+                        
+                        // Cherche dans le Grand Dictionnaire d'Alternatives
+                        let alternativeTrouvee = "";
+                        const nomFRClean = removeAccents(nomFR.toLowerCase());
+                        if (typeof DICO_ALTERNATIVES_CLINIQUES !== 'undefined') {
+                            for (let [cle, remp] of Object.entries(DICO_ALTERNATIVES_CLINIQUES)) {
+                                if (nomFRClean.includes(cle) || cle.includes(nomFRClean)) {
+                                    alternativeTrouvee = remp;
+                                    break;
+                                }
+                            }
+                        }
+                        const texteConseil = alternativeTrouvee ? `(💡 Remplacer par : ${alternativeTrouvee})` : `(💡 À doser selon votre sensibilité)`;
+                        conseil = ` <span style="font-size:0.75rem; color:#B5603F; font-weight:700;">${texteConseil}</span>`;
+                    }
+                }
+
+                ingredientsHTML += `<li style="margin-bottom: 5px;">
+                    ${puce} <strong>${qte ? qte.trim() : ''}</strong> ${ing.trim()}${conseil}
+                </li>`;
             }
         }
 
+        // 🧠 3. DÉFINITION DES COULEURS DE LA BANNIÈRE
+        let bannerBg = analyse.statut === '🟢' ? 'rgba(46,125,50,0.12)' : (analyse.statut === '🟡' ? 'rgba(245,127,23,0.12)' : 'rgba(216,67,21,0.12)');
+        let bannerColor = analyse.statut === '🟢' ? '#1B5E20' : (analyse.statut === '🟡' ? '#E65100' : '#B5603F');
+        let verdictFinal = analyse.verdict === '🟢 RECETTE HARMONIEUSE' ? '🟢 RECETTE DU MONDE' : analyse.verdict;
+
+        const urlSourceFinale = meal.strSource || meal.strYoutube || `https://www.themealdb.com/meal/${meal.idMeal}`;
+        const nomSourceFinale = meal.strSource ? "TheMealDB / Source web" : "TheMealDB";
+
+        // 🧠 4. RENDU HTML
         detailZone.innerHTML = `
             <img src="${meal.strMealThumb}" alt="${meal.strMeal}" style="width: 100%; height: 170px; object-fit: cover; border-radius: 14px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
             
             <div style="text-align: center; margin-bottom: 12px;">
                 <div style="font-size: 0.68rem; color: #1565C0; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">🌍 BASE THEMEALDB</div>
-                <span style="display: inline-block; padding: 5px 14px; border-radius: 20px; font-weight: 800; font-size: 0.78rem; background: rgba(46,125,50,0.12); color: #1B5E20; border: 1.5px solid #1B5E20;">
-                    🟢 RECETTE DU MONDE • PROFIL : ${profilAffiche}
+                <span style="display: inline-block; padding: 5px 14px; border-radius: 20px; font-weight: 800; font-size: 0.78rem; background: ${bannerBg}; color: ${bannerColor}; border: 1.5px solid ${bannerColor};">
+                    ${verdictFinal} • PROFIL : ${profilAffiche}
                 </span>
+                ${analyse.alertes.length > 0 ? `<div style="font-size:0.75rem; color:#B5603F; font-weight:700; margin-top:4px;">${analyse.scoreTexte}</div>` : ''}
+                
+                <div style="font-size:0.75rem; color:#2E7D32; font-weight:700; margin-top:6px; background:rgba(46,125,50,0.08); padding:5px 10px; border-radius:10px;">
+                    🌿 Conseil chef : ${conseilChefTexte}
+                </div>
             </div>
 
             <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 12px;">
@@ -8531,8 +9181,8 @@ async function afficherDetailRecetteDirect(rec, estMaison = true) {
             
             <div style="margin-top: 18px; padding-top: 10px; border-top: 1px dashed var(--border-color); text-align: center;">
                 <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">Source originale : </span>
-                <a href="${meal.strSource || meal.strYoutube || `https://www.themealdb.com/meal/${meal.idMeal}`}" target="_blank" rel="noopener noreferrer" style="font-size: 0.75rem; color: var(--accent-dark); font-weight: 800; text-decoration: underline;">
-                    ${meal.strSource ? "TheMealDB / Source web" : "TheMealDB"} ↗
+                <a href="${urlSourceFinale}" target="_blank" rel="noopener noreferrer" style="font-size: 0.75rem; color: var(--accent-dark); font-weight: 800; text-decoration: underline;">
+                    ${nomSourceFinale} ↗
                 </a>
             </div>
         `;
