@@ -1,5 +1,5 @@
 <!-- ================================================================================== -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 14.01 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 14.02 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -1593,7 +1593,7 @@
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v14.01</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v14.02</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -2656,7 +2656,7 @@
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "14.01";
+    const APP_VERSION = "14.02";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -4030,10 +4030,11 @@ function afficherProduitNonTrouve(codeBarres) {
     if (zoneContenu) {
         zoneContenu.innerHTML = `
             <div style="background: #FFFDF8; border: 2px dashed var(--border-color); border-radius: 16px; padding: 25px 15px; text-align: center;">
-                <div style="font-size: 2.2rem; margin-bottom: 8px;">📦❓</div>
+                <div style="font-size: 2.2rem; margin-bottom: 8px;">🧴❓</div>
                 <h4 style="color: var(--text-title); margin: 0 0 6px 0; font-family: 'Playfair Display', serif;">Produit introuvable</h4>
-                <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.45;">
-                    Le code-barres <strong>${codeBarres}</strong> n'est pas encore répertorié dans la base libre Open Food Facts.
+                <div style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.45;">
+                    Le code-barres <strong>${codeBarres}</strong> n'est pas répertorié.<br><br>
+                    <span style="font-size: 0.75rem;">Il s'agit peut-être d'un <strong>produit non alimentaire</strong> (cosmétique, entretien...) ou d'un article trop récent pour la base de données libre.</span>
                 </div>
             </div>
         `;
@@ -6733,6 +6734,37 @@ async function enregistrerDirectTheMealDB(idMeal, nomRecette) {
 
     } catch (e) {
         alert("⚠️ Erreur lors de l'enregistrement direct.");
+    }
+}
+
+// === LE MOTEUR MANQUANT : SAUVEGARDE LA RECETTE SUR LA FICHE ===
+function sauvegarderObjetRecetteSurAliment(idAliment, objetRecette) {
+    const index = legumes.findIndex(l => l.id === idAliment);
+    if (index > -1) {
+        // 1. Crée la liste de recettes si elle est vide
+        if (!Array.isArray(legumes[index].recettesList)) {
+            legumes[index].recettesList = [];
+        }
+        
+        // 2. Ajoute la nouvelle recette
+        legumes[index].recettesList.push(objetRecette);
+        
+        // 3. Sauvegarde dans le téléphone
+        saveToLocal();
+        
+        // 4. Met à jour les compteurs de la page d'accueil
+        renderHomeCounts();
+        
+        // 5. Masque le bouton pour éviter de cliquer deux fois
+        const btnSave = document.getElementById('btn-enregistrer-recette');
+        if (btnSave) btnSave.style.display = 'none';
+
+        alert(`✅ La recette "${objetRecette.nom}" a bien été ajoutée à votre Carnet !`);
+        
+        // 6. Rafraîchit l'affichage en arrière-plan
+        if (document.getElementById('view-list').style.display === 'block') {
+            renderCards();
+        }
     }
 }
 
