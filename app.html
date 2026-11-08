@@ -1,5 +1,5 @@
 <!-- ================================================================================== -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 14.05 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 15.00 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -16,6 +16,7 @@
 <!-- MISE EN PLACE COFFRE_FORT CLOUD - GESTIONNAIRE LISTE DES RECETTES "MES RECETTES" -->
 <!-- MISE EN PLACE DE MA PROPRE BD DE RECETTES CONSULTABLE HORS LIGNE -->
 <!-- REORGANISATION DE LA PAGE ACCUEIL AVEC BOUTON ADAPTES-FAVORIS-RECETTE-SCANNER  -->
+<!-- MISE A JOUR MODE SOMBRE - INTEGRATION FILTRE INTELIGENT MES RECETTES  -->
 <!-- =================================================================================== -->
 
 <!DOCTYPE html>
@@ -1529,7 +1530,10 @@ body.dark-mode .carnet-row,
 body.dark-mode #resultats-explorer-global div[style*="background: #FFFDF8"],
 body.dark-mode #resultats-explorer-global div[style*="background: #FFFFFF"] {
     background-color: #38312B !important; 
-    border-color: #5C5248 !important;
+    /* On force les bordures haut, droite et bas, mais on laisse la bordure gauche tranquille ! */
+    border-top-color: #5C5248 !important;
+    border-right-color: #5C5248 !important;
+    border-bottom-color: #5C5248 !important;
 }
 
 /* 2. Textes dans les cartes (Blanc pur et Sable) */
@@ -1548,12 +1552,14 @@ body.dark-mode .carnet-row strong[style*="color: var(--accent-dark)"] {
 /* 3. Les boutons d'action dans les cartes (Voir, Déplacer, Poubelle) */
 body.dark-mode .carnet-row button,
 body.dark-mode #resultats-explorer-global button {
-    background-color: #4A423A !important;
-    color: #FFF8F0 !important;
-    border-color: #5C5248 !important;
+    background-color: #FFFDF8 !important;
+    color: #231F1A !important;
+    border-color: #D1C7B8 !important;
 }
 body.dark-mode .carnet-row button[onclick*="supprimerRecette"] {
-    color: #EF9A9A !important;
+    background-color: #FFF5F5 !important;
+    border-color: #FFCDCD !important;
+    color: #D32F2F !important;
 }
 
 /* 4. Le Champ de Recherche (Input) */
@@ -1606,6 +1612,7 @@ body.dark-mode #tab-btn-decouvrir[style*="background: var(--text-title)"] {
 }
 /* Onglet DÉSÉLECTIONNÉ : Fond blanc sable, texte foncé (comme Image 3) */
 body.dark-mode #tab-btn-mon-carnet[style*="background: transparent"],
+body.dark-mode #tab-btn-frigo[style*="background: transparent"],
 body.dark-mode #tab-btn-decouvrir[style*="background: transparent"] {
     background-color: #FFFDF8 !important; 
     color: #4A423A !important; 
@@ -1955,7 +1962,7 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v14.05</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v15.00</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -2420,11 +2427,12 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
 
             <p style="margin: 0 0 4px 0; color: #1565C0; font-weight: 800; font-size: 0.85rem;">📖 3. Le bouton "Mes Recettes" (Accueil) :</p>
             <p style="margin: 0 0 6px 0; color: #555; line-height: 1.45; font-size: 0.85rem;">
-                C'est votre grand marché gourmand, séparé en <strong>2 onglets</strong> :
+                C'est votre grand marché gourmand, séparé en <strong>3 onglets</strong> :
             </p>
             <ul style="margin: 0 0 5px 0; padding-left: 15px; color: #555; line-height: 1.45; font-size: 0.85rem;">
-                <li style="margin-bottom: 6px;"><strong>Mon Carnet :</strong> Il regroupe toutes vos recettes enregistrées. Vous pouvez les relire 👁️, les supprimer 🗑️, ou les <strong>déplacer 🔄</strong> vers un autre aliment en cas d'erreur.</li>
-                <li style="margin-bottom: 0;"><strong>Découvrir & Explorer :</strong> Recherche libre mondiale (tapez "Poulet", "Curry"...). C'est aussi ici que se trouvent les liens web des sites culinaires <strong>Suisses 🇨🇭 et Français 🇫🇷</strong> les plus connus (Migusto, Fooby, Marmiton...).</li>
+                <li style="margin-bottom: 6px;"><strong>📖 Carnet :</strong> Regroupe vos recettes enregistrées. Vous pouvez les filtrer par tolérance (🟢, 🟡, 🟠), les renommer ✏️, les relire 👁️, les <strong>déplacer 🔄</strong> vers un autre aliment ou les supprimer 🗑️.</li>
+                <li style="margin-bottom: 6px;"><strong>🧊 Frigo Anti-Gaspi :</strong> Ajoutez jusqu'à 4 restes de votre cuisine (saisie semi-automatique). L'application trouve instantanément les plats combinant au mieux vos ingrédients !</li>
+                <li style="margin-bottom: 0;"><strong>🔍 Explorer :</strong> Recherche libre mondiale (tapez "Poulet", "Curry"...). C'est aussi ici que se trouvent les liens directs vers les grands sites culinaires <strong>Suisses 🇨🇭 et Français 🇫🇷</strong> (Migusto, Fooby, Marmiton...).</li>
             </ul>
         </div>
 
@@ -2684,23 +2692,26 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
     </div>
 </div>
 
-<!-- MODALE CARNET DE RECETTES GLOBAL (AVEC 2 ONGLETS) -->
+<!-- MODALE CARNET DE RECETTES GLOBAL (AVEC 3 ONGLETS) -->
 <div id="modal-carnet-recettes" class="modal" style="display: none;">
     <div class="modal-content" style="max-width: 500px; max-height: 85vh; overflow-y: auto; padding: 20px;">
         
-        <!-- En-tête : Titre + Croix ❌ -->
+        <!-- 1. En-tête : Titre + Croix ❌ -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
             <h3 style="margin: 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.35rem;">🍲 Mes Recettes</h3>
             <button type="button" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; padding: 0;" onclick="fermerCarnetRecettes()">❌</button>
         </div>
 
-        <!-- LES 2 ONGLETS ÉLÉGANTS -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: rgba(0,0,0,0.04); padding: 5px; border-radius: 16px; margin-bottom: 15px;">
-            <button type="button" id="tab-btn-mon-carnet" class="btn" onclick="basculerOngletCarnet('carnet')" style="border-radius: 12px; font-weight: 800; font-size: 0.8rem; padding: 10px 6px; text-align: center; border: none; background: var(--text-title); color: #FFF; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                📖 Mon Carnet
+        <!-- 2. LES 3 ONGLETS ÉLÉGANTS ALIGNÉS -->
+        <div style="display: flex; gap: 6px; background: rgba(0,0,0,0.05); padding: 4px; border-radius: 14px; margin-bottom: 15px; width: 100%; box-sizing: border-box;">
+            <button type="button" id="tab-btn-mon-carnet" class="btn" onclick="basculerOngletCarnet('carnet')" style="flex: 1; border-radius: 10px; font-weight: 800; font-size: 0.75rem; padding: 8px 2px; text-align: center; border: none; background: var(--text-title); color: #FFF; box-shadow: 0 2px 6px rgba(0,0,0,0.1); white-space: nowrap;">
+                📖 Carnet
             </button>
-            <button type="button" id="tab-btn-decouvrir" class="btn" onclick="basculerOngletCarnet('explorer')" style="border-radius: 12px; font-weight: 800; font-size: 0.8rem; padding: 10px 6px; text-align: center; border: none; background: transparent; color: var(--text-muted); box-shadow: none;">
-                🔍 Découvrir & Explorer
+            <button type="button" id="tab-btn-frigo" class="btn" onclick="basculerOngletCarnet('frigo')" style="flex: 1; border-radius: 10px; font-weight: 800; font-size: 0.75rem; padding: 8px 2px; text-align: center; border: none; background: transparent; color: var(--text-muted); box-shadow: none; white-space: nowrap;">
+                🧊 Frigo
+            </button>
+            <button type="button" id="tab-btn-decouvrir" class="btn" onclick="basculerOngletCarnet('explorer')" style="flex: 1; border-radius: 10px; font-weight: 800; font-size: 0.75rem; padding: 8px 2px; text-align: center; border: none; background: transparent; color: var(--text-muted); box-shadow: none; white-space: nowrap;">
+                🔍 Explorer
             </button>
         </div>
 
@@ -2708,21 +2719,50 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
         <!-- ONGLET 1 : MON CARNET DE RECETTES PERSO    -->
         <!-- ========================================== -->
         <div id="vue-onglet-carnet">
-            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0; margin-bottom: 12px;">Vos recettes enregistrées et vos pépites personnelles :</p>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0; margin-bottom: 12px; text-align: center;">Vos recettes enregistrées et vos pépites personnelles :</p>
             
-            <div style="margin-bottom: 12px;">
-                <input type="text" id="search-carnet" class="form-control" placeholder="🔍 Filtrer dans mon carnet..." oninput="filtrerCarnetRecettes()" style="padding: 10px 14px; font-size: 0.88rem; border-radius: 12px; width: 100%; box-sizing: border-box; border: 1px solid var(--border-color); background: #FFFDF8; color: var(--text-title); font-weight: 700;">
+            <div class="search-box-container" style="margin-top: 18px; margin-bottom: 12px; width: 100%; max-width: none;">
+                <div id="carnet-profil-badge" class="active-profil-badge" onclick="ouvrirModalChangerProfil()" style="cursor: pointer;" title="Cliquer pour changer de profil">Profil : 🟢 Neutre</div>
+                <input type="text" id="search-carnet" class="search-input" placeholder="🔍 Filtrer dans mon carnet..." oninput="filtrerCarnetRecettes()" style="padding: 10px 14px; font-size: 0.88rem; border-radius: 12px; width: 100%; box-sizing: border-box; border: 1px solid var(--border-color); background: #FFFDF8; color: var(--text-title); font-weight: 700;">
             </div>
 
-            <!-- Liste des recettes enregistrées -->
+            <div id="carnet-filters-container" class="filter-row" style="margin-bottom: 15px; width: 100%;"></div>
             <div id="liste-carnet-recettes" style="display: flex; flex-direction: column; gap: 8px;"></div>
         </div>
 
         <!-- ========================================== -->
-        <!-- ONGLET 2 : DÉCOUVRIR & EXPLORER (GLOBAL)   -->
+        <!-- ONGLET 2 : MON FRIGO ANTI-GASPI            -->
+        <!-- ========================================== -->
+        <div id="vue-onglet-frigo" style="display: none;">
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0; margin-bottom: 8px; text-align: center;">
+                Qu'avez-vous sous la main ? Ajoutez jusqu'à 4 ingrédients :
+            </p>
+
+            <div style="position: relative; margin-bottom: 10px;">
+                <input type="text" id="input-frigo-search" class="form-control" placeholder="Tapez 2 lettres (ex: ca, po, ri...)" oninput="rechercheAutoFrigo(event)" style="padding: 10px 14px; font-size: 0.88rem; border-radius: 12px; width: 100%; box-sizing: border-box; border: 1.5px solid var(--accent); background: #FFFDF8; font-weight: 700; color: var(--accent-dark);">
+                <div id="frigo-suggestions" class="search-results" style="position: absolute; width: 100%; z-index: 50; display: none; background: #FFFFFF; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); max-height: 200px; overflow-y: auto;"></div>
+            </div>
+
+            <div id="frigo-panier-tags" style="display: flex; flex-wrap: wrap; gap: 6px; min-height: 38px; margin-bottom: 12px; align-items: center; justify-content: center;">
+                <span id="frigo-placeholder-vide" style="font-size: 0.75rem; color: var(--text-muted); font-style: italic;">
+                    (Aucun ingrédient sélectionné)
+                </span>
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <button type="button" id="btn-chercher-frigo" class="btn btn-primary" onclick="lancerRechercheFrigoAntiGaspi()" style="width: 100%; padding: 12px; font-weight: 800; font-size: 0.9rem; border-radius: 14px; box-shadow: 0 4px 10px rgba(212,163,115,0.25);">
+                    🍲 Trouver ma recette Anti-Gaspi
+                </button>
+            </div>
+
+            <div id="resultats-frigo-container" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ONGLET 3 : DÉCOUVRIR & EXPLORER (GLOBAL)   -->
         <!-- ========================================== -->
         <div id="vue-onglet-explorer" style="display: none;">
-            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0; margin-bottom: 12px;">Trouvez l'inspiration par ingrédient ou par envie (Soupe, Curry, Gratin...) :</p>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0; margin-bottom: 12px; text-align: center;">Trouvez l'inspiration par ingrédient ou par envie (Soupe, Curry, Gratin...) :</p>
             
             <div style="display: flex; gap: 6px; margin-bottom: 14px;">
                 <input type="text" id="input-explorer-libre" class="form-control" placeholder="Ex: Poulet, Curry, Courge..." style="padding: 10px 14px; font-size: 0.9rem; border-radius: 12px; flex: 1; border: 1.5px solid var(--accent); background: #FFFDF8; font-weight: 800; color: var(--accent-dark);">
@@ -2731,7 +2771,6 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
                 </button>
             </div>
 
-            <!-- Résultats d'exploration -->
             <div id="resultats-explorer-global" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
                 <div style="text-align: center; color: var(--text-muted); font-size: 0.82rem; padding: 20px 10px; font-style: italic;">
                     Tapez un mot-clé ci-dessus pour explorer les recettes du monde et les recettes officielles du Marché !
@@ -2740,8 +2779,6 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
 
             <!-- GUIDE DÉROULANT : COMMENT ENREGISTRER UNE RECETTE CH & FR -->
             <div style="background: #FFFDF8; border: 1.5px dashed var(--accent); border-radius: 16px; margin: 15px 0 16px 0; text-align: left; box-shadow: 0 2px 6px rgba(0,0,0,0.02); overflow: hidden;">
-                
-                <!-- En-tête cliquable avec la flèche -->
                 <div onclick="toggleGuideRecettesWeb()" style="padding: 12px 14px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none;">
                     <div style="font-weight: 800; color: var(--accent-dark); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.8px; display: flex; align-items: center; gap: 6px;">
                         💡 Enregistrer une recette CH & FR ?
@@ -2750,41 +2787,17 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
                         <path d="M7 10l5 5 5-5z"/>
                     </svg>
                 </div>
-
-                <!-- Contenu qui se déroule au clic -->
                 <div id="contenu-guide-web" style="max-height: 0px; opacity: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease, padding 0.3s ease; padding: 0 14px;">
                     <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.76rem; color: var(--text-main); line-height: 1.35; padding-bottom: 12px; border-top: 1px dashed rgba(212, 163, 115, 0.3); padding-top: 10px;">
-                        
-                        <!-- 1 -->
-                        <div style="display: flex; align-items: flex-start; gap: 8px;">
-                            <span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">1</span>
-                            <span><strong>Ouvrez le site :</strong> Touchez l'un des boutons ci-dessous (la page s'ouvre dans votre navigateur).</span>
-                        </div>
-
-                        <!-- 2 -->
-                        <div style="display: flex; align-items: flex-start; gap: 8px;">
-                            <span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">2</span>
-                            <span><strong>Cherchez votre plat :</strong> Trouvez la recette qui vous fait envie sur le site partenaire.</span>
-                        </div>
-
-                        <!-- 3 -->
-                        <div style="display: flex; align-items: flex-start; gap: 8px;">
-                            <span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">3</span>
-                            <span><strong>Copiez le lien :</strong> Touchez la barre d'adresse en haut du navigateur et faites <strong>Copier</strong> (l'URL).</span>
-                        </div>
-
-                        <!-- 4 -->
-                        <div style="display: flex; align-items: flex-start; gap: 8px;">
-                            <span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">4</span>
-                            <span><strong>Collez & sauvez :</strong> Revenez dans l'application sur la fiche de l'aliment (✏️ Modifier), collez le lien et enregistrez !</span>
-                        </div>
-
+                        <div style="display: flex; align-items: flex-start; gap: 8px;"><span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">1</span><span><strong>Ouvrez le site :</strong> Touchez l'un des boutons ci-dessous.</span></div>
+                        <div style="display: flex; align-items: flex-start; gap: 8px;"><span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">2</span><span><strong>Cherchez votre plat :</strong> Trouvez la recette qui vous fait envie.</span></div>
+                        <div style="display: flex; align-items: flex-start; gap: 8px;"><span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">3</span><span><strong>Copiez le lien :</strong> Touchez la barre d'adresse en haut et faites Copier.</span></div>
+                        <div style="display: flex; align-items: flex-start; gap: 8px;"><span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">4</span><span><strong>Collez & sauvez :</strong> Revenez sur la fiche de l'aliment (✏️ Modifier), collez le lien et enregistrez !</span></div>
                     </div>
                 </div>
-
             </div>
 
-            <!-- 2. SITES CULINAIRES SUISSES -->
+            <!-- SITES CULINAIRES SUISSES ET FRANCAIS -->
             <div style="border-top: 1px dashed var(--border-color); padding-top: 12px; margin-bottom: 14px;">
                 <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; text-align: center;">🇨🇭 Grands Sites Culinaires Suisses</div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
@@ -2794,8 +2807,6 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
                     <a href="https://www.swissmilk.ch/fr/recettes/" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #1976D2; background: #FFFDF8; color: #1565C0; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇨🇭 Swissmilk</a>
                 </div>
             </div>
-
-            <!-- 3. SITES CULINAIRES FRANÇAIS -->
             <div style="border-top: 1px dashed var(--border-color); padding-top: 12px; margin-bottom: 10px;">
                 <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; text-align: center;">🇫🇷 Grands Sites Culinaires Français</div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
@@ -2807,8 +2818,8 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
             </div>
         </div>
 
-    </div>
-</div>
+    </div> <!-- Ferme modal-content -->
+</div> <!-- Ferme modal-carnet-recettes -->
 <!-- MODALE DÉPLACER UNE RECETTE -->
 <div id="modal-deplacer-recette" class="modal-overlay hidden">
     <div class="modal-box" style="max-width: 400px; text-align: center;">
@@ -3017,7 +3028,7 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "14.05";
+    const APP_VERSION = "15.00";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -3862,17 +3873,26 @@ window.fermerProfils = function() {
         currentProfil = selectionProfilModal.length === 0 ? 'neutre' : selectionProfilModal.join(',');
         localStorage.setItem('marche_saison_profil', currentProfil);
 
-        // Met à jour les badges et compteurs
+        // Met à jour les badges et compteurs de l'accueil
         updateProfilBadges();
         renderHomeCounts();
 
-        // Ferme la fenêtre
+        // Ferme la fenêtre de sélection du profil
         fermerModalChangerProfil();
 
-        // Si on est dans une saison ou dans Adaptés, actualise la liste
+        // 1. Si on est dans une saison ou dans Adaptés, actualise la liste des aliments
         const viewList = document.getElementById('view-list');
         if (viewList && viewList.style.display === 'block') {
             renderCards();
+        }
+
+        // 2. NOUVEAU : Si le carnet de recettes est ouvert, on le rafraîchit en direct !
+        const modalCarnet = document.getElementById('modal-carnet-recettes');
+        if (modalCarnet && modalCarnet.style.display === 'block') {
+            // On relance l'ouverture du carnet pour forcer le recalcul des pastilles
+            // On garde l'onglet actuel (carnet ou explorer)
+            const ongletActif = document.getElementById('vue-onglet-explorer').style.display === 'block' ? 'explorer' : 'carnet';
+            ouvrirCarnetRecettes(ongletActif);
         }
     }
 
@@ -6142,22 +6162,15 @@ function ouvrirQrModal(idFicheUnique = null) {
     if (statusText) statusText.innerHTML = '';
     if (btnCopier) btnCopier.style.display = 'none';
 
-    // --- LE COMPRESSEUR "VOYAGE LÉGER" ---
-    // Supprime le texte lourd des recettes pour ne garder que le numéro d'identification (idMeal)
     const allegerRecettes = (recettes) => {
-    if (!recettes || !Array.isArray(recettes)) return [];
-    return recettes.map(r => {
-        if (r.idMeal) {
-            // SI ON A LE IDMEAL : ON JETTE L'URL COMPLÈTE ! On ne garde QUE le numéro idMeal !
-            return { idMeal: r.idMeal }; 
-        }
-        // Sinon (lien web simple), on ne garde que le nom et l'URL
-        return { nom: r.nom, url: r.url };
-    });
-};
+        if (!recettes || !Array.isArray(recettes)) return [];
+        return recettes.map(r => {
+            if (r.idMeal) { return { idMeal: r.idMeal }; }
+            return { nom: r.nom, url: r.url };
+        });
+    };
 
     try {
-        // CAS A : PARTAGE DIRECT D'UNE SEULE FICHE
         if (idFicheUnique) {
             const fiche = legumes.find(l => l.id == idFicheUnique);
             if (fiche) {
@@ -6181,7 +6194,6 @@ function ouvrirQrModal(idFicheUnique = null) {
             }
         }
 
-        // CAS B : SCAN DES FICHES EN ATTENTE D'ENVOI
         fichesAEnvoyerGlobal = [];
 
         legumes.forEach(l => {
@@ -6193,19 +6205,17 @@ function ouvrirQrModal(idFicheUnique = null) {
             let paquet = null;
 
             if (!d) {
-                // Nouvel aliment inventé par l'utilisateur
                 estModifie = true;
                 paquet = { ...l, recettesList: allegerRecettes(l.recettesList) };
                 delete paquet.image;
             } else {
-                // Fiche officielle avec vos notes ou recettes personnalisées
                 const notePerso = (l.notes || "").trim();
                 const noteOrigine = (d.notes || "").trim();
                 const aNote = notePerso.length > 0 && notePerso !== noteOrigine && notePerso !== "À venir...";
 
-                const recettesPerso = JSON.stringify(allegerRecettes(l.recettesList));
-                const recettesOrigine = JSON.stringify(allegerRecettes(d.recettesList));
-                const aRecette = (l.recettesList && l.recettesList.length > 0) && (recettesPerso !== recettesOrigine);
+                // CORRECTION MAGIQUE ICI : On contourne le bug de mémoire. 
+                // Toutes les fiches de base n'ont aucune recette. Si la vôtre en a, elle DOIT être partagée !
+                const aRecette = (l.recettesList && l.recettesList.length > 0);
 
                 if (aNote || aRecette) {
                     estModifie = true;
@@ -6214,18 +6224,16 @@ function ouvrirQrModal(idFicheUnique = null) {
                         nom: l.nom,
                         notes: l.notes || "",
                         recettesList: allegerRecettes(l.recettesList),
-                        dejaEnvoye: l.dejaEnvoye /* LA PIÈCE MANQUANTE EST ICI ! */
+                        dejaEnvoye: l.dejaEnvoye 
                     };
                 }
             }
 
-            // Filtre du tampon
             if (estModifie && (forcerToutHistorique || l.dejaEnvoye !== true)) {
                 fichesAEnvoyerGlobal.push(paquet);
             }
         });
 
-        // Si aucune fiche en attente
         if (fichesAEnvoyerGlobal.length === 0) {
             if (statusText) {
                 statusText.innerHTML = `
@@ -6240,11 +6248,9 @@ function ouvrirQrModal(idFicheUnique = null) {
             return;
         }
 
-        // COCHAGE AUTOMATIQUE INTELLIGENT :
-        // Uniquement à la première ouverture de la fenêtre ! (Ne force plus la main)
         if (selectionFichesIds.length === 0 && !window.qrModalDejaOuverte) {
             selectionFichesIds = fichesAEnvoyerGlobal.filter(f => !f.dejaEnvoye).map(f => String(f.id || f.nom));
-            window.qrModalDejaOuverte = true; // On mémorise qu'on l'a déjà fait
+            window.qrModalDejaOuverte = true; 
         }
         
         dessinerInterfacePilules();
@@ -7110,19 +7116,22 @@ function sauvegarderObjetRecetteSurAliment(idAliment, objetRecette) {
         // 2. Ajoute la nouvelle recette
         legumes[index].recettesList.push(objetRecette);
         
-        // 3. Sauvegarde dans le téléphone
+        // 3. CORRECTION : Remet la fiche dans la file d'attente des partages !
+        legumes[index].dejaEnvoye = false;
+        
+        // 4. Sauvegarde dans le téléphone
         saveToLocal();
         
-        // 4. Met à jour les compteurs de la page d'accueil
+        // 5. Met à jour les compteurs de la page d'accueil
         renderHomeCounts();
         
-        // 5. Masque le bouton pour éviter de cliquer deux fois
+        // 6. Masque le bouton pour éviter de cliquer deux fois
         const btnSave = document.getElementById('btn-enregistrer-recette');
         if (btnSave) btnSave.style.display = 'none';
 
         alert(`✅ La recette "${objetRecette.nom}" a bien été ajoutée à votre Carnet !`);
         
-        // 6. Rafraîchit l'affichage en arrière-plan
+        // 7. Rafraîchit l'affichage en arrière-plan
         if (document.getElementById('view-list').style.display === 'block') {
             renderCards();
         }
@@ -8239,10 +8248,22 @@ function fermerModalRecetteSmart() {
 
     if (vientDuCarnet) {
         vientDuCarnet = false;
-        ouvrirCarnetRecettes(vientDeLOngletExplorer ? 'explorer' : 'carnet');
-        vientDeLOngletExplorer = false;
+        const modalCarnet = document.getElementById('modal-carnet-recettes');
+        if (modalCarnet) modalCarnet.style.display = 'block';
+        
+        // Détermine exactement sur quel onglet ré-atterrir
+        let ongletRetour = 'carnet';
+        if (vientDuFrigo) {
+            ongletRetour = 'frigo';
+            vientDuFrigo = false;
+        } else if (vientDeLOngletExplorer) {
+            ongletRetour = 'explorer';
+            vientDeLOngletExplorer = false;
+        }
+
+        basculerOngletCarnet(ongletRetour);
     } else {
-        // Sinon, replace l'écran sur la fiche consultée
+        // Sinon, on replace l'écran sur la fiche consultée (comportement normal)
         if (alimentRecetteActif) {
             const carteCible = document.querySelector(`button[onclick*="openForm(${alimentRecetteActif.id})"]`)?.closest('.card');
             if (carteCible) {
@@ -8254,6 +8275,7 @@ function fermerModalRecetteSmart() {
     }
 }
 
+// Ouvre la liseuse de recette directement depuis le bouton caramel de la carte !
 // Ouvre la liseuse de recette directement depuis le bouton caramel de la carte !
 function ouvrirLecteurRecetteInApp(alimentId, indexRecette) {
     const leg = legumes.find(l => l.id == alimentId);
@@ -8294,77 +8316,138 @@ function ouvrirLecteurRecetteInApp(alimentId, indexRecette) {
 
         const detailZone = document.getElementById('rec-detail-contenu');
         if (detailZone) {
-            // 🧠 1. RECONSTRUCTION DU CONTEXTE (Est-ce une recette Maison ou Web ?)
-            let estMaison = false;
-            let conseilChefTexte = "";
-            let portionsTxt = rec.portions || "~ 4 personnes";
-            let tempsTxt = rec.temps || "~ 30 min";
-            let typeOrigine = "🌍 BASE INTERNATIONALE";
-
-            // Vérifie si c'est une recette officielle maison
-            if (typeof window.RECETTES_MAISON !== 'undefined') {
-                const recetteMaisonRef = window.RECETTES_MAISON.find(r => r.nom === rec.nom);
-                if (recetteMaisonRef) {
-                    estMaison = true;
-                    typeOrigine = "⭐ RECETTE OFFICIELLE MAISON";
-                    portionsTxt = recetteMaisonRef.portions || portionsTxt;
-                    tempsTxt = recetteMaisonRef.temps || tempsTxt;
-                    conseilChefTexte = recetteMaisonRef.conseilDigestif || "";
-                }
-            }
-
-            // 🧠 2. DÉFINITION DES COULEURS ET BADGES (RECALCULÉ POUR LES MAISONS !)
-            let statutBadge = rec.statut || '🟢'; // Statut par défaut TheMealDB
             
-            // Si c'est une recette Maison, on recalcule le VRAI statut en direct en lisant les ingrédients !
-            if (estMaison && rec.ingredients) {
-                if (rec.ingredients.includes('🔴') || rec.ingredients.includes('🟠')) {
-                    statutBadge = '🟠';
-                } else if (rec.ingredients.includes('🟡')) {
-                    statutBadge = '🟡';
-                } else {
-                    statutBadge = '🟢';
-                }
+            // 🧠 1. RECONSTRUCTION DU CONTEXTE (Détection Maison vs TheMealDB)
+            let typeOrigine = "🌍 BASE INTERNATIONALE";
+            
+            // Une recette est "Maison" si elle est dans la base locale OU si elle n'a pas d'idMeal TheMealDB
+            const estDansBaseMaison = typeof window.RECETTES_MAISON !== 'undefined' && window.RECETTES_MAISON.some(r => removeAccents(r.nom.toLowerCase().trim()) === removeAccents((rec.nom || '').toLowerCase().trim()));
+            const estRecetteMaison = estDansBaseMaison || (!rec.idMeal && rec.instructions);
+
+            if (estRecetteMaison) {
+                typeOrigine = "⭐ RECETTE OFFICIELLE MAISON";
+            } else {
+                typeOrigine = "🌍 RECETTE THEMEALDB";
             }
 
-            let verdictTexte = '🟢 RECETTE SAUVEGARDÉE';
+            // 🧠 2. RE-ÉVALUATION CLINIQUE DYNAMIQUE DES INGRÉDIENTS SAUVEGARDÉS
+            let alertes = [];
+            let ingredientsHTML = "";
+
+            if (rec.ingredients && typeof rec.ingredients === 'string') {
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = rec.ingredients;
+                const items = tempDiv.querySelectorAll('li');
+                const legumesTries = [...legumes].sort((a, b) => b.nom.length - a.nom.length);
+
+                if (items.length > 0) {
+                    items.forEach(li => {
+                        // Nettoyage du texte pour l'analyse
+                        let rawText = li.textContent.replace(/(🟢|🟡|🟠|🔴|⚪)/g, '').trim();
+                        rawText = rawText.replace(/\(💡.*?\)/g, '').trim();
+                        const texteClean = removeAccents(rawText.toLowerCase());
+                        
+                        let estSensible = false;
+                        let nomSensible = "";
+
+                        if (currentProfil && currentProfil !== 'neutre') {
+                            for (let alim of legumesTries) {
+                                if (!alim || !alim.nom) continue;
+                                const nomAlimClean = removeAccents(alim.nom.toLowerCase().trim());
+                                const nomAlimSingulier = nomAlimClean.replace(/s\b/g, '');
+                                const regexMotEntier = new RegExp(`(^|[^a-zÀ-ÿ])(${nomAlimClean}|${nomAlimSingulier})([^a-zÀ-ÿ]|$)`, 'i');
+
+                                if (regexMotEntier.test(texteClean)) {
+                                    if (isClinicallyBad(alim, currentProfil)) {
+                                        estSensible = true;
+                                        nomSensible = alim.nom;
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Reconstruction de la ligne HTML en gardant le formatage (ex: <strong>)
+                        let inner = li.innerHTML;
+                        inner = inner.replace(/(🟢|🟡|🟠|🔴|⚪)/g, '').trim();
+                        inner = inner.replace(/<span[^>]*>\(💡.*?<\/span>/g, '').trim();
+
+                        if (estSensible) {
+                            if (!alertes.includes(nomSensible)) alertes.push(nomSensible);
+                            let alternativeTrouvee = "";
+                            const nomSensibleClean = removeAccents(nomSensible.toLowerCase().trim());
+                            const nomSensibleSingulier = nomSensibleClean.replace(/s\b/g, '');
+
+                            if (typeof DICO_ALTERNATIVES_CLINIQUES !== 'undefined') {
+                                for (let [cle, remp] of Object.entries(DICO_ALTERNATIVES_CLINIQUES)) {
+                                    if (nomSensibleClean === cle || nomSensibleSingulier === cle || nomSensibleClean.includes(cle)) {
+                                        alternativeTrouvee = remp;
+                                        break;
+                                    }
+                                }
+                            }
+                            const conseilTexte = alternativeTrouvee ? `(💡 Remplacer par : ${alternativeTrouvee})` : `(💡 À doser selon votre sensibilité)`;
+                            ingredientsHTML += `<li style="margin-bottom: 5px;">🟡 ${inner} <span style="font-size:0.75rem; color:#B5603F; font-weight:700;">${conseilTexte}</span></li>`;
+                        } else {
+                            ingredientsHTML += `<li style="margin-bottom: 5px;">🟢 ${inner}</li>`;
+                        }
+                    });
+                } else {
+                    ingredientsHTML = "<li>Ingrédients enregistrés</li>";
+                }
+            } else {
+                ingredientsHTML = "<li>Ingrédients non disponibles</li>";
+            }
+
+            // 🧠 3. DÉFINITION DES COULEURS ET BADGES
+            let verdictTexte = '🟢 RECETTE IDÉALE';
             let bgBadge = "rgba(46, 125, 50, 0.12)";
             let bordBadge = "#2E7D32";
             let txtBadge = "#1B5E20";
             let astuceSousTitre = '';
+            let conseilChefTexte = "Ingrédients doux et harmonieux. Privilégiez une cuisson modérée sans excès d'huile et dégustez tiède.";
 
-            if (statutBadge === '🟢') {
-                verdictTexte = estMaison ? '🟢 RECETTE IDÉALE' : '🟢 RECETTE DU MONDE';
-            } else if (statutBadge === '🟡') {
+            if (alertes.length > 0 && alertes.length <= 2) {
                 verdictTexte = '🟡 FACILEMENT ADAPTABLE';
                 bgBadge = "rgba(245, 127, 23, 0.12)";
                 bordBadge = "#F57F17";
                 txtBadge = "#E65100";
-                astuceSousTitre = `<div style="font-size:0.75rem; color:#B5603F; font-weight:700; margin-top:4px;">💡 Astuce : modérez ou adaptez les ingrédients signalés ci-dessous.</div>`;
-            } else if (statutBadge === '🔴' || statutBadge === '🟠') {
+                astuceSousTitre = `<div style="font-size:0.75rem; color:#B5603F; font-weight:700; margin-top:4px;">💡 Astuce : modérez ou adaptez ${alertes.join(' et ')}</div>`;
+                conseilChefTexte = `Pour votre confort digestif, n'hésitez pas à modérer ou remplacer les ingrédients signalés.`;
+            } else if (alertes.length > 2) {
                 verdictTexte = '🟠 SENSIBLE EN CRISE';
                 bgBadge = "rgba(216, 67, 21, 0.12)";
                 bordBadge = "#D84315";
                 txtBadge = "#B5603F";
-                astuceSousTitre = `<div style="font-size:0.75rem; color:#B5603F; font-weight:700; margin-top:4px;">💡 Attention : Plusieurs ingrédients sont déconseillés pour votre profil.</div>`;
+                astuceSousTitre = `<div style="font-size:0.75rem; color:#B5603F; font-weight:700; margin-top:4px;">💡 Plusieurs ingrédients sensibles (${alertes.slice(0, 2).join(', ')}...)</div>`;
+                conseilChefTexte = `Attention, cette recette cumule plusieurs déclencheurs pour votre profil actuel.`;
             }
             
-            const profilAffiche = currentProfil ? currentProfil.toUpperCase() : 'NEUTRE';
-
-            // Si ce n'est pas une recette maison, on génère un conseil générique
-            if (!conseilChefTexte) {
-                if (statutBadge === '🟢') conseilChefTexte = "Ingrédients doux et harmonieux. Privilégiez une cuisson modérée sans excès d'huile et dégustez tiède.";
-                else conseilChefTexte = "Pour votre confort digestif, n'hésitez pas à modérer ou remplacer les ingrédients signalés.";
+            // Si c'est une recette maison, on essaie de récupérer son conseil chef d'origine
+            if (typeOrigine === "⭐ RECETTE OFFICIELLE MAISON" && typeof window.RECETTES_MAISON !== 'undefined') {
+                const recetteMaisonRef = window.RECETTES_MAISON.find(r => r.nom === rec.nom);
+                if (recetteMaisonRef && recetteMaisonRef.conseilDigestif) {
+                    conseilChefTexte = recetteMaisonRef.conseilDigestif;
+                }
             }
 
-            // 🧠 3. RENDU HTML FINAL
+            const profilAffiche = currentProfil ? currentProfil.toUpperCase() : 'NEUTRE';
+            let portionsTxt = rec.portions || "~ 4 personnes";
+            let tempsTxt = rec.temps || "~ 30 min";
+
+            // 🧠 4. RENDU HTML FINAL
             detailZone.innerHTML = `
                 <img src="${rec.thumb || ''}" alt="${rec.nom}" style="width: 100%; height: 170px; object-fit: cover; border-radius: 12px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
                 
                 <div style="text-align: center; margin-bottom: 12px;">
-                    <div style="font-size: 0.68rem; color: ${estMaison ? '#B78103' : '#1565C0'}; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">
+                    <div style="font-size: 0.68rem; color: ${typeOrigine.includes('MAISON') ? '#B78103' : '#1565C0'}; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">
                         ${typeOrigine}
                     </div>
+					<!-- RAPPEL DE LA FICHE ATTACHÉE -->
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px;">
+                        📌 Fiche : <strong style="color: var(--accent-dark);">${leg.nom}</strong>
+                    </div>
+					
                     <span style="display: inline-block; padding: 5px 14px; border-radius: 20px; font-weight: 800; font-size: 0.78rem; background: ${bgBadge}; color: ${txtBadge}; border: 1.5px solid ${bordBadge};">
                         ${verdictTexte} • PROFIL : ${profilAffiche}
                     </span>
@@ -8387,7 +8470,7 @@ function ouvrirLecteurRecetteInApp(alimentId, indexRecette) {
                 
                 <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">🛒 Ingrédients :</div>
                 <ul id="rec-ingredients-detail" style="font-size: 0.85rem; color: var(--text-main); margin: 0 0 14px 0; padding-left: 15px; list-style: none; line-height: 1.5;">
-                    ${rec.ingredients || '<li>Ingrédients enregistrés</li>'}
+                    ${ingredientsHTML}
                 </ul>
                 
                 <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">👨‍🍳 Instructions :</div>
@@ -8541,68 +8624,135 @@ function ouvrirRecetteDepuisCarnet(idAliment, index) {
 // ========================================================
 // 1. GESTION DES 2 ONGLETS DU CARNET
 // ========================================================
+// ========================================================
+// 1. GESTION DES 3 ONGLETS DU CARNET
+// ========================================================
 function basculerOngletCarnet(nomOnglet) {
-    const vueCarnet = document.getElementById('vue-onglet-carnet');
-    const vueExplorer = document.getElementById('vue-onglet-explorer');
-    const btnCarnet = document.getElementById('tab-btn-mon-carnet');
-    const btnExplorer = document.getElementById('tab-btn-decouvrir');
+    const vues = {
+        'carnet': document.getElementById('vue-onglet-carnet'),
+        'frigo': document.getElementById('vue-onglet-frigo'),
+        'explorer': document.getElementById('vue-onglet-explorer')
+    };
+    const btns = {
+        'carnet': document.getElementById('tab-btn-mon-carnet'),
+        'frigo': document.getElementById('tab-btn-frigo'),
+        'explorer': document.getElementById('tab-btn-decouvrir')
+    };
 
-    if (nomOnglet === 'carnet') {
-        if (vueCarnet) vueCarnet.style.display = 'block';
-        if (vueExplorer) vueExplorer.style.display = 'none';
+    // Masquer tout et réinitialiser les boutons
+    Object.keys(vues).forEach(key => {
+        if (vues[key]) vues[key].style.display = 'none';
+        if (btns[key]) {
+            btns[key].style.background = 'transparent';
+            btns[key].style.color = 'var(--text-muted)';
+            btns[key].style.boxShadow = 'none';
+        }
+    });
 
-        if (btnCarnet) {
-            btnCarnet.style.background = 'var(--text-title)';
-            btnCarnet.style.color = '#FFF';
-            btnCarnet.style.boxShadow = '0 4px 10px rgba(0,0,0,0.1)';
-        }
-        if (btnExplorer) {
-            btnExplorer.style.background = 'transparent';
-            btnExplorer.style.color = 'var(--text-muted)';
-            btnExplorer.style.boxShadow = 'none';
-        }
-    } else {
-        if (vueCarnet) vueCarnet.style.display = 'none';
-        if (vueExplorer) vueExplorer.style.display = 'block';
+    // Afficher l'onglet actif
+    if (vues[nomOnglet]) vues[nomOnglet].style.display = 'block';
+    if (btns[nomOnglet]) {
+        btns[nomOnglet].style.background = 'var(--text-title)';
+        btns[nomOnglet].style.color = '#FFF';
+        btns[nomOnglet].style.boxShadow = '0 4px 10px rgba(0,0,0,0.1)';
+    }
 
-        if (btnExplorer) {
-            btnExplorer.style.background = 'var(--text-title)';
-            btnExplorer.style.color = '#FFF';
-            btnExplorer.style.boxShadow = '0 4px 10px rgba(0,0,0,0.1)';
-        }
-        if (btnCarnet) {
-            btnCarnet.style.background = 'transparent';
-            btnCarnet.style.color = 'var(--text-muted)';
-            btnCarnet.style.boxShadow = 'none';
-        }
+    if (nomOnglet === 'explorer') {
         const inputExp = document.getElementById('input-explorer-libre');
         if (inputExp) inputExp.focus();
     }
 }
 
 // ========================================================
-// 2. OUVERTURE DU CARNET (ONGLET 1 : MES RECETTES PERSO)
+// MOTEUR INTELLIGENT DU CARNET DE RECETTES
 // ========================================================
-let vientDeLOngletExplorer = false;
+let currentCarnetFilter = 'all';
+
+// Évalue dynamiquement une recette sauvegardée selon le profil actif
+function evaluerStatutRecetteSauvegardee(rec, profil) {
+    if (!profil || profil === 'neutre') return '🟢';
+    if (!rec.ingredients) return rec.statut || '🟢'; 
+
+    let alertes = 0;
+    const legumesTries = [...legumes].sort((a, b) => b.nom.length - a.nom.length);
+    
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = rec.ingredients;
+    const items = tempDiv.querySelectorAll('li');
+    
+    if (items.length === 0) return rec.statut || '🟢';
+
+    items.forEach(li => {
+        let rawText = li.textContent.replace(/(🟢|🟡|🟠|🔴|⚪)/g, '').trim();
+        rawText = rawText.replace(/\(💡.*?\)/g, '').trim();
+        const texteClean = removeAccents(rawText.toLowerCase());
+        
+        for (let alim of legumesTries) {
+            if (!alim || !alim.nom) continue;
+            const nomAlimClean = removeAccents(alim.nom.toLowerCase().trim());
+            const nomAlimSingulier = nomAlimClean.replace(/s\b/g, '');
+            const regexMotEntier = new RegExp(`(^|[^a-zÀ-ÿ])(${nomAlimClean}|${nomAlimSingulier})([^a-zÀ-ÿ]|$)`, 'i');
+
+            if (regexMotEntier.test(texteClean)) {
+                if (isClinicallyBad(alim, profil)) alertes++;
+                break;
+            }
+        }
+    });
+
+    if (alertes === 0) return '🟢';
+    if (alertes <= 2) return '🟡';
+    return '🟠';
+}
+
+// Gère le clic sur les boutons de filtres du carnet
+function setCarnetFilter(val) {
+    currentCarnetFilter = val;
+    document.querySelectorAll('.carnet-filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-filter') === val) btn.classList.add('active');
+    });
+    filtrerCarnetRecettes();
+}
+
+// Le petit crayon pour renommer
+function renommerRecetteDepuisCarnet(idAliment, indexRecette) {
+    const leg = legumes.find(l => l.id === idAliment);
+    if (!leg || !leg.recettesList || !leg.recettesList[indexRecette]) return;
+    
+    const ancienNom = leg.recettesList[indexRecette].nom;
+    const nouveauNom = prompt("Renommer la recette :", ancienNom);
+    
+    if (nouveauNom && nouveauNom.trim() !== "" && nouveauNom !== ancienNom) {
+        leg.recettesList[indexRecette].nom = nouveauNom.trim();
+        saveToLocal();
+        ouvrirCarnetRecettes(); // Rafraîchit l'affichage instantanément
+    }
+}
 
 function ouvrirCarnetRecettes(ongletCible = 'carnet') {
-    // 🛡️ OUVRE LA MODALE IMMÉDIATEMENT EN PREMIER !
     const modal = document.getElementById('modal-carnet-recettes');
     if (modal) modal.style.display = 'block';
 
     const conteneur = document.getElementById('liste-carnet-recettes');
     if (!conteneur) return;
     conteneur.innerHTML = '';
-	
+    
     const searchInput = document.getElementById('search-carnet');
     if (searchInput) searchInput.value = '';
 
-    // Bascule sur l'onglet demandé
-    if (typeof basculerOngletCarnet === 'function') {
-        basculerOngletCarnet(ongletCible);
+    // Mise à jour du badge de profil
+    const badge = document.getElementById('carnet-profil-badge');
+    if (badge) {
+        const shortNames = { 'neutre': '🟢 Neutre', 'estomac': '🔥 Acidité', 'lactose': '🥛 Lactose', 'gluten': '🌾 Gluten', 'colon': '💨 Irritable', 'fodmap': '🧪 FODMAP', 'diabete': '🩸 Diabète', 'poids': '⚖️ Poids' };
+        let displayTxt = "Profil : ";
+        if (currentProfil === 'neutre' || !currentProfil) displayTxt += shortNames['neutre'];
+        else displayTxt += currentProfil.split(',').map(p => shortNames[p]).filter(n => n).join(' + ');
+        badge.innerText = displayTxt;
     }
+
+    if (typeof basculerOngletCarnet === 'function') basculerOngletCarnet(ongletCible);
     
-    // 1. Récolte de vos recettes personnelles enregistrées
     let toutesRecettes = [];
     if (Array.isArray(legumes)) {
         legumes.forEach(leg => {
@@ -8614,11 +8764,11 @@ function ouvrirCarnetRecettes(ongletCible = 'carnet') {
         });
     }
 
-    // Met à jour le nombre sur le bouton d'onglet
     const btnTabCarnet = document.getElementById('tab-btn-mon-carnet');
-    if (btnTabCarnet) btnTabCarnet.innerText = `📖 Mon Carnet (${toutesRecettes.length})`;
+    if (btnTabCarnet) btnTabCarnet.innerText = `📖 Carnet (${toutesRecettes.length})`;
 
     if (toutesRecettes.length === 0) {
+        document.getElementById('carnet-filters-container').innerHTML = '';
         conteneur.innerHTML = `
             <div style="text-align: center; padding: 25px 15px; color: var(--text-muted); line-height: 1.5;">
                 <div style="font-size: 1.8rem; margin-bottom: 6px;">📖✨</div>
@@ -8628,50 +8778,99 @@ function ouvrirCarnetRecettes(ongletCible = 'carnet') {
                 </button>
             </div>
         `;
-    } else {
-        // Tri alphabétique 100% sécurisé (anti-plantage)
-        toutesRecettes.sort((a, b) => {
-            const nomA = (a.rec && a.rec.nom) ? a.rec.nom : "";
-            const nomB = (b.rec && b.rec.nom) ? b.rec.nom : "";
-            return nomA.localeCompare(nomB);
-        });
+        return;
+    }
 
-        toutesRecettes.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'carnet-row';
-            const nomRecette = (item.rec && item.rec.nom) ? item.rec.nom : "Recette";
-            const nomAliment = (item.leg && item.leg.nom) ? item.leg.nom : "";
-            const texteRecherche = removeAccents((nomRecette + " " + nomAliment).toLowerCase());
-            div.setAttribute('data-search', texteRecherche);
-            div.style.cssText = "background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 8px;";
-            
-            let actionClick = "";
-            let styleBoutonVoir = "border-color: var(--accent); color: var(--accent-dark); background: #FFFDF8;";
-            
-            if (item.rec && (item.rec.instructions || item.rec.idMeal)) {
-                actionClick = `onclick="ouvrirRecetteDepuisCarnet(${item.leg.id}, ${item.index})"`;
-            } else if (item.rec && item.rec.url && typeof item.rec.url === 'string' && item.rec.url.trim() !== "") {
-                let validUrl = item.rec.url.startsWith('http') ? item.rec.url : 'https://' + item.rec.url;
-                actionClick = `onclick="window.open('${validUrl.replace(/'/g, "\\'")}', '_blank')"`;
-            } else {
-                actionClick = `onclick="alert('Cette recette n\\'a pas encore de lien ou d\\'instructions.')"`;
-                styleBoutonVoir = "border-color: #E8E0D2; color: #8D99AE; background: #F9F7F2;";
-            }
-			
-            div.innerHTML = `
-                <div style="flex: 1; min-width: 0; cursor: pointer;" ${actionClick}>
-                    <div style="font-weight: 800; color: var(--text-title); font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${nomRecette}</div>
-                    <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">📌 Fiche : <strong style="color: var(--accent-dark);">${nomAliment}</strong></div>
-                </div>
-                <div style="display: flex; gap: 6px; flex-shrink: 0; margin-left: 10px;">
-                    <button class="btn" style="padding: 8px; font-size: 0.9rem; ${styleBoutonVoir}" ${actionClick} title="Voir la recette">👁️</button>
-                    <button class="btn" style="padding: 8px; font-size: 0.9rem; border-color: var(--border-color); color: #8D99AE; background: #FFF;" onclick="preparerDeplacementRecette(${item.leg.id}, ${item.index})" title="Déplacer vers un autre aliment">🔄</button>
-                    <button class="btn" style="padding: 8px; font-size: 0.9rem; border-color: #FFCDCD; color: #D32F2F; background: #FFF0F0;" onclick="supprimerRecetteDepuisCarnet(${item.leg.id}, ${item.index})" title="Supprimer la recette">🗑️</button>
+    toutesRecettes.sort((a, b) => {
+        const nomA = (a.rec && a.rec.nom) ? a.rec.nom : "";
+        const nomB = (b.rec && b.rec.nom) ? b.rec.nom : "";
+        return nomA.localeCompare(nomB);
+    });
+
+    // Comptage clinique
+    let countVert = 0, countJaune = 0, countOrange = 0;
+
+    toutesRecettes.forEach(item => {
+        item.statutDynamique = evaluerStatutRecetteSauvegardee(item.rec, currentProfil);
+        if (item.statutDynamique === '🟢') countVert++;
+        else if (item.statutDynamique === '🟡') countJaune++;
+        else countOrange++;
+    });
+
+    // Affichage des filtres
+    const filtersContainer = document.getElementById('carnet-filters-container');
+    if (filtersContainer) {
+        filtersContainer.innerHTML = `
+            <button class="filter-btn tol-btn carnet-filter-btn ${currentCarnetFilter === 'all' ? 'active' : ''}" data-filter="all" onclick="setCarnetFilter('all')">Toutes</button>
+            <button class="filter-btn tol-btn carnet-filter-btn ${currentCarnetFilter === '🟢' ? 'active' : ''}" data-filter="🟢" onclick="setCarnetFilter('🟢')">🟢 <span class="tol-badge-count">${countVert}</span></button>
+            <button class="filter-btn tol-btn carnet-filter-btn ${currentCarnetFilter === '🟡' ? 'active' : ''}" data-filter="🟡" onclick="setCarnetFilter('🟡')">🟡 <span class="tol-badge-count">${countJaune}</span></button>
+            <button class="filter-btn tol-btn tol-btn-avoid carnet-filter-btn ${currentCarnetFilter === '🟠' ? 'active' : ''}" data-filter="🟠" onclick="setCarnetFilter('🟠')">🟠 <span class="tol-badge-count">${countOrange}</span></button>
+        `;
+    }
+
+    toutesRecettes.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'carnet-row';
+        const nomRecette = (item.rec && item.rec.nom) ? item.rec.nom : "Recette";
+        const nomAliment = (item.leg && item.leg.nom) ? item.leg.nom : "";
+        const texteRecherche = removeAccents((nomRecette + " " + nomAliment).toLowerCase());
+        
+        div.setAttribute('data-search', texteRecherche);
+        div.setAttribute('data-statut', item.statutDynamique);
+        
+        // Design dynamique de la bordure
+        let borderColor = "#2E7D32"; // Vert
+        if (item.statutDynamique === '🟡') borderColor = "#F57F17";
+        if (item.statutDynamique === '🟠' || item.statutDynamique === '🔴') borderColor = "#D84315";
+
+        div.style.cssText = `background: #FFFFFF; border: 1px solid var(--border-color); border-left: 5px solid ${borderColor}; border-radius: 14px; padding: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 8px;`;
+        
+        let actionClick = "";
+        let styleBoutonVoir = "border-color: var(--accent); color: var(--accent-dark); background: #FFFDF8;";
+        
+        if (item.rec && (item.rec.instructions || item.rec.idMeal)) {
+            actionClick = `onclick="ouvrirRecetteDepuisCarnet(${item.leg.id}, ${item.index})"`;
+        } else if (item.rec && item.rec.url && typeof item.rec.url === 'string' && item.rec.url.trim() !== "") {
+            let validUrl = item.rec.url.startsWith('http') ? item.rec.url : 'https://' + item.rec.url;
+            actionClick = `onclick="window.open('${validUrl.replace(/'/g, "\\'")}', '_blank')"`;
+        } else {
+            actionClick = `onclick="alert('Cette recette n\\'a pas encore de lien ou d\\'instructions.')"`;
+            styleBoutonVoir = "border-color: #E8E0D2; color: #8D99AE; background: #F9F7F2;";
+        }
+        
+        div.innerHTML = `
+                <div style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
+                    <!-- ÉTAGE 1 : Titre 100% libéré (Pastille + Nom du plat) -->
+                    <div style="width: 100%; cursor: pointer;" ${actionClick}>
+                        <div style="font-weight: 800; color: var(--text-title); font-size: 0.98rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 2px;">
+                            ${item.statutDynamique} ${nomRecette}
+                        </div>
+                    </div>
+
+                    <!-- ÉTAGE 2 : Fiche à gauche + Boutons d'action alignés à droite -->
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding-left: 2px;">
+                        <div style="font-size: 0.72rem; color: var(--text-muted); cursor: pointer; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 8px;" ${actionClick}>
+                            📌 Fiche : <strong style="color: var(--accent-dark);">${nomAliment}</strong>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; flex-shrink: 0;">
+                            <!-- 1. Le bouton principal (Voir) -->
+                            <button class="btn" style="padding: 2px 7px; font-size: 1.05rem; line-height: 1.2; border-radius: 8px; border: 1px solid var(--accent); background: #FFFDF8; color: var(--accent-dark); box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-right: 10px;" ${actionClick} title="Voir la recette">👁️</button>
+                            
+                            <!-- 2. Le trio d'outils groupés (✏️ 🔄 🗑️) avec petit écart de 4px entre eux -->
+                            <div style="display: flex; gap: 4px;">
+                                <button class="btn" style="padding: 2px 6px; font-size: 0.95rem; line-height: 1.2; border-radius: 8px; border: 1px solid var(--border-color); background: #FFFDF8; box-shadow: 0 1px 3px rgba(0,0,0,0.04);" onclick="renommerRecetteDepuisCarnet(${item.leg.id}, ${item.index})" title="Renommer">✏️</button>
+                                <button class="btn" style="padding: 2px 6px; font-size: 0.95rem; line-height: 1.2; border-radius: 8px; border: 1px solid var(--border-color); background: #FFFDF8; color: #555; box-shadow: 0 1px 3px rgba(0,0,0,0.04);" onclick="preparerDeplacementRecette(${item.leg.id}, ${item.index})" title="Déplacer vers un autre aliment">🔄</button>
+                                <button class="btn" style="padding: 2px 6px; font-size: 0.95rem; line-height: 1.2; border-radius: 8px; border: 1px solid #FFCDCD; background: #FFF8F8; color: #D32F2F; box-shadow: 0 1px 3px rgba(0,0,0,0.04);" onclick="supprimerRecetteDepuisCarnet(${item.leg.id}, ${item.index})" title="Supprimer la recette">🗑️</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             `;
-            conteneur.appendChild(div);
-        });
-    }
+        conteneur.appendChild(div);
+    });
+
+    filtrerCarnetRecettes(); // Applique le filtre actuel immédiatement
 }
 
 // ========================================================
@@ -9080,11 +9279,22 @@ async function afficherDetailRecetteDirect(rec, estMaison = true) {
         }
 
         // 🧠 3. RENDU HTML
+        // Détecte le premier aliment associé à la recette pour l'afficher
+        let nomFicheAttachee = (rec.alimentsAssocies && rec.alimentsAssocies.length > 0) ? rec.alimentsAssocies[0] : (alimentRecetteActif ? alimentRecetteActif.nom : "");
+
         detailZone.innerHTML = `
             <img src="${rec.image || ''}" alt="${rec.nom}" style="width: 100%; height: 170px; object-fit: cover; border-radius: 14px; margin-bottom: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
             
             <div style="text-align: center; margin-bottom: 12px;">
-                <div style="font-size: 0.68rem; color: #B78103; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">⭐ RECETTE OFFICIELLE MAISON</div>
+                <div style="font-size: 0.68rem; color: #B78103; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">⭐ RECETTE OFFICIELLE MAISON</div>
+                
+                <!-- NOUVEAU : RAPPEL DE LA FICHE ATTACHÉE DEPUIS LE FRIGO -->
+                ${nomFicheAttachee ? `
+                    <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px;">
+                        📌 Fiche : <strong style="color: var(--accent-dark);">${nomFicheAttachee}</strong>
+                    </div>
+                ` : ''}
+
                 <span style="display: inline-block; padding: 5px 14px; border-radius: 20px; font-weight: 800; font-size: 0.78rem; background: ${bannerBg}; color: ${bannerColor}; border: 1.5px solid ${bannerColor};">
                     ${verdictTexte} • PROFIL : ${profilAffiche}
                 </span>
@@ -9222,7 +9432,7 @@ function fermerCarnetRecettes() {
     const modal = document.getElementById('modal-carnet-recettes');
     if (modal) modal.style.display = 'none';
 
-    // 🧹 Réinitialise proprement le champ de recherche pour la prochaine ouverture depuis l'accueil !
+    // 1. Réinitialise l'onglet Explorer
     const inputExp = document.getElementById('input-explorer-libre');
     if (inputExp) inputExp.value = '';
     const resExp = document.getElementById('resultats-explorer-global');
@@ -9233,6 +9443,16 @@ function fermerCarnetRecettes() {
             </div>
         `;
     }
+
+    // 2. NOUVEAU : Réinitialise le Frigo (vide le panier et efface les résultats)
+    panierFrigo = [];
+    dessinerTagsFrigo();
+    const resFrigo = document.getElementById('resultats-frigo-container');
+    if (resFrigo) resFrigo.innerHTML = '';
+    const inputFrigo = document.getElementById('input-frigo-search');
+    if (inputFrigo) inputFrigo.value = '';
+    const suggFrigo = document.getElementById('frigo-suggestions');
+    if (suggFrigo) suggFrigo.style.display = 'none';
 }
 
 // ========================================================
@@ -9248,7 +9468,12 @@ function filtrerCarnetRecettes() {
 
     rows.forEach(row => {
         const searchData = row.getAttribute('data-search');
-        if (searchData.includes(query)) {
+        const statutData = row.getAttribute('data-statut');
+        
+        const matchText = searchData.includes(query);
+        const matchFilter = (currentCarnetFilter === 'all') || (statutData === currentCarnetFilter) || (currentCarnetFilter === '🟠' && statutData === '🔴');
+
+        if (matchText && matchFilter) {
             row.style.display = 'flex';
             visibleCount++;
         } else {
@@ -9256,16 +9481,15 @@ function filtrerCarnetRecettes() {
         }
     });
 
-    // Affiche un message si aucune recette ne correspond
     let noResultMsg = document.getElementById('carnet-no-result');
     if (visibleCount === 0 && rows.length > 0) {
         if (!noResultMsg) {
             noResultMsg = document.createElement('div');
             noResultMsg.id = 'carnet-no-result';
             noResultMsg.style.cssText = "text-align:center; padding: 20px; color:#8D99AE; font-style:italic; font-size: 0.9rem;";
-            noResultMsg.innerText = "Aucune recette trouvée pour cette recherche.";
             document.getElementById('liste-carnet-recettes').appendChild(noResultMsg);
         }
+        noResultMsg.innerText = "Aucune recette trouvée pour ces critères.";
         noResultMsg.style.display = 'block';
     } else if (noResultMsg) {
         noResultMsg.style.display = 'none';
@@ -9440,6 +9664,207 @@ function restaurerFichesDefaut() {
     }
     // Lancer la normalisation au chargement
     normaliserTolerances();
+	
+	// ========================================================
+// MOTEUR DU FRIGO ANTI-GASPI (TAGS & RECHERCHE COMBINÉE)
+// ========================================================
+let panierFrigo = []; // Contient les 4 ingrédients max
+
+// 1. Recherche prédictive rapide dès 2 lettres
+function rechercheAutoFrigo(event) {
+    const val = removeAccents(event.target.value.toLowerCase().trim());
+    const box = document.getElementById('frigo-suggestions');
+    if (!box) return;
+
+    if (val.length < 2) {
+        box.style.display = 'none';
+        box.innerHTML = '';
+        return;
+    }
+
+    if (panierFrigo.length >= 4) {
+        alert("⚠️ Vous avez déjà atteint le maximum de 4 ingrédients pour le frigo !");
+        event.target.value = '';
+        box.style.display = 'none';
+        return;
+    }
+
+    // Cherche parmi les 350 aliments du marché
+    const correspondances = legumes.filter(l => {
+        const nomClean = removeAccents(l.nom.toLowerCase());
+        const dejaPris = panierFrigo.some(p => p.id === l.id);
+        return nomClean.includes(val) && !dejaPris;
+    }).slice(0, 6); // Limite à 6 propositions
+
+    if (correspondances.length === 0) {
+        box.innerHTML = '<div style="padding: 10px; font-size: 0.78rem; color: var(--text-muted); text-align: center;">Aucun aliment trouvé</div>';
+        box.style.display = 'block';
+        return;
+    }
+
+    box.innerHTML = correspondances.map(l => `
+        <div style="padding: 8px 12px; font-size: 0.85rem; font-weight: 700; color: var(--text-title); cursor: pointer; border-bottom: 1px solid #FAF7F2; display: flex; justify-content: space-between; align-items: center;" onclick="ajouterAlimentAuFrigo(${l.id})">
+            <span>${l.nom}</span>
+            <span style="font-size: 0.7rem; color: var(--text-muted);">${l.saison}</span>
+        </div>
+    `).join('');
+    box.style.display = 'block';
+}
+
+// 2. Ajoute l'ingrédient sous forme d'étiquette (Tag)
+function ajouterAlimentAuFrigo(idAliment) {
+    const alim = legumes.find(l => l.id === idAliment);
+    if (!alim || panierFrigo.length >= 4) return;
+
+    panierFrigo.push(alim);
+    
+    // Nettoie la barre de recherche
+    const input = document.getElementById('input-frigo-search');
+    if (input) input.value = '';
+    const box = document.getElementById('frigo-suggestions');
+    if (box) box.style.display = 'none';
+
+    dessinerTagsFrigo();
+}
+
+// 3. Retire un ingrédient au clic sur la croix ✖
+function retirerAlimentDuFrigo(index) {
+    panierFrigo.splice(index, 1);
+    dessinerTagsFrigo();
+
+    // Si le panier est maintenant vide, on efface immédiatement la liste de résultats !
+    if (panierFrigo.length === 0) {
+        const conteneur = document.getElementById('resultats-frigo-container');
+        if (conteneur) conteneur.innerHTML = '';
+    }
+}
+
+// 4. Dessine les jolies étiquettes visuelles
+function dessinerTagsFrigo() {
+    const zone = document.getElementById('frigo-panier-tags');
+    if (!zone) return;
+
+    if (panierFrigo.length === 0) {
+        zone.innerHTML = '<span id="frigo-placeholder-vide" style="font-size: 0.75rem; color: var(--text-muted); font-style: italic;">(Aucun ingrédient sélectionné)</span>';
+        return;
+    }
+
+    zone.innerHTML = panierFrigo.map((alim, idx) => `
+        <span style="display: inline-flex; align-items: center; gap: 6px; background: #FFFDF8; border: 1.5px solid var(--accent); color: var(--accent-dark); padding: 5px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 800; box-shadow: 0 2px 5px rgba(0,0,0,0.04);">
+            ${alim.nom}
+            <span style="cursor: pointer; font-size: 0.75rem; color: #D32F2F; margin-left: 2px;" onclick="retirerAlimentDuFrigo(${idx})" title="Retirer">✖</span>
+        </span>
+    `).join('');
+}
+
+// Variable pour mémoriser les résultats du Frigo en cours
+let resultatsFrigoEnCours = [];
+
+// 5. Cerveau Anti-Gaspi : Scan précis et bouton Voir 100% opérationnel
+async function lancerRechercheFrigoAntiGaspi() {
+    const conteneur = document.getElementById('resultats-frigo-container');
+    if (!conteneur) return;
+
+    if (panierFrigo.length === 0) {
+        alert("⚠️ Ajoutez au moins 1 ingrédient dans votre frigo pour lancer la recherche !");
+        return;
+    }
+
+    conteneur.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.88rem; padding: 20px 10px;">⏳ Votre chef Anti-Gaspi inspecte le livre de cuisine...</div>`;
+
+    const nomsNettoyes = panierFrigo.map(a => removeAccents(a.nom.toLowerCase().trim()));
+    resultatsFrigoEnCours = [];
+
+    // SCAN STRICT DES RECETTES MAISON (Les seules capables de combiner plusieurs ingrédients en français !)
+    if (typeof window.RECETTES_MAISON !== 'undefined' && Array.isArray(window.RECETTES_MAISON)) {
+        window.RECETTES_MAISON.forEach(rec => {
+            let nbMatches = 0;
+            const texteRecette = removeAccents((rec.nom + " " + (rec.ingredients || []).join(' ') + " " + (rec.alimentsAssocies || []).join(' ')).toLowerCase());
+
+            nomsNettoyes.forEach(mot => {
+                const motSimple = mot.split(' ')[0];
+                if (texteRecette.includes(mot) || (motSimple.length >= 4 && texteRecette.includes(motSimple))) {
+                    nbMatches++;
+                }
+            });
+
+            // RÈGLE ANTI-GASPI :
+            // Si 1 ingrédient au frigo -> il faut 1 match
+            // Si 2, 3 ou 4 ingrédients -> il faut AU MOINS 2 ingrédients présents dans le plat !
+            const minimumRequis = (nomsNettoyes.length === 1) ? 1 : 2;
+
+            if (nbMatches >= minimumRequis) {
+                resultatsFrigoEnCours.push({ rec: rec, matches: nbMatches });
+            }
+        });
+    }
+
+    // Tri d'excellence : les recettes combinant le PLUS d'ingrédients tout en haut !
+    resultatsFrigoEnCours.sort((a, b) => b.matches - a.matches);
+
+    if (resultatsFrigoEnCours.length === 0) {
+        conteneur.innerHTML = `
+            <div style="background: #FFFDF8; border: 1.5px dashed var(--accent); border-radius: 16px; padding: 20px 15px; text-align: center; margin-top: 10px;">
+                <div style="font-size: 1.8rem; margin-bottom: 6px;">🥣</div>
+                <div style="font-weight: 800; color: var(--text-title); font-size: 0.95rem; margin-bottom: 4px;">Aucune combinaison trouvée</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.45;">
+                    Vos restes actuels (${panierFrigo.map(a=>a.nom).join(', ')}) ne se retrouvent pas ensemble dans une même recette.<br><br>
+                    <span style="color: var(--accent-dark); font-weight: 700;">💡 Astuce : Retirez 1 ingrédient avec la petite croix ✖ pour trouver des plats plus simples !</span>
+                </div>
+            </div>
+        `;
+        return;
+    }
+
+    // En-tête des résultats
+    conteneur.innerHTML = `<div style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 800; text-transform: uppercase; margin-bottom: 6px; text-align: center;">Plats trouvés (${resultatsFrigoEnCours.length}) :</div>`;
+
+    // Dessin des cartes avec bouton Voir opérationnel à 100%
+    resultatsFrigoEnCours.forEach((item, indexF) => {
+        const rec = item.rec;
+        const div = document.createElement('div');
+        div.className = 'carnet-row';
+        div.style.cssText = "background: #FFFFFF; border: 1.5px solid var(--accent); border-radius: 14px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 8px;";
+
+        const estJackpot = (item.matches === nomsNettoyes.length);
+        const badgeTexte = estJackpot ? '🌟 Parfait (Tous vos restes !)' : `🎯 Utilise ${item.matches} sur ${nomsNettoyes.length} restes`;
+        const badgeColor = estJackpot ? '#2E7D32' : 'var(--accent-dark)';
+
+        div.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; cursor: pointer;" onclick="ouvrirRecetteDepuisFrigo(${indexF})">
+                <img src="${rec.image}" alt="${rec.nom}" style="width: 48px; height: 48px; border-radius: 10px; object-fit: cover; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
+                <div style="min-width: 0;">
+                    <div style="font-weight: 800; color: var(--text-title); font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${rec.nom}</div>
+                    <div style="display: flex; gap: 6px; align-items: center; margin-top: 3px; flex-wrap: wrap;">
+                        <span style="font-size: 0.68rem; font-weight: 800; padding: 2px 6px; border-radius: 8px; background: #FFF8E1; color: #B78103; border: 1px solid #F6C343;">⭐ MAISON</span>
+                        <span style="font-size: 0.7rem; color: ${badgeColor}; font-weight: 800;">${badgeTexte}</span>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn" style="padding: 6px 10px; font-size: 0.78rem; font-weight: 800; border-color: var(--accent); color: var(--accent-dark); background: #FFFDF8;" onclick="ouvrirRecetteDepuisFrigo(${indexF})">👁️ Voir</button>
+        `;
+        conteneur.appendChild(div);
+    });
+}
+
+// 6. Fonction dédiée qui ouvre la recette en grand sans bug
+let vientDuFrigo = false; // Mémorise si on vient du Frigo
+
+function ouvrirRecetteDepuisFrigo(index) {
+    if (!resultatsFrigoEnCours[index]) return;
+    const rec = resultatsFrigoEnCours[index].rec;
+    
+    // On active le mouchard du Frigo !
+    vientDuCarnet = true;
+    vientDuFrigo = true;
+    vientDeLOngletExplorer = false; 
+
+    afficherDetailRecetteDirect(rec, true);
+
+    // Ajuste le libellé du bouton pour faire super pro !
+    const btnFermer = document.getElementById('btn-fermer-detail');
+    if (btnFermer) btnFermer.innerText = "← Retour au Frigo";
+}
 
 </script>
 

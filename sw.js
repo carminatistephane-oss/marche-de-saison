@@ -1,9 +1,9 @@
 // ========================================================
 // SERVICE WORKER - LE PETIT MARCHÉ DE MON ESTOMAC
-// VERSION DU CACHE : v14.05 (Intégration des 10 Classeurs Recettes Maison)
+// VERSION DU CACHE : v15.00 (Intégration des 10 Classeurs Recettes Maison)
 // ========================================================
 
-const CACHE_NAME = 'marche-cache-v14.05';
+const CACHE_NAME = 'marche-cache-v15.00';
 
 // Fichiers vitaux à stocker pour le fonctionnement 100% hors-ligne
 const urlsToCache = [
