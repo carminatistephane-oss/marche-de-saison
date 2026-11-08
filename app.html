@@ -1,5 +1,5 @@
 <!-- ================================================================================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 16.00 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 16.01 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -1964,7 +1964,7 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v16.00</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v16.01</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -3030,7 +3030,7 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "16.00";
+    const APP_VERSION = "16.01";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -7141,9 +7141,14 @@ function enregistrerRecetteTheMealDB() {
 
     // 1. Détection de l'aliment cible (ex: Carottes) si besoin
     if (!alimentRecetteActif) {
-        if (recetteTheMealDBEnCours.alimentsAssocies && recetteTheMealDBEnCours.alimentsAssocies.length > 0) {
-            const nomCible = recetteTheMealDBEnCours.alimentsAssocies[0];
-            alimentRecetteActif = legumes.find(l => removeAccents(l.nom.toLowerCase()).includes(removeAccents(nomCible.toLowerCase())));
+        if (typeof panierFrigo !== 'undefined' && panierFrigo.length > 0) {
+            alimentRecetteActif = panierFrigo[0];
+        } else if (recetteTheMealDBEnCours.alimentsAssocies && recetteTheMealDBEnCours.alimentsAssocies.length > 0) {
+            const nomCible = removeAccents(recetteTheMealDBEnCours.alimentsAssocies[0].toLowerCase());
+            alimentRecetteActif = legumes.find(l => {
+                const bloc = removeAccents((l.nom + " " + (l.soustitre || "")).toLowerCase());
+                return bloc.includes(nomCible) || nomCible.split(/[\s']+/).some(m => m.length >= 4 && removeAccents(l.nom.toLowerCase()).includes(m));
+            });
         }
         if (!alimentRecetteActif) {
             const inputExp = document.getElementById('input-explorer-libre');
@@ -9189,22 +9194,39 @@ async function afficherDetailRecetteDirect(rec, estMaison = true) {
         if (!terme) return null;
         const clean = removeAccents(terme.toLowerCase().trim());
         const cleanSansS = clean.replace(/s\b/g, '');
+        // 1. Nom exact
         let exact = legumes.find(l => removeAccents(l.nom.toLowerCase().trim()) === clean || removeAccents(l.nom.toLowerCase().trim()).replace(/s\b/g, '') === cleanSansS);
         if (exact) return exact;
+        // 2. Nom partiel
         let parNom = legumes.find(l => removeAccents(l.nom.toLowerCase()).includes(cleanSansS));
         if (parNom) return parNom;
-        // Cherche aussi dans les sous-titres des viandes regroupées !
-        return legumes.find(l => l.soustitre && removeAccents(l.soustitre.toLowerCase()).includes(cleanSansS));
+        // 3. Sous-titre direct
+        let parSousTitre = legumes.find(l => l.soustitre && removeAccents(l.soustitre.toLowerCase()).includes(cleanSansS));
+        if (parSousTitre) return parSousTitre;
+        // 4. Par mots-clés découpés (ex: "Gigot d'agneau" -> cherche "gigot" ET "agneau" dans le nom + sous-titre !)
+        const mots = cleanSansS.split(/[\s']+/).filter(m => m.length >= 3 && m !== 'les' && m !== 'des' && m !== 'aux');
+        if (mots.length > 0) {
+            let parTousLesMots = legumes.find(l => {
+                const bloc = removeAccents((l.nom + " " + (l.soustitre || "")).toLowerCase());
+                return mots.every(m => bloc.includes(m));
+            });
+            if (parTousLesMots) return parTousLesMots;
+            // Sinon, cherche la racine principale (ex: "agneau")
+            const racine = mots[mots.length - 1];
+            return legumes.find(l => removeAccents(l.nom.toLowerCase()).includes(racine));
+        }
+        return null;
     };
 
     const motsPlatsGeneriques = ['ragout', 'roti', 'filet', 'emince', 'cotelette', 'steak', 'soupe', 'potage', 'veloute', 'salade', 'curry', 'gratin', 'tarte', 'quiche', 'poelee', 'boulette', 'burger', 'tranche', 'escalope', 'mijote', 'sauce', 'gateau', 'crepe'];
     const inputExp = document.getElementById('input-explorer-libre');
     const motTape = inputExp ? removeAccents(inputExp.value.toLowerCase().trim()).replace(/s\b/g, '') : "";
 
-    if (estMaison && rec.alimentsAssocies && rec.alimentsAssocies.length > 0) {
-        alimentRecetteActif = trouverAlimentCible(rec.alimentsAssocies[0]);
-    } else if (typeof vientDuFrigo !== 'undefined' && vientDuFrigo && panierFrigo.length > 0) {
+    // PRIORITÉ 1 : Si on vient du Frigo, on rattache à l'ingrédient mis dans le Frigo !
+    if (typeof vientDuFrigo !== 'undefined' && vientDuFrigo && panierFrigo.length > 0) {
         alimentRecetteActif = panierFrigo[0];
+    } else if (estMaison && rec.alimentsAssocies && rec.alimentsAssocies.length > 0) {
+        alimentRecetteActif = trouverAlimentCible(rec.alimentsAssocies[0]);
     } else if (motTape && !motsPlatsGeneriques.includes(motTape)) {
         alimentRecetteActif = trouverAlimentCible(motTape);
     }
