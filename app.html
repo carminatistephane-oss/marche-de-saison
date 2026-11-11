@@ -1,5 +1,5 @@
 <!-- ================================================================================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 16.50 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 16.60 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -20,6 +20,7 @@
 <!-- INTEGRATION DE MON FRIGO DANS MES RECETTES AVEC RECHERCHE INTELIGENTE DANS MES DONNEES ET MES RECETTES ENREGITREES  -->
 <!-- MISE A JOUR DE LA LISTE DES VIANDES POUR LA CATEGORISER PLUS SIMPLEMENT  -->
 <!-- OPTIMISATION DE LA BASE ALIMENTS EN SUPPRIMENT LES DOUBLON ET LES INUTILES  -->
+<!-- HARMONISATION PRESENTATION FICHES RECETTES DANS MES RECETTES_MON FRIGO_MES RECHERCHES  -->
 <!-- =================================================================================================================== -->
 
 <!DOCTYPE html>
@@ -1607,6 +1608,7 @@ body.dark-mode #modal-carnet-recettes div[style*="grid-template-columns: 1fr 1fr
 }
 /* Onglet SÉLECTIONNÉ : Fond foncé, texte blanc sable (Image 1) */
 body.dark-mode #tab-btn-mon-carnet[style*="background: var(--text-title)"],
+body.dark-mode #tab-btn-frigo[style*="background: var(--text-title)"],
 body.dark-mode #tab-btn-decouvrir[style*="background: var(--text-title)"] {
     background-color: #2C3E50 !important; 
     color: #FFFFFF !important; 
@@ -1965,7 +1967,7 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v16.50</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v16.60</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -2715,20 +2717,23 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
         
         <!-- 1. En-tête : Titre + Croix ❌ -->
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <h3 style="margin: 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.35rem;">🍲 Mes Recettes</h3>
+            <h3 style="margin: 0; color: var(--text-title); font-family: 'Playfair Display', serif; font-size: 1.35rem;">🍲 Cuisine & Recettes</h3>
             <button type="button" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; padding: 0;" onclick="fermerCarnetRecettes()">❌</button>
         </div>
 
-        <!-- 2. LES 3 ONGLETS ÉLÉGANTS ALIGNÉS -->
-        <div style="display: flex; gap: 6px; background: rgba(0,0,0,0.05); padding: 4px; border-radius: 14px; margin-bottom: 15px; width: 100%; box-sizing: border-box;">
-            <button type="button" id="tab-btn-mon-carnet" class="btn" onclick="basculerOngletCarnet('carnet')" style="flex: 1; border-radius: 10px; font-weight: 800; font-size: 0.75rem; padding: 8px 2px; text-align: center; border: none; background: var(--text-title); color: #FFF; box-shadow: 0 2px 6px rgba(0,0,0,0.1); white-space: nowrap;">
-                📖 Carnet
+        <!-- 2. LES 3 ONGLETS EXPLICITES SUR 2 LIGNES -->
+        <div style="display: flex; gap: 6px; background: rgba(0,0,0,0.05); padding: 5px; border-radius: 16px; margin-bottom: 15px; width: 100%; box-sizing: border-box;">
+            <button type="button" id="tab-btn-mon-carnet" class="btn" onclick="basculerOngletCarnet('carnet')" style="flex: 1; border-radius: 12px; font-weight: 800; font-size: 0.74rem; padding: 7px 4px; text-align: center; border: none; background: var(--text-title); color: #FFF; box-shadow: 0 2px 6px rgba(0,0,0,0.1); line-height: 1.25; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+                <span style="font-size: 1rem;">📖</span>
+                <span id="label-tab-carnet">Mes Recettes (0)</span>
             </button>
-            <button type="button" id="tab-btn-frigo" class="btn" onclick="basculerOngletCarnet('frigo')" style="flex: 1; border-radius: 10px; font-weight: 800; font-size: 0.75rem; padding: 8px 2px; text-align: center; border: none; background: transparent; color: var(--text-muted); box-shadow: none; white-space: nowrap;">
-                🧊 Frigo
+            <button type="button" id="tab-btn-frigo" class="btn" onclick="basculerOngletCarnet('frigo')" style="flex: 1; border-radius: 12px; font-weight: 800; font-size: 0.74rem; padding: 7px 4px; text-align: center; border: none; background: transparent; color: var(--text-muted); box-shadow: none; line-height: 1.25; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+                <span style="font-size: 1rem;">🧊</span>
+                <span>Mon Frigo</span>
             </button>
-            <button type="button" id="tab-btn-decouvrir" class="btn" onclick="basculerOngletCarnet('explorer')" style="flex: 1; border-radius: 10px; font-weight: 800; font-size: 0.75rem; padding: 8px 2px; text-align: center; border: none; background: transparent; color: var(--text-muted); box-shadow: none; white-space: nowrap;">
-                🔍 Explorer
+            <button type="button" id="tab-btn-decouvrir" class="btn" onclick="basculerOngletCarnet('explorer')" style="flex: 1; border-radius: 12px; font-weight: 800; font-size: 0.74rem; padding: 7px 4px; text-align: center; border: none; background: transparent; color: var(--text-muted); box-shadow: none; line-height: 1.25; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+                <span style="font-size: 1rem;">🔍</span>
+                <span>Mes Recherches</span>
             </button>
         </div>
 
@@ -2747,21 +2752,22 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
             <div id="liste-carnet-recettes" style="display: flex; flex-direction: column; gap: 8px;"></div>
         </div>
 
-        <!-- ========================================== -->
+      <!-- ========================================== -->
         <!-- ONGLET 2 : MON FRIGO ANTI-GASPI            -->
         <!-- ========================================== -->
         <div id="vue-onglet-frigo" style="display: none;">
-            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0; margin-bottom: 8px; text-align: center;">
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0; margin-bottom: 12px; text-align: center;">
                 Qu'avez-vous sous la main ? Ajoutez jusqu'à 4 ingrédients :
             </p>
 
-            <div style="position: relative; margin-bottom: 10px;">
+            <div class="search-box-container" style="position: relative; margin-top: 18px; margin-bottom: 10px; width: 100%; max-width: none;">
+                <div id="frigo-profil-badge" class="active-profil-badge" onclick="ouvrirModalChangerProfil()" style="cursor: pointer;" title="Cliquer pour changer de profil">Profil : 🟢 Neutre</div>
                 <input type="text" id="input-frigo-search" class="form-control" placeholder="Tapez 2 lettres (ex: ca, po, ri...)" oninput="rechercheAutoFrigo(event)" style="padding: 10px 14px; font-size: 0.88rem; border-radius: 12px; width: 100%; box-sizing: border-box; border: 1.5px solid var(--accent); background: #FFFDF8; font-weight: 700; color: var(--accent-dark);">
                 <div id="frigo-suggestions" class="search-results" style="position: absolute; width: 100%; z-index: 50; display: none; background: #FFFFFF; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); max-height: 200px; overflow-y: auto;"></div>
             </div>
 
             <div id="frigo-panier-tags" style="display: flex; flex-wrap: wrap; gap: 6px; min-height: 38px; margin-bottom: 12px; align-items: center; justify-content: center;">
-                <span id="frigo-placeholder-vide" style="font-size: 0.75rem; color: var(--text-muted); font-style: italic;">
+                <span id="frigo-placeholder-vide" style="font-size: 0.75rem; color: #5C5248; font-style: italic; font-weight: 700;">
                     (Aucun ingrédient sélectionné)
                 </span>
             </div>
@@ -2779,10 +2785,11 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
         <!-- ONGLET 3 : DÉCOUVRIR & EXPLORER (GLOBAL)   -->
         <!-- ========================================== -->
         <div id="vue-onglet-explorer" style="display: none;">
-            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0; margin-bottom: 12px; text-align: center;">Trouvez l'inspiration par ingrédient ou par envie (Soupe, Curry, Gratin...) :</p>
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0; margin-bottom: 12px; text-align: center;">Trouvez l'inspiration par envie (Soupe, Curry, Gratin...) :</p>
             
-            <div style="display: flex; gap: 6px; margin-bottom: 14px;">
-                <input type="text" id="input-explorer-libre" class="form-control" placeholder="Ex: Poulet, Curry, Courge..." style="padding: 10px 14px; font-size: 0.9rem; border-radius: 12px; flex: 1; border: 1.5px solid var(--accent); background: #FFFDF8; font-weight: 800; color: var(--accent-dark);">
+            <div class="search-box-container" style="position: relative; margin-top: 18px; margin-bottom: 14px; width: 100%; max-width: none; display: flex; gap: 6px;">
+                <div id="explorer-profil-badge" class="active-profil-badge" onclick="ouvrirModalChangerProfil()" style="cursor: pointer;" title="Cliquer pour changer de profil">Profil : 🟢 Neutre</div>
+                <input type="text" id="input-explorer-libre" class="form-control" placeholder="Ex: Poulet, Curry, Courge..." style="padding: 10px 14px; font-size: 0.88rem; border-radius: 12px; flex: 1; border: 1.5px solid var(--accent); background: #FFFDF8; font-weight: 800; color: var(--accent-dark);">
                 <button type="button" class="btn btn-primary" onclick="lancerRechercheGlobaleDepuisCarnet()" style="padding: 10px 14px; font-weight: 800; font-size: 0.85rem; border-radius: 12px; white-space: nowrap;">
                     Chercher
                 </button>
@@ -3045,7 +3052,7 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "16.50";
+    const APP_VERSION = "16.60";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -3878,12 +3885,16 @@ window.fermerProfils = function() {
         // 2. NOUVEAU : Si le carnet de recettes est ouvert, on le rafraîchit en direct !
         const modalCarnet = document.getElementById('modal-carnet-recettes');
         if (modalCarnet && modalCarnet.style.display === 'block') {
-            // On relance l'ouverture du carnet pour forcer le recalcul des pastilles
-            // On garde l'onglet actuel (carnet ou explorer)
-            const ongletActif = document.getElementById('vue-onglet-explorer').style.display === 'block' ? 'explorer' : 'carnet';
-            ouvrirCarnetRecettes(ongletActif);
+            if (document.getElementById('vue-onglet-explorer').style.display === 'block') {
+                const inp = document.getElementById('input-explorer-libre');
+                if (inp && inp.value.trim()) lancerRechercheGlobaleDepuisCarnet();
+            } else if (document.getElementById('vue-onglet-frigo').style.display === 'block') {
+                if (panierFrigo.length > 0) lancerRechercheFrigoAntiGaspi();
+            } else {
+                ouvrirCarnetRecettes('carnet');
+            }
         }
-    }
+    } // <-- Ferme appliquerProfilModalRapide()
 
     function updateProfilBadges() {
         const shortNames = {
@@ -3912,8 +3923,12 @@ window.fermerProfils = function() {
         
         const listBadge = document.getElementById('list-profil-badge');
         if (listBadge) listBadge.innerText = displayTxt;
-    }
-    
+
+        ['carnet-profil-badge', 'frigo-profil-badge', 'explorer-profil-badge'].forEach(idB => {
+            const b = document.getElementById(idB);
+            if (b) b.innerText = displayTxt;
+        });
+    } // <-- Ferme updateProfilBadges() APRES le forEach !
 
     // NOUVEAU : Fonction qui juge si un aliment est incompatible avec le profil clinique actif
     function isClinicallyBad(l, profil) {
@@ -7585,7 +7600,7 @@ const DICO_ALTERNATIVES_CLINIQUES = {
     "edulcorant": "sucre de canne à très petite dose ou stévia pure"
 };
 
-// 1. Cherche dans tous nos classeurs de recettes maison (Nom + Synonymes du Sous-titre !)
+// 1. Cherche dans tous nos classeurs de recettes maison (Nom + Synonymes précis du Sous-titre !)
 function trouverRecettesMaison(termeRecherche) {
     if (!window.RECETTES_MAISON || !Array.isArray(window.RECETTES_MAISON)) return [];
     
@@ -7594,30 +7609,37 @@ function trouverRecettesMaison(termeRecherche) {
         .replace(/\s+(maigres?|gras|grasses?|panes?|panees?)\b.*$/i, '')
         .trim();
 
+    // Mots de découpe trop génériques s'ils sont utilisés seuls (évite "filet d'huile", "jambon blanc", etc.)
+    const motsCoupesIsoles = ["filet", "filets", "blanc", "blancs", "tranche", "tranches", "emince", "eminces", "escalope", "escalopes", "roti", "rotis", "cuisse", "cuisses", "aile", "ailes", "pilon", "pilons", "cote", "cotes", "cotelette", "cotelettes", "carre", "epaule", "souris", "pave", "darne", "dos", "queue", "entier", "frais", "nature", "doux"];
+
     const motPrincipal = nettoyerMot(termeRecherche);
     let synonymes = [motPrincipal];
 
-    // Si le terme correspond à une fiche du marché, on ajoute aussi tous les mots de son sous-titre !
+    // Si le terme correspond à une fiche du marché, on ajoute uniquement les vrais synonymes précis de son sous-titre
     const ficheMarche = legumes.find(l => nettoyerMot(l.nom) === motPrincipal);
-    if (ficheMarche && ficheMarche.soustitre) {
-        ficheMarche.soustitre.split(/[,\/\-]+/).forEach(s => {
+    if (ficheMarche && ficheMarche.soustitre && ficheMarche.saison !== "Viandes") {
+        ficheMarche.soustitre.split(/[,\/]+/).forEach(s => {
             const syn = nettoyerMot(s);
-            if (syn && syn.length >= 3 && !synonymes.includes(syn)) synonymes.push(syn);
+            if (syn && syn.length >= 4 && !motsCoupesIsoles.includes(syn) && !synonymes.includes(syn)) {
+                synonymes.push(syn);
+            }
         });
     }
 
     return window.RECETTES_MAISON.filter(rec => {
         const nomRecette = removeAccents((rec.nom || '').toLowerCase());
-        const ingRecette = removeAccents(((rec.ingredients || []).join(' ')).toLowerCase());
 
         return synonymes.some(mot => {
             if (!mot) return false;
-            if (nomRecette.includes(mot) || ingRecette.includes(mot)) return true;
+            const regexMot = new RegExp(`(^|[^a-z])${mot}[sx]?([^a-z]|$)`, 'i');
+            // A. Vérifie dans le titre de la recette
+            if (regexMot.test(nomRecette)) return true;
+            // B. Vérifie dans les aliments principaux associés à la recette
             if (rec.alimentsAssocies && Array.isArray(rec.alimentsAssocies)) {
                 return rec.alimentsAssocies.some(alim => {
                     if (!alim) return false;
                     const alimClean = removeAccents(alim.toLowerCase().trim());
-                    return alimClean.includes(mot) || mot.includes(alimClean);
+                    return regexMot.test(alimClean) || alimClean.includes(mot);
                 });
             }
             return false;
@@ -8005,7 +8027,7 @@ async function afficherPageRecettesCourante() {
                                 <span style="font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: 10px; border: 1px solid ${bordBadgeM}; background: ${bgBadgeM}; color: ${txtBadgeM};">
                                     ${verdictM}
                                 </span>
-                                <span style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 700;">🍽️ ${recM.portions}</span>
+                                <span style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 700;">🍽️ ${(recM.portions || '4 pers.').replace(/personnes?/i, 'pers.')}</span>
                             </div>
                             ${astuceM ? `<div style="font-size: 0.68rem; color: #D84315; font-weight: 700; margin-top: 3px;">💡 ${astuceM}</div>` : ''}
                         </div>
@@ -8342,6 +8364,7 @@ function ouvrirLecteurRecetteInApp(alimentId, indexRecette) {
             // Une recette est "Maison" si elle est dans la base locale OU si elle n'a pas d'idMeal TheMealDB
             const estDansBaseMaison = typeof window.RECETTES_MAISON !== 'undefined' && window.RECETTES_MAISON.some(r => removeAccents(r.nom.toLowerCase().trim()) === removeAccents((rec.nom || '').toLowerCase().trim()));
             const estRecetteMaison = estDansBaseMaison || (!rec.idMeal && rec.instructions);
+			if (btnTrad) btnTrad.style.display = estRecetteMaison ? 'none' : 'block';
 
             if (estRecetteMaison) {
                 typeOrigine = "⭐ RECETTE OFFICIELLE MAISON";
@@ -8783,13 +8806,13 @@ function ouvrirCarnetRecettes(ongletCible = 'carnet') {
         });
     }
 
-    const btnTabCarnet = document.getElementById('tab-btn-mon-carnet');
-    if (btnTabCarnet) btnTabCarnet.innerText = `📖 Carnet (${toutesRecettes.length})`;
+    const labelTabCarnet = document.getElementById('label-tab-carnet');
+    if (labelTabCarnet) labelTabCarnet.innerText = `Mes Recettes (${toutesRecettes.length})`;
 
     if (toutesRecettes.length === 0) {
         document.getElementById('carnet-filters-container').innerHTML = '';
         conteneur.innerHTML = `
-            <div style="text-align: center; padding: 25px 15px; color: var(--text-muted); line-height: 1.5;">
+            <div style="text-align: center; padding: 25px 15px; color: #4A423A; line-height: 1.5;">
                 <div style="font-size: 1.8rem; margin-bottom: 6px;">📖✨</div>
                 <strong>Votre carnet est prêt à accueillir vos recettes !</strong><br><br>
                 <button type="button" class="btn btn-primary" onclick="basculerOngletCarnet('explorer')" style="padding: 10px 18px; font-weight: 800; font-size: 0.85rem; border-radius: 14px;">
@@ -8837,16 +8860,27 @@ function ouvrirCarnetRecettes(ongletCible = 'carnet') {
         div.setAttribute('data-search', texteRecherche);
         div.setAttribute('data-statut', item.statutDynamique);
         
-        // Design dynamique de la bordure
-        let borderColor = "#2E7D32"; // Vert
-        if (item.statutDynamique === '🟡') borderColor = "#F57F17";
-        if (item.statutDynamique === '🟠' || item.statutDynamique === '🔴') borderColor = "#D84315";
+       // Design dynamique de la bordure et du badge clinique du bas
+        let borderColor = "#2E7D32";
+        let verdictCarnet = "🟢 RECETTE IDÉALE";
+        let bgVerdict = "rgba(46, 125, 50, 0.12)";
+        let txtVerdict = "#1B5E20";
 
-        div.style.cssText = `background: #FFFFFF; border: 1px solid var(--border-color); border-left: 5px solid ${borderColor}; border-radius: 14px; padding: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 8px;`;
+        if (item.statutDynamique === '🟡') {
+            borderColor = "#F57F17";
+            verdictCarnet = "🟡 FACILEMENT ADAPTABLE";
+            bgVerdict = "rgba(245, 127, 23, 0.12)";
+            txtVerdict = "#E65100";
+        } else if (item.statutDynamique === '🟠' || item.statutDynamique === '🔴') {
+            borderColor = "#D84315";
+            verdictCarnet = "🟠 SENSIBLE EN CRISE";
+            bgVerdict = "rgba(216, 67, 21, 0.12)";
+            txtVerdict = "#B5603F";
+        }
+
+        div.style.cssText = `background: #FFFFFF; border: 1px solid var(--border-color); border-left: 5px solid ${borderColor}; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 8px;`;
         
         let actionClick = "";
-        let styleBoutonVoir = "border-color: var(--accent); color: var(--accent-dark); background: #FFFDF8;";
-        
         if (item.rec && (item.rec.instructions || item.rec.idMeal)) {
             actionClick = `onclick="ouvrirRecetteDepuisCarnet(${item.leg.id}, ${item.index})"`;
         } else if (item.rec && item.rec.url && typeof item.rec.url === 'string' && item.rec.url.trim() !== "") {
@@ -8854,38 +8888,47 @@ function ouvrirCarnetRecettes(ongletCible = 'carnet') {
             actionClick = `onclick="window.open('${validUrl.replace(/'/g, "\\'")}', '_blank')"`;
         } else {
             actionClick = `onclick="alert('Cette recette n\\'a pas encore de lien ou d\\'instructions.')"`;
-            styleBoutonVoir = "border-color: #E8E0D2; color: #8D99AE; background: #F9F7F2;";
         }
-        
-        div.innerHTML = `
-                <div style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
-                    <!-- ÉTAGE 1 : Titre 100% libéré (Pastille + Nom du plat) -->
-                    <div style="width: 100%; cursor: pointer;" ${actionClick}>
-                        <div style="font-weight: 800; color: var(--text-title); font-size: 0.98rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-left: 2px;">
-                            ${item.statutDynamique} ${nomRecette}
-                        </div>
-                    </div>
 
-                    <!-- ÉTAGE 2 : Fiche à gauche + Boutons d'action alignés à droite -->
-                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; padding-left: 2px;">
-                        <div style="font-size: 0.72rem; color: var(--text-muted); cursor: pointer; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 8px;" ${actionClick}>
-                            📌 Fiche : <strong style="color: var(--accent-dark);">${nomAliment}</strong>
+        const imageCarnet = item.rec.thumb || item.rec.image || item.rec.strMealThumb || 'icones/carnet_recette.png';
+        const estMaisonCarnet = !item.rec.idMeal && item.rec.instructions;
+        const badgeSourceCarnet = estMaisonCarnet
+            ? `<span style="font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 8px; background: #FFF8E1; color: #B78103; border: 1px solid #F6C343;">⭐ MAISON</span>`
+            : (item.rec.idMeal ? `<span style="font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 8px; background: #E3F2FD; color: #1565C0; border: 1px solid #90CAF9;">🌍 THEMEALDB</span>` : `<span style="font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 8px; background: #F3E5F5; color: #6A1B9A; border: 1px solid #CE93D8;">🔗 WEB</span>`);
+        const portionsCarnet = (item.rec.portions || "4 pers.").replace('~ ', '').replace(/personnes?/i, 'pers.');
+
+        div.innerHTML = `
+            <div style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
+                <!-- ÉTAGE 1 : Photo + Titre + [Source | 4 pers. | 📌 Fiche] -->
+                <div style="display: flex; align-items: center; gap: 10px; width: 100%; cursor: pointer;" ${actionClick}>
+                    <img src="${imageCarnet}" alt="" style="width: 50px; height: 50px; border-radius: 10px; object-fit: cover; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.08);">
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-weight: 800; color: var(--text-title); font-size: 0.94rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            ${nomRecette}
                         </div>
-                        
-                        <div style="display: flex; align-items: center; flex-shrink: 0;">
-                            <!-- 1. Le bouton principal (Voir) -->
-                            <button class="btn" style="padding: 2px 7px; font-size: 1.05rem; line-height: 1.2; border-radius: 8px; border: 1px solid var(--accent); background: #FFFDF8; color: var(--accent-dark); box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-right: 10px;" ${actionClick} title="Voir la recette">👁️</button>
-                            
-                            <!-- 2. Le trio d'outils groupés (✏️ 🔄 🗑️) avec petit écart de 4px entre eux -->
-                            <div style="display: flex; gap: 4px;">
-                                <button class="btn" style="padding: 2px 6px; font-size: 0.95rem; line-height: 1.2; border-radius: 8px; border: 1px solid var(--border-color); background: #FFFDF8; box-shadow: 0 1px 3px rgba(0,0,0,0.04);" onclick="renommerRecetteDepuisCarnet(${item.leg.id}, ${item.index})" title="Renommer">✏️</button>
-                                <button class="btn" style="padding: 2px 6px; font-size: 0.95rem; line-height: 1.2; border-radius: 8px; border: 1px solid var(--border-color); background: #FFFDF8; color: #555; box-shadow: 0 1px 3px rgba(0,0,0,0.04);" onclick="preparerDeplacementRecette(${item.leg.id}, ${item.index})" title="Déplacer vers un autre aliment">🔄</button>
-                                <button class="btn" style="padding: 2px 6px; font-size: 0.95rem; line-height: 1.2; border-radius: 8px; border: 1px solid #FFCDCD; background: #FFF8F8; color: #D32F2F; box-shadow: 0 1px 3px rgba(0,0,0,0.04);" onclick="supprimerRecetteDepuisCarnet(${item.leg.id}, ${item.index})" title="Supprimer la recette">🗑️</button>
-                            </div>
+                        <div style="display: flex; align-items: center; gap: 6px; margin-top: 4px; flex-wrap: nowrap; overflow: hidden;">
+                            ${badgeSourceCarnet}
+                            <span style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 700; white-space: nowrap;">🍽️ ${portionsCarnet}</span>
+                            <span style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 800; padding: 1px 6px; border: 1px dashed var(--accent); border-radius: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">📌 ${nomAliment}</span>
                         </div>
                     </div>
                 </div>
-            `;
+
+                <!-- ÉTAGE 2 : Verdict clinique à gauche + [🗑️ 🔄 ✏️ 👁️ Voir] à droite -->
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-top: 1px dashed rgba(212, 163, 115, 0.3); padding-top: 8px; gap: 6px;">
+                    <span style="font-size: 0.68rem; font-weight: 800; padding: 3px 9px; border-radius: 10px; border: 1px solid ${borderColor}; background: ${bgVerdict}; color: ${txtVerdict}; white-space: nowrap;">
+                        ${verdictCarnet}
+                    </span>
+                    
+                    <div style="display: flex; align-items: center; gap: 4px; flex-shrink: 0;">
+                        <button class="btn" style="padding: 3px 7px; font-size: 0.85rem; line-height: 1.2; border-radius: 8px; border: 1px solid #FFCDCD; background: #FFF8F8; color: #D32F2F;" onclick="supprimerRecetteDepuisCarnet(${item.leg.id}, ${item.index})" title="Supprimer">🗑️</button>
+                        <button class="btn" style="padding: 3px 7px; font-size: 0.85rem; line-height: 1.2; border-radius: 8px; border: 1px solid var(--border-color); background: #FFFDF8; color: #555;" onclick="preparerDeplacementRecette(${item.leg.id}, ${item.index})" title="Déplacer">🔄</button>
+                        <button class="btn" style="padding: 3px 7px; font-size: 0.85rem; line-height: 1.2; border-radius: 8px; border: 1px solid var(--border-color); background: #FFFDF8;" onclick="renommerRecetteDepuisCarnet(${item.leg.id}, ${item.index})" title="Renommer">✏️</button>
+                        <button class="btn" style="padding: 4px 10px; font-size: 0.78rem; font-weight: 800; line-height: 1.2; border-radius: 8px; border: 1px solid var(--accent); color: var(--accent-dark); background: #FFFDF8;" ${actionClick}>👁️ Voir</button>
+                    </div>
+                </div>
+            </div>
+        `;
         conteneur.appendChild(div);
     });
 
@@ -8897,6 +8940,27 @@ function ouvrirCarnetRecettes(ongletCible = 'carnet') {
 // ========================================================
 let dernieresMaisonTrouvees = [];
 let dernieresMealDBTrouvees = [];
+		
+// Vérifie si une recette (Maison ou TheMealDB) est déjà enregistrée dans le Carnet (et retourne sa fiche !)
+function trouverRecetteDansCarnet(rec) {
+    if (!rec || !Array.isArray(legumes)) return null;
+    const nomRec = removeAccents((rec.nom || rec.strMeal || '').toLowerCase().trim());
+    const imgRec = rec.image || rec.thumb || rec.strMealThumb || '';
+    const idMealRec = rec.idMeal || '';
+
+    for (let l of legumes) {
+        if (l.recettesList && Array.isArray(l.recettesList)) {
+            for (let r of l.recettesList) {
+                const nomR = removeAccents((r.nom || '').toLowerCase().trim());
+                const imgR = r.thumb || r.image || '';
+                if ((nomRec && nomR === nomRec) || (imgRec && imgR === imgRec) || (idMealRec && r.idMeal == idMealRec)) {
+                    return { fiche: l, recetteSauvegardee: r };
+                }
+            }
+        }
+    }
+    return null;
+}
 
 async function lancerRechercheGlobaleDepuisCarnet() {
     const input = document.getElementById('input-explorer-libre');
@@ -8994,45 +9058,56 @@ async function lancerRechercheGlobaleDepuisCarnet() {
             let bgBadgeM = 'rgba(46, 125, 50, 0.12)';
             let bordBadgeM = '#2E7D32';
             let txtBadgeM = '#1B5E20';
-            let astuceM = '';
 
             if (alertesM.length > 0 && alertesM.length <= 2) {
                 verdictM = '🟡 FACILEMENT ADAPTABLE';
                 bgBadgeM = 'rgba(245, 127, 23, 0.12)';
                 bordBadgeM = '#F57F17';
                 txtBadgeM = '#E65100';
-                astuceM = `💡 Astuce : modérez ou retirez ${alertesM.join(' et ')}`;
             } else if (alertesM.length > 2) {
                 verdictM = '🟠 SENSIBLE EN CRISE';
                 bgBadgeM = 'rgba(216, 67, 21, 0.12)';
                 bordBadgeM = '#D84315';
                 txtBadgeM = '#B5603F';
-                astuceM = `💡 Plusieurs ingrédients sensibles (${alertesM.slice(0, 2).join(', ')}...)`;
             }
 
+            const dejaCarnetM = trouverRecetteDansCarnet(recM);
+            const badgeOrigineM = dejaCarnetM 
+                ? `<span style="font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 8px; background: rgba(44, 62, 80, 0.1); color: var(--text-title); border: 1px solid var(--text-title);">📖 MES RECETTES</span>` 
+                : `<span style="font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 8px; background: #FFF8E1; color: #B78103; border: 1px solid #F6C343;">⭐ MAISON</span>`;
+            const ficheBadgeM = dejaCarnetM
+                ? `<span style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 800; padding: 1px 6px; border: 1px dashed var(--accent); border-radius: 6px;">📌 ${dejaCarnetM.fiche.nom}</span>`
+                : '';
+
             const card = document.createElement('div');
-            card.style.cssText = "display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #FFFDF8; border: 1.5px solid rgba(212,163,115,0.4); border-radius: 14px; padding: 10px 12px; margin-bottom: 6px;";
+            card.className = 'carnet-row';
+            card.style.cssText = `background: #FFFFFF; border: 1px solid var(--border-color); border-left: 5px solid ${bordBadgeM}; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 8px;`;
             card.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; cursor: pointer;" onclick="afficherDetailRecetteDirect(dernieresMaisonTrouvees[${indexM}], true)">
-                    <img src="${recM.image}" alt="${recM.nom}" style="width: 56px; height: 56px; border-radius: 10px; object-fit: cover; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-                    <div style="min-width: 0;">
-                        <div style="font-weight: 800; color: var(--text-title); font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${recM.nom}</div>
-                        <div style="display: flex; gap: 6px; align-items: center; margin-top: 4px; flex-wrap: wrap;">
-                            <span style="font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: 10px; border: 1px solid ${bordBadgeM}; background: ${bgBadgeM}; color: ${txtBadgeM};">
-                                ${verdictM}
-                            </span>
-                            <span style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 700;">🍽️ ${recM.portions}</span>
+                <div style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; align-items: center; gap: 10px; width: 100%; cursor: pointer;" onclick="afficherDetailRecetteDirect(dernieresMaisonTrouvees[${indexM}], true)">
+                        <img src="${recM.image}" alt="${recM.nom}" style="width: 50px; height: 50px; border-radius: 10px; object-fit: cover; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.08);">
+                        <div style="flex: 1; min-width: 0;">
+                            <div style="font-weight: 800; color: var(--text-title); font-size: 0.94rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${recM.nom}</div>
+                            <div style="display: flex; gap: 6px; align-items: center; margin-top: 4px; flex-wrap: wrap;">
+                                ${badgeOrigineM}
+                                <span style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 700;">🍽️ ${(recM.portions || '4 pers.').replace(/personnes?/i, 'pers.')}</span>
+                                ${ficheBadgeM}
+                            </div>
                         </div>
-                        ${astuceM ? `<div style="font-size: 0.68rem; color: #D84315; font-weight: 700; margin-top: 3px;">${astuceM}</div>` : ''}
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-top: 1px dashed rgba(212, 163, 115, 0.3); padding-top: 8px;">
+                        <span style="font-size: 0.68rem; font-weight: 800; padding: 3px 9px; border-radius: 10px; border: 1px solid ${bordBadgeM}; background: ${bgBadgeM}; color: ${txtBadgeM};">
+                            ${verdictM}
+                        </span>
+                        <button type="button" class="btn" style="padding: 4px 12px; font-size: 0.78rem; font-weight: 800; line-height: 1.2; border-radius: 8px; border: 1px solid var(--accent); color: var(--accent-dark); background: #FFFDF8;" onclick="afficherDetailRecetteDirect(dernieresMaisonTrouvees[${indexM}], true)">👁️ Voir</button>
                     </div>
                 </div>
-                <button type="button" class="btn" style="padding: 7px 12px; font-size: 0.78rem; font-weight: 800; border-color: var(--accent); color: var(--accent-dark); background: #FFF;" onclick="afficherDetailRecetteDirect(dernieresMaisonTrouvees[${indexM}], true)">👁️ Voir</button>
             `;
             conteneur.appendChild(card);
         });
     }
 
-    // B. Affichage des Recettes TheMealDB trouvées (avec bouton Traduire la liste !)
+    // B. Affichage des Recettes TheMealDB trouvées
     if (dernieresMealDBTrouvees.length > 0) {
         const headerMealDB = document.createElement('div');
         headerMealDB.style.cssText = "display: flex; justify-content: space-between; align-items: center; margin: 14px 0 8px 2px;";
@@ -9046,7 +9121,6 @@ async function lancerRechercheGlobaleDepuisCarnet() {
         `;
         conteneur.appendChild(headerMealDB);
 
-        // 🚨 NOUVEAU : On télécharge les ingrédients pour pouvoir faire l'analyse clinique
         const aAnalyser = dernieresMealDBTrouvees.slice(0, 25);
         const recettesCompletes = await Promise.all(aAnalyser.map(async m => {
             if (m.strIngredient1) return m; 
@@ -9059,16 +9133,15 @@ async function lancerRechercheGlobaleDepuisCarnet() {
         
         dernieresMealDBTrouvees = recettesCompletes;
 
-        // On dessine la liste avec l'intelligence clinique activée !
         dernieresMealDBTrouvees.forEach((m, indexDB) => {
             const analyse = (typeof analyserCliniqueRecette === 'function') 
                 ? analyserCliniqueRecette(m, currentProfil) 
-                : { statut: '🟢', verdict: '🟢 RECETTE DU MONDE', alertes: [], scoreTexte: '' };
+                : { statut: '🟢', verdict: '🟢 RECETTE IDÉALE', alertes: [], scoreTexte: '' };
             
             let bgBadge = "rgba(46, 125, 50, 0.12)";
             let bordBadge = "#2E7D32";
             let txtBadge = "#1B5E20";
-            let verdictFinal = analyse.verdict === '🟢 RECETTE HARMONIEUSE' ? '🟢 RECETTE DU MONDE' : analyse.verdict;
+            let verdictFinal = analyse.verdict === '🟢 RECETTE HARMONIEUSE' ? '🟢 RECETTE IDÉALE' : analyse.verdict;
 
             if (analyse.statut === '🟡') {
                 bgBadge = "rgba(245, 127, 23, 0.12)";
@@ -9080,22 +9153,37 @@ async function lancerRechercheGlobaleDepuisCarnet() {
                 txtBadge = "#B5603F";
             }
 
-            const card = document.createElement('div');
-            card.style.cssText = "display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 14px; padding: 10px 12px; margin-bottom: 6px;";
-            card.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; cursor: pointer;" onclick="afficherDetailRecetteDirect(dernieresMealDBTrouvees[${indexDB}], false)">
-                    <img src="${m.strMealThumb}/preview" alt="${m.strMeal}" style="width: 44px; height: 44px; border-radius: 10px; object-fit: cover; flex-shrink: 0;">
-                    <div style="min-width: 0;">
-                        <div class="meal-title-text" style="font-weight: 800; color: var(--text-title); font-size: 0.88rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${m.strMeal}</div>
-                        
-                        <div style="display: inline-block; font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: 10px; border: 1px solid ${bordBadge}; background: ${bgBadge}; color: ${txtBadge}; margin-top: 3px;">
-                            ${verdictFinal}
-                        </div>
-                        ${analyse.alertes.length > 0 ? `<div style="font-size: 0.68rem; color: #D84315; font-weight: 700; margin-top: 2px;">💡 ${analyse.scoreTexte}</div>` : ''}
+            const dejaCarnetDB = trouverRecetteDansCarnet(m);
+            const badgeOrigineDB = dejaCarnetDB 
+                ? `<span style="font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 8px; background: rgba(44, 62, 80, 0.1); color: var(--text-title); border: 1px solid var(--text-title);">📖 MES RECETTES</span>` 
+                : `<span style="font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 8px; background: #E3F2FD; color: #1565C0; border: 1px solid #90CAF9;">🌍 THEMEALDB</span>`;
+            const ficheBadgeDB = dejaCarnetDB
+                ? `<span style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 800; padding: 1px 6px; border: 1px dashed var(--accent); border-radius: 6px;">📌 ${dejaCarnetDB.fiche.nom}</span>`
+                : '';
 
+            const card = document.createElement('div');
+            card.className = 'carnet-row';
+            card.style.cssText = `background: #FFFFFF; border: 1px solid var(--border-color); border-left: 5px solid ${bordBadge}; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 8px;`;
+            card.innerHTML = `
+                <div style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
+                    <div style="display: flex; align-items: center; gap: 10px; width: 100%; cursor: pointer;" onclick="afficherDetailRecetteDirect(dernieresMealDBTrouvees[${indexDB}], false)">
+                        <img src="${m.strMealThumb}/preview" alt="${m.strMeal}" style="width: 50px; height: 50px; border-radius: 10px; object-fit: cover; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.08);">
+                        <div style="flex: 1; min-width: 0;">
+                            <div class="meal-title-text" style="font-weight: 800; color: var(--text-title); font-size: 0.94rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${m.strMeal}</div>
+                            <div style="display: flex; gap: 6px; align-items: center; margin-top: 4px; flex-wrap: wrap;">
+                                ${badgeOrigineDB}
+                                <span style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 700;">🍽️ 4 pers.</span>
+                                ${ficheBadgeDB}
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-top: 1px dashed rgba(212, 163, 115, 0.3); padding-top: 8px;">
+                        <span style="font-size: 0.68rem; font-weight: 800; padding: 3px 9px; border-radius: 10px; border: 1px solid ${bordBadge}; background: ${bgBadge}; color: ${txtBadge};">
+                            ${verdictFinal}
+                        </span>
+                        <button type="button" class="btn" style="padding: 4px 12px; font-size: 0.78rem; font-weight: 800; line-height: 1.2; border-radius: 8px; border: 1px solid var(--accent); color: var(--accent-dark); background: #FFFDF8;" onclick="afficherDetailRecetteDirect(dernieresMealDBTrouvees[${indexDB}], false)">👁️ Voir</button>
                     </div>
                 </div>
-                <button type="button" class="btn" style="padding: 7px 12px; font-size: 0.78rem; font-weight: 800;" onclick="afficherDetailRecetteDirect(dernieresMealDBTrouvees[${indexDB}], false)">👁️ Voir</button>
             `;
             conteneur.appendChild(card);
         });
@@ -9236,13 +9324,15 @@ async function afficherDetailRecetteDirect(rec, estMaison = true) {
     const inputExp = document.getElementById('input-explorer-libre');
     const motTape = inputExp ? removeAccents(inputExp.value.toLowerCase().trim()).replace(/s\b/g, '') : "";
 
-    // PRIORITÉ 1 : Si on vient du Frigo, on rattache à l'ingrédient mis dans le Frigo !
+    // PRIORITÉ 1 : Si on vient du Frigo, on rattache à l'ingrédient du Frigo
+    // PRIORITÉ 2 : Si on a tapé un aliment dans Explorer (ex: "carotte"), on rattache à cet aliment !
     if (typeof vientDuFrigo !== 'undefined' && vientDuFrigo && panierFrigo.length > 0) {
         alimentRecetteActif = panierFrigo[0];
-    } else if (estMaison && rec.alimentsAssocies && rec.alimentsAssocies.length > 0) {
-        alimentRecetteActif = trouverAlimentCible(rec.alimentsAssocies[0]);
     } else if (motTape && !motsPlatsGeneriques.includes(motTape)) {
         alimentRecetteActif = trouverAlimentCible(motTape);
+    }
+    if (!alimentRecetteActif && estMaison && rec.alimentsAssocies && rec.alimentsAssocies.length > 0) {
+        alimentRecetteActif = trouverAlimentCible(rec.alimentsAssocies[0]);
     }
 
     if (!alimentRecetteActif) {
@@ -9277,8 +9367,9 @@ async function afficherDetailRecetteDirect(rec, estMaison = true) {
         if (!alimentRecetteActif && motTape) alimentRecetteActif = trouverAlimentCible(motTape);
     }
 
+    const infoDejaCarnet = trouverRecetteDansCarnet(rec);
     const btnSave = document.getElementById('btn-enregistrer-recette');
-    if (btnSave) btnSave.style.display = 'block';
+    if (btnSave) btnSave.style.display = infoDejaCarnet ? 'none' : 'block';
 
     const detailZone = document.getElementById('rec-detail-contenu');
     if (!detailZone) return;
@@ -9364,7 +9455,7 @@ async function afficherDetailRecetteDirect(rec, estMaison = true) {
             
             <div style="text-align: center; margin-bottom: 12px;">
                 <div style="font-size: 0.68rem; color: #B78103; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">⭐ RECETTE OFFICIELLE MAISON</div>
-                ${nomFicheAttachee ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px;">📌 Fiche : <strong style="color: var(--accent-dark);">${nomFicheAttachee}</strong></div>` : ''}
+                ${infoDejaCarnet ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px;">📌 Dans votre Carnet : <strong style="color: var(--accent-dark);">${infoDejaCarnet.fiche.nom}</strong></div>` : ''}
                 <span style="display: inline-block; padding: 5px 14px; border-radius: 20px; font-weight: 800; font-size: 0.78rem; background: ${bannerBg}; color: ${bannerColor}; border: 1.5px solid ${bannerColor};">
                     ${verdictTexte} • PROFIL : ${profilAffiche}
                 </span>
@@ -9373,7 +9464,7 @@ async function afficherDetailRecetteDirect(rec, estMaison = true) {
             </div>
 
             <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 12px;">
-                <span style="background: rgba(212, 163, 115, 0.15); color: var(--accent-dark); padding: 4px 12px; border-radius: 14px; font-size: 0.75rem; font-weight: 800;">🍽️ ${rec.portions || '~ 4 personnes'}</span>
+                <span style="background: rgba(212, 163, 115, 0.15); color: var(--accent-dark); padding: 4px 12px; border-radius: 14px; font-size: 0.75rem; font-weight: 800;">🍽️ ${rec.portions || '~ 4 pers.'}</span>
                 <span style="background: rgba(212, 163, 115, 0.15); color: var(--accent-dark); padding: 4px 12px; border-radius: 14px; font-size: 0.75rem; font-weight: 800;">⏱️ ${rec.temps || '~ 30 min'}</span>
             </div>
 
@@ -9453,7 +9544,7 @@ async function afficherDetailRecetteDirect(rec, estMaison = true) {
             
             <div style="text-align: center; margin-bottom: 12px;">
                 <div style="font-size: 0.68rem; color: #1565C0; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;">🌍 BASE THEMEALDB</div>
-                ${nomFicheAttachee ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px;">📌 Fiche : <strong style="color: var(--accent-dark);">${nomFicheAttachee}</strong></div>` : ''}
+                ${infoDejaCarnet ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px;">📌 Dans votre Carnet : <strong style="color: var(--accent-dark);">${infoDejaCarnet.fiche.nom}</strong></div>` : ''}
                 <span style="display: inline-block; padding: 5px 14px; border-radius: 20px; font-weight: 800; font-size: 0.78rem; background: ${bannerBg}; color: ${bannerColor}; border: 1.5px solid ${bannerColor};">
                     ${verdictFinal} • PROFIL : ${profilAffiche}
                 </span>
@@ -9803,7 +9894,7 @@ function dessinerTagsFrigo() {
     if (!zone) return;
 
     if (panierFrigo.length === 0) {
-        zone.innerHTML = '<span id="frigo-placeholder-vide" style="font-size: 0.75rem; color: var(--text-muted); font-style: italic;">(Aucun ingrédient sélectionné)</span>';
+        zone.innerHTML = '<span id="frigo-placeholder-vide" style="font-size: 0.75rem; color: #5C5248; font-weight: 700; font-style: italic;">(Aucun ingrédient sélectionné)</span>';
         return;
     }
 
@@ -9832,32 +9923,30 @@ async function lancerRechercheFrigoAntiGaspi() {
 
     conteneur.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.88rem; padding: 20px 10px;">⏳ Votre chef Anti-Gaspi inspecte le livre de cuisine...</div>`;
 
-    // Fonction qui extrait le VRAI mot-clé (ex: "Filet d'agneau" -> "agneau", "Carottes nouvelle" -> "carotte")
-        const extraireRacineAliment = (nomBrut) => {
-        let txt = removeAccents(nomBrut.toLowerCase().trim());
-        // 0. NOUVEAU : Retire tout ce qui est entre parenthèses ou après "&" (ex: "(Cuisse, Ailes)", "& Caille")
+    // Fonction qui extrait UNIQUEMENT le vrai nom de l'aliment (ex: "Filets de cabillaud" -> "cabillaud", "Boeuf maigre" -> "boeuf")
+    const extraireRacineAliment = (nomBrut) => {
+        let txt = removeAccents((nomBrut || '').toLowerCase().trim());
         txt = txt.replace(/\s*\(.*?\)/g, '').replace(/\s*&.*$/g, '');
-        // 1. Retire les mots de découpe au début ("filet d'", "blanc de", "cuisse de", etc.)
-        txt = txt.replace(/^(filets?|cuisses?|escalopes?|tranches?|eminces?|rotis?|cotelettes?|gigots?|steaks?|viande hachee|ragouts?|bouillis?|entrecotes?|medaillons?|darnes?|queues?|anneaux|blancs?|cotes?|pointes?|coeurs?)\s+(de\s+|d'|du\s+|des\s+)/i, '');
-        // 2. Retire les adjectifs qualificatifs à la fin (AJOUT DE : maigre, gras, panes !)
-        txt = txt.replace(/\s+(maigres?|gras|grasses?|panes?|panees?|nouvelles?|nouveaux|frais|fraiches?|crues?|crus|cuites?|cuits|nature|entiers?|uht|past|aop|classiques?|doux|sales?|fermes?|sechees?|seches?|cocktail|black tiger)\b.*$/i, '');
-        // 3. Met au singulier
+        txt = txt.replace(/^(filets?|cuisses?|escalopes?|tranches?|eminces?|rotis?|cotelettes?|gigots?|steaks?|viande hachee|ragouts?|bouillis?|entrecotes?|medaillons?|darnes?|queues?|anneaux|blancs?|cotes?|pointes?|coeurs?|dos|noix|paves?)\s+(de\s+|d'|du\s+|des\s+)/i, '');
+        txt = txt.replace(/\s+(maigres?|gras|grasses?|panes?|panees?|nouvelles?|nouveaux|frais|fraiches?|crues?|crus|cuites?|cuits|nature|entiers?|uht|past|aop|classiques?|doux|sales?|fermes?|sechees?|seches?|cocktail|black tiger| royale?s?|arc-en-ciel)\b.*$/i, '');
         return txt.trim().replace(/s\b/g, '');
     };
 
-    // Chaque aliment du Frigo cherche son nom principal OU les synonymes de son sous-titre !
+    // Pour chaque aliment du Frigo, on cherche sa racine principale (et "vermicelle" si c'est Nouilles de riz)
     const groupesSynonymesFrigo = panierFrigo.map(a => {
-        let listeMots = [extraireRacineAliment(a.nom)];
-        if (a.soustitre) {
-            a.soustitre.split(/[,\/\-]+/).forEach(s => {
-                const racS = extraireRacineAliment(s);
-                if (racS && racS.length >= 3 && !listeMots.includes(racS)) {
-                    listeMots.push(racS);
-                }
-            });
-        }
-        return listeMots.filter(Boolean);
+        const rac = extraireRacineAliment(a.nom);
+        let liste = [rac];
+        if (rac.includes("nouille")) liste.push("vermicelle de riz", "vermicelle");
+        if (rac.includes("rampon")) liste.push("mache", "doucette");
+        if (rac.includes("courge")) liste.push("butternut", "potimarron");
+        if (rac.includes("potiron")) liste.push("citrouille", "potimarron");
+        if (rac.includes("baudroie")) liste.push("lotte");
+        if (rac.includes("cabillaud")) liste.push("morue");
+        if (rac.includes("ciboulette")) liste.push("ciboule", "cebette");
+        return liste.filter(m => m && m.length >= 3);
     });
+
+    resultatsFrigoEnCours = [];
 
     // ========================================================
     // ÉTAPE 1 : CATALOGUE UNIFIÉ SANS DOUBLON (MÊME RENOMMÉ !)
@@ -9866,7 +9955,6 @@ async function lancerRechercheFrigoAntiGaspi() {
     let nomsVus = new Set();
     let imagesVues = new Set();
 
-    // A. Priorité aux recettes enregistrées dans Mon Carnet
     legumes.forEach(l => {
         if (l.recettesList && Array.isArray(l.recettesList)) {
             l.recettesList.forEach((r, idx) => {
@@ -9886,7 +9974,6 @@ async function lancerRechercheFrigoAntiGaspi() {
         }
     });
 
-    // B. Complément avec les Recettes Maison (bloquées si même nom OU même photo !)
     if (typeof window.RECETTES_MAISON !== 'undefined' && Array.isArray(window.RECETTES_MAISON)) {
         window.RECETTES_MAISON.forEach(rM => {
             if (rM && rM.nom) {
@@ -9910,19 +9997,18 @@ async function lancerRechercheFrigoAntiGaspi() {
     // ========================================================
     catalogueUnifie.forEach(rec => {
         let nbMatches = 0;
-        
-        let texteIngredients = Array.isArray(rec.ingredients) ? rec.ingredients.join(' ') : (rec.ingredients || '');
-        const texteCible = removeAccents((
-            (rec.nom || '') + " " + 
-            texteIngredients + " " + 
-            ((rec.alimentsAssocies || []).join(' '))
-        ).toLowerCase());
+
+        let sourceIngredients = (rec.alimentsAssocies && rec.alimentsAssocies.length > 0)
+            ? rec.alimentsAssocies.join(' | ')
+            : (Array.isArray(rec.ingredients) ? rec.ingredients.join(' | ') : (rec.ingredients || ''));
+
+        const texteCible = removeAccents(((rec.nom || '') + " | " + sourceIngredients).toLowerCase())
+            .replace(/bouillon\s+de\s+[a-z]+/g, '')
+            .replace(/filet\s+d'huile/g, '');
 
         groupesSynonymesFrigo.forEach(synonymes => {
-            // Si AU MOINS UN des synonymes de l'aliment (ex: "nouille de riz" OU "vermicelle de riz") est dans la recette, ça matche !
             const trouve = synonymes.some(racine => {
-                if (!racine) return false;
-                // Gère les pluriels internes (ex: "nouille de riz" -> "nouilles? de riz")
+                if (!racine || racine.length < 3) return false;
                 const pattern = racine.split(/\s+/).map(m => m + '[sx]?').join('\\s+');
                 const regexMot = new RegExp(`(^|[^a-z])${pattern}([^a-z]|$)`, 'i');
                 return regexMot.test(texteCible);
@@ -9962,33 +10048,94 @@ async function lancerRechercheFrigoAntiGaspi() {
         const rec = item.rec;
         const div = document.createElement('div');
         div.className = 'carnet-row';
-        div.style.cssText = "background: #FFFFFF; border: 1.5px solid var(--accent); border-radius: 14px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 8px;";
+
+        // Calcul du statut clinique dynamique de la recette dans le Frigo
+        let statutFrigo = '🟢';
+        if (rec.estDuCarnet) {
+            statutFrigo = evaluerStatutRecetteSauvegardee(rec, currentProfil);
+        } else if (currentProfil && currentProfil !== 'neutre' && rec.ingredients && Array.isArray(rec.ingredients)) {
+            let nbAlertes = 0;
+            const legumesTries = [...legumes].sort((a, b) => b.nom.length - a.nom.length);
+            rec.ingredients.forEach(ligne => {
+                const texteClean = removeAccents(ligne.toLowerCase());
+                for (let alim of legumesTries) {
+                    if (!alim || !alim.nom) continue;
+                    const nomAlim = removeAccents(alim.nom.toLowerCase().trim());
+                    const regexMotEntier = new RegExp(`(^|[^a-zÀ-ÿ])${nomAlim}([^a-zÀ-ÿ]|$)`, 'i');
+                    if (regexMotEntier.test(texteClean)) {
+                        if (isClinicallyBad(alim, currentProfil)) nbAlertes++;
+                        break;
+                    }
+                }
+            });
+            if (nbAlertes > 0 && nbAlertes <= 2) statutFrigo = '🟡';
+            else if (nbAlertes > 2) statutFrigo = '🟠';
+        }
+
+        let borderColor = "#2E7D32";
+        let verdictFrigo = "🟢 RECETTE IDÉALE";
+        let bgVerdict = "rgba(46, 125, 50, 0.12)";
+        let txtVerdict = "#1B5E20";
+
+        if (statutFrigo === '🟡') {
+            borderColor = "#F57F17";
+            verdictFrigo = "🟡 FACILEMENT ADAPTABLE";
+            bgVerdict = "rgba(245, 127, 23, 0.12)";
+            txtVerdict = "#E65100";
+        } else if (statutFrigo === '🟠' || statutFrigo === '🔴') {
+            borderColor = "#D84315";
+            verdictFrigo = "🟠 SENSIBLE EN CRISE";
+            bgVerdict = "rgba(216, 67, 21, 0.12)";
+            txtVerdict = "#B5603F";
+        }
+
+        div.style.cssText = `background: #FFFFFF; border: 1px solid var(--border-color); border-left: 5px solid ${borderColor}; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 8px;`;
 
         const estJackpot = (item.matches === panierFrigo.length);
-        const badgeTexte = estJackpot ? '🌟 Parfait (Tous vos restes !)' : `🎯 Utilise ${item.matches} sur ${panierFrigo.length} restes`;
-        const badgeColor = estJackpot ? '#2E7D32' : 'var(--accent-dark)';
+        const badgeScoreFrigo = `<span style="font-size: 0.68rem; color: ${estJackpot ? '#2E7D32' : 'var(--accent-dark)'}; font-weight: 800; padding: 3px 7px; border-radius: 8px; background: rgba(0,0,0,0.04); white-space: nowrap;">🎯 ${item.matches}/${panierFrigo.length} restes</span>`;
 
         const badgeOrigine = rec.estDuCarnet 
-            ? `<span style="font-size: 0.68rem; font-weight: 800; padding: 2px 6px; border-radius: 8px; background: rgba(44, 62, 80, 0.1); color: var(--text-title); border: 1px solid var(--text-title);">📖 MON CARNET</span>`
-            : `<span style="font-size: 0.68rem; font-weight: 800; padding: 2px 6px; border-radius: 8px; background: #FFF8E1; color: #B78103; border: 1px solid #F6C343;">⭐ MAISON</span>`;
+            ? `<span style="font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 8px; background: rgba(44, 62, 80, 0.1); color: var(--text-title); border: 1px solid var(--text-title);">📖 MES RECETTES</span>`
+            : `<span style="font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 8px; background: #FFF8E1; color: #B78103; border: 1px solid #F6C343;">⭐ MAISON</span>`;
+
+        const ficheBadgeFrigo = (rec.estDuCarnet && rec.ficheNom)
+            ? `<span style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 800; padding: 1px 6px; border: 1px dashed var(--accent); border-radius: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">📌 ${rec.ficheNom}</span>`
+            : '';
 
         const imageAffichee = rec.image || rec.thumb || rec.strMealThumb || 'icones/carnet_recette.png';
+        const portionsFrigo = (rec.portions || "4 pers.").replace('~ ', '').replace(/personnes?/i, 'pers.');
 
         div.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; cursor: pointer;" onclick="ouvrirRecetteDepuisFrigo(${indexF})">
-                <img src="${imageAffichee}" alt="${rec.nom}" style="width: 48px; height: 48px; border-radius: 10px; object-fit: cover; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
-                <div style="min-width: 0;">
-                    <div style="font-weight: 800; color: var(--text-title); font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${rec.nom}</div>
-                    <div style="display: flex; gap: 6px; align-items: center; margin-top: 3px; flex-wrap: wrap;">
-                        ${badgeOrigine}
-                        <span style="font-size: 0.7rem; color: ${badgeColor}; font-weight: 800;">${badgeTexte}</span>
+            <div style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
+                <!-- ÉTAGE 1 : Photo + Titre + [Origine | 4 pers. | 📌 Fiche] -->
+                <div style="display: flex; align-items: center; gap: 10px; width: 100%; cursor: pointer;" onclick="ouvrirRecetteDepuisFrigo(${indexF})">
+                    <img src="${imageAffichee}" alt="${rec.nom}" style="width: 50px; height: 50px; border-radius: 10px; object-fit: cover; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.08);">
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-weight: 800; color: var(--text-title); font-size: 0.94rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            ${rec.nom}
+                        </div>
+                        <div style="display: flex; gap: 6px; align-items: center; margin-top: 4px; flex-wrap: nowrap; overflow: hidden;">
+                            ${badgeOrigine}
+                            <span style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 700; white-space: nowrap;">🍽️ ${portionsFrigo}</span>
+                            ${ficheBadgeFrigo}
+                        </div>
                     </div>
                 </div>
+
+                <!-- ÉTAGE 2 : Verdict clinique + 🎯 X/Y restes à gauche + [👁️ Voir] à droite -->
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-top: 1px dashed rgba(212, 163, 115, 0.3); padding-top: 8px;">
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <span style="font-size: 0.68rem; font-weight: 800; padding: 3px 9px; border-radius: 10px; border: 1px solid ${borderColor}; background: ${bgVerdict}; color: ${txtVerdict}; white-space: nowrap;">
+                            ${verdictFrigo}
+                        </span>
+                        ${badgeScoreFrigo}
+                    </div>
+                    <button type="button" class="btn" style="padding: 4px 12px; font-size: 0.78rem; font-weight: 800; line-height: 1.2; border-radius: 8px; border: 1px solid var(--accent); color: var(--accent-dark); background: #FFFDF8;" onclick="ouvrirRecetteDepuisFrigo(${indexF})">👁️ Voir</button>
+                </div>
             </div>
-            <button type="button" class="btn" style="padding: 6px 10px; font-size: 0.78rem; font-weight: 800; border-color: var(--accent); color: var(--accent-dark); background: #FFFDF8;" onclick="ouvrirRecetteDepuisFrigo(${indexF})">👁️ Voir</button>
         `;
         conteneur.appendChild(div);
-    });
+    });;
 }
 
 // 6. Fonction dédiée qui ouvre la recette en grand sans bug
