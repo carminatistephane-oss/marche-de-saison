@@ -1,5 +1,5 @@
 <!-- ================================================================================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 16.60 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 17.00 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -21,6 +21,7 @@
 <!-- MISE A JOUR DE LA LISTE DES VIANDES POUR LA CATEGORISER PLUS SIMPLEMENT  -->
 <!-- OPTIMISATION DE LA BASE ALIMENTS EN SUPPRIMENT LES DOUBLON ET LES INUTILES  -->
 <!-- HARMONISATION PRESENTATION FICHES RECETTES DANS MES RECETTES_MON FRIGO_MES RECHERCHES  -->
+<!-- MISE AJOUR FICHIER RECETTES - INTEGRATION FILTRES RECETTES DANS "MES RECHERCHES"  -->
 <!-- =================================================================================================================== -->
 
 <!DOCTYPE html>
@@ -1805,18 +1806,17 @@ body.dark-mode #rec-liste-container div[style*="color: var(--text-title)"],
 body.dark-mode #rec-liste-container .meal-title-text,
 body.dark-mode #resultats-explorer-global div[style*="color: var(--text-title)"],
 body.dark-mode #resultats-explorer-global .meal-title-text {
-    color: #231F1A !important; /* Moka très foncé bien lisible */
+    color: #FFFFFF !important; /* Titre bien blanc et lisible sur fond Moka */
 }
 
-/* Cartes de la liste d'aliments : Même fond blanc et titres nets que l'Image 1 */
-body.dark-mode #rec-liste-container > div {
-    background-color: #FFFDF8 !important; /* Même fond blanc crème ! */
-    border: 1px solid #E2D9CC !important;
+/* Cartes de la liste d'aliments : Même fond Moka et bordure gauche colorée */
+body.dark-mode #rec-liste-container > div.carnet-row {
+    background-color: #38312B !important;
+    border-top-color: #5C5248 !important;
+    border-right-color: #5C5248 !important;
+    border-bottom-color: #5C5248 !important;
 }
-body.dark-mode #rec-liste-container div[style*="color: var(--text-title)"],
-body.dark-mode #rec-liste-container .meal-title-text {
-    color: #231F1A !important;            /* Titre bien noir et lisible */
-}
+
 
 /* ======================================================== */
 /* RESTAURATION DES VRAIES COULEURS DES BADGES              */
@@ -1905,17 +1905,8 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
-<!-- BASE DE RECETTES MAISON (100% FRANÇAIS & HORS-LIGNE) -->
-<script src="donnees/recettes_printemps.js"></script>
-<script src="donnees/recettes_ete.js"></script>
-<script src="donnees/recettes_automne.js"></script>
-<script src="donnees/recettes_hiver.js"></script>
-<script src="donnees/recettes_feculents.js"></script>
-<script src="donnees/recettes_legumineuses.js"></script>
-<script src="donnees/recettes_viandes.js"></script>
-<script src="donnees/recettes_poissons.js"></script>
-<script src="donnees/recettes_laitages.js"></script>
-<script src="donnees/recettes_douceurs.js"></script>
+<!-- BASE DE RECETTES MAISON UNIFIÉE (100% FRANÇAIS & HORS-LIGNE) -->
+<script src="donnees/recettes_maison.js"></script>
 
 </head>
 <body>
@@ -1967,7 +1958,7 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v16.60</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v17.00</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -2787,7 +2778,7 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
         <div id="vue-onglet-explorer" style="display: none;">
             <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0; margin-bottom: 12px; text-align: center;">Trouvez l'inspiration par envie (Soupe, Curry, Gratin...) :</p>
             
-            <div class="search-box-container" style="position: relative; margin-top: 18px; margin-bottom: 14px; width: 100%; max-width: none; display: flex; gap: 6px;">
+            <div class="search-box-container" style="position: relative; margin-top: 18px; margin-bottom: 10px; width: 100%; max-width: none; display: flex; gap: 6px;">
                 <div id="explorer-profil-badge" class="active-profil-badge" onclick="ouvrirModalChangerProfil()" style="cursor: pointer;" title="Cliquer pour changer de profil">Profil : 🟢 Neutre</div>
                 <input type="text" id="input-explorer-libre" class="form-control" placeholder="Ex: Poulet, Curry, Courge..." style="padding: 10px 14px; font-size: 0.88rem; border-radius: 12px; flex: 1; border: 1.5px solid var(--accent); background: #FFFDF8; font-weight: 800; color: var(--accent-dark);">
                 <button type="button" class="btn btn-primary" onclick="lancerRechercheGlobaleDepuisCarnet()" style="padding: 10px 14px; font-weight: 800; font-size: 0.85rem; border-radius: 12px; white-space: nowrap;">
@@ -2795,49 +2786,66 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
                 </button>
             </div>
 
-            <div id="resultats-explorer-global" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
-                <div style="text-align: center; color: var(--text-muted); font-size: 0.82rem; padding: 20px 10px; font-style: italic;">
-                    Tapez un mot-clé ci-dessus pour explorer les recettes du monde et les recettes officielles du Marché !
+            <!-- PILULES DU CATALOGUE DES RECETTES MAISON (1 CLIC SANS TAPER !) -->
+            <div style="margin-bottom: 12px;">
+                <div style="font-size: 0.66rem; color: var(--accent-dark); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; text-align: center;">
+                    ⭐ Catalogue Officiel Maison (Accès direct) :
+                </div>
+                <div id="catalogue-maison-pills" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 5px;">
+                    <button type="button" class="filter-btn cat-maison-btn" data-cat="toutes" onclick="filtrerCatalogueMaison('toutes')" style="padding: 5px 10px; font-size: 0.72rem;">⭐ Toutes</button>
+                    <button type="button" class="filter-btn cat-maison-btn" data-cat="soupes" onclick="filtrerCatalogueMaison('soupes')" style="padding: 5px 10px; font-size: 0.72rem;">🥣 Soupes</button>
+                    <button type="button" class="filter-btn cat-maison-btn" data-cat="salades" onclick="filtrerCatalogueMaison('salades')" style="padding: 5px 10px; font-size: 0.72rem;">🥗 Salades</button>
+                    <button type="button" class="filter-btn cat-maison-btn" data-cat="legumes" onclick="filtrerCatalogueMaison('legumes')" style="padding: 5px 10px; font-size: 0.72rem;">🥕 Légumes</button>
+                    <button type="button" class="filter-btn cat-maison-btn" data-cat="feculents" onclick="filtrerCatalogueMaison('feculents')" style="padding: 5px 10px; font-size: 0.72rem;">🍝 Féculents</button>
+                    <button type="button" class="filter-btn cat-maison-btn" data-cat="viandes" onclick="filtrerCatalogueMaison('viandes')" style="padding: 5px 10px; font-size: 0.72rem;">🥩 Viandes</button>
+                    <button type="button" class="filter-btn cat-maison-btn" data-cat="poissons" onclick="filtrerCatalogueMaison('poissons')" style="padding: 5px 10px; font-size: 0.72rem;">🐟 Poissons</button>
+                    <button type="button" class="filter-btn cat-maison-btn" data-cat="douceurs" onclick="filtrerCatalogueMaison('douceurs')" style="padding: 5px 10px; font-size: 0.72rem;">🍪 Douceurs</button>
                 </div>
             </div>
 
-            <!-- GUIDE DÉROULANT : COMMENT ENREGISTRER UNE RECETTE CH & FR -->
-            <div style="background: #FFFDF8; border: 1.5px dashed var(--accent); border-radius: 16px; margin: 15px 0 16px 0; text-align: left; box-shadow: 0 2px 6px rgba(0,0,0,0.02); overflow: hidden;">
+            <div id="resultats-explorer-global" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px;">
+                <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 14px 10px; font-style: italic;">
+                    Touchez une catégorie ci-dessus pour parcourir nos Recettes Maison, ou tapez un mot-clé pour explorer aussi TheMealDB !
+                </div>
+            </div>
+
+            <!-- TIROIR DÉPLIANT TOUT-EN-UN : SITES CULINAIRES CH & FR + GUIDE -->
+            <div style="background: #FFFDF8; border: 1.5px dashed var(--accent); border-radius: 16px; margin: 10px 0 8px 0; text-align: left; box-shadow: 0 2px 6px rgba(0,0,0,0.02); overflow: hidden;">
                 <div onclick="toggleGuideRecettesWeb()" style="padding: 12px 14px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none;">
-                    <div style="font-weight: 800; color: var(--accent-dark); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.8px; display: flex; align-items: center; gap: 6px;">
-                        💡 Enregistrer une recette CH & FR ?
+                    <div style="font-weight: 800; color: var(--accent-dark); font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.6px; display: flex; align-items: center; gap: 6px;">
+                        🇨🇭 🇫🇷 Grands Sites Culinaires & Guide Web
                     </div>
                     <svg id="chevron-guide-web" viewBox="0 0 24 24" width="18" height="18" style="fill: var(--accent-dark); transition: transform 0.3s ease; flex-shrink: 0;">
                         <path d="M7 10l5 5 5-5z"/>
                     </svg>
                 </div>
                 <div id="contenu-guide-web" style="max-height: 0px; opacity: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease, padding 0.3s ease; padding: 0 14px;">
-                    <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.76rem; color: var(--text-main); line-height: 1.35; padding-bottom: 12px; border-top: 1px dashed rgba(212, 163, 115, 0.3); padding-top: 10px;">
-                        <div style="display: flex; align-items: flex-start; gap: 8px;"><span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">1</span><span><strong>Ouvrez le site :</strong> Touchez l'un des boutons ci-dessous.</span></div>
-                        <div style="display: flex; align-items: flex-start; gap: 8px;"><span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">2</span><span><strong>Cherchez votre plat :</strong> Trouvez la recette qui vous fait envie.</span></div>
-                        <div style="display: flex; align-items: flex-start; gap: 8px;"><span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">3</span><span><strong>Copiez le lien :</strong> Touchez la barre d'adresse en haut et faites Copier.</span></div>
-                        <div style="display: flex; align-items: flex-start; gap: 8px;"><span style="font-weight: 800; color: #FFFFFF; background: var(--accent-dark); border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 0.68rem; flex-shrink: 0; margin-top: 1px;">4</span><span><strong>Collez & sauvez :</strong> Revenez sur la fiche de l'aliment (✏️ Modifier), collez le lien et enregistrez !</span></div>
-                    </div>
-                </div>
-            </div>
+                    <div style="border-top: 1px dashed rgba(212, 163, 115, 0.3); padding-top: 10px; padding-bottom: 14px;">
+                        
+                        <!-- Les 4 étapes résumées -->
+                        <div style="display: flex; flex-direction: column; gap: 6px; font-size: 0.74rem; color: var(--text-main); line-height: 1.35; margin-bottom: 12px;">
+                            <div><strong>1.</strong> Ouvrez un site ci-dessous • <strong>2.</strong> Copiez l'adresse URL de la recette • <strong>3.</strong> Collez-la sur la fiche de l'aliment (✏️ Modifier) !</div>
+                        </div>
 
-            <!-- SITES CULINAIRES SUISSES ET FRANCAIS -->
-            <div style="border-top: 1px dashed var(--border-color); padding-top: 12px; margin-bottom: 14px;">
-                <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; text-align: center;">🇨🇭 Grands Sites Culinaires Suisses</div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <a href="https://migusto.migros.ch" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #D4A373; background: #FFFDF8; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box; color: var(--text-main);">🇨🇭 Migusto</a>
-                    <a href="https://fooby.ch" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #4CAF50; background: #FFFDF8; color: #2E7D32; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇨🇭 FOOBY</a>
-                    <a href="https://www.bettybossi.ch" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #D84315; background: #FFFDF8; color: #D84315; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇨🇭 Betty Bossi</a>
-                    <a href="https://www.swissmilk.ch/fr/recettes/" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #1976D2; background: #FFFDF8; color: #1565C0; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇨🇭 Swissmilk</a>
-                </div>
-            </div>
-            <div style="border-top: 1px dashed var(--border-color); padding-top: 12px; margin-bottom: 10px;">
-                <div style="font-size: 0.68rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; text-align: center;">🇫🇷 Grands Sites Culinaires Français</div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <a href="https://www.marmiton.org" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #E65100; background: #FFFDF8; color: #E65100; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇫🇷 Marmiton</a>
-                    <a href="https://www.cuisineaz.com" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #8E24AA; background: #FFFDF8; color: #6A1B9A; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇫🇷 Cuisine AZ</a>
-                    <a href="https://www.750g.com" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #D32F2F; background: #FFFDF8; color: #C62828; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇫🇷 750g</a>
-                    <a href="https://www.cuisineactuelle.fr" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 9px; font-weight: 800; font-size: 0.78rem; border-color: #0288D1; background: #FFFDF8; color: #0288D1; text-decoration: none; text-align: center; display: flex; justify-content: center; align-items: center; box-sizing: border-box;">🇫🇷 Cuisine Actuelle</a>
+                        <!-- Sites Suisses -->
+                        <div style="font-size: 0.66rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; text-align: center;">🇨🇭 Sites Culinaires Suisses</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px;">
+                            <a href="https://migusto.migros.ch" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 8px; font-weight: 800; font-size: 0.76rem; border-color: #D4A373; background: #FFFDF8; text-decoration: none; text-align: center; color: var(--text-main);">🇨🇭 Migusto</a>
+                            <a href="https://fooby.ch" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 8px; font-weight: 800; font-size: 0.76rem; border-color: #4CAF50; background: #FFFDF8; color: #2E7D32; text-decoration: none; text-align: center;">🇨🇭 FOOBY</a>
+                            <a href="https://www.bettybossi.ch" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 8px; font-weight: 800; font-size: 0.76rem; border-color: #D84315; background: #FFFDF8; color: #D84315; text-decoration: none; text-align: center;">🇨🇭 Betty Bossi</a>
+                            <a href="https://www.swissmilk.ch/fr/recettes/" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 8px; font-weight: 800; font-size: 0.76rem; border-color: #1976D2; background: #FFFDF8; color: #1565C0; text-decoration: none; text-align: center;">🇨🇭 Swissmilk</a>
+                        </div>
+
+                        <!-- Sites Français -->
+                        <div style="font-size: 0.66rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; text-align: center;">🇫🇷 Sites Culinaires Français</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+                            <a href="https://www.marmiton.org" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 8px; font-weight: 800; font-size: 0.76rem; border-color: #E65100; background: #FFFDF8; color: #E65100; text-decoration: none; text-align: center;">🇫🇷 Marmiton</a>
+                            <a href="https://www.cuisineaz.com" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 8px; font-weight: 800; font-size: 0.76rem; border-color: #8E24AA; background: #FFFDF8; color: #6A1B9A; text-decoration: none; text-align: center;">🇫🇷 Cuisine AZ</a>
+                            <a href="https://www.750g.com" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 8px; font-weight: 800; font-size: 0.76rem; border-color: #D32F2F; background: #FFFDF8; color: #C62828; text-decoration: none; text-align: center;">🇫🇷 750g</a>
+                            <a href="https://www.cuisineactuelle.fr" target="_blank" rel="noopener noreferrer" class="btn" style="padding: 8px; font-weight: 800; font-size: 0.76rem; border-color: #0288D1; background: #FFFDF8; color: #0288D1; text-decoration: none; text-align: center;">🇫🇷 Cuisine Actuelle</a>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -3052,7 +3060,7 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "16.60";
+    const APP_VERSION = "17.00";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -3886,8 +3894,10 @@ window.fermerProfils = function() {
         const modalCarnet = document.getElementById('modal-carnet-recettes');
         if (modalCarnet && modalCarnet.style.display === 'block') {
             if (document.getElementById('vue-onglet-explorer').style.display === 'block') {
+                const pillActive = document.querySelector('.cat-maison-btn.active');
                 const inp = document.getElementById('input-explorer-libre');
-                if (inp && inp.value.trim()) lancerRechercheGlobaleDepuisCarnet();
+                if (pillActive) filtrerCatalogueMaison(pillActive.getAttribute('data-cat'));
+                else if (inp && inp.value.trim()) lancerRechercheGlobaleDepuisCarnet();
             } else if (document.getElementById('vue-onglet-frigo').style.display === 'block') {
                 if (panierFrigo.length > 0) lancerRechercheFrigoAntiGaspi();
             } else {
@@ -5430,7 +5440,7 @@ function renderCards() {
                         <div class="prop-box"><div class="prop-label" style="display: flex; align-items: center; gap: 5px;">${prepLabel}</div><div class="prop-value normal-text">${prepText}</div></div>
                     </div>
                     <div class="card-actions-row">
-						<button class="btn-action-wide" onclick="this.parentElement.nextElementSibling.classList.toggle('open')">📖 Conseils & Recettes</button>
+						<button class="btn-action-wide" style="background: #FFFDF8; color: var(--accent-dark); border-color: var(--accent);" onclick="this.parentElement.nextElementSibling.classList.toggle('open')">📖 En cuisine</button>
 						<button class="btn-action-medium" onclick="openForm(${leg.id})" title="Éditer">✏️</button>
 						<button class="btn-action-square" onclick="partagerFicheDirect(${leg.id})" title="Partager en QR Code" style="background-color: #FFFFFF; border-color: #D1C7B8;">
 							<svg viewBox="0 0 24 24" width="22" height="22" fill="#111111"><path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm10-2h3v3h-3v-3zm5 0h3v3h-3v-3zm-5 5h3v3h-3v-3zm5 0h3v3h-3v-3zm-2-2h2v2h-2v-2z"/></svg>
@@ -7606,8 +7616,9 @@ function trouverRecettesMaison(termeRecherche) {
     
     const nettoyerMot = (m) => removeAccents(m.toLowerCase().trim())
         .replace(/\s*\(.*?\)/g, '')
-        .replace(/\s+(maigres?|gras|grasses?|panes?|panees?)\b.*$/i, '')
-        .trim();
+        .replace(/^(filets?|cuisses?|escalopes?|tranches?|eminces?|rotis?|cotelettes?|gigots?|steaks?|darnes?|queues?|anneaux|blancs?|cotes?|pointes?|coeurs?|dos|noix|paves?)\s+(de\s+|d'|du\s+|des\s+)/i, '')
+        .replace(/\s+(maigres?|gras|grasses?|panes?|panees?|nouvelles?|nouveaux|primeurs?|frais|fraiches?|crues?|crus|cuites?|cuits|nature|entiers?|uht|past|aop|classiques?|doux|sales?|fermes?|sechees?|seches?|rouge|blanc|vert|frise|plat)\b.*$/i, '')
+        .trim().replace(/s\b/g, '');;
 
     // Mots de découpe trop génériques s'ils sont utilisés seuls (évite "filet d'huile", "jambon blanc", etc.)
     const motsCoupesIsoles = ["filet", "filets", "blanc", "blancs", "tranche", "tranches", "emince", "eminces", "escalope", "escalopes", "roti", "rotis", "cuisse", "cuisses", "aile", "ailes", "pilon", "pilons", "cote", "cotes", "cotelette", "cotelettes", "carre", "epaule", "souris", "pave", "darne", "dos", "queue", "entier", "frais", "nature", "doux"];
@@ -7923,7 +7934,7 @@ async function chargerRecettesTheMealDB(leg) {
     }
 }
 
-// Affiche le lot de 20 recettes correspondant à la page actuelle
+// Affiche le lot de 20 recettes correspondant à la page actuelle (DESIGN UNIFIÉ !)
 async function afficherPageRecettesCourante() {
     const conteneur = document.getElementById('rec-liste-container');
     const loader = document.getElementById('rec-loading');
@@ -7964,7 +7975,6 @@ async function afficherPageRecettesCourante() {
         const recettesMaisonTrouvees = (typeof trouverRecettesMaison === 'function') ? trouverRecettesMaison(motCherche) : [];
         
         if (recettesMaisonTrouvees.length > 0) {
-            // Titre '⭐ RECETTES MAISON' aligné à gauche (comme Image 1)
             const tMaison = document.createElement('div');
             tMaison.style.cssText = "font-size: 0.72rem; color: #B78103; font-weight: 800; text-transform: uppercase; margin: 4px 0 6px 2px;";
             tMaison.innerText = `⭐ Recettes Officielles Maison (${recettesMaisonTrouvees.length})`;
@@ -7996,50 +8006,56 @@ async function afficherPageRecettesCourante() {
                 let bgBadgeM = 'rgba(46, 125, 50, 0.12)';
                 let bordBadgeM = '#2E7D32';
                 let txtBadgeM = '#1B5E20';
-                let astuceM = '';
 
                 if (alertesM.length > 0 && alertesM.length <= 2) {
                     verdictM = '🟡 FACILEMENT ADAPTABLE';
                     bgBadgeM = 'rgba(245, 127, 23, 0.12)';
                     bordBadgeM = '#F57F17';
                     txtBadgeM = '#E65100';
-                    astuceM = `Astuce : modérez ou adaptez ${alertesM.join(' et ')}`;
                 } else if (alertesM.length > 2) {
                     verdictM = '🟠 SENSIBLE EN CRISE';
                     bgBadgeM = 'rgba(216, 67, 21, 0.12)';
                     bordBadgeM = '#D84315';
                     txtBadgeM = '#B5603F';
-                    astuceM = `Plusieurs ingrédients sensibles (${alertesM.slice(0, 2).join(', ')}...)`;
                 }
 
+                const dejaCarnetM = (typeof trouverRecetteDansCarnet === 'function') ? trouverRecetteDansCarnet(recM) : null;
+                const badgeOrigineM = dejaCarnetM 
+                    ? `<span style="font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 8px; background: rgba(44, 62, 80, 0.1); color: var(--text-title); border: 1px solid var(--text-title);">📖 MES RECETTES</span>` 
+                    : `<span style="font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 8px; background: #FFF8E1; color: #B78103; border: 1px solid #F6C343;">⭐ MAISON</span>`;
+                const ficheBadgeM = dejaCarnetM
+                    ? `<span style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 800; padding: 1px 6px; border: 1px dashed var(--accent); border-radius: 6px;">📌 ${dejaCarnetM.fiche.nom}</span>`
+                    : '';
+                const portionsM = (recM.portions || "4 pers.").replace(/personnes?/i, 'pers.');
+
                 const cardM = document.createElement('div');
-                cardM.style.cssText = "display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #FFFDF8; border: 2px solid var(--accent); border-radius: 16px; padding: 12px; box-shadow: 0 4px 12px rgba(212,163,115,0.15); margin-bottom: 8px;";
+                cardM.className = 'carnet-row';
+                cardM.style.cssText = `background: #FFFFFF; border: 1px solid var(--border-color); border-left: 5px solid ${bordBadgeM}; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 8px;`;
                 
                 cardM.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;">
-                        <img src="${recM.image}" alt="${recM.nom}" style="width: 56px; height: 56px; border-radius: 12px; object-fit: cover; flex-shrink: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-                        <div style="min-width: 0;">
-                            <div style="font-weight: 800; font-size: 0.92rem; color: var(--text-title); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${recM.nom}</div>
-                            <div style="display: flex; gap: 6px; align-items: center; margin-top: 4px; flex-wrap: wrap;">
-                                <span style="font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: 10px; border: 1.5px solid #F6C343; background: #FFF8E1; color: #B78103;">
-                                    ⭐ RECETTE MAISON
-                                </span>
-                                <span style="font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: 10px; border: 1px solid ${bordBadgeM}; background: ${bgBadgeM}; color: ${txtBadgeM};">
-                                    ${verdictM}
-                                </span>
-                                <span style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 700;">🍽️ ${(recM.portions || '4 pers.').replace(/personnes?/i, 'pers.')}</span>
+                    <div style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; align-items: center; gap: 10px; width: 100%; cursor: pointer;" onclick="voirDetailRecetteMaison('${recM.id}')">
+                            <img src="${recM.image}" alt="${recM.nom}" style="width: 50px; height: 50px; border-radius: 10px; object-fit: cover; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.08);">
+                            <div style="flex: 1; min-width: 0;">
+                                <div style="font-weight: 800; font-size: 0.94rem; color: var(--text-title); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${recM.nom}</div>
+                                <div style="display: flex; gap: 6px; align-items: center; margin-top: 4px; flex-wrap: wrap;">
+                                    ${badgeOrigineM}
+                                    <span style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 700;">🍽️ ${portionsM}</span>
+                                    ${ficheBadgeM}
+                                </div>
                             </div>
-                            ${astuceM ? `<div style="font-size: 0.68rem; color: #D84315; font-weight: 700; margin-top: 3px;">💡 ${astuceM}</div>` : ''}
                         </div>
-                    </div>
-                    <div style="display: flex; gap: 6px; flex-shrink: 0;">
-                        <button type="button" class="btn" style="padding: 7px 12px; font-size: 0.78rem; font-weight: 800; border-color: var(--accent); color: var(--accent-dark); background: #FFF;" onclick="voirDetailRecetteMaison('${recM.id}')">👁️ Voir</button>
+                        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-top: 1px dashed rgba(212, 163, 115, 0.3); padding-top: 8px;">
+                            <span style="font-size: 0.68rem; font-weight: 800; padding: 3px 9px; border-radius: 10px; border: 1px solid ${bordBadgeM}; background: ${bgBadgeM}; color: ${txtBadgeM};">
+                                ${verdictM}
+                            </span>
+                            <button type="button" class="btn" style="padding: 4px 12px; font-size: 0.78rem; font-weight: 800; line-height: 1.2; border-radius: 8px; border: 1px solid var(--accent); color: var(--accent-dark); background: #FFFDF8;" onclick="voirDetailRecetteMaison('${recM.id}')">👁️ Voir</button>
+                        </div>
                     </div>
                 `;
                 conteneur.appendChild(cardM);
             });
 
-            // Titre '🌍 RECETTES / THEMEALDB' aligné à gauche
             const sep = document.createElement('div');
             sep.style.cssText = "font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin: 14px 0 8px 2px;";
             sep.innerText = `🌍 Recettes / TheMealDB (${total})`;
@@ -8048,16 +8064,17 @@ async function afficherPageRecettesCourante() {
     }
 
     // ========================================================
-    // 2. DESSINE LES 20 CARTES THEMEALDB
+    // 2. DESSINE LES 20 CARTES THEMEALDB (DESIGN UNIFIÉ !)
     // ========================================================
     recettesCompletes.forEach(m => {
         const analyse = (typeof analyserCliniqueRecette === 'function') 
             ? analyserCliniqueRecette(m, currentProfil) 
-            : { statut: '🟢', verdict: '🟢 RECETTE THEMEALDB', alertes: [], scoreTexte: '' };
+            : { statut: '🟢', verdict: '🟢 RECETTE IDÉALE', alertes: [], scoreTexte: '' };
         
         let bgBadge = "rgba(46, 125, 50, 0.12)";
         let bordBadge = "#2E7D32";
         let txtBadge = "#1B5E20";
+        let verdictFinal = analyse.verdict === '🟢 RECETTE HARMONIEUSE' ? '🟢 RECETTE IDÉALE' : analyse.verdict;
 
         if (analyse.statut === '🟡') {
             bgBadge = "rgba(245, 127, 23, 0.12)";
@@ -8069,22 +8086,37 @@ async function afficherPageRecettesCourante() {
             txtBadge = "#B5603F";
         }
 
+        const dejaCarnetDB = (typeof trouverRecetteDansCarnet === 'function') ? trouverRecetteDansCarnet(m) : null;
+        const badgeOrigineDB = dejaCarnetDB 
+            ? `<span style="font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 8px; background: rgba(44, 62, 80, 0.1); color: var(--text-title); border: 1px solid var(--text-title);">📖 MES RECETTES</span>` 
+            : `<span style="font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 8px; background: #E3F2FD; color: #1565C0; border: 1px solid #90CAF9;">🌍 THEMEALDB</span>`;
+        const ficheBadgeDB = dejaCarnetDB
+            ? `<span style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 800; padding: 1px 6px; border: 1px dashed var(--accent); border-radius: 6px;">📌 ${dejaCarnetDB.fiche.nom}</span>`
+            : '';
+
         const card = document.createElement('div');
-        card.style.cssText = "display: flex; align-items: center; justify-content: space-between; gap: 10px; background: #FFFFFF; border: 1px solid var(--border-color); border-radius: 14px; padding: 10px 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.03); margin-bottom: 8px;";
+        card.className = 'carnet-row';
+        card.style.cssText = `background: #FFFFFF; border: 1px solid var(--border-color); border-left: 5px solid ${bordBadge}; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 8px;`;
         
         card.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;">
-                <img src="${m.strMealThumb}/preview" alt="${m.strMeal}" style="width: 52px; height: 52px; border-radius: 10px; object-fit: cover; flex-shrink: 0;">
-                <div style="min-width: 0;">
-                    <div class="meal-title-text" style="font-weight: 800; font-size: 0.88rem; color: var(--text-title); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${m.strMeal}</div>
-                    <div style="display: inline-block; font-size: 0.68rem; font-weight: 800; padding: 2px 8px; border-radius: 10px; border: 1px solid ${bordBadge}; background: ${bgBadge}; color: ${txtBadge}; margin-top: 3px;">
-                        ${analyse.verdict}
+            <div style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 10px; width: 100%; cursor: pointer;" onclick="voirDetailRecetteTheMealDB('${m.idMeal}')">
+                    <img src="${m.strMealThumb}/preview" alt="${m.strMeal}" style="width: 50px; height: 50px; border-radius: 10px; object-fit: cover; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.08);">
+                    <div style="flex: 1; min-width: 0;">
+                        <div class="meal-title-text" style="font-weight: 800; font-size: 0.94rem; color: var(--text-title); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${m.strMeal}</div>
+                        <div style="display: flex; gap: 6px; align-items: center; margin-top: 4px; flex-wrap: wrap;">
+                            ${badgeOrigineDB}
+                            <span style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 700;">🍽️ 4 pers.</span>
+                            ${ficheBadgeDB}
+                        </div>
                     </div>
-                    ${analyse.alertes.length > 0 ? `<div style="font-size: 0.68rem; color: #D84315; font-weight: 700; margin-top: 2px;">💡 ${analyse.scoreTexte}</div>` : ''}
                 </div>
-            </div>
-            <div style="display: flex; gap: 6px; flex-shrink: 0;">
-                <button type="button" class="btn" style="padding: 6px 12px; font-size: 0.75rem; font-weight: 800;" onclick="voirDetailRecetteTheMealDB('${m.idMeal}')">👁️ Voir</button>
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-top: 1px dashed rgba(212, 163, 115, 0.3); padding-top: 8px;">
+                    <span style="font-size: 0.68rem; font-weight: 800; padding: 3px 9px; border-radius: 10px; border: 1px solid ${bordBadge}; background: ${bgBadge}; color: ${txtBadge};">
+                        ${verdictFinal}
+                    </span>
+                    <button type="button" class="btn" style="padding: 4px 12px; font-size: 0.78rem; font-weight: 800; line-height: 1.2; border-radius: 8px; border: 1px solid var(--accent); color: var(--accent-dark); background: #FFFDF8;" onclick="voirDetailRecetteTheMealDB('${m.idMeal}')">👁️ Voir</button>
+                </div>
             </div>
         `;
         conteneur.appendChild(card);
@@ -8133,7 +8165,7 @@ function retourAuHubChoix() {
     document.getElementById('rec-vue-liste').style.display = 'none';
 }
 
-// Ouvre ou ferme le guide des recettes web en douceur
+// Ouvre ou ferme le tiroir des sites culinaires CH & FR en douceur
 function toggleGuideRecettesWeb() {
     const contenu = document.getElementById('contenu-guide-web');
     const chevron = document.getElementById('chevron-guide-web');
@@ -8142,7 +8174,7 @@ function toggleGuideRecettesWeb() {
     const estFerme = contenu.style.maxHeight === '0px' || contenu.style.maxHeight === '' || contenu.style.maxHeight === '0';
 
     if (estFerme) {
-        contenu.style.maxHeight = '450px';
+        contenu.style.maxHeight = '650px';
         contenu.style.opacity = '1';
         if (chevron) chevron.style.transform = 'rotate(180deg)';
     } else {
@@ -8150,6 +8182,169 @@ function toggleGuideRecettesWeb() {
         contenu.style.opacity = '0';
         if (chevron) chevron.style.transform = 'rotate(0deg)';
     }
+}
+
+// Catalogue Officiel Maison : Filtre automatique par pilule en 1 clic (sans catégorie manuelle !)
+function filtrerCatalogueMaison(categorieChoisie) {
+    const conteneur = document.getElementById('resultats-explorer-global');
+    if (!conteneur || !window.RECETTES_MAISON) return;
+
+    // Vérifie si on clique sur une pilule DÉJÀ allumée
+    const btnClique = document.querySelector(`.cat-maison-btn[data-cat="${categorieChoisie}"]`);
+    const etaitDejaAllumee = btnClique && btnClique.classList.contains('active');
+
+    // 1. Éteint toutes les pilules par défaut
+    document.querySelectorAll('.cat-maison-btn').forEach(btn => btn.classList.remove('active'));
+
+    // Vide la barre de recherche texte
+    const inputExp = document.getElementById('input-explorer-libre');
+    if (inputExp) inputExp.value = '';
+
+    // Si la pilule était déjà allumée, on remet l'écran à zéro et on s'arrête là !
+    if (etaitDejaAllumee) {
+        conteneur.innerHTML = `
+            <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 14px 10px; font-style: italic;">
+                Touchez une catégorie ci-dessus pour parcourir nos Recettes Maison, ou tapez un mot-clé pour explorer aussi TheMealDB !
+            </div>
+        `;
+        return;
+    }
+
+    // Sinon, on allume la nouvelle pilule cliquée et on continue !
+    if (btnClique) btnClique.classList.add('active');
+
+    // 2. Détection intelligente et automatique de la famille du plat (Titre + Aliments associés)
+    dernieresMaisonTrouvees = window.RECETTES_MAISON.filter(rec => {
+        if (categorieChoisie === 'toutes') return true;
+
+        const titreClean = removeAccents((rec.nom || '').toLowerCase());
+        const associes = (rec.alimentsAssocies || []).map(a => removeAccents(a.toLowerCase()));
+
+        // A. Soupes & Veloutés
+        if (categorieChoisie === 'soupes') {
+            return ['soupe', 'veloute', 'potage', 'bouillon', 'minestrone'].some(m => titreClean.includes(m));
+        }
+        // B. Salades & Fraîcheur
+        if (categorieChoisie === 'salades') {
+            return ['salade', 'bowl', 'taboule', 'tartare', 'carpaccio'].some(m => titreClean.includes(m));
+        }
+
+        // Pour les autres catégories, on regarde à quelle saison appartiennent les alimentsAssociés dans defaultData !
+        const saisonsPresentes = new Set();
+        associes.forEach(nomAssoc => {
+            const fiche = legumes.find(l => {
+                const n = removeAccents(l.nom.toLowerCase());
+                return n === nomAssoc || n.includes(nomAssoc) || nomAssoc.includes(n);
+            });
+            if (fiche) saisonsPresentes.add(fiche.saison);
+        });
+
+        // C. Viandes
+        if (categorieChoisie === 'viandes') return saisonsPresentes.has('Viandes');
+        // D. Poissons & Mer
+        if (categorieChoisie === 'poissons') return saisonsPresentes.has('Poissons');
+        // E. Féculents (Pâtes, Riz, Nouilles, Pains, Pommes de terre, Légumineuses)
+        if (categorieChoisie === 'feculents') {
+            return saisonsPresentes.has('Féculents') || saisonsPresentes.has('Légumineuses') || ['pizza', 'pate', 'pasta', 'tartine', 'pad thai', 'risotto', 'quiche'].some(m => titreClean.includes(m));
+        }
+        // F. Légumes & Gratins (plats végétariens de légumes hors soupes/salades)
+        if (categorieChoisie === 'legumes') {
+            const estSoupeOuSalade = ['soupe', 'veloute', 'potage', 'salade'].some(m => titreClean.includes(m));
+            const aViandeOuPoisson = saisonsPresentes.has('Viandes') || saisonsPresentes.has('Poissons');
+            return !estSoupeOuSalade && !aViandeOuPoisson && (saisonsPresentes.has('Printemps') || saisonsPresentes.has('Été') || saisonsPresentes.has('Automne') || saisonsPresentes.has('Hiver'));
+        }
+        // G. Douceurs & Desserts
+        if (categorieChoisie === 'douceurs') {
+            return saisonsPresentes.has('Boissons') || ['gateau', 'biscuit', 'compote', 'dessert', 'crepe', 'gaufre', 'tarte'].some(m => titreClean.includes(m));
+        }
+        return false;
+    });
+
+    // 3. Affichage avec notre beau design unifié !
+    conteneur.innerHTML = '';
+
+    if (dernieresMaisonTrouvees.length === 0) {
+        conteneur.innerHTML = `<div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 20px 10px;">Aucune recette Maison dans cette catégorie pour le moment.</div>`;
+        return;
+    }
+
+    const tMaison = document.createElement('div');
+    tMaison.style.cssText = "font-size: 0.72rem; color: #B78103; font-weight: 800; text-transform: uppercase; margin: 4px 0 6px 2px;";
+    tMaison.innerText = `⭐ Recettes Officielles Maison (${dernieresMaisonTrouvees.length})`;
+    conteneur.appendChild(tMaison);
+
+    dernieresMaisonTrouvees.forEach((recM, indexM) => {
+        let alertesM = [];
+        if (currentProfil && currentProfil !== 'neutre' && recM.ingredients && Array.isArray(recM.ingredients)) {
+            const legumesTries = [...legumes].sort((a, b) => b.nom.length - a.nom.length);
+            recM.ingredients.forEach(ligne => {
+                const texteClean = removeAccents(ligne.toLowerCase());
+                for (let alim of legumesTries) {
+                    if (!alim || !alim.nom) continue;
+                    const nomAlim = removeAccents(alim.nom.toLowerCase().trim());
+                    const regexMotEntier = new RegExp(`(^|[^a-zÀ-ÿ])${nomAlim}([^a-zÀ-ÿ]|$)`, 'i');
+                    if (regexMotEntier.test(texteClean)) {
+                        if (isClinicallyBad(alim, currentProfil)) {
+                            if (!alertesM.includes(alim.nom)) alertesM.push(alim.nom);
+                        }
+                        break;
+                    }
+                }
+            });
+        }
+
+        let verdictM = '🟢 RECETTE IDÉALE';
+        let bgBadgeM = 'rgba(46, 125, 50, 0.12)';
+        let bordBadgeM = '#2E7D32';
+        let txtBadgeM = '#1B5E20';
+
+        if (alertesM.length > 0 && alertesM.length <= 2) {
+            verdictM = '🟡 FACILEMENT ADAPTABLE';
+            bgBadgeM = 'rgba(245, 127, 23, 0.12)';
+            bordBadgeM = '#F57F17';
+            txtBadgeM = '#E65100';
+        } else if (alertesM.length > 2) {
+            verdictM = '🟠 SENSIBLE EN CRISE';
+            bgBadgeM = 'rgba(216, 67, 21, 0.12)';
+            bordBadgeM = '#D84315';
+            txtBadgeM = '#B5603F';
+        }
+
+        const dejaCarnetM = trouverRecetteDansCarnet(recM);
+        const badgeOrigineM = dejaCarnetM 
+            ? `<span style="font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 8px; background: rgba(44, 62, 80, 0.1); color: var(--text-title); border: 1px solid var(--text-title);">📖 MES RECETTES</span>` 
+            : `<span style="font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 8px; background: #FFF8E1; color: #B78103; border: 1px solid #F6C343;">⭐ MAISON</span>`;
+        const ficheBadgeM = dejaCarnetM
+            ? `<span style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 800; padding: 1px 6px; border: 1px dashed var(--accent); border-radius: 6px;">📌 ${dejaCarnetM.fiche.nom}</span>`
+            : '';
+        const portionsM = (recM.portions || "4 pers.").replace(/personnes?/i, 'pers.');
+
+        const card = document.createElement('div');
+        card.className = 'carnet-row';
+        card.style.cssText = `background: #FFFFFF; border: 1px solid var(--border-color); border-left: 5px solid ${bordBadgeM}; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 8px;`;
+        card.innerHTML = `
+            <div style="width: 100%; display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; align-items: center; gap: 10px; width: 100%; cursor: pointer;" onclick="afficherDetailRecetteDirect(dernieresMaisonTrouvees[${indexM}], true)">
+                    <img src="${recM.image}" alt="${recM.nom}" style="width: 50px; height: 50px; border-radius: 10px; object-fit: cover; flex-shrink: 0; box-shadow: 0 2px 5px rgba(0,0,0,0.08);">
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-weight: 800; color: var(--text-title); font-size: 0.94rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${recM.nom}</div>
+                        <div style="display: flex; gap: 6px; align-items: center; margin-top: 4px; flex-wrap: wrap;">
+                            ${badgeOrigineM}
+                            <span style="font-size: 0.72rem; color: var(--accent-dark); font-weight: 700;">🍽️ ${portionsM}</span>
+                            ${ficheBadgeM}
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; border-top: 1px dashed rgba(212, 163, 115, 0.3); padding-top: 8px;">
+                    <span style="font-size: 0.68rem; font-weight: 800; padding: 3px 9px; border-radius: 10px; border: 1px solid ${bordBadgeM}; background: ${bgBadgeM}; color: ${txtBadgeM};">
+                        ${verdictM}
+                    </span>
+                    <button type="button" class="btn" style="padding: 4px 12px; font-size: 0.78rem; font-weight: 800; line-height: 1.2; border-radius: 8px; border: 1px solid var(--accent); color: var(--accent-dark); background: #FFFDF8;" onclick="afficherDetailRecetteDirect(dernieresMaisonTrouvees[${indexM}], true)">👁️ Voir</button>
+                </div>
+            </div>
+        `;
+        conteneur.appendChild(card);
+    });
 }
 
 // Moteur de traduction instantanée
@@ -8516,18 +8711,18 @@ function ouvrirLecteurRecetteInApp(alimentId, indexRecette) {
                 </ul>
                 
                 <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">👨‍🍳 Instructions :</div>
-                <p id="rec-instructions-detail" style="font-size: 0.85rem; color: var(--text-main); line-height: 1.45; white-space: pre-line; margin: 0;">${rec.instructions}</p>
-                
-                ${rec.sourceNom && rec.sourceUrl ? `
-                    <div style="margin-top: 18px; padding-top: 10px; border-top: 1px dashed var(--border-color); text-align: center;">
-                        <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">Inspiration originale : </span>
-                        <a href="${rec.sourceUrl}" target="_blank" rel="noopener noreferrer" style="font-size: 0.75rem; color: var(--accent-dark); font-weight: 800; text-decoration: underline;">
-                            ${rec.sourceNom} ↗
-                        </a>
-                    </div>
-                ` : ''}
-            `;
-        }
+        <p id="rec-instructions-detail" style="font-size: 0.88rem; color: var(--text-main); line-height: 1.45; white-space: pre-line; margin: 0;">${rec.instructions}</p>
+        
+        ${rec.sourceNom && rec.sourceUrl ? `
+            <div style="margin-top: 18px; padding-top: 10px; border-top: 1px dashed var(--border-color); text-align: center;">
+                <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">Inspiration originale : </span>
+                <a href="${rec.sourceUrl}" target="_blank" rel="noopener noreferrer" style="font-size: 0.75rem; color: var(--accent-dark); font-weight: 800; text-decoration: underline;">
+                    ${rec.sourceNom} ↗
+                </a>
+            </div>
+        ` : ''}
+    `;
+}
 
         const modal = document.getElementById('modal-recipe-search');
         if (modal) modal.style.display = 'block';
@@ -8966,6 +9161,9 @@ async function lancerRechercheGlobaleDepuisCarnet() {
     const input = document.getElementById('input-explorer-libre');
     const conteneur = document.getElementById('resultats-explorer-global');
     if (!input || !conteneur) return;
+
+    // Éteint les pilules du Catalogue Maison quand on lance une recherche par mot-clé
+    document.querySelectorAll('.cat-maison-btn').forEach(btn => btn.classList.remove('active'));
 
     const mot = input.value.trim();
     if (!mot) {
@@ -9475,6 +9673,15 @@ async function afficherDetailRecetteDirect(rec, estMaison = true) {
 
             <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">👨‍🍳 Préparation étape par étape :</div>
             <p id="rec-instructions-detail" style="font-size: 0.88rem; color: var(--text-main); line-height: 1.55; white-space: pre-line; margin: 0;">${rec.instructions}</p>
+			${rec.sourceNom && rec.sourceUrl ? `
+            <div style="margin-top: 18px; padding-top: 10px; border-top: 1px dashed var(--border-color); text-align: center;">
+                <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">Inspiration originale : </span>
+                <a href="${rec.sourceUrl}" target="_blank" rel="noopener noreferrer" style="font-size: 0.75rem; color: var(--accent-dark); font-weight: 800; text-decoration: underline;">
+                    ${rec.sourceNom} ↗
+                </a>
+            </div>
+        ` : ''}
+			
         `;
 
     } else {
@@ -9567,12 +9774,14 @@ async function afficherDetailRecetteDirect(rec, estMaison = true) {
             <div style="font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; margin-bottom: 6px;">👨‍🍳 Instructions :</div>
             <p id="rec-instructions-detail" style="font-size: 0.88rem; color: var(--text-main); line-height: 1.55; white-space: pre-line; margin: 0;">${meal.strInstructions}</p>
             
+            ${urlSourceFinale ? `
             <div style="margin-top: 18px; padding-top: 10px; border-top: 1px dashed var(--border-color); text-align: center;">
                 <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 700;">Source originale : </span>
                 <a href="${urlSourceFinale}" target="_blank" rel="noopener noreferrer" style="font-size: 0.75rem; color: var(--accent-dark); font-weight: 800; text-decoration: underline;">
                     ${nomSourceFinale} ↗
                 </a>
             </div>
+        ` : ''}
         `;
     }
 }
@@ -9580,14 +9789,15 @@ function fermerCarnetRecettes() {
     const modal = document.getElementById('modal-carnet-recettes');
     if (modal) modal.style.display = 'none';
 
-    // 1. Réinitialise l'onglet Explorer
+    // 1. Réinitialise l'onglet Explorer et éteint les pilules
+    document.querySelectorAll('.cat-maison-btn').forEach(btn => btn.classList.remove('active'));
     const inputExp = document.getElementById('input-explorer-libre');
     if (inputExp) inputExp.value = '';
     const resExp = document.getElementById('resultats-explorer-global');
     if (resExp) {
         resExp.innerHTML = `
-            <div style="text-align: center; color: var(--text-muted); font-size: 0.82rem; padding: 20px 10px; font-style: italic;">
-                Tapez un mot-clé ci-dessus pour explorer les recettes du monde et les recettes officielles du Marché !
+            <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 14px 10px; font-style: italic;">
+                Touchez une catégorie ci-dessus pour parcourir nos Recettes Maison, ou tapez un mot-clé pour explorer aussi TheMealDB !
             </div>
         `;
     }

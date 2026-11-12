@@ -1,9 +1,9 @@
 // ========================================================
 // SERVICE WORKER - LE PETIT MARCHÉ DE MON ESTOMAC
-// VERSION DU CACHE : v16.60 (Intégration des 10 Classeurs Recettes Maison)
+// VERSION DU CACHE : v17.00 (Intégration des 10 Classeurs Recettes Maison)
 // ========================================================
 
-const CACHE_NAME = 'marche-cache-v16.60';
+const CACHE_NAME = 'marche-cache-v17.00';
 
 // Fichiers vitaux à stocker pour le fonctionnement 100% hors-ligne
 const urlsToCache = [
@@ -19,17 +19,8 @@ const urlsToCache = [
   './icones/icn-192.png',
   './icones/icn-512.png',
 
-  // LES 10 CLASSEURS OFFICIELS DE RECETTES MAISON
-  './donnees/recettes_printemps.js',
-  './donnees/recettes_ete.js',
-  './donnees/recettes_automne.js',
-  './donnees/recettes_hiver.js',
-  './donnees/recettes_feculents.js',
-  './donnees/recettes_legumineuses.js',
-  './donnees/recettes_viandes.js',
-  './donnees/recettes_poissons.js',
-  './donnees/recettes_laitages.js',
-  './donnees/recettes_douceurs.js'
+  // LE CLASSEUR OFFICIEL UNIQUE DE RECETTES MAISON
+  './donnees/recettes_maison.js',
 ];
 
 // 1. INSTALLATION : Téléchargement des fichiers essentiels (avec sécurité tolérante)
