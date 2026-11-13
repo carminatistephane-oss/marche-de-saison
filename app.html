@@ -1,5 +1,5 @@
 <!-- ================================================================================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 17.70 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 17.80 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -2110,7 +2110,7 @@ body.dark-mode .btn-remove-recette {
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v17.70</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v17.80</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -3234,7 +3234,7 @@ body.dark-mode .btn-remove-recette {
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "17.70";
+    const APP_VERSION = "17.80";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -3270,7 +3270,7 @@ body.dark-mode .btn-remove-recette {
             modal.classList.remove('hidden');
             const corpsFenetre = modal.querySelector('.modal-body');
             if (corpsFenetre) corpsFenetre.scrollTop = 0;
-            armerBouclierHistorique();
+            protegerNavigationInterne();
         }
     }
     
@@ -4909,28 +4909,66 @@ function afficherResultatProduitScan(product) {
         renderCards(); 
     }
 
+// Calcule le niveau de profondeur actuel des écrans ouverts (0 = Accueil)
+    let derniereProfondeur = 0;
+
+    function calculerProfondeurEcran() {
+        let p = 0;
+        if (document.getElementById('view-list')?.style.display === 'block') p += 1;
+        if (document.getElementById('modal-carnet-recettes')?.style.display === 'block') p += 1;
+        if (document.getElementById('modal-form')?.style.display === 'block') p += 1;
+        if (document.getElementById('qr-modal')?.style.display === 'block') p += 1;
+        if (document.getElementById('hidden-items-modal')?.style.display === 'block') p += 1;
+        if (document.querySelector('.modal-overlay:not(.hidden)') !== null) p += 1;
+
+        const modRecette = document.getElementById('modal-recipe-search');
+        if (modRecette && modRecette.style.display === 'block') {
+            // Si on vient du Carnet/Frigo, le Carnet a été masqué donc on compte sa place (+1)
+            if (typeof vientDuCarnet !== 'undefined' && vientDuCarnet) p += 1;
+
+            const vueListe = document.getElementById('rec-vue-liste');
+            const vueDetail = document.getElementById('rec-vue-detail');
+            const btnRetourListe = document.getElementById('btn-retour-liste');
+
+            if (vueDetail && vueDetail.style.display === 'block') {
+                p += (btnRetourListe && btnRetourListe.style.display !== 'none') ? 3 : 1;
+            } else if (vueListe && vueListe.style.display === 'block') {
+                p += 2;
+            } else {
+                p += 1;
+            }
+        }
+        return p;
+    }
+
+    function protegerNavigationInterne() {
+        if (window.location.hash && window.location.hash.startsWith('#import=')) return;
+        const profActuelle = calculerProfondeurEcran();
+        while (derniereProfondeur < profActuelle) {
+            derniereProfondeur++;
+            history.pushState({ niveau: derniereProfondeur }, '', window.location.pathname + window.location.search);
+        }
+        derniereProfondeur = profActuelle;
+    }
+
     function openSaison(saison) {
-        // Si on change complètement de catégorie, on nettoie les types d'aliments spécifiques
         if (currentSaison !== saison && currentSaison !== "Recommandés") {
             currentTypeFilters = [];
         }
         
         currentSaison = saison; 
-        // On conserve currentTolFilter (À volonté, À limiter...) actif en mémoire !
-        
-        // On s'assure que le panneau arrive bien fermé et propre
         window.isFilterPanelOpen = false;
         window.isTypeSwitcherOpen = false;
         
         document.getElementById('view-home').style.display = 'none';
         document.getElementById('view-list').style.display = 'block';
         window.scrollTo(0, 0); 
-        armerBouclierHistorique();
+        
+        protegerNavigationInterne();
         
         const titleEl = document.getElementById('saison-title-container');
         const titres = { "Recommandés": "", "Printemps": "🌼", "Été": "☀", "Automne": svgAutomne, "Hiver": "❄", "Féculents": "🌾", "Légumineuses": "🫘", "Viandes": "🥩", "Poissons": "🐟", "Laitages": "🧀", "Condiments": "🌿", "Boissons": "☕" };
         
-        // NOUVEAU : On force l'affichage du mot "Adaptés" au lieu de "Recommandés" en haut de la page
         let nomAffichage = saison;
         if (saison === "Recommandés") { nomAffichage = "Adaptés"; }
         
@@ -4939,40 +4977,35 @@ function afficherResultatProduitScan(product) {
     }
 
     function openSaisonAndFocus(saison, alimentId) {
-    const aliment = legumes.find(l => l.id === alimentId);
-    if (!aliment) return;
+        const aliment = legumes.find(l => l.id === alimentId);
+        if (!aliment) return;
 
-    // 1. Assistant Cru / Cuit : Si la cuisson sauve l'aliment, on passe sur Cuit
-    const evalCru = getToleranceDynamique(aliment, currentProfil, 'cru');
-    const evalCuit = getToleranceDynamique(aliment, currentProfil, 'cuit');
+        const evalCru = getToleranceDynamique(aliment, currentProfil, 'cru');
+        const evalCuit = getToleranceDynamique(aliment, currentProfil, 'cuit');
 
-    if (evalCru.isAvoid && !evalCuit.isAvoid) {
-        currentModePreparation = 'cuit';
+        if (evalCru.isAvoid && !evalCuit.isAvoid) {
+            currentModePreparation = 'cuit';
+        }
+
+        const evalActuelle = getToleranceDynamique(aliment, currentProfil, currentModePreparation);
+        if (saison === "Recommandés" && evalActuelle.isAvoid) {
+            currentTolFilter = '🟠';
+        }
+
+        openSaison(saison);
+
+        setTimeout(() => {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                const editBtn = card.querySelector(`button[onclick*="openForm(${alimentId})"]`);
+                if (editBtn) {
+                    scrollToFirstCard(card);
+                    card.classList.add('highlight');
+                    setTimeout(() => card.classList.remove('highlight'), 2000);
+                }
+            });
+        }, 150);
     }
-
-    // 2. Si l'aliment est orange dans la vue Adaptés, on active le filtre Orange 
-    // pour être SÛR qu'il s'affiche sur la page Adaptés sans changer de page !
-    const evalActuelle = getToleranceDynamique(aliment, currentProfil, currentModePreparation);
-    if (saison === "Recommandés" && evalActuelle.isAvoid) {
-        currentTolFilter = '🟠';
-    }
-
-    // 3. On reste STRICTEMENT sur la page où tu te trouves (ex: Adaptés)
-    openSaison(saison);
-
-    // 4. On fait glisser l'écran vers la fiche avec l'effet doré
-    setTimeout(() => {
-        const cards = document.querySelectorAll('.card');
-        cards.forEach(card => {
-            const editBtn = card.querySelector(`button[onclick*="openForm(${alimentId})"]`);
-            if (editBtn) {
-                scrollToFirstCard(card);
-                card.classList.add('highlight');
-                setTimeout(() => card.classList.remove('highlight'), 2000);
-            }
-        });
-    }, 150);
-}
 
     function scrollToFirstCard(targetCard = null) {
         setTimeout(() => {
@@ -5007,81 +5040,23 @@ function afficherResultatProduitScan(product) {
         document.getElementById('view-home').style.display = 'block';
         window.scrollTo(0, 0); 
         renderHomeCounts();
-        armerBouclierHistorique();
+        derniereProfondeur = 0;
     }
 
-    // =========================================================================
-    // 🛡️ SYSTÈME UNIVERSEL DE NAVIGATION "RETOUR" & VRAIE FERMETURE NATIVE
-    // =========================================================================
-    let attenteSecondRetourQuitter = false;
-    let timerQuitter = null;
+    // À chaque clic, si un nouvel écran/sous-écran s'est ouvert, on ajoute un cran d'historique
+    document.addEventListener('click', () => {
+        setTimeout(protegerNavigationInterne, 20);
+    }, true);
 
-    function armerBouclierHistorique() {
-        if (attenteSecondRetourQuitter) return;
-        if (window.location.hash && window.location.hash.startsWith('#import=')) return;
-        if (!history.state || history.state.bouclier !== true) {
-            history.pushState({ bouclier: true }, '', window.location.pathname + window.location.search);
-        }
-    }
-
-    window.addEventListener('load', () => {
-        if (!window.location.hash || !window.location.hash.startsWith('#import=')) {
-            history.replaceState({ base: true }, '', window.location.pathname + window.location.search);
-            armerBouclierHistorique();
-        }
-    });
-
-    // Si l'utilisateur touche l'écran de l'application, on annule la sortie et on réarme la protection
-    document.addEventListener('touchstart', () => {
-        if (attenteSecondRetourQuitter) {
-            attenteSecondRetourQuitter = false;
-            const toastExit = document.getElementById('exit-app-toast');
-            if (toastExit) toastExit.style.display = 'none';
-        }
-        armerBouclierHistorique();
-    }, { passive: true });
-
-    document.addEventListener('click', armerBouclierHistorique, true);
-
-    function demanderConfirmationSortieNative() {
-        attenteSecondRetourQuitter = true;
-
-        // Crée ou affiche une jolie bannière flottante en bas de l'écran
-        let toastExit = document.getElementById('exit-app-toast');
-        if (!toastExit) {
-            toastExit = document.createElement('div');
-            toastExit.id = 'exit-app-toast';
-            toastExit.style.cssText = "position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:#2C3E50; color:#FFF8F0; padding:12px 20px; border-radius:25px; font-family:'Nunito',sans-serif; font-weight:800; font-size:0.85rem; box-shadow:0 8px 25px rgba(0,0,0,0.35); border:1.5px solid #D4A373; z-index:9999; white-space:nowrap; text-align:center;";
-            document.body.appendChild(toastExit);
-        }
-        toastExit.innerHTML = "🚪 Appuyez encore sur <strong>Retour</strong> pour quitter";
-        toastExit.style.display = 'block';
-
-        if (timerQuitter) clearTimeout(timerQuitter);
-        timerQuitter = setTimeout(() => {
-            attenteSecondRetourQuitter = false;
-            if (toastExit) toastExit.style.display = 'none';
-            armerBouclierHistorique();
-        }, 3500);
-    }
-
-    // Intercepteur intelligent du bouton physique "Retour" (Mobile & Tablette)
+    // Touche Retour : recule d'un écran à chaque pression jusqu'à l'Accueil !
     window.addEventListener('popstate', function(event) {
-        if (fermetureAutorisee) {
-            try { window.close(); } catch (e) {}
-            history.back();
-            return;
-        }
-
-        // 1. Sous-modale : Déplacer une recette
         const modDeplacer = document.getElementById('modal-deplacer-recette');
         if (modDeplacer && !modDeplacer.classList.contains('hidden') && modDeplacer.style.display !== 'none') {
             fermerModalDeplacerRecette();
-            armerBouclierHistorique();
+            derniereProfondeur = calculerProfondeurEcran();
             return;
         }
 
-        // 2. Modale Lecture & Recherche de Recettes (Navigation interne étape par étape !)
         const modRecette = document.getElementById('modal-recipe-search');
         if (modRecette && modRecette.style.display === 'block') {
             const vueDetail = document.getElementById('rec-vue-detail');
@@ -5089,11 +5064,9 @@ function afficherResultatProduitScan(product) {
             const btnRetourListe = document.getElementById('btn-retour-liste');
 
             if (vueDetail && vueDetail.style.display === 'block') {
-                // Si on vient de la liste des résultats, on retourne à la liste
                 if (btnRetourListe && btnRetourListe.style.display !== 'none') {
                     retourListeRecettes();
                 } else {
-                    // Sinon on retourne au Carnet / Frigo / Fiche aliment
                     fermerModalRecetteSmart();
                 }
             } else if (vueListe && vueListe.style.display === 'block') {
@@ -5101,101 +5074,66 @@ function afficherResultatProduitScan(product) {
             } else {
                 fermerModalRecetteSmart();
             }
-            armerBouclierHistorique();
+            derniereProfondeur = calculerProfondeurEcran();
             return;
         }
 
-        // 3. Modale Carnet de Recettes Global (Mes Recettes / Mon Frigo / Mes Recherches)
         const modCarnet = document.getElementById('modal-carnet-recettes');
         if (modCarnet && modCarnet.style.display === 'block') {
             fermerCarnetRecettes();
-            armerBouclierHistorique();
+            derniereProfondeur = calculerProfondeurEcran();
             return;
         }
 
-        // 4. Modale Scanner Alimentaire
         const modScanner = document.getElementById('modal-scanner');
         if (modScanner && !modScanner.classList.contains('hidden')) {
             fermerScannerModal();
-            armerBouclierHistorique();
+            derniereProfondeur = calculerProfondeurEcran();
             return;
         }
 
-        // 5. Modale Formulaire d'ajout / modification d'une fiche
         const modForm = document.getElementById('modal-form');
         if (modForm && modForm.style.display === 'block') {
             modForm.style.display = 'none';
-            armerBouclierHistorique();
+            derniereProfondeur = calculerProfondeurEcran();
             return;
         }
 
-        // 6. Modale QR Code & Partage PIN
         const modQr = document.getElementById('qr-modal');
         if (modQr && modQr.style.display === 'block') {
             fermerQrModal();
-            armerBouclierHistorique();
+            derniereProfondeur = calculerProfondeurEcran();
             return;
         }
 
-        // 7. Modale Fiches Masquées
         const modHidden = document.getElementById('hidden-items-modal');
         if (modHidden && modHidden.style.display === 'block') {
             fermerModalFichesMasquees();
-            armerBouclierHistorique();
+            derniereProfondeur = calculerProfondeurEcran();
             return;
         }
 
-        // 8. Modale Sélection du Profil Digestif
-        const modSelectProfil = document.getElementById('modal-select-profil');
-        if (modSelectProfil && !modSelectProfil.classList.contains('hidden')) {
-            fermerModalChangerProfil();
-            armerBouclierHistorique();
-            return;
-        }
-
-        // 9. Modale Coffre-Fort Cloud
-        const modCloud = document.getElementById('modal-cloud-setup');
-        if (modCloud && !modCloud.classList.contains('hidden')) {
-            fermerCloudSetup();
-            armerBouclierHistorique();
-            return;
-        }
-
-        // 10. Modales À Propos, Aide, Paramètres
-        const modOverlays = ['modal-about', 'modal-help', 'modal-settings'];
+        const modOverlays = ['modal-select-profil', 'modal-cloud-setup', 'modal-about', 'modal-help', 'modal-settings'];
         for (let idMod of modOverlays) {
             const el = document.getElementById(idMod);
             if (el && !el.classList.contains('hidden')) {
                 el.classList.add('hidden');
-                armerBouclierHistorique();
+                derniereProfondeur = calculerProfondeurEcran();
                 return;
             }
         }
 
-        // 11. Modale Confirmation Profil (Ancienne)
-        const modProfil = document.getElementById('modal-profil');
-        if (modProfil && (modProfil.classList.contains('show') || modProfil.style.display === 'flex')) {
-            closeProfilModal();
-            armerBouclierHistorique();
-            return;
-        }
-
-        // 12. Si un volet de filtres est déroulé dans la liste, on le referme d'abord
         if (window.isFilterPanelOpen) {
             toggleAdvancedFilters();
-            armerBouclierHistorique();
+            derniereProfondeur = calculerProfondeurEcran();
             return;
         }
 
-        // 13. Vue Liste d'une saison / catégorie -> Retour à l'Accueil
         const viewList = document.getElementById('view-list');
         if (viewList && viewList.style.display === 'block') {
             goHome();
             return;
         }
-
-        // 14. On est sur l'Accueil et tout est fermé -> Un 2e appui sur Retour ferme totalement l'appli !
-        demanderConfirmationSortieNative();
     });
 
     let timerFermetureFiltres = null;
