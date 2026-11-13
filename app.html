@@ -1,5 +1,5 @@
 <!-- ================================================================================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 18.00 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 18.50 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -22,6 +22,7 @@
 <!-- OPTIMISATION DE LA BASE ALIMENTS EN SUPPRIMENT LES DOUBLON ET LES INUTILES  -->
 <!-- HARMONISATION PRESENTATION FICHES RECETTES DANS MES RECETTES_MON FRIGO_MES RECHERCHES  -->
 <!-- MISE AJOUR FICHIER RECETTES - INTEGRATION FILTRES RECETTES DANS "MES RECHERCHES"  -->
+<!-- MISE AJOUR DE PLUSIEURS FONCTIONNALITE ERGONOMIQUE - MISE A JOUR SW.JS POUR MISE A JOUR AUTO RECETTES  -->
 <!-- =================================================================================================================== -->
 
 <!DOCTYPE html>
@@ -2046,6 +2047,112 @@ body.dark-mode .btn-remove-recette {
     color: #D32F2F !important;
 }
 
+/* ======================================================== */
+/* MODULE LISTE DE COURSES & SURBRILLANCE FRIGO             */
+/* ======================================================== */
+
+/* Onglet Courses en Mode Sombre (identique aux 3 autres onglets) */
+body.dark-mode #tab-btn-courses[style*="background: var(--text-title)"] {
+    background-color: #2C3E50 !important;
+    color: #FFFFFF !important;
+    border-radius: 12px !important;
+    border: 1px solid #5C5248 !important;
+}
+body.dark-mode #tab-btn-courses[style*="background: transparent"] {
+    background-color: #FFFDF8 !important;
+    color: #4A423A !important;
+    border-radius: 12px !important;
+    border: 1px solid #D4A373 !important;
+}
+
+/* Surbrillance d'un ingrédient présent dans "Mon Frigo" */
+.ing-au-frigo {
+    background: linear-gradient(90deg, rgba(46, 125, 50, 0.14) 0%, rgba(212, 163, 115, 0.12) 100%) !important;
+    border: 1.5px solid #2E7D32 !important;
+    border-radius: 10px !important;
+    padding: 6px 8px !important;
+    margin-left: -6px !important;
+    margin-right: -4px !important;
+}
+.badge-au-frigo {
+    display: inline-block;
+    background: #2E7D32;
+    color: #FFFFFF !important;
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 8px;
+    margin-left: 6px;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+/* Petit bouton +🛒 sur chaque ligne d'ingrédient */
+.btn-ing-course {
+    background: #FFFDF8;
+    border: 1px solid #D4A373;
+    color: #A06A42;
+    border-radius: 8px;
+    padding: 2px 7px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    cursor: pointer;
+    margin-left: auto;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+}
+.btn-ing-course.added {
+    background: #E8F5E9;
+    border-color: #4CAF50;
+    color: #2E7D32;
+}
+
+/* Lignes d'articles dans l'onglet Courses */
+.course-rayon-title {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--accent-dark);
+    margin: 12px 0 6px 2px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.course-item-row {
+    background: #FFFFFF;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+.course-item-row.checked {
+    opacity: 0.55;
+    background: rgba(0,0,0,0.03);
+}
+.course-item-row.checked .course-item-text {
+    text-decoration: line-through;
+}
+body.dark-mode .course-rayon-title {
+    color: #231F1A !important;
+}
+body.dark-mode .course-item-row {
+    background-color: #38312B !important;
+    border-color: #5C5248 !important;
+    color: #FFFFFF !important;
+}
+body.dark-mode .course-item-row .course-item-text {
+    color: #FFFFFF !important;
+}
+body.dark-mode .course-item-row .course-item-sub {
+    color: #FFE0B2 !important;
+}
+
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
@@ -2110,7 +2217,7 @@ body.dark-mode .btn-remove-recette {
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v18.00</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v18.50</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -2886,19 +2993,23 @@ body.dark-mode .btn-remove-recette {
             <button type="button" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; padding: 0;" onclick="fermerCarnetRecettes()">❌</button>
         </div>
 
-        <!-- 2. LES 3 ONGLETS EXPLICITES SUR 2 LIGNES -->
-        <div style="display: flex; gap: 6px; background: rgba(0,0,0,0.05); padding: 5px; border-radius: 16px; margin-bottom: 15px; width: 100%; box-sizing: border-box;">
-            <button type="button" id="tab-btn-mon-carnet" class="btn" onclick="basculerOngletCarnet('carnet')" style="flex: 1; border-radius: 12px; font-weight: 800; font-size: 0.74rem; padding: 7px 4px; text-align: center; border: none; background: var(--text-title); color: #FFF; box-shadow: 0 2px 6px rgba(0,0,0,0.1); line-height: 1.25; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+        <!-- 2. LES 4 ONGLETS EXPLICITES SUR 2 LIGNES -->
+        <div style="display: flex; gap: 5px; background: rgba(0,0,0,0.05); padding: 5px; border-radius: 16px; margin-bottom: 15px; width: 100%; box-sizing: border-box;">
+            <button type="button" id="tab-btn-mon-carnet" class="btn" onclick="basculerOngletCarnet('carnet')" style="flex: 1; border-radius: 12px; font-weight: 800; font-size: 0.7rem; padding: 7px 2px; text-align: center; border: none; background: var(--text-title); color: #FFF; box-shadow: 0 2px 6px rgba(0,0,0,0.1); line-height: 1.2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
                 <span style="font-size: 1rem;">📖</span>
-                <span id="label-tab-carnet">Mes Recettes (0)</span>
+                <span id="label-tab-carnet">Recettes (0)</span>
             </button>
-            <button type="button" id="tab-btn-frigo" class="btn" onclick="basculerOngletCarnet('frigo')" style="flex: 1; border-radius: 12px; font-weight: 800; font-size: 0.74rem; padding: 7px 4px; text-align: center; border: none; background: transparent; color: var(--text-muted); box-shadow: none; line-height: 1.25; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+            <button type="button" id="tab-btn-frigo" class="btn" onclick="basculerOngletCarnet('frigo')" style="flex: 1; border-radius: 12px; font-weight: 800; font-size: 0.7rem; padding: 7px 2px; text-align: center; border: none; background: transparent; color: var(--text-muted); box-shadow: none; line-height: 1.2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
                 <span style="font-size: 1rem;">🧊</span>
-                <span>Mon Frigo</span>
+                <span>Frigo</span>
             </button>
-            <button type="button" id="tab-btn-decouvrir" class="btn" onclick="basculerOngletCarnet('explorer')" style="flex: 1; border-radius: 12px; font-weight: 800; font-size: 0.74rem; padding: 7px 4px; text-align: center; border: none; background: transparent; color: var(--text-muted); box-shadow: none; line-height: 1.25; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+            <button type="button" id="tab-btn-courses" class="btn" onclick="basculerOngletCarnet('courses')" style="flex: 1; border-radius: 12px; font-weight: 800; font-size: 0.7rem; padding: 7px 2px; text-align: center; border: none; background: transparent; color: var(--text-muted); box-shadow: none; line-height: 1.2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+                <span style="font-size: 1rem;">🛒</span>
+                <span id="label-tab-courses">Courses (0)</span>
+            </button>
+            <button type="button" id="tab-btn-decouvrir" class="btn" onclick="basculerOngletCarnet('explorer')" style="flex: 1; border-radius: 12px; font-weight: 800; font-size: 0.7rem; padding: 7px 2px; text-align: center; border: none; background: transparent; color: var(--text-muted); box-shadow: none; line-height: 1.2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
                 <span style="font-size: 1rem;">🔍</span>
-                <span>Mes Recherches</span>
+                <span>Recherches</span>
             </button>
         </div>
 
@@ -2944,6 +3055,39 @@ body.dark-mode .btn-remove-recette {
             </div>
 
             <div id="resultats-frigo-container" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- ONGLET : MA LISTE DE COURSES INTELLIGENTE  -->
+        <!-- ========================================== -->
+        <div id="vue-onglet-courses" style="display: none;">
+            <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0; margin-bottom: 12px; text-align: center;">
+                Vos articles triés automatiquement par rayons de supermarché :
+            </p>
+
+            <div class="search-box-container" style="position: relative; margin-top: 18px; margin-bottom: 14px; width: 100%; max-width: none; display: flex; gap: 6px;">
+                <div id="courses-profil-badge" class="active-profil-badge" onclick="ouvrirModalChangerProfil()" style="cursor: pointer;" title="Cliquer pour changer de profil">Profil : 🟢 Neutre</div>
+                <input type="text" id="input-course-ajout" class="form-control" placeholder="Ajouter un article (ex: Carottes, Oeufs...)" onkeydown="if(event.key==='Enter') ajouterArticleCourseManuel()" style="padding: 10px 14px; font-size: 0.88rem; border-radius: 12px; flex: 1; border: 1.5px solid var(--accent); background: #FFFDF8; font-weight: 700; color: var(--accent-dark);">
+                <button type="button" class="btn btn-primary" onclick="ajouterArticleCourseManuel()" style="padding: 10px 14px; font-weight: 800; font-size: 0.85rem; border-radius: 12px; white-space: nowrap;">
+                    + Ajouter
+                </button>
+            </div>
+
+            <div id="liste-courses-container" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px;"></div>
+
+            <div id="courses-actions-bas" style="display: none; flex-direction: column; gap: 8px; margin-top: 15px; padding-top: 12px; border-top: 1px dashed var(--border-color);">
+                <div style="display: flex; gap: 8px;">
+                    <button type="button" class="btn" onclick="nettoyerCoursesCochees()" style="flex: 1; padding: 10px; font-size: 0.78rem; font-weight: 800; border-radius: 12px; background: #FFFDF8; border-color: var(--accent); color: var(--accent-dark);">
+                        🧹 Retirer les cochés
+                    </button>
+                    <button type="button" class="btn" onclick="partagerListeCoursesTexte()" style="flex: 1; padding: 10px; font-size: 0.78rem; font-weight: 800; border-radius: 12px; background: #E8F5E9; border-color: #A5D6A7; color: #2E7D32;">
+                        📲 Copier / Partager
+                    </button>
+                </div>
+                <button type="button" class="btn" onclick="viderToutesLesCourses()" style="width: 100%; padding: 9px; font-size: 0.75rem; font-weight: 800; border-radius: 12px; background: #FFF5F5; border-color: #FFCDCD; color: #C62828;">
+                    🗑️ Vider toute la liste
+                </button>
+            </div>
         </div>
 
         <!-- ========================================== -->
@@ -3234,7 +3378,7 @@ body.dark-mode .btn-remove-recette {
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "18.00";
+    const APP_VERSION = "18.50";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -9315,24 +9459,22 @@ function ouvrirRecetteDepuisCarnet(idAliment, index) {
 }
 
 // ========================================================
-// 1. GESTION DES 2 ONGLETS DU CARNET
-// ========================================================
-// ========================================================
 // 1. GESTION DES 3 ONGLETS DU CARNET
 // ========================================================
 function basculerOngletCarnet(nomOnglet) {
     const vues = {
         'carnet': document.getElementById('vue-onglet-carnet'),
         'frigo': document.getElementById('vue-onglet-frigo'),
+        'courses': document.getElementById('vue-onglet-courses'),
         'explorer': document.getElementById('vue-onglet-explorer')
     };
     const btns = {
         'carnet': document.getElementById('tab-btn-mon-carnet'),
         'frigo': document.getElementById('tab-btn-frigo'),
+        'courses': document.getElementById('tab-btn-courses'),
         'explorer': document.getElementById('tab-btn-decouvrir')
     };
 
-    // Masquer tout et réinitialiser les boutons
     Object.keys(vues).forEach(key => {
         if (vues[key]) vues[key].style.display = 'none';
         if (btns[key]) {
@@ -9342,7 +9484,6 @@ function basculerOngletCarnet(nomOnglet) {
         }
     });
 
-    // Afficher l'onglet actif
     if (vues[nomOnglet]) vues[nomOnglet].style.display = 'block';
     if (btns[nomOnglet]) {
         btns[nomOnglet].style.background = 'var(--text-title)';
@@ -9350,7 +9491,9 @@ function basculerOngletCarnet(nomOnglet) {
         btns[nomOnglet].style.boxShadow = '0 4px 10px rgba(0,0,0,0.1)';
     }
 
-    if (nomOnglet === 'explorer') {
+    if (nomOnglet === 'courses') {
+        afficherListeCourses();
+    } else if (nomOnglet === 'explorer') {
         const inputExp = document.getElementById('input-explorer-libre');
         if (inputExp) inputExp.focus();
     }
@@ -10503,13 +10646,20 @@ function rechercheAutoFrigo(event) {
         return;
     }
 
-    // Cherche parmi les aliments du marché (Nom OU Sous-titre !)
+    // Cherche parmi les aliments du marché et trie par pertinence (Nom commençant par le mot en 1er !)
     const correspondances = legumes.filter(l => {
         const nomClean = removeAccents(l.nom.toLowerCase());
         const soustitreClean = l.soustitre ? removeAccents(l.soustitre.toLowerCase()) : "";
         const dejaPris = panierFrigo.some(p => p.id === l.id);
         return (nomClean.includes(val) || soustitreClean.includes(val)) && !dejaPris;
-    }).slice(0, 6);
+    }).sort((a, b) => {
+        const nomA = removeAccents(a.nom.toLowerCase());
+        const nomB = removeAccents(b.nom.toLowerCase());
+        const startA = nomA.startsWith(val) ? 0 : (nomA.includes(val) ? 1 : 2);
+        const startB = nomB.startsWith(val) ? 0 : (nomB.includes(val) ? 1 : 2);
+        if (startA !== startB) return startA - startB;
+        return nomA.localeCompare(nomB);
+    }).slice(0, 15);
 
     if (correspondances.length === 0) {
         box.innerHTML = '<div style="padding: 10px; font-size: 0.78rem; color: var(--text-muted); text-align: center;">Aucun aliment trouvé</div>';
@@ -10757,8 +10907,8 @@ async function lancerRechercheFrigoAntiGaspi() {
 
         div.style.cssText = `background: #FFFFFF; border: 1px solid var(--border-color); border-left: 5px solid ${borderColor}; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 8px;`;
 
-        const estJackpot = (item.matches === panierFrigo.length);
-        const badgeScoreFrigo = `<span style="font-size: 0.68rem; color: ${estJackpot ? '#2E7D32' : 'var(--accent-dark)'}; font-weight: 800; padding: 3px 7px; border-radius: 8px; background: rgba(0,0,0,0.04); white-space: nowrap;">🎯 ${item.matches}/${panierFrigo.length} restes</span>`;
+        const estJackpot = (item.matches >= 2);
+        const badgeScoreFrigo = `<span style="font-size: 0.68rem; color: ${estJackpot ? '#2E7D32' : 'var(--accent-dark)'}; font-weight: 800; padding: 3px 7px; border-radius: 8px; background: rgba(0,0,0,0.04); white-space: nowrap;">🎯 ${item.matches}/4 restes</span>`;
 
         const badgeOrigine = rec.estDuCarnet 
             ? `<span style="font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 8px; background: rgba(44, 62, 80, 0.1); color: var(--text-title); border: 1px solid var(--text-title);">📖 MES RECETTES</span>`
@@ -10830,6 +10980,437 @@ function ouvrirRecetteDepuisFrigo(index) {
     const btnFermer = document.getElementById('btn-fermer-detail');
     if (btnFermer) btnFermer.innerText = "← Retour au Frigo";
 }
+
+// =========================================================================
+// 🛒 MOTEUR DE LA LISTE DE COURSES INTELLIGENTE & SURBRILLANCE FRIGO
+// =========================================================================
+function getListeCourses() {
+    const saved = localStorage.getItem('marche_saison_courses');
+    return saved ? JSON.parse(saved) : [];
+}
+
+function saveListeCourses(liste) {
+    localStorage.setItem('marche_saison_courses', JSON.stringify(liste));
+    mettreAJourCompteurCourses();
+}
+
+function mettreAJourCompteurCourses() {
+    const liste = getListeCourses();
+    const restants = liste.filter(item => !item.checked).length;
+    const label = document.getElementById('label-tab-courses');
+    if (label) label.innerText = `Courses (${restants})`;
+
+    const labelCarnet = document.getElementById('label-tab-carnet');
+    if (labelCarnet && labelCarnet.innerText.includes('Mes Recettes')) {
+        labelCarnet.innerText = labelCarnet.innerText.replace('Mes Recettes', 'Recettes');
+    }
+}
+
+// Détecte automatiquement le rayon de supermarché d'un ingrédient (gère les "&" et les sous-titres !)
+function detecterRayonSupermarche(texteIngredient) {
+    const clean = removeAccents(texteIngredient.toLowerCase())
+        .replace(/c\.\s*a\s*cafe/g, '')
+        .replace(/cuilleres?\s*a\s*cafe/g, '');
+
+    // Ingrédients de boulangerie/pâtisserie courants (poudre à lever, levure, farine...)
+    if (["poudre a lever", "levure", "bicarbonate", "farine", "fecule"].some(m => clean.includes(m))) {
+        return "🍝 Épicerie, Pains & Féculents";
+    }
+
+    const donnerNomRayon = (saison) => {
+        if (["Printemps", "Été", "Automne", "Hiver"].includes(saison)) return "🥦 Fruits & Légumes";
+        if (["Viandes", "Poissons"].includes(saison)) return "🥩 Viandes & Poissons";
+        if (saison === "Laitages") return "🧀 Frais, Laitages & Œufs";
+        if (["Féculents", "Légumineuses"].includes(saison)) return "🍝 Épicerie, Pains & Féculents";
+        if (saison === "Condiments") return "🌿 Condiments, Huiles & Épices";
+        if (saison === "Boissons") return "☕ Boissons & Douceurs";
+        return "🛍️ Autres articles";
+    };
+
+    // On extrait tous les noms (coupés sur "&") et on trie du plus long au plus court ("huile d'avocat" gagne sur "fondue" !)
+    let clesNoms = [];
+    legumes.forEach(alim => {
+        if (!alim || !alim.nom) return;
+        removeAccents(alim.nom.toLowerCase()).split('&').forEach(p => {
+            const mot = p.trim().replace(/s\b/g, '');
+            if (mot.length >= 3) clesNoms.push({ mot: mot, saison: alim.saison });
+        });
+    });
+    clesNoms.sort((a, b) => b.mot.length - a.mot.length);
+
+    // 1. Recherche d'abord sur l'ingrédient principal (hors parenthèses), puis sur toute la ligne
+    const cleanSansParentheses = clean.replace(/\s*\(.*?\)/g, '');
+    for (let cible of [cleanSansParentheses, clean]) {
+        for (let item of clesNoms) {
+            const regex = new RegExp(`(^|[^a-z])${item.mot}[sx]?([^a-z]|$)`, 'i');
+            if (regex.test(cible)) return donnerNomRayon(item.saison);
+        }
+    }
+
+    // 2. Recherche dans les sous-titres (muscade, badiane, cardamome, passata...)
+    for (let alim of legumes) {
+        if (!alim || !alim.soustitre) continue;
+        const synonymes = removeAccents(alim.soustitre.toLowerCase()).split(/[,\/]+/).map(s => s.trim().replace(/s\b/g, ''));
+        for (let syn of synonymes) {
+            if (syn.length >= 4 && clean.includes(syn)) {
+                return donnerNomRayon(alim.saison);
+            }
+        }
+    }
+
+    return "🛍️ Autres articles";
+}
+
+function ajouterArticleCourse(texteBrut, conseilClinique = "", nomRecette = "") {
+    const texte = texteBrut.trim();
+    if (!texte) return false;
+
+    let liste = getListeCourses();
+    const existeDeja = liste.some(item => removeAccents(item.texte.toLowerCase()) === removeAccents(texte.toLowerCase()));
+    if (existeDeja) return false;
+
+    const rayon = detecterRayonSupermarche(texte);
+    liste.push({
+        id: Date.now() + Math.floor(Math.random() * 1000),
+        texte: texte,
+        conseil: conseilClinique,
+        recette: nomRecette,
+        rayon: rayon,
+        checked: false
+    });
+    saveListeCourses(liste);
+    return true;
+}
+
+function ajouterArticleCourseManuel() {
+    const input = document.getElementById('input-course-ajout');
+    if (!input || !input.value.trim()) return;
+    ajouterArticleCourse(input.value.trim());
+    input.value = '';
+    afficherListeCourses();
+}
+
+function toggleCheckCourse(id) {
+    let liste = getListeCourses();
+    const idx = liste.findIndex(i => i.id === id);
+    if (idx > -1) {
+        liste[idx].checked = !liste[idx].checked;
+        saveListeCourses(liste);
+        afficherListeCourses();
+    }
+}
+
+function supprimerArticleCourse(id, event) {
+    if (event) event.stopPropagation();
+    let liste = getListeCourses().filter(i => i.id !== id);
+    saveListeCourses(liste);
+    afficherListeCourses();
+}
+
+function nettoyerCoursesCochees() {
+    let liste = getListeCourses().filter(i => !i.checked);
+    saveListeCourses(liste);
+    afficherListeCourses();
+}
+
+function viderToutesLesCourses() {
+    if (!confirm("🗑️ Voulez-vous vraiment vider toute votre liste de courses ?")) return;
+    saveListeCourses([]);
+    afficherListeCourses();
+}
+
+function partagerListeCoursesTexte() {
+    const liste = getListeCourses().filter(i => !i.checked);
+    if (liste.length === 0) {
+        alert("⚠️ Aucun article à acheter dans votre liste !");
+        return;
+    }
+
+    const ordreRayons = [
+        "🥦 Fruits & Légumes",
+        "🥩 Viandes & Poissons",
+        "🧀 Frais, Laitages & Œufs",
+        "🍝 Épicerie, Pains & Féculents",
+        "🌿 Condiments, Huiles & Épices",
+        "☕ Boissons & Douceurs",
+        "🛍️ Autres articles"
+    ];
+
+    let textePartage = "🛒 MA LISTE DE COURSES (Le Petit Marché)\n\n";
+    ordreRayons.forEach(rayon => {
+        const items = liste.filter(i => i.rayon === rayon);
+        if (items.length > 0) {
+            textePartage += `${rayon.toUpperCase()} :\n`;
+            items.forEach(i => {
+                textePartage += `☐ ${i.texte}${i.conseil ? ' ' + i.conseil : ''}\n`;
+            });
+            textePartage += "\n";
+        }
+    });
+
+    if (navigator.share) {
+        navigator.share({ title: 'Ma Liste de Courses', text: textePartage }).catch(() => {});
+    } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(textePartage).then(() => {
+            alert("📋 Liste de courses copiée dans le presse-papier !");
+        });
+    }
+}
+
+function afficherListeCourses() {
+    const conteneur = document.getElementById('liste-courses-container');
+    const actionsBas = document.getElementById('courses-actions-bas');
+    if (!conteneur) return;
+
+    mettreAJourCompteurCourses();
+    const badge = document.getElementById('courses-profil-badge');
+    const badgeRef = document.getElementById('carnet-profil-badge');
+    if (badge && badgeRef) badge.innerText = badgeRef.innerText;
+
+    const liste = getListeCourses();
+    if (liste.length === 0) {
+        if (actionsBas) actionsBas.style.display = 'none';
+        conteneur.innerHTML = `
+            <div style="text-align: center; padding: 25px 15px; color: var(--text-muted); font-size: 0.85rem; line-height: 1.5;">
+                <div style="font-size: 1.8rem; margin-bottom: 6px;">🛒✨</div>
+                <strong>Votre panier de courses est vide !</strong><br>
+                Ajoutez un article ci-dessus ou cliquez sur les boutons <strong>+ 🛒</strong> directement dans vos recettes.
+            </div>
+        `;
+        return;
+    }
+
+    if (actionsBas) actionsBas.style.display = 'flex';
+    conteneur.innerHTML = `
+        <div style="background: rgba(212, 163, 115, 0.12); border: 1px dashed var(--accent); border-radius: 10px; padding: 7px 10px; font-size: 0.74rem; color: var(--accent-dark); font-weight: 700; text-align: center; margin-bottom: 4px;">
+            💡 <strong>En magasin :</strong> touchez un article pour le cocher (✓) lorsqu'il est dans votre caddie !
+        </div>
+    `;
+
+    const ordreRayons = [
+        "🥦 Fruits & Légumes",
+        "🥩 Viandes & Poissons",
+        "🧀 Frais, Laitages & Œufs",
+        "🍝 Épicerie, Pains & Féculents",
+        "🌿 Condiments, Huiles & Épices",
+        "☕ Boissons & Douceurs",
+        "🛍️ Autres articles"
+    ];
+
+    ordreRayons.forEach(rayon => {
+        const itemsRayon = liste.filter(i => i.rayon === rayon);
+        if (itemsRayon.length > 0) {
+            const titre = document.createElement('div');
+            titre.className = 'course-rayon-title';
+            titre.innerText = `${rayon} (${itemsRayon.length})`;
+            conteneur.appendChild(titre);
+
+            itemsRayon.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'course-item-row' + (item.checked ? ' checked' : '');
+                row.onclick = () => toggleCheckCourse(item.id);
+
+                // Vraie case à cocher visuelle ultra-claire
+                const caseVisuelle = item.checked
+                    ? `<span style="width: 22px; height: 22px; border-radius: 6px; background: #2E7D32; border: 2px solid #2E7D32; color: #FFF; display: inline-flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 900; flex-shrink: 0;">✓</span>`
+                    : `<span style="width: 22px; height: 22px; border-radius: 6px; background: #FFFDF8; border: 2px solid #D4A373; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;"></span>`;
+
+                row.innerHTML = `
+                    ${caseVisuelle}
+                    <div style="flex: 1; min-width: 0;">
+                        <div class="course-item-text" style="font-weight: 800; font-size: 0.88rem; color: var(--text-title); line-height: 1.3;">${item.texte}</div>
+                        ${item.conseil ? `<div class="course-item-sub" style="font-size: 0.72rem; color: #B5603F; font-weight: 700; margin-top: 2px;">${item.conseil}</div>` : ''}
+                        ${item.recette ? `<div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 2px;">🍲 ${item.recette}</div>` : ''}
+                    </div>
+                    <button type="button" class="btn" onclick="supprimerArticleCourse(${item.id}, event)" title="Supprimer cet article" style="padding: 4px 7px; font-size: 0.82rem; border-radius: 8px; border: 1px solid #FFCDCD; background: #FFF5F5; color: #D32F2F; flex-shrink: 0;">🗑️</button>
+                `;
+                conteneur.appendChild(row);
+            });
+        }
+    });
+}
+
+// Vérifie si une ligne d'ingrédient correspond à un aliment présent dans "Mon Frigo"
+function estIngredientDansMonFrigo(texteLigne) {
+    if (!panierFrigo || panierFrigo.length === 0) return false;
+    const cleanLigne = removeAccents(texteLigne.toLowerCase());
+
+    return panierFrigo.some(alim => {
+        let rac = removeAccents((alim.nom || '').toLowerCase().trim())
+            .replace(/\s*\(.*?\)/g, '')
+            .replace(/^(filets?|cuisses?|escalopes?|tranches?|eminces?|rotis?|cotelettes?|gigots?|steaks?|blancs?|cotes?|pointes?)\s+(de\s+|d'|du\s+|des\s+)/i, '')
+            .replace(/\s+(maigres?|gras|grasses?|nouvelles?|nouveaux|frais|fraiches?|nature|entiers?|uht|aop|doux)\b.*$/i, '')
+            .trim().replace(/s\b/g, '');
+        if (rac.length >= 3 && cleanLigne.includes(rac)) return true;
+        if (rac.includes("nouille") && cleanLigne.includes("vermicelle")) return true;
+        return false;
+    });
+}
+
+// Enrichit automatiquement toute recette ouverte avec le bouton 🧊 Frigo et le bouton +🛒 Panier
+function enrichirIngredientsRecetteActive() {
+    const ul = document.getElementById('rec-ingredients-detail');
+    if (!ul || ul.getAttribute('data-courses-ready') === 'true') return;
+    ul.setAttribute('data-courses-ready', 'true');
+
+    const titreRecette = document.getElementById('rec-titre-detail')?.innerText || "";
+    const listeCoursesActuelle = getListeCourses();
+
+    // 1. Ajoute le bouton "+ 🛒 Tout ajouter aux courses" à côté du titre "INGRÉDIENTS"
+    const labelIng = ul.previousElementSibling;
+    if (labelIng && !labelIng.querySelector('.btn-tout-courses')) {
+        labelIng.style.cssText = "display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase;";
+        const btnTout = document.createElement('button');
+        btnTout.type = 'button';
+        btnTout.className = 'btn-tout-courses';
+        btnTout.style.cssText = "background: #FFFDF8; border: 1.5px solid var(--accent); color: var(--accent-dark); border-radius: 10px; padding: 4px 10px; font-size: 0.7rem; font-weight: 800; cursor: pointer;";
+        btnTout.innerHTML = "+ 🛒 Ajouter les manquants";
+        btnTout.onclick = () => {
+            let ajoutes = 0;
+            ul.querySelectorAll('li').forEach(li => {
+                if (li.classList.contains('ing-au-frigo')) return; // Ignore tout ce qui est coché 🧊 Au frigo !
+                const btn = li.querySelector('.btn-ing-course');
+                if (btn && !btn.classList.contains('added') && btn.style.display !== 'none') {
+                    btn.click();
+                    ajoutes++;
+                }
+            });
+            btnTout.innerHTML = ajoutes > 0 ? `✅ ${ajoutes} ajouté(s) !` : "✅ Panier à jour";
+            btnTout.style.borderColor = "#2E7D32";
+            btnTout.style.color = "#2E7D32";
+            setTimeout(() => {
+                btnTout.innerHTML = "+ 🛒 Ajouter les manquants";
+                btnTout.style.borderColor = "var(--accent)";
+                btnTout.style.color = "var(--accent-dark)";
+            }, 2000);
+        };
+        labelIng.appendChild(btnTout);
+    }
+
+    // 2. Parcourt chaque ligne d'ingrédient
+    ul.querySelectorAll('li').forEach(li => {
+        const clone = li.cloneNode(true);
+
+        // Nettoie les anciens boutons s'ils avaient été sauvegardés
+        clone.querySelectorAll('.btn-ing-course, .btn-ing-frigo, .badge-au-frigo, button').forEach(el => el.remove());
+
+        // Récupère le conseil clinique éventuel (💡 Remplacer par...)
+        let texteConseil = "";
+        let htmlConseil = "";
+        clone.querySelectorAll('span').forEach(sp => {
+            if (sp.textContent.includes('💡')) {
+                texteConseil = sp.textContent.trim();
+                htmlConseil = sp.outerHTML;
+                sp.remove();
+            }
+        });
+
+        const texteBrutComplet = clone.textContent || "";
+        const matchPuce = texteBrutComplet.match(/(🟢|🟡|🟠|🔴|⚪)/);
+        const puce = matchPuce ? matchPuce[1] : "🟢";
+
+        const textePropre = texteBrutComplet
+            .replace(/(🟢|🟡|🟠|🔴|⚪)/g, '')
+            .replace(/\(\s*💡.*?\)/g, '')
+            .replace(/\s+/g, ' ')
+            .trim();
+        if (!textePropre) return;
+
+        li.className = '';
+        li.style.cssText = "display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; transition: all 0.2s ease;";
+
+        const wrapperTexte = document.createElement('div');
+        wrapperTexte.style.cssText = "flex: 1; line-height: 1.4;";
+        wrapperTexte.innerHTML = `${puce} ${textePropre} ${htmlConseil}`;
+
+        // Conteneur des 2 boutons à droite (🧊 Frigo + 🛒 Panier)
+        const actionsRight = document.createElement('div');
+        actionsRight.style.cssText = "display: flex; align-items: center; gap: 5px; flex-shrink: 0;";
+
+        let auFrigoActif = estIngredientDansMonFrigo(textePropre);
+        const dejaDansCourses = listeCoursesActuelle.some(c => removeAccents(c.texte.toLowerCase()) === removeAccents(textePropre.toLowerCase()));
+
+        // Bouton 🧊 Frigo (Bascule On/Off)
+        const btnFrigo = document.createElement('button');
+        btnFrigo.type = 'button';
+        btnFrigo.className = 'btn-ing-frigo';
+        btnFrigo.title = "J'ai déjà cet ingrédient dans mon frigo / placard";
+
+        // Bouton + 🛒 Panier
+        const btnAdd = document.createElement('button');
+        btnAdd.type = 'button';
+        btnAdd.className = 'btn-ing-course' + (dejaDansCourses ? ' added' : '');
+        btnAdd.innerHTML = dejaDansCourses ? '✅' : '+ 🛒';
+        btnAdd.title = "Ajouter à ma liste de courses";
+
+        // Fonction qui met à jour l'état visuel de la ligne selon si 🧊 est actif ou non
+        const actualiserVisuelLigne = () => {
+            if (auFrigoActif) {
+                li.classList.add('ing-au-frigo');
+                btnFrigo.style.cssText = "background: #2E7D32; border: 1px solid #1B5E20; color: #FFFFFF; border-radius: 8px; padding: 2px 7px; font-size: 0.68rem; font-weight: 800; cursor: pointer; white-space: nowrap;";
+                btnFrigo.innerHTML = "🧊 J'ai";
+                btnAdd.style.display = "none"; // Cache le bouton panier !
+            } else {
+                li.classList.remove('ing-au-frigo');
+                btnFrigo.style.cssText = "background: #FFFDF8; border: 1px solid #90CAF9; color: #1565C0; border-radius: 8px; padding: 2px 6px; font-size: 0.7rem; font-weight: 800; cursor: pointer; opacity: 0.85;";
+                btnFrigo.innerHTML = "🧊";
+                btnAdd.style.display = "inline-block"; // Réaffiche le bouton panier !
+            }
+        };
+
+        btnFrigo.onclick = (e) => {
+            e.stopPropagation();
+            auFrigoActif = !auFrigoActif;
+            // Si on marque "J'ai au frigo" et qu'il était dans les courses, on le retire des courses
+            if (auFrigoActif) {
+                let liste = getListeCourses().filter(c => removeAccents(c.texte.toLowerCase()) !== removeAccents(textePropre.toLowerCase()));
+                saveListeCourses(liste);
+                btnAdd.classList.remove('added');
+                btnAdd.innerHTML = '+ 🛒';
+            }
+            actualiserVisuelLigne();
+        };
+
+        btnAdd.onclick = (e) => {
+            e.stopPropagation();
+            if (!btnAdd.classList.contains('added')) {
+                ajouterArticleCourse(textePropre, texteConseil, titreRecette);
+                btnAdd.classList.add('added');
+                btnAdd.innerHTML = '✅';
+            } else {
+                // Si on reclique sur ✅, on peut même le retirer du panier !
+                let liste = getListeCourses().filter(c => removeAccents(c.texte.toLowerCase()) !== removeAccents(textePropre.toLowerCase()));
+                saveListeCourses(liste);
+                btnAdd.classList.remove('added');
+                btnAdd.innerHTML = '+ 🛒';
+            }
+        };
+
+        actualiserVisuelLigne();
+
+        actionsRight.appendChild(btnFrigo);
+        actionsRight.appendChild(btnAdd);
+
+        li.innerHTML = '';
+        li.appendChild(wrapperTexte);
+        li.appendChild(actionsRight);
+    });
+}
+
+// Observe automatiquement l'ouverture ou la traduction d'une recette pour l'enrichir
+const observerRecetteCourses = new MutationObserver(() => {
+    const ul = document.getElementById('rec-ingredients-detail');
+    if (ul && ul.getAttribute('data-courses-ready') !== 'true') {
+        enrichirIngredientsRecetteActive();
+    }
+});
+window.addEventListener('DOMContentLoaded', () => {
+    mettreAJourCompteurCourses();
+    const detailZone = document.getElementById('rec-detail-contenu');
+    if (detailZone) {
+        observerRecetteCourses.observe(detailZone, { childList: true, subtree: true });
+    }
+});
 
 </script>
 
