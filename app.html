@@ -1,5 +1,5 @@
 <!-- ================================================================================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 17.00 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 17.50 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -661,7 +661,43 @@
     
     .category-badge { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; padding: 4px 8px; border-radius: 20px; background-color: #FFF; border: 1px solid; white-space: nowrap; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
     
-    .tag-badge { background-color: #F0EAE1; color: var(--text-title); font-size: 0.6rem; font-weight: 800; padding: 3px 6px; border-radius: 8px; letter-spacing: 0.3px; text-transform: uppercase; border: 1px solid #E2D9CC; display: inline-flex; align-items: center; gap: 3px; }
+    .tag-badge { background-color: #F0EAE1; color: var(--text-title); font-size: 0.6rem; font-weight: 800; padding: 4px 7px; border-radius: 8px; letter-spacing: 0.3px; text-transform: uppercase; border: 1px solid #E2D9CC; display: inline-flex; align-items: center; gap: 3px; cursor: pointer; user-select: none; transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease; }
+    .tag-badge:active { transform: scale(0.93); }
+    .tag-badge.active-tag { border-color: #A06A42 !important; box-shadow: 0 0 0 2px rgba(212, 163, 115, 0.35); }
+
+    .tag-info-bubble {
+        display: none;
+        background: #FADBD0;
+        background: linear-gradient(135deg, #FDEBD0 0%, #FADBD8 100%);
+        border: 2px solid #8D6E63;
+        border-radius: 14px;
+        padding: 12px 14px;
+        margin: 0 auto 14px auto;
+        color: #2C3E50;
+        font-size: 0.84rem;
+        line-height: 1.45;
+        text-align: left;
+        box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+        position: relative;
+        animation: hintFadeInOut 0.25s ease forwards;
+        animation-Iteration-Count: 1;
+    }
+    @keyframes bubbleAppear {
+        from { opacity: 0; transform: translateY(-5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .tag-info-bubble.open {
+        display: block;
+        animation: bubbleAppear 0.2s ease-out;
+    }
+    body.dark-mode .tag-info-bubble {
+        background: #38312B !important;
+        border: 2px solid #D4A373 !important;
+        color: #FFF8F0 !important;
+    }
+    body.dark-mode .tag-info-bubble strong {
+        color: #FFE0B2 !important;
+    }
 
     .card-title-elegant { font-family: 'Playfair Display', serif; font-size: 2.3rem; font-weight: 700; color: var(--text-title); text-align: center; margin: 0 0 10px 0; letter-spacing: -0.5px; text-shadow: 2px 3px 5px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.05); }
     
@@ -1894,6 +1930,122 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
     font-weight: 800 !important;
 }
 
+/* ======================================================== */
+/* CORRECTIF LISIBILITÉ MODE SOMBRE : CARTES, PILULES & WEB */
+/* ======================================================== */
+
+/* 1. Les 8 pilules du Catalogue Maison bien nettes en Mode Sombre */
+body.dark-mode .cat-maison-btn:not(.active) {
+    background-color: #FAF7F2 !important;
+    color: #231F1A !important;
+    border-color: #C2B09B !important;
+}
+body.dark-mode .cat-maison-btn.active {
+    background-color: #2C3E50 !important;
+    color: #FFFFFF !important;
+    border-color: #2C3E50 !important;
+}
+
+/* 2. Textes et sous-titres du tiroir "Grands Sites Culinaires & Guide Web" */
+body.dark-mode #contenu-guide-web div {
+    color: #231F1A !important;
+    font-weight: 700 !important;
+}
+body.dark-mode #contenu-guide-web div[style*="font-size: 0.66rem"] {
+    color: #5C5248 !important;
+    font-weight: 800 !important;
+}
+
+/* 3. Cartes de recettes (.carnet-row) : Portions, Fiche attachée et Badges de Verdict lumineux */
+body.dark-mode .carnet-row span[style*="accent-dark"] {
+    color: #F0E6D8 !important;
+    border-color: #D4A373 !important;
+}
+body.dark-mode .carnet-row span[style*="var(--text-title)"] {
+    background-color: #2C3E50 !important;
+    color: #FFFFFF !important;
+    border-color: #8D99AE !important;
+}
+/* Verdict Vert : Recette Idéale */
+body.dark-mode .carnet-row span[style*="#1B5E20"] {
+    background-color: #1E3A24 !important;
+    color: #A8E6CF !important;
+    border-color: #4CAF50 !important;
+}
+/* Verdict Jaune : Facilement Adaptable */
+body.dark-mode .carnet-row span[style*="#E65100"] {
+    background-color: #3D2E14 !important;
+    color: #FFD97D !important;
+    border-color: #FFB300 !important;
+}
+/* Verdict Orange : Sensible en Crise */
+body.dark-mode .carnet-row span[style*="#B5603F"] {
+    background-color: #3B2014 !important;
+    color: #FFCCBC !important;
+    border-color: #FF7043 !important;
+}
+/* Score Anti-Gaspi dans le Frigo (🎯 X/Y restes) */
+body.dark-mode .carnet-row span[style*="#2E7D32"] {
+    background-color: rgba(168, 230, 207, 0.15) !important;
+    color: #A8E6CF !important;
+}
+
+/* ======================================================== */
+/* HARMONISATION DES 5 BOUTONS DES FICHES & DU FORMULAIRE   */
+/* ======================================================== */
+
+/* 1. Même hauteur fine et élégante (38px) pour les 5 boutons de la fiche */
+.card-actions-row {
+    gap: 6px !important;
+}
+.card-actions-row .btn-action-wide,
+.card-actions-row .btn-action-medium,
+.card-actions-row .btn-action-square {
+    height: 38px !important;
+    border-radius: 10px !important;
+    box-sizing: border-box !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+}
+.card-actions-row .btn-action-medium,
+.card-actions-row .btn-action-square {
+    width: 38px !important;
+    padding: 0 !important;
+    font-size: 0.95rem !important;
+    flex-shrink: 0 !important;
+}
+.card-actions-row .btn-action-square svg {
+    width: 18px !important;
+    height: 18px !important;
+}
+.card-actions-row .btn-action-wide {
+    padding: 0 12px !important;
+    font-size: 0.88rem !important;
+}
+
+/* 2. Couleurs Mode Sombre : Les 5 boutons en Blanc Sable lumineux */
+body.dark-mode .card-actions-row .btn-action-wide {
+    background-color: #FFFDF8 !important;
+    color: #4A423A !important;
+    border: 1.5px solid #D4A373 !important;
+    font-weight: 800 !important;
+}
+body.dark-mode .card-actions-row .btn-action-medium,
+body.dark-mode .card-actions-row .btn-action-square {
+    background-color: #FFFDF8 !important;
+    color: #231F1A !important;
+    border: 1px solid #D1C7B8 !important;
+}
+/* Bouton Corbeille (fiche + formulaire) en blanc rosé délicat */
+body.dark-mode .card-actions-row .btn-action-square[onclick*="deleteFiche"],
+body.dark-mode .btn-remove-recette {
+    background-color: #FFF5F5 !important;
+    border: 1px solid #FFCDCD !important;
+    color: #D32F2F !important;
+}
+
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
@@ -1958,7 +2110,7 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v17.00</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v17.50</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -2363,17 +2515,39 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
             <p style="margin: 8px 0 0 0; color: #555; line-height: 1.4;">✨ <strong>Le bouton "Adaptés" :</strong> Sur la page d'accueil, ce bouton magique filtre instantanément les aliments pour ne vous afficher QUE ceux compatibles avec le profil choisi !</p>
 		</div>
 
-        <!-- 2. Codes Couleurs, Cru/Cuit & Coaching -->
+        <!-- 2. Codes Couleurs, Bulles d'info, Cru/Cuit & Critères -->
         <div style="background: #FDF2E9; border-left: 4px solid #D4A373; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
-            <p style="color: #A06A42; font-weight: 800; font-size: 0.95rem; margin: 0 0 8px 0;">2. Codes Couleurs et Critères d'Analyse</p>
-            <p style="margin: 0 0 5px 0; font-weight: bold; color: #4A4A4A;">Les Pastilles de Tolérance :</p>
+            <p style="color: #A06A42; font-weight: 800; font-size: 0.95rem; margin: 0 0 8px 0;">2. Codes Couleurs & Étiquettes Cliniques (Cliquables 💬)</p>
+            <p style="margin: 0 0 8px 0; color: #555; line-height: 1.4;">
+                💡 <strong>Astuce :</strong> Sur chaque fiche aliment, <strong>touchez n'importe quelle petite étiquette</strong> (ou la pastille de couleur) pour ouvrir une bulle explicative détaillée !
+            </p>
+
+            <p style="margin: 0 0 4px 0; font-weight: 800; color: #A06A42; font-size: 0.85rem;">A. Les Pastilles de Tolérance & Mode Cru / Cuit :</p>
             <ul style="padding-left: 15px; margin: 0 0 10px 0; color: #555; line-height: 1.4;">
-                <li style="margin-bottom: 4px;"><strong>🟢 Pastille Verte :</strong> Aliment hautement digeste, parfaitement compatible avec votre profil actuel.</li>
-                <li style="margin-bottom: 4px;"><strong>🟡 Pastille Jaune :</strong> Attention, aliment à consommer avec modération selon votre propre seuil de tolérance.</li>
-                <li style="margin-bottom: 0;"><strong>🟠 Pastille Orange :</strong> Aliment problématique, fortement déconseillé par rapport aux sensibilités que vous avez cochées.</li>
+                <li style="margin-bottom: 4px;"><strong>🟢 À volonté :</strong> Aliment hautement digeste, parfaitement compatible avec votre profil actuel.</li>
+                <li style="margin-bottom: 4px;"><strong>🟡 À limiter :</strong> Aliment à consommer en portion modérée selon votre seuil de tolérance.</li>
+                <li style="margin-bottom: 4px;"><strong>🟠 À éviter :</strong> Aliment déconseillé par rapport aux sensibilités que vous avez cochées (ou exigeant une cuisson).</li>
+                <li style="margin-bottom: 0;"><strong>🥕 Cru / 🍗 Cuit :</strong> Basculez entre <em>Cru</em> et <em>Cuit</em> en haut des listes ! La chaleur attendrit les fibres végétales, coagule les protéines animales et modifie la tolérance en direct.</li>
             </ul>
-            <p style="margin: 0 0 5px 0; color: #555; line-height: 1.4;">🥕 <strong>Simulateur Cru / Cuit :</strong> La cuisson transforme les aliments ! Cliquez sur les boutons <em>Cru</em> ou <em>Cuit</em> : un chou-fleur cru (🟠) devient digeste une fois cuit (🟡). Attention : cuire une carotte augmente son taux de sucre.</p>
-            <p style="margin: 0; color: #555; line-height: 1.4;">💡 <strong>Coaching Bienveillant :</strong> L'application ne punit pas. Si une recette contient un ingrédient sensible, elle n'est pas "Interdite" mais <em>"🟡 Facilement adaptable"</em> : l'appli vous indique exactement quel ingrédient retirer (ex: Ail ou Oignon) pour rendre le plat parfait !</p>
+
+            <p style="margin: 0 0 4px 0; font-weight: 800; color: #A06A42; font-size: 0.85rem;">B. Les Critères de Digestion (Estomac & Intestin) :</p>
+            <ul style="padding-left: 15px; margin: 0 0 10px 0; color: #555; line-height: 1.4;">
+                <li style="margin-bottom: 4px;"><strong>🧪 FODMAP (Bas 🟢 / Haut 🔴) :</strong> Petits glucides fermentescibles. S'ils sont <em>Hauts</em>, ils fermentent dans le côlon et provoquent gaz et ballonnements.</li>
+                <li style="margin-bottom: 4px;"><strong>🍎 Fruct. — Fructose (Bas 🟢 / Haut 🔴) :</strong> Sucre naturel des fruits et du miel. En excès, il attire l'eau et fermente dans l'intestin.</li>
+                <li style="margin-bottom: 4px;"><strong>🌾 Fibres (Solubles 🟢 / Insolubles 🔴 / Sans ⚪) :</strong> Les fibres <em>Solubles</em> forment un gel très doux pour la muqueuse. Les fibres <em>Insolubles</em> sont dures et irritantes pour les côlons sensibles ou diverticules (la cuisson aide à les assouplir).</li>
+                <li style="margin-bottom: 4px;"><strong>🥩 Chair (Fondante 🟢 / Ferme 🟡 / Fibreuse 🔴) :</strong> Indique l'effort de broyage mécanique demandé à l'estomac.</li>
+                <li style="margin-bottom: 4px;"><strong>🔥 Acide (🔴) :</strong> Signale un aliment susceptible d'irriter la paroi de l'estomac (gastrite) ou de favoriser le reflux (RGO).</li>
+                <li style="margin-bottom: 0;"><strong>🧈 Gras (🔴) :</strong> Signale un aliment riche en lipides qui ralentit la vidange de l'estomac et alourdit la digestion.</li>
+            </ul>
+
+            <p style="margin: 0 0 4px 0; font-weight: 800; color: #A06A42; font-size: 0.85rem;">C. Intolérances & Métabolisme :</p>
+            <ul style="padding-left: 15px; margin: 0 0 8px 0; color: #555; line-height: 1.4;">
+                <li style="margin-bottom: 4px;"><strong>🩸 CG — Charge Glycémique (Bas 🟢 / Moyen 🟡 / Élevé 🔴) :</strong> Mesure la vitesse et l'ampleur du pic de sucre dans le sang après le repas (essentiel pour le <em>Diabète</em> et le <em>Poids</em>).</li>
+                <li style="margin-bottom: 4px;"><strong>🥛 Lactose (🔴) :</strong> Indique la présence de sucre du lait (les fromages à pâte dure affinés en sont naturellement dépourvus).</li>
+                <li style="margin-bottom: 0;"><strong>🌾 Gluten (🔴) :</strong> Indique la présence de protéines de blé, seigle, orge ou épeautre.</li>
+            </ul>
+
+            <p style="margin: 0; color: #555; line-height: 1.4;">💡 <strong>Coaching Bienveillant :</strong> Dans les recettes, si un ingrédient est sensible, l'application vous propose automatiquement par quoi le remplacer !</p>
         </div>
 
         <!-- 3. Édition -->
@@ -2555,6 +2729,14 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
       <!-- 5. La Réparation des fiches -->
       <button class="settings-btn" onclick="restaurerFichesDefaut()" style="background-color: #E3F2FD; border-color: #90CAF9; color: #0D47A1; font-weight: 700;">
           🔄 Réparer les fiches de base
+      </button>
+
+      <!-- SÉPARATEUR DISCRET -->
+      <div style="border-top: 1px dashed var(--border-color); margin: 8px 0 4px 0;"></div>
+
+      <!-- 6. Fermer l'application -->
+      <button class="settings-btn" onclick="quitterApplication()" style="background-color: #FFF5F5; border-color: #FFCDCD; color: #C62828; font-weight: 800; text-align: center;">
+          🚪 Fermer l'application
       </button>
 
       <!-- Bouton Admin caché -->
@@ -3060,7 +3242,7 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "17.00";
+    const APP_VERSION = "17.50";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -3090,21 +3272,19 @@ body.dark-mode #rec-liste-container > div[style*="font-size: 0.72rem"] {
     // ========================================================
 	
 	// === GESTION DES NOUVELLES FENÊTRES (MODALES) ===
-function openPopup(id) {
+    function openPopup(id) {
         const modal = document.getElementById(id);
         if (modal) {
             modal.classList.remove('hidden');
             const corpsFenetre = modal.querySelector('.modal-body');
             if (corpsFenetre) corpsFenetre.scrollTop = 0;
-            // NOUVEAU : On crée une étape d'historique pour la fenêtre
-            if (window.location.hash !== '#modal') history.pushState({ vue: 'modal' }, '', '#modal');
+            armerBouclierHistorique();
         }
     }
     
     function closePopup(id) { 
-        document.getElementById(id).classList.add('hidden'); 
-        // NOUVEAU : On nettoie l'historique si on ferme avec la croix
-        if (window.location.hash === '#modal') history.back();
+        const modal = document.getElementById(id);
+        if (modal) modal.classList.add('hidden'); 
     }
 
     // Connecter les clics de la barre du haut
@@ -3116,10 +3296,8 @@ function openPopup(id) {
     window.addEventListener('click', (event) => {
         if (event.target.classList.contains('modal-overlay')) {
             event.target.classList.add('hidden');
-            if (window.location.hash === '#modal') history.back();
         }
     });
-
 // Fermer en cliquant à côté de la fenêtre blanche
 window.addEventListener('click', (event) => {
     if (event.target.classList.contains('modal-overlay')) {
@@ -4001,7 +4179,7 @@ window.fermerProfils = function() {
     function ajouterLigneRecette(nom = '', url = '') {
         const container = document.getElementById('recettes-container');
         const div = document.createElement('div'); div.className = 'recette-row';
-        div.innerHTML = `<div class="recette-row-inputs"><input type="text" class="form-control r-nom" placeholder="Titre" value="${nom}"><input type="url" class="form-control r-url" placeholder="URL" value="${url}"></div><button type="button" class="btn-remove-recette" onclick="this.parentElement.remove()">✖️</button>`;
+        div.innerHTML = `<div class="recette-row-inputs"><input type="text" class="form-control r-nom" placeholder="Titre" value="${nom}"><input type="url" class="form-control r-url" placeholder="URL" value="${url}"></div><button type="button" class="btn-remove-recette" onclick="this.parentElement.remove()" title="Supprimer ce lien">🗑️</button>`;
         container.appendChild(div);
     }
 
@@ -4818,12 +4996,10 @@ function afficherResultatProduitScan(product) {
     }
 
     function goHome() {
-        // Annule les minuteries en cours
         if (typeof timerFermetureFiltres !== 'undefined' && timerFermetureFiltres) {
             clearTimeout(timerFermetureFiltres);
         }
 
-        // Force la fermeture de tous les volets de filtres pour la prochaine visite
         window.isFilterPanelOpen = false;
         window.isTypeSwitcherOpen = false;
 
@@ -4837,38 +5013,199 @@ function afficherResultatProduitScan(product) {
         if (typesCont) typesCont.classList.add('collapsed');
         if (btnTypes) btnTypes.classList.remove('open');
 
-        // Affiche l'accueil
         document.getElementById('view-list').style.display = 'none';
         document.getElementById('view-home').style.display = 'block';
         window.scrollTo(0, 0); 
         renderHomeCounts();
+        armerBouclierHistorique();
+    }
 
-        // Nettoyage de l'adresse sans conflit
-        if (window.location.hash) {
-            history.replaceState(null, '', window.location.pathname + window.location.search);
+    // =========================================================================
+    // 🛡️ SYSTÈME UNIVERSEL DE NAVIGATION "RETOUR" & FERMETURE DE L'APPLI
+    // =========================================================================
+    let fermetureAutorisee = false;
+
+    function armerBouclierHistorique() {
+        if (fermetureAutorisee) return;
+        if (window.location.hash && window.location.hash.startsWith('#import=')) return;
+        if (!history.state || history.state.bouclier !== true) {
+            history.pushState({ bouclier: true }, '', window.location.pathname + window.location.search);
         }
     }
 
-    // NOUVEAU : Écouteur du bouton retour natif (téléphone/navigateur)
-    window.addEventListener('popstate', function(event) {
-        // 1. Sécurité : on ferme toutes les fenêtres superposées (modales) si elles sont ouvertes
-        if (typeof closeForm === 'function') closeForm();
-        if (typeof closeProfilModal === 'function') closeProfilModal();
-        if (typeof fermerQrModal === 'function') fermerQrModal();
-        if (typeof fermerModalFichesMasquees === 'function') fermerModalFichesMasquees();
-        document.querySelectorAll('.modal-overlay').forEach(m => m.classList.add('hidden'));
-
-        // 2. Gestion de l'affichage principal
-        if (window.location.hash !== '#saison') {
-            // Retour à l'accueil
-            document.getElementById('view-list').style.display = 'none';
-            document.getElementById('view-home').style.display = 'block';
-            renderHomeCounts();
-        } else {
-            // Retour sur la liste
-            document.getElementById('view-home').style.display = 'none';
-            document.getElementById('view-list').style.display = 'block';
+    // Arme le bouclier dès le chargement et au premier contact tactile sur l'écran
+    window.addEventListener('load', () => {
+        if (!window.location.hash || !window.location.hash.startsWith('#import=')) {
+            history.replaceState({ base: true }, '', window.location.pathname + window.location.search);
+            armerBouclierHistorique();
         }
+    });
+    document.addEventListener('touchstart', armerBouclierHistorique, { passive: true });
+    document.addEventListener('click', armerBouclierHistorique, true);
+
+    // Fonction pour quitter l'application (depuis le bouton Retour à l'accueil ou depuis Paramètres)
+    function quitterApplication() {
+        const confirmation = confirm("🚪 Voulez-vous vraiment fermer Le Petit Marché de mon Estomac ?");
+        if (!confirmation) {
+            armerBouclierHistorique();
+            return;
+        }
+
+        fermetureAutorisee = true;
+        closePopup('modal-settings');
+
+        // 1. Tentative de fermeture native (PWA / fenêtre)
+        try { window.close(); } catch (e) {}
+
+        // 2. Sortie de l'historique navigateur
+        setTimeout(() => {
+            history.go(-(history.length));
+        }, 50);
+
+        // 3. Écran de veille si l'OS mobile maintient la fenêtre ouverte
+        setTimeout(() => {
+            document.body.innerHTML = `
+                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; text-align:center; padding:25px; box-sizing:border-box; font-family:'Nunito',sans-serif; background:var(--bg-main); color:var(--text-main);">
+                    <img src="icones/logo.png" alt="Logo" style="width:110px; margin-bottom:20px; opacity:0.85;" onerror="this.style.display='none'">
+                    <h2 style="font-family:'Playfair Display',serif; color:var(--text-title); margin:0 0 10px 0;">À bientôt ! 🌿</h2>
+                    <p style="color:var(--text-muted); font-size:0.95rem; max-width:300px; line-height:1.5; margin-bottom:25px;">
+                        L'application est fermée. Vous pouvez maintenant balayer l'écran ou revenir à l'accueil de votre appareil.
+                    </p>
+                    <button onclick="location.reload()" style="background:linear-gradient(135deg, #D4A373 0%, #BC8A5F 100%); color:#FFF; border:none; padding:12px 24px; border-radius:16px; font-weight:800; font-size:0.95rem; cursor:pointer; box-shadow:0 4px 12px rgba(212,163,115,0.3);">
+                        🔄 Relancer l'application
+                    </button>
+                </div>
+            `;
+        }, 300);
+    }
+
+    // Intercepteur intelligent du bouton physique "Retour" (Mobile & Tablette)
+    window.addEventListener('popstate', function(event) {
+        if (fermetureAutorisee) return;
+
+        // 1. Sous-modale : Déplacer une recette
+        const modDeplacer = document.getElementById('modal-deplacer-recette');
+        if (modDeplacer && !modDeplacer.classList.contains('hidden') && modDeplacer.style.display !== 'none') {
+            fermerModalDeplacerRecette();
+            armerBouclierHistorique();
+            return;
+        }
+
+        // 2. Modale Lecture & Recherche de Recettes (Navigation interne étape par étape !)
+        const modRecette = document.getElementById('modal-recipe-search');
+        if (modRecette && modRecette.style.display === 'block') {
+            const vueDetail = document.getElementById('rec-vue-detail');
+            const vueListe = document.getElementById('rec-vue-liste');
+            const btnRetourListe = document.getElementById('btn-retour-liste');
+
+            if (vueDetail && vueDetail.style.display === 'block') {
+                // Si on vient de la liste des résultats, on retourne à la liste
+                if (btnRetourListe && btnRetourListe.style.display !== 'none') {
+                    retourListeRecettes();
+                } else {
+                    // Sinon on retourne au Carnet / Frigo / Fiche aliment
+                    fermerModalRecetteSmart();
+                }
+            } else if (vueListe && vueListe.style.display === 'block') {
+                retourAuHubChoix();
+            } else {
+                fermerModalRecetteSmart();
+            }
+            armerBouclierHistorique();
+            return;
+        }
+
+        // 3. Modale Carnet de Recettes Global (Mes Recettes / Mon Frigo / Mes Recherches)
+        const modCarnet = document.getElementById('modal-carnet-recettes');
+        if (modCarnet && modCarnet.style.display === 'block') {
+            fermerCarnetRecettes();
+            armerBouclierHistorique();
+            return;
+        }
+
+        // 4. Modale Scanner Alimentaire
+        const modScanner = document.getElementById('modal-scanner');
+        if (modScanner && !modScanner.classList.contains('hidden')) {
+            fermerScannerModal();
+            armerBouclierHistorique();
+            return;
+        }
+
+        // 5. Modale Formulaire d'ajout / modification d'une fiche
+        const modForm = document.getElementById('modal-form');
+        if (modForm && modForm.style.display === 'block') {
+            modForm.style.display = 'none';
+            armerBouclierHistorique();
+            return;
+        }
+
+        // 6. Modale QR Code & Partage PIN
+        const modQr = document.getElementById('qr-modal');
+        if (modQr && modQr.style.display === 'block') {
+            fermerQrModal();
+            armerBouclierHistorique();
+            return;
+        }
+
+        // 7. Modale Fiches Masquées
+        const modHidden = document.getElementById('hidden-items-modal');
+        if (modHidden && modHidden.style.display === 'block') {
+            fermerModalFichesMasquees();
+            armerBouclierHistorique();
+            return;
+        }
+
+        // 8. Modale Sélection du Profil Digestif
+        const modSelectProfil = document.getElementById('modal-select-profil');
+        if (modSelectProfil && !modSelectProfil.classList.contains('hidden')) {
+            fermerModalChangerProfil();
+            armerBouclierHistorique();
+            return;
+        }
+
+        // 9. Modale Coffre-Fort Cloud
+        const modCloud = document.getElementById('modal-cloud-setup');
+        if (modCloud && !modCloud.classList.contains('hidden')) {
+            fermerCloudSetup();
+            armerBouclierHistorique();
+            return;
+        }
+
+        // 10. Modales À Propos, Aide, Paramètres
+        const modOverlays = ['modal-about', 'modal-help', 'modal-settings'];
+        for (let idMod of modOverlays) {
+            const el = document.getElementById(idMod);
+            if (el && !el.classList.contains('hidden')) {
+                el.classList.add('hidden');
+                armerBouclierHistorique();
+                return;
+            }
+        }
+
+        // 11. Modale Confirmation Profil (Ancienne)
+        const modProfil = document.getElementById('modal-profil');
+        if (modProfil && (modProfil.classList.contains('show') || modProfil.style.display === 'flex')) {
+            closeProfilModal();
+            armerBouclierHistorique();
+            return;
+        }
+
+        // 12. Si un volet de filtres est déroulé dans la liste, on le referme d'abord
+        if (window.isFilterPanelOpen) {
+            toggleAdvancedFilters();
+            armerBouclierHistorique();
+            return;
+        }
+
+        // 13. Vue Liste d'une saison / catégorie -> Retour à l'Accueil
+        const viewList = document.getElementById('view-list');
+        if (viewList && viewList.style.display === 'block') {
+            goHome();
+            return;
+        }
+
+        // 14. On est sur l'Accueil et tout est fermé -> Demande de confirmation pour quitter l'appli !
+        quitterApplication();
     });
 
     let timerFermetureFiltres = null;
@@ -4967,15 +5304,44 @@ function changerModePreparation(mode) {
 }
 
 // === LE CERVEAU DE CALCUL DYNAMIQUE (CRU / CUIT & PROFILS) ===
+const groupCondimentsGlobal = ["Huile & Vinaigre", "Graines & Fruits secs", "Épices", "Condiment"];
+
+function estAlimentAvecCuisson(type) {
+    return ["Légume", "Fruit", "Légumineuse", ...groupFeculents, ...groupViandes, ...groupPoissons, ...groupLaitages, ...groupCondimentsGlobal].includes(type);
+}
+
+function exigeCuissonObligatoire(leg) {
+    const nomLower = removeAccents(leg.nom.toLowerCase());
+    // 1. Végétaux, Féculents, Légumineuses, Œufs et Bouillons qui exigent une cuisson
+    const exclusCrus = [
+        "pomme de terre", "rosti", "gnocchi", "riz", "pate", "pâte", "nouille", "couscous", "boulgour", "polenta", "sarrasin", "orge", "patate douce", "aubergine", "morille", "lentille", "haricot", "pois", "feve", "fève", "toor dal", "edamame", "quinoa", "panais", "manioc", "maizena", "topinambour", "châtaigne", "chataigne", "coing",
+        "oeuf", "bouillon", "raclette"
+    ];
+    if (exclusCrus.some(mot => nomLower.includes(mot))) return true;
+
+    // 2. Viandes qui ne se mangent jamais crues (hors charcuterie prête et bœuf/cheval en tartare)
+    if (groupViandes.includes(leg.type) && leg.type !== "Charcuterie") {
+        const viandesCruesPossibles = ["boeuf maigre", "cheval"];
+        if (!viandesCruesPossibles.some(m => nomLower.includes(m))) return true;
+    }
+    if (["boudin", "saucisse a rotir", "merguez", "saucisse au chou", "saucisson vaudois", "saucisson neuchatelois", "lard a griller"].some(m => nomLower.includes(m))) {
+        return true;
+    }
+
+    // 3. Poissons & Crustacés qui exigent une cuisson (hors fumés, conserves, crevettes cuites et poissons à sushi/ceviche)
+    if (groupPoissons.includes(leg.type)) {
+        const poissonsCrusOuPrets = ["saumon", "thon", "dorade", "sardine", "anchois", "truite fumee", "crevettes"];
+        if (!poissonsCrusOuPrets.some(m => nomLower.includes(m))) return true;
+    }
+
+    return false;
+}
+
 function getToleranceDynamique(leg, profil, mode) {
     let tolBase = leg.tolerance;
-    const aUnModeCuisson = ["Légume", "Fruit", "Légumineuse", ...groupFeculents].includes(leg.type);
-    
-    // 1. Liste des aliments toxiques ou totalement indigestes lorsqu'ils sont CRUS
-    // 1. Liste des aliments toxiques ou totalement indigestes lorsqu'ils sont CRUS
-    const exclusCrus = ["pomme de terre", "rosti", "gnocchi", "riz", "pate", "pâte", "nouille", "couscous", "boulgour", "polenta", "sarrasin", "orge", "patate douce", "aubergine", "morille", "lentille", "haricot", "pois", "feve", "fève", "toor dal", "edamame", "quinoa", "panais", "manioc", "maizena", "topinambour", "châtaigne", "chataigne", "coing"];
+    const aUnModeCuisson = estAlimentAvecCuisson(leg.type);
     const nomLower = removeAccents(leg.nom.toLowerCase());
-    const doitEtreCuit = exclusCrus.some(mot => nomLower.includes(mot));
+    const doitEtreCuit = exigeCuissonObligatoire(leg);
 
     // Si on est en mode CRU et que l'aliment EXIGE une cuisson :
     if (mode === 'cru' && doitEtreCuit) {
@@ -4984,15 +5350,28 @@ function getToleranceDynamique(leg, profil, mode) {
 
     let legVirtuel = { ...leg };
 
-    // 2. Si on est en mode CUIT : la cuisson ramollit les fibres et adoucit la chair
-    if (mode === 'cuit' && aUnModeCuisson) {
-        if (legVirtuel.fibres === 'Insolubles') legVirtuel.fibres = 'Solubles';
-        if (legVirtuel.texture === 'Ferme' || legVirtuel.texture === 'Fibreuse') legVirtuel.texture = 'Fondante';
+    // Cas particulier : Beurre ou huiles fragiles chauffés en mode CUIT
+    if (mode === 'cuit' && (nomLower.includes("beurre de cuisine") || nomLower.includes("colza"))) {
+        return { isAvoid: true, emoji: "🟠", color: "#C62828", tolBase: "🟠 À éviter (Cuit)" };
+    }
 
-        if (tolBase.includes("🔴") || tolBase.includes("🟠")) {
-            tolBase = "🟡 À limiter";
-        } else if (tolBase.includes("🟡")) {
-            tolBase = "🟢 À volonté";
+    // 2. Si on est en mode CUIT : la cuisson ramollit les fibres des végétaux et adoucit la chair
+    if (mode === 'cuit' && aUnModeCuisson) {
+        const estVegetalOuFeculent = ["Légume", "Fruit", "Légumineuse", ...groupFeculents].includes(leg.type);
+        if (estVegetalOuFeculent) {
+            if (legVirtuel.fibres === 'Insolubles') legVirtuel.fibres = 'Solubles';
+            if (legVirtuel.texture === 'Ferme' || legVirtuel.texture === 'Fibreuse') legVirtuel.texture = 'Fondante';
+
+            if (tolBase.includes("🔴") || tolBase.includes("🟠")) {
+                tolBase = "🟡 À limiter";
+            } else if (tolBase.includes("🟡")) {
+                tolBase = "🟢 À volonté";
+            }
+        } else if (groupViandes.includes(leg.type) || groupPoissons.includes(leg.type)) {
+            // Pour les viandes et poissons maigres/fermes, la cuisson douce attendrit les fibres musculaires
+            if (legVirtuel.texture === 'Ferme' && legVirtuel.graisses === 'Maigre') {
+                legVirtuel.texture = 'Fondante';
+            }
         }
     }
 
@@ -5197,9 +5576,9 @@ function renderCards() {
 
         advancedFiltersHtml += `</div>`; // Fermeture du panneau
 
-            const saisonsAvecCuisson = ["Printemps", "Été", "Automne", "Hiver", "Féculents", "Légumineuses", "Recommandés", "Favoris"];
+            const saisonsAvecCuisson = ["Printemps", "Été", "Automne", "Hiver", "Féculents", "Légumineuses", "Viandes", "Poissons", "Laitages", "Condiments", "Recommandés", "Favoris"];
             const afficherCuisson = saisonsAvecCuisson.includes(currentSaison);
-
+			
             let htmlBtnCru = '';
             let htmlBtnCuit = '';
             if (afficherCuisson) {
@@ -5240,7 +5619,7 @@ function renderCards() {
 
         filtered.forEach(leg => {			
             const card = document.createElement('div'); card.className = 'card';
-			const aUnModeCuisson = ["Légume", "Fruit", "Légumineuse", ...groupFeculents].includes(leg.type);
+			const aUnModeCuisson = estAlimentAvecCuisson(leg.type);
             
             const bgColors = { 
                 "Printemps": ["#D9EDDB", "#A6D2A9"], "Été": ["#FFF1C5", "#F3D068"], "Automne": ["#FFE5D9", "#F2B89E"], "Hiver": ["#D6E8FD", "#9CC5EE"], 
@@ -5271,7 +5650,7 @@ function renderCards() {
 
             const badges = { 
                 'Fruit': ['🍎 FRUIT', '#E91E63'], 'Féculent': ['🌾 FÉCULENT', '#A06A42'], 'Légumineuse': ['🫘 LÉGUMINEUSE', '#795548'], 'Laitage': ['🧀 LAITAGE', '#FBC02D'],
-                'Huile & Vinaigre': ['🫙 HUILE & VIN.', '#558B2F'], 'Graines & Fruits secs': ['🥜 GRAINES/FRUITS SECS', '#795548'], 'Épices': ['🌿 ÉPICES', '#2E7D32'],
+                'Huile & Vinaigre': ['🫙 HUILE & VIN.', '#558B2F'], 'Graines & Fruits secs': ['🥜 GRAINES & NOIX', '#795548'], 'Épices': ['🌿 ÉPICES', '#2E7D32'],
                 'Boisson Chaude': ['☕ BOISSON CHAUDE', '#6D4C41'], 'Boisson Froide': ['🍹 BOISSON FROIDE', '#0288D1'], 'Douceur': ['🍪 DOUCEUR', '#8D6E63'],
                 'Condiment': ['🌿 CONDIMENT', '#558B2F'], 'Boisson': ['☕ BOISSON', '#6D4C41'], 'Tubercule': ['🥔 TUBERCULE', '#8D6E63'], 'Riz': ['🍚 RIZ', '#A06A42'], 
 				'Pâtes & Nouilles': ['🍝 PÂTES & NOUILLES', '#D84315'], 'Pain & Galette': ['🥖 PAIN & GALETTE', '#795548'], 'Céréale & Grain': ['🌾 CÉRÉALE & GRAIN', '#A06A42'],
@@ -5299,17 +5678,20 @@ function renderCards() {
             }
 
             let tagsList = [];
-            if (leg.fodmap && leg.fodmap !== "N/A" && leg.fodmap !== "") tagsList.push('<span class="tag-badge">' + (leg.fodmap === 'Bas' ? '🟢' : '🔴') + ' FODMAP ' + leg.fodmap + '</span>');
-            if (leg.fructose && leg.fructose !== "N/A" && leg.fructose !== "") tagsList.push('<span class="tag-badge">' + (leg.fructose === 'Bas' ? '🟢' : '🔴') + ' Fruct. ' + leg.fructose + '</span>');
-            if (fibresAffichees && fibresAffichees !== "N/A" && fibresAffichees !== "") tagsList.push('<span class="tag-badge">' + (fibresAffichees === 'Solubles' ? '🟢' : (fibresAffichees === 'Sans' ? '⚪' : '🔴')) + ' Fibres ' + fibresAffichees + '</span>');
-            if (leg.cg && leg.cg !== "N/A" && leg.cg !== "") tagsList.push('<span class="tag-badge">' + (leg.cg === 'Bas' ? '🟢' : (leg.cg === 'Moyen' ? '🟡' : '🔴')) + ' CG ' + leg.cg + '</span>');
-            if (leg.acidite === "Acide") tagsList.push('<span class="tag-badge">🔴 Acide</span>');
-            if (leg.graisses === "Gras") tagsList.push('<span class="tag-badge">🔴 Gras</span>');
-            if (leg.gluten === "Avec") tagsList.push('<span class="tag-badge">🔴 Gluten</span>');
-            if (leg.lactose === "Avec") tagsList.push('<span class="tag-badge">🔴 Lactose</span>');
-            if (textureAffichee && textureAffichee !== "N/A" && textureAffichee !== "") tagsList.push('<span class="tag-badge">' + (textureAffichee === 'Fondante' ? '🟢' : (textureAffichee === 'Ferme' ? '🟡' : '🔴')) + ' Chair ' + textureAffichee + '</span>');
+            if (leg.fodmap && leg.fodmap !== "N/A" && leg.fodmap !== "") tagsList.push(`<span class="tag-badge" onclick="afficherBulleCritere(${leg.id}, 'fodmap', '${leg.fodmap}', this)">${leg.fodmap === 'Bas' ? '🟢' : '🔴'} FODMAP ${leg.fodmap}</span>`);
+            if (leg.fructose && leg.fructose !== "N/A" && leg.fructose !== "") tagsList.push(`<span class="tag-badge" onclick="afficherBulleCritere(${leg.id}, 'fructose', '${leg.fructose}', this)">${leg.fructose === 'Bas' ? '🟢' : '🔴'} Fruct. ${leg.fructose}</span>`);
+            if (fibresAffichees && fibresAffichees !== "N/A" && fibresAffichees !== "") tagsList.push(`<span class="tag-badge" onclick="afficherBulleCritere(${leg.id}, 'fibres', '${fibresAffichees}', this)">${fibresAffichees === 'Solubles' ? '🟢' : (fibresAffichees === 'Sans' ? '⚪' : '🔴')} Fibres ${fibresAffichees}</span>`);
+            if (leg.cg && leg.cg !== "N/A" && leg.cg !== "") tagsList.push(`<span class="tag-badge" onclick="afficherBulleCritere(${leg.id}, 'cg', '${leg.cg}', this)">${leg.cg === 'Bas' ? '🟢' : (leg.cg === 'Moyen' ? '🟡' : '🔴')} CG ${leg.cg}</span>`);
+            if (leg.acidite === "Acide") tagsList.push(`<span class="tag-badge" onclick="afficherBulleCritere(${leg.id}, 'acidite', 'Acide', this)">🔴 Acide</span>`);
+            if (leg.graisses === "Gras") tagsList.push(`<span class="tag-badge" onclick="afficherBulleCritere(${leg.id}, 'graisses', 'Gras', this)">🔴 Gras</span>`);
+            if (leg.gluten === "Avec") tagsList.push(`<span class="tag-badge" onclick="afficherBulleCritere(${leg.id}, 'gluten', 'Avec', this)">🔴 Gluten</span>`);
+            if (leg.lactose === "Avec") tagsList.push(`<span class="tag-badge" onclick="afficherBulleCritere(${leg.id}, 'lactose', 'Avec', this)">🔴 Lactose</span>`);
+            if (textureAffichee && textureAffichee !== "N/A" && textureAffichee !== "") tagsList.push(`<span class="tag-badge" onclick="afficherBulleCritere(${leg.id}, 'chair', '${textureAffichee}', this)">${textureAffichee === 'Fondante' ? '🟢' : (textureAffichee === 'Ferme' ? '🟡' : '🔴')} Chair ${textureAffichee}</span>`);
             
-            let tagsHTML = tagsList.length > 0 ? `<div style="display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-bottom: 18px;">${tagsList.join('')}</div>` : '';
+            let tagsHTML = `
+                <div id="bulle-critere-${leg.id}" class="tag-info-bubble" onclick="this.classList.remove('open')"></div>
+                ${tagsList.length > 0 ? `<div style="display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-bottom: 18px;">${tagsList.join('')}</div>` : ''}
+            `;
 			let soustitreHTML = leg.soustitre ? `<div style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-top: -6px; margin-bottom: 12px; font-weight: 700; letter-spacing: 0.5px;">${leg.soustitre}</div>` : '';
 
             let recipesArray = leg.recettesList || [];
@@ -5340,26 +5722,47 @@ function renderCards() {
 
             let evalCru = getToleranceDynamique(leg, currentProfil, 'cru');
             let evalCuit = getToleranceDynamique(leg, currentProfil, 'cuit');
+            const doitEtreCuit = exigeCuissonObligatoire(leg);
+            const vraiInconvenient = (leg.inconvenient && leg.inconvenient !== "-" && leg.inconvenient !== "Aucun.") ? leg.inconvenient : "";
 
             if (currentModePreparation === 'cru') {
                 prepLabel = `<span style="font-size:0.9rem;">${evalCru.emoji}</span> <span style="color:#2E7D32;">🥕 SPÉCIFICITÉ CRU</span>`;
-                prepText = (leg.inconvenient && leg.inconvenient !== "-" && leg.inconvenient !== "Aucun.") 
-                    ? leg.inconvenient 
-                    : "Aucun inconvénient particulier à cru.";
+                if (doitEtreCuit) {
+                    if (groupViandes.includes(leg.type) || groupPoissons.includes(leg.type) || leg.type === "oeuf") {
+                        prepText = "Ne se consomme pas cru (risque bactériologique et protéines mal assimilées à cru). " + vraiInconvenient;
+                    } else {
+                        prepText = "Indigeste à l'état cru, nécessite une cuisson préalable. " + vraiInconvenient;
+                    }
+                } else {
+                    prepText = vraiInconvenient || "Parfaitement toléré à l'état frais / cru.";
+                }
             } else {
                 prepLabel = `<span style="font-size:0.9rem;">${evalCuit.emoji}</span> <span style="color:#D84315;">🍗 SPÉCIFICITÉ CUIT</span>`;
-                
-                let vraiInconvenient = (leg.inconvenient && leg.inconvenient !== "-" && leg.inconvenient !== "Aucun.") ? leg.inconvenient : "";
 
                 if (aUnModeCuisson) {
-                    // 1. Liste des aliments toxiques ou totalement indigestes lorsqu'ils sont CRUS
-    const exclusCrus = ["pomme de terre", "rosti", "gnocchi", "riz", "pate", "pâte", "nouille", "couscous", "boulgour", "polenta", "sarrasin", "orge", "patate douce", "aubergine", "morille", "lentille", "haricot", "pois", "feve", "fève", "toor dal", "edamame", "quinoa", "panais", "manioc", "maizena", "topinambour", "châtaigne", "chataigne", "coing"];
-                    const doitEtreCuit = exclusCrus.some(mot => removeAccents(leg.nom.toLowerCase()).includes(mot));
-
-                    // LE VARIATEUR DE VOCABULAIRE PREMIUM (Choisit entre 0 et 7)
                     const indexVar = leg.id % 8; 
 
-                    if (doitEtreCuit) {
+                    if (groupViandes.includes(leg.type)) {
+                        prepText = (doitEtreCuit ? "La cuisson coagule les protéines et facilite le travail de l'estomac. " : "Cuit, attention à ne pas surcuire ni brûler les graisses. ") + (vraiInconvenient || "Privilégier une cuisson douce sans friture.");
+                    } else if (groupPoissons.includes(leg.type)) {
+                        prepText = "La cuisson douce (vapeur, papillote, court-bouillon) rend la chair ultra-fondante et digeste. " + (vraiInconvenient || "");
+                    } else if (groupLaitages.includes(leg.type)) {
+                        if (leg.type === "oeuf") {
+                            prepText = "Le blanc bien cuit et le jaune moelleux (coque, mollet, poché) offrent une digestibilité optimale. " + vraiInconvenient;
+                        } else if (removeAccents(leg.nom.toLowerCase()).includes("beurre de cuisine")) {
+                            prepText = "⚠️ Chauffé ou frit à la poêle, le beurre brûle, ralentit fortement l'estomac et favorise le reflux. Préférer cru ou fondu hors du feu.";
+                        } else {
+                            prepText = (vraiInconvenient ? vraiInconvenient + " " : "") + "En cuisson ou fondu, surveiller la teneur en matières grasses.";
+                        }
+                    } else if (groupCondimentsGlobal.includes(leg.type)) {
+                        if (leg.type === "Huile & Vinaigre") {
+                            prepText = removeAccents(leg.nom.toLowerCase()).includes("colza")
+                                ? "⚠️ Les huiles riches en oméga-3 (colza, noix, lin) se dégradent à la chaleur : toujours les ajouter à cru après cuisson !"
+                                : "En cuisson douce uniquement (ne jamais faire fumer un corps gras). " + vraiInconvenient;
+                        } else {
+                            prepText = "Infusé ou cuit dans le plat, son arôme se diffuse en douceur sans irriter la muqueuse. " + vraiInconvenient;
+                        }
+                    } else if (doitEtreCuit) {
                         const phrasesObligatoire = [
                             "Cuisson impérative (indigeste à cru). ",
                             "Ne se consomme que cuit. ",
@@ -5427,9 +5830,9 @@ function renderCards() {
                     <img src="icones/coeur.png" alt="Favori">
                 </button>
                 <div class="card-top-overlay">
-                    <div class="card-top-left"><div class="card-photo-round" style="border-color: ${tolColor};">${imgTag}<div class="tolerance-badge">${tolEmoji}</div></div></div>
+                    <div class="card-top-left"><div class="card-photo-round" style="border-color: ${tolColor}; cursor: pointer;" onclick="afficherBulleCritere(${leg.id}, 'tolerance', '${tolEmoji}', this)" title="Cliquer pour comprendre cette pastille">${imgTag}<div class="tolerance-badge">${tolEmoji}</div></div></div>
                     <div class="card-top-center"><span class="category-badge" style="color: ${badgeColor}; border-color: ${badgeColor};">${badgeType}</span></div>
-			<div class="card-top-center"><span class="category-badge" style="color: ${badgeColor}; border-color: ${badgeColor};">${badgeType}</span></div>${aUnModeCuisson ? `<div class="card-top-prep"><span class="badge-prep-mode ${currentModePreparation}">${currentModePreparation === 'cru' ? '🥕 CRU' : '🍗 CUIT'}</span></div>` : ''}
+                    ${aUnModeCuisson ? `<div class="card-top-prep"><span class="badge-prep-mode ${currentModePreparation}" style="cursor: pointer;" onclick="afficherBulleCritere(${leg.id}, 'cuisson', '${currentModePreparation}', this)">${currentModePreparation === 'cru' ? '🥕 CRU' : '🍗 CUIT'}</span></div>` : ''}
                 </div>
                 <div class="card-content">
                     <h2 class="card-title-elegant">${leg.nom}</h2>
@@ -5470,6 +5873,133 @@ function renderCards() {
              </div>`;
             container.appendChild(card);
         });
+    }
+
+// === MOTEUR DES BULLES EXPLICATIVES SUR LES FICHES ALIMENTS ===
+    function afficherBulleCritere(idAliment, typeCritere, valeur, elementClique) {
+        const bulle = document.getElementById(`bulle-critere-${idAliment}`);
+        if (!bulle) return;
+
+        const cleActive = `${typeCritere}_${valeur}`;
+        if (bulle.classList.contains('open') && bulle.getAttribute('data-cle') === cleActive) {
+            bulle.classList.remove('open');
+            bulle.removeAttribute('data-cle');
+            if (elementClique && elementClique.classList.contains('tag-badge')) elementClique.classList.remove('active-tag');
+            return;
+        }
+
+        // Retire la surbrillance des autres badges de la même carte
+        const card = bulle.closest('.card');
+        if (card) {
+            card.querySelectorAll('.tag-badge').forEach(b => b.classList.remove('active-tag'));
+        }
+        if (elementClique && elementClique.classList.contains('tag-badge')) {
+            elementClique.classList.add('active-tag');
+        }
+
+        const textes = {
+            'fodmap_Bas': {
+                titre: "🟢 FODMAP Bas (Digestion & Intestin)",
+                desc: "Pauvre en glucides fermentescibles. Cet aliment ne provoque pas de fermentation excessive ni de gaz dans l'intestin."
+            },
+            'fodmap_Haut': {
+                titre: "🔴 FODMAP Haut (Digestion & Intestin)",
+                desc: "Riche en petits sucres fermentescibles (fructanes, polyols, GOS). Peut provoquer ballonnements et spasmes au-delà d'une petite portion."
+            },
+            'fructose_Bas': {
+                titre: "🟢 Fructose Bas (Digestion & Métabolisme)",
+                desc: "Faible taux de fructose libre : s'absorbe facilement dans l'intestin grêle sans provoquer d'inconfort."
+            },
+            'fructose_Haut': {
+                titre: "🔴 Fructose Haut (Digestion & Métabolisme)",
+                desc: "Riche en fructose libre. En excès, il est mal absorbé par l'intestin et peut fermenter rapidement."
+            },
+            'fibres_Solubles': {
+                titre: "🟢 Fibres Solubles (Digestion Douce)",
+                desc: "Au contact de l'eau, ces fibres forment un gel très doux (pectine, mucilage) qui protège la muqueuse et régule le transit sans irriter."
+            },
+            'fibres_Insolubles': {
+                titre: "🔴 Fibres Insolubles (Vigilance Côlon)",
+                desc: "Fibres fermes qui ne se dissolvent pas. Peuvent irriter un côlon sensible ou des diverticules. Astuce : la cuisson ou le mixage les adoucit !"
+            },
+            'fibres_Sans': {
+                titre: "⚪ Sans Fibres (Repos Intestinal)",
+                desc: "Aliment totalement dépourvu de fibres végétales : ne laisse aucun résidu fibreux à broyer pour le côlon."
+            },
+            'cg_Bas': {
+                titre: "🟢 Charge Glycémique Basse (Métabolisme)",
+                desc: "N'entraîne pas de pic de sucre dans le sang ni de hausse brusque d'insuline. Idéal pour la glycémie et le poids."
+            },
+            'cg_Moyen': {
+                titre: "🟡 Charge Glycémique Moyenne (Métabolisme)",
+                desc: "Impact modéré sur la glycémie. À consommer en portion normale, idéalement accompagné de légumes ou de protéines."
+            },
+            'cg_Élevé': {
+                titre: "🔴 Charge Glycémique Élevée (Métabolisme)",
+                desc: "Fait monter rapidement le taux de sucre sanguin. À limiter ou à associer à des fibres/bonnes graisses si vous surveillez votre glycémie."
+            },
+            'acidite_Acide': {
+                titre: "🔴 Aliment Acide (Vigilance Estomac)",
+                desc: "Peut irriter une muqueuse gastrique enflammée (gastrite) ou favoriser les remontées acides (reflux RGO)."
+            },
+            'graisses_Gras': {
+                titre: "🔴 Riche en Lipides (Vidange de l'Estomac)",
+                desc: "Les graisses ralentissent la vidange de l'estomac, ce qui peut donner une sensation de lourdeur ou favoriser le reflux."
+            },
+            'gluten_Avec': {
+                titre: "🔴 Contient du Gluten (Intolérance)",
+                desc: "Présence de protéines de blé, seigle, orge ou épeautre. À éviter en cas de maladie cœliaque ou d'hypersensibilité au gluten."
+            },
+            'lactose_Avec': {
+                titre: "🔴 Contient du Lactose (Intolérance)",
+                desc: "Contient le sucre naturel du lait. Peut causer ballonnements et inconfort si vous manquez d'enzyme lactase."
+            },
+            'chair_Fondante': {
+                titre: "🟢 Chair Fondante (Travail de l'Estomac)",
+                desc: "Texture tendre et souple : demande très peu d'effort mécanique à l'estomac pour être digérée."
+            },
+            'chair_Ferme': {
+                titre: "🟡 Chair Ferme (Mastication)",
+                desc: "Texture dense qui demande de bien mâcher pour faciliter le travail de l'estomac."
+            },
+            'chair_Fibreuse': {
+                titre: "🔴 Chair Fibreuse / Coriace (Vigilance)",
+                desc: "Fibres longues ou dures : nécessite d'être épluché, haché finement ou mijoté longuement pour ne pas fatiguer la digestion."
+            },
+            'tolerance_🟢': {
+                titre: "🟢 Tolérance : À volonté",
+                desc: "Cet aliment est parfaitement compatible avec votre profil digestif actuel et le mode de préparation sélectionné."
+            },
+            'tolerance_🟡': {
+                titre: "🟡 Tolérance : À limiter",
+                desc: "Compatible en quantité raisonnable. Écoutez votre ressenti et suivez les conseils de préparation de la fiche."
+            },
+            'tolerance_🟠': {
+                titre: "🟠 Tolérance : À éviter",
+                desc: "Déconseillé pour votre profil actuel (ou nécessite d'être basculé en mode 🍗 Cuit pour devenir digeste)."
+            },
+            'cuisson_cru': {
+                titre: "🥕 Mode Actif : CRU / FRAIS",
+                desc: "Évaluation de l'aliment tel quel, sans cuisson. Cliquez sur « 🍗 Cuit » en haut de la page pour voir comment la chaleur transforme sa tolérance !"
+            },
+            'cuisson_cuit': {
+                titre: "🍗 Mode Actif : CUIT",
+                desc: "Évaluation après cuisson : la chaleur ramollit la cellulose des végétaux et coagule les protéines pour faciliter le travail digestif."
+            }
+        };
+
+        const info = textes[cleActive];
+        if (!info) return;
+
+        bulle.setAttribute('data-cle', cleActive);
+        bulle.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:4px;">
+                <strong style="font-size:0.86rem; color:#8D4925;">${info.titre}</strong>
+                <span style="font-size:0.8rem; cursor:pointer; opacity:0.7; line-height:1;">✖</span>
+            </div>
+            <div>${info.desc}</div>
+        `;
+        bulle.classList.add('open');
     }
 
     document.getElementById('f-image-file').addEventListener('change', function(e) {
@@ -5579,8 +6109,6 @@ function renderCards() {
 
     function closeForm() { 
         document.getElementById('modal-form').style.display = 'none'; 
-        // NOUVEAU : On nettoie l'historique quand on annule ou qu'on enregistre
-        if (window.location.hash === '#modal') history.back();
     }
 
     function saveFiche() {
