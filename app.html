@@ -1,5 +1,5 @@
 <!-- ================================================================================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 17.50 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 17.60 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -2110,7 +2110,7 @@ body.dark-mode .btn-remove-recette {
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v17.50</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v17.60</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -3242,7 +3242,7 @@ body.dark-mode .btn-remove-recette {
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "17.50";
+    const APP_VERSION = "17.60";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -5054,34 +5054,39 @@ function afficherResultatProduitScan(product) {
         fermetureAutorisee = true;
         closePopup('modal-settings');
 
-        // 1. Tentative de fermeture native (PWA / fenêtre)
+        // 1. Fermeture native (PWA) + recul cran par cran jusqu'à sortie complète de l'application sur mobile
         try { window.close(); } catch (e) {}
+        history.back();
 
-        // 2. Sortie de l'historique navigateur
+        // 2. Secours uniquement sur PC si le navigateur bureau refuse de fermer l'onglet après 800ms
         setTimeout(() => {
-            history.go(-(history.length));
-        }, 50);
+            try { window.close(); } catch (e) {}
+            history.back();
+        }, 150);
 
-        // 3. Écran de veille si l'OS mobile maintient la fenêtre ouverte
         setTimeout(() => {
             document.body.innerHTML = `
                 <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; text-align:center; padding:25px; box-sizing:border-box; font-family:'Nunito',sans-serif; background:var(--bg-main); color:var(--text-main);">
                     <img src="icones/logo.png" alt="Logo" style="width:110px; margin-bottom:20px; opacity:0.85;" onerror="this.style.display='none'">
                     <h2 style="font-family:'Playfair Display',serif; color:var(--text-title); margin:0 0 10px 0;">À bientôt ! 🌿</h2>
                     <p style="color:var(--text-muted); font-size:0.95rem; max-width:300px; line-height:1.5; margin-bottom:25px;">
-                        L'application est fermée. Vous pouvez maintenant balayer l'écran ou revenir à l'accueil de votre appareil.
+                        L'application est fermée.
                     </p>
                     <button onclick="location.reload()" style="background:linear-gradient(135deg, #D4A373 0%, #BC8A5F 100%); color:#FFF; border:none; padding:12px 24px; border-radius:16px; font-weight:800; font-size:0.95rem; cursor:pointer; box-shadow:0 4px 12px rgba(212,163,115,0.3);">
                         🔄 Relancer l'application
                     </button>
                 </div>
             `;
-        }, 300);
+        }, 800);
     }
 
     // Intercepteur intelligent du bouton physique "Retour" (Mobile & Tablette)
     window.addEventListener('popstate', function(event) {
-        if (fermetureAutorisee) return;
+        if (fermetureAutorisee) {
+            try { window.close(); } catch (e) {}
+            history.back();
+            return;
+        }
 
         // 1. Sous-modale : Déplacer une recette
         const modDeplacer = document.getElementById('modal-deplacer-recette');
