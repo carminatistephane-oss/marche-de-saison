@@ -3,7 +3,7 @@
 // VERSION DU CACHE : v18.50 (Mise à jour auto des Recettes Maison)
 // ========================================================
 
-const CACHE_NAME = 'marche-cache-v18.50';
+const CACHE_NAME = 'marche-cache-v18.60';
 
 // Fichiers vitaux à stocker pour le fonctionnement 100% hors-ligne
 const urlsToCache = [

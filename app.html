@@ -1,5 +1,5 @@
 <!-- ================================================================================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 18.50 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 18.60 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -2217,7 +2217,7 @@ body.dark-mode .course-item-row .course-item-sub {
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v18.50</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v18.60</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -3378,7 +3378,7 @@ body.dark-mode .course-item-row .course-item-sub {
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "18.50";
+    const APP_VERSION = "18.60";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -11006,15 +11006,27 @@ function mettreAJourCompteurCourses() {
     }
 }
 
-// Détecte automatiquement le rayon de supermarché d'un ingrédient (gère les "&" et les sous-titres !)
+// Détecte automatiquement le rayon de supermarché d'un ingrédient
 function detecterRayonSupermarche(texteIngredient) {
-    const clean = removeAccents(texteIngredient.toLowerCase())
-        .replace(/c\.\s*a\s*cafe/g, '')
-        .replace(/cuilleres?\s*a\s*cafe/g, '');
+    // 1. Enlever les accents et mettre en minuscules
+    let clean = removeAccents(texteIngredient.toLowerCase());
 
-    // Ingrédients de boulangerie/pâtisserie courants (poudre à lever, levure, farine...)
-    if (["poudre a lever", "levure", "bicarbonate", "farine", "fecule"].some(m => clean.includes(m))) {
+    // 2. Retirer "c. à café" pour ne pas confondre avec la boisson "café"
+    clean = clean.replace(/c\.\s*a\s*cafe/g, '').replace(/cuilleres?\s*a\s*cafe/g, '');
+
+    // 3. Le secret : on ignore ce qui est entre parenthèses pour classer (ex: le "ou bouillon" du vin)
+    // et on enlève les "s" du pluriel pour l'analyse.
+    const textPrincipal = clean.replace(/\s*\(.*?\)/g, '').replace(/s\b/g, '');
+
+    // 4. Mots-clés stricts (le "\b" oblige l'ordinateur à chercher le mot EXACT, donc "poireau" ne déclenche pas "eau")
+    if (/\b(spatzli|spaetzli|spatzle|spaetzle|poudre a lever|levure|bicarbonate|farine|fecule)\b/i.test(textPrincipal)) {
         return "🍝 Épicerie, Pains & Féculents";
+    }
+    if (/\b(bouillon|sel|poivre|paprika|curry|safran|vinaigre|moutarde|huile)\b/i.test(textPrincipal)) {
+        return "🌿 Condiments, Huiles & Épices";
+    }
+    if (/\b(eau|vin|biere|rhum|kirsch)\b/i.test(textPrincipal)) {
+        return "☕ Boissons & Douceurs";
     }
 
     const donnerNomRayon = (saison) => {
@@ -11027,32 +11039,26 @@ function detecterRayonSupermarche(texteIngredient) {
         return "🛍️ Autres articles";
     };
 
-    // On extrait tous les noms (coupés sur "&") et on trie du plus long au plus court ("huile d'avocat" gagne sur "fondue" !)
-    let clesNoms = [];
-    legumes.forEach(alim => {
-        if (!alim || !alim.nom) return;
-        removeAccents(alim.nom.toLowerCase()).split('&').forEach(p => {
-            const mot = p.trim().replace(/s\b/g, '');
-            if (mot.length >= 3) clesNoms.push({ mot: mot, saison: alim.saison });
-        });
-    });
-    clesNoms.sort((a, b) => b.mot.length - a.mot.length);
+    const legumesTries = [...legumes].sort((a, b) => b.nom.length - a.nom.length);
 
-    // 1. Recherche d'abord sur l'ingrédient principal (hors parenthèses), puis sur toute la ligne
-    const cleanSansParentheses = clean.replace(/\s*\(.*?\)/g, '');
-    for (let cible of [cleanSansParentheses, clean]) {
-        for (let item of clesNoms) {
-            const regex = new RegExp(`(^|[^a-z])${item.mot}[sx]?([^a-z]|$)`, 'i');
-            if (regex.test(cible)) return donnerNomRayon(item.saison);
+    // 5. Recherche dans les noms des fiches (en coupant sur "&")
+    for (let alim of legumesTries) {
+        if (!alim || !alim.nom) continue;
+        const partiesNom = removeAccents(alim.nom.toLowerCase()).split('&').map(p => p.trim().replace(/s\b/g, ''));
+        for (let partie of partiesNom) {
+            if (partie.length >= 3) {
+                const regex = new RegExp(`(^|[^a-z])${partie}([^a-z]|$)`, 'i');
+                if (regex.test(textPrincipal)) return donnerNomRayon(alim.saison);
+            }
         }
     }
 
-    // 2. Recherche dans les sous-titres (muscade, badiane, cardamome, passata...)
+    // 6. Recherche dans les sous-titres
     for (let alim of legumes) {
         if (!alim || !alim.soustitre) continue;
         const synonymes = removeAccents(alim.soustitre.toLowerCase()).split(/[,\/]+/).map(s => s.trim().replace(/s\b/g, ''));
         for (let syn of synonymes) {
-            if (syn.length >= 4 && clean.includes(syn)) {
+            if (syn.length >= 4 && textPrincipal.includes(syn)) {
                 return donnerNomRayon(alim.saison);
             }
         }
