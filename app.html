@@ -1,5 +1,5 @@
 <!-- ================================================================================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 17.60 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 17.70 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -2110,7 +2110,7 @@ body.dark-mode .btn-remove-recette {
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v17.60</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v17.70</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -2731,14 +2731,6 @@ body.dark-mode .btn-remove-recette {
           🔄 Réparer les fiches de base
       </button>
 
-      <!-- SÉPARATEUR DISCRET -->
-      <div style="border-top: 1px dashed var(--border-color); margin: 8px 0 4px 0;"></div>
-
-      <!-- 6. Fermer l'application -->
-      <button class="settings-btn" onclick="quitterApplication()" style="background-color: #FFF5F5; border-color: #FFCDCD; color: #C62828; font-weight: 800; text-align: center;">
-          🚪 Fermer l'application
-      </button>
-
       <!-- Bouton Admin caché -->
       <button class="settings-btn" id="btn-admin-reset" onclick="localStorage.clear(); location.reload();" style="display: none; background-color: #FFF0F0; color: #D32F2F; border-color: #FFCDCD; margin-top: 10px;">
           🔧 Forcer la mise à jour (Réinitialiser)
@@ -3242,7 +3234,7 @@ body.dark-mode .btn-remove-recette {
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "17.60";
+    const APP_VERSION = "17.70";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -4933,9 +4925,7 @@ function afficherResultatProduitScan(product) {
         document.getElementById('view-home').style.display = 'none';
         document.getElementById('view-list').style.display = 'block';
         window.scrollTo(0, 0); 
-        
-        // NOUVEAU : On ajoute une étape dans l'historique du téléphone
-        history.pushState({ vue: 'liste' }, '', '#saison');
+        armerBouclierHistorique();
         
         const titleEl = document.getElementById('saison-title-container');
         const titres = { "Recommandés": "", "Printemps": "🌼", "Été": "☀", "Automne": svgAutomne, "Hiver": "❄", "Féculents": "🌾", "Légumineuses": "🫘", "Viandes": "🥩", "Poissons": "🐟", "Laitages": "🧀", "Condiments": "🌿", "Boissons": "☕" };
@@ -5021,63 +5011,58 @@ function afficherResultatProduitScan(product) {
     }
 
     // =========================================================================
-    // 🛡️ SYSTÈME UNIVERSEL DE NAVIGATION "RETOUR" & FERMETURE DE L'APPLI
+    // 🛡️ SYSTÈME UNIVERSEL DE NAVIGATION "RETOUR" & VRAIE FERMETURE NATIVE
     // =========================================================================
-    let fermetureAutorisee = false;
+    let attenteSecondRetourQuitter = false;
+    let timerQuitter = null;
 
     function armerBouclierHistorique() {
-        if (fermetureAutorisee) return;
+        if (attenteSecondRetourQuitter) return;
         if (window.location.hash && window.location.hash.startsWith('#import=')) return;
         if (!history.state || history.state.bouclier !== true) {
             history.pushState({ bouclier: true }, '', window.location.pathname + window.location.search);
         }
     }
 
-    // Arme le bouclier dès le chargement et au premier contact tactile sur l'écran
     window.addEventListener('load', () => {
         if (!window.location.hash || !window.location.hash.startsWith('#import=')) {
             history.replaceState({ base: true }, '', window.location.pathname + window.location.search);
             armerBouclierHistorique();
         }
     });
-    document.addEventListener('touchstart', armerBouclierHistorique, { passive: true });
+
+    // Si l'utilisateur touche l'écran de l'application, on annule la sortie et on réarme la protection
+    document.addEventListener('touchstart', () => {
+        if (attenteSecondRetourQuitter) {
+            attenteSecondRetourQuitter = false;
+            const toastExit = document.getElementById('exit-app-toast');
+            if (toastExit) toastExit.style.display = 'none';
+        }
+        armerBouclierHistorique();
+    }, { passive: true });
+
     document.addEventListener('click', armerBouclierHistorique, true);
 
-    // Fonction pour quitter l'application (depuis le bouton Retour à l'accueil ou depuis Paramètres)
-    function quitterApplication() {
-        const confirmation = confirm("🚪 Voulez-vous vraiment fermer Le Petit Marché de mon Estomac ?");
-        if (!confirmation) {
-            armerBouclierHistorique();
-            return;
+    function demanderConfirmationSortieNative() {
+        attenteSecondRetourQuitter = true;
+
+        // Crée ou affiche une jolie bannière flottante en bas de l'écran
+        let toastExit = document.getElementById('exit-app-toast');
+        if (!toastExit) {
+            toastExit = document.createElement('div');
+            toastExit.id = 'exit-app-toast';
+            toastExit.style.cssText = "position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:#2C3E50; color:#FFF8F0; padding:12px 20px; border-radius:25px; font-family:'Nunito',sans-serif; font-weight:800; font-size:0.85rem; box-shadow:0 8px 25px rgba(0,0,0,0.35); border:1.5px solid #D4A373; z-index:9999; white-space:nowrap; text-align:center;";
+            document.body.appendChild(toastExit);
         }
+        toastExit.innerHTML = "🚪 Appuyez encore sur <strong>Retour</strong> pour quitter";
+        toastExit.style.display = 'block';
 
-        fermetureAutorisee = true;
-        closePopup('modal-settings');
-
-        // 1. Fermeture native (PWA) + recul cran par cran jusqu'à sortie complète de l'application sur mobile
-        try { window.close(); } catch (e) {}
-        history.back();
-
-        // 2. Secours uniquement sur PC si le navigateur bureau refuse de fermer l'onglet après 800ms
-        setTimeout(() => {
-            try { window.close(); } catch (e) {}
-            history.back();
-        }, 150);
-
-        setTimeout(() => {
-            document.body.innerHTML = `
-                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; text-align:center; padding:25px; box-sizing:border-box; font-family:'Nunito',sans-serif; background:var(--bg-main); color:var(--text-main);">
-                    <img src="icones/logo.png" alt="Logo" style="width:110px; margin-bottom:20px; opacity:0.85;" onerror="this.style.display='none'">
-                    <h2 style="font-family:'Playfair Display',serif; color:var(--text-title); margin:0 0 10px 0;">À bientôt ! 🌿</h2>
-                    <p style="color:var(--text-muted); font-size:0.95rem; max-width:300px; line-height:1.5; margin-bottom:25px;">
-                        L'application est fermée.
-                    </p>
-                    <button onclick="location.reload()" style="background:linear-gradient(135deg, #D4A373 0%, #BC8A5F 100%); color:#FFF; border:none; padding:12px 24px; border-radius:16px; font-weight:800; font-size:0.95rem; cursor:pointer; box-shadow:0 4px 12px rgba(212,163,115,0.3);">
-                        🔄 Relancer l'application
-                    </button>
-                </div>
-            `;
-        }, 800);
+        if (timerQuitter) clearTimeout(timerQuitter);
+        timerQuitter = setTimeout(() => {
+            attenteSecondRetourQuitter = false;
+            if (toastExit) toastExit.style.display = 'none';
+            armerBouclierHistorique();
+        }, 3500);
     }
 
     // Intercepteur intelligent du bouton physique "Retour" (Mobile & Tablette)
@@ -5209,8 +5194,8 @@ function afficherResultatProduitScan(product) {
             return;
         }
 
-        // 14. On est sur l'Accueil et tout est fermé -> Demande de confirmation pour quitter l'appli !
-        quitterApplication();
+        // 14. On est sur l'Accueil et tout est fermé -> Un 2e appui sur Retour ferme totalement l'appli !
+        demanderConfirmationSortieNative();
     });
 
     let timerFermetureFiltres = null;
