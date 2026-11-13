@@ -1,9 +1,9 @@
 // ========================================================
 // SERVICE WORKER - LE PETIT MARCHÉ DE MON ESTOMAC
-// VERSION DU CACHE : v17.80 (Intégration des 10 Classeurs Recettes Maison)
+// VERSION DU CACHE : v18.00 (Mise à jour auto des Recettes Maison)
 // ========================================================
 
-const CACHE_NAME = 'marche-cache-v17.80';
+const CACHE_NAME = 'marche-cache-v18.00';
 
 // Fichiers vitaux à stocker pour le fonctionnement 100% hors-ligne
 const urlsToCache = [
@@ -16,6 +16,8 @@ const urlsToCache = [
   './icones/coeur.png',
   './icones/favoris_02.png',
   './icones/recommandes_02.png',
+  './icones/carnet_recette.png',
+  './icones/scanner.png',
   './icones/icn-192.png',
   './icones/icn-512.png',
 
@@ -36,7 +38,7 @@ self.addEventListener('install', (event) => {
     );
 });
 
-// 2. ACTIVATION : Nettoyage automatique des anciens caches (v13.05, v12, etc.)
+// 2. ACTIVATION : Nettoyage automatique des anciens caches
 self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((listeCaches) => {
@@ -52,15 +54,20 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// 3. DISTRIBUTION (RÉSEAU D'ABORD, CACHE EN SECOURS + MISE EN CACHE AUTOMATIQUE DES PHOTOS)
+// 3. DISTRIBUTION (RÉSEAU EN DIRECT SANS CACHE DISQUE POUR LES RECETTES, CACHE EN SECOURS HORS-LIGNE)
 self.addEventListener('fetch', (event) => {
     // Sécurité : Ignorer les requêtes non-GET ou externes non-HTTP
     if (event.request.method !== 'GET' || !event.request.url.startsWith('http')) return;
 
+    // Si c'est le fichier des recettes maison, on force la vérification directe sur GitHub ('no-cache')
+    // pour que tout ajout de recette soit visible immédiatement sans jamais changer la version de sw.js !
+    const estFichierRecettes = event.request.url.includes('recettes_maison.js');
+    const optionsFetch = estFichierRecettes ? { cache: 'no-cache' } : {};
+
     event.respondWith(
-        fetch(event.request)
+        fetch(event.request, optionsFetch)
             .then((reponseReseau) => {
-                // Dès qu'une photo de recette est vue, elle est stockée en cache hors-ligne !
+                // Dès qu'une recette ou photo est vue, elle est mise à jour dans le cache hors-ligne !
                 if (reponseReseau && reponseReseau.status === 200) {
                     const copieReponse = reponseReseau.clone();
                     caches.open(CACHE_NAME).then((cache) => {
@@ -70,7 +77,7 @@ self.addEventListener('fetch', (event) => {
                 return reponseReseau;
             })
             .catch(() => {
-                // Si pas d'internet (hors-ligne/métro), on sert la réserve du cache
+                // Si pas d'internet (hors-ligne), on sert la réserve du cache
                 return caches.match(event.request).then((reponseEnCache) => {
                     if (reponseEnCache) {
                         return reponseEnCache;
