@@ -1,5 +1,5 @@
 <!-- ================================================================================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 18.70 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 19.00 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -2153,6 +2153,48 @@ body.dark-mode .course-item-row .course-item-sub {
     color: #FFE0B2 !important;
 }
 
+/* ======================================================== */
+/* CALCULATEUR DE PORTIONS DYNAMIQUE (- 1 / 2 / 3 / 4 +)    */
+/* ======================================================== */
+.portion-stepper {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(212, 163, 115, 0.16);
+    border: 1.5px solid #D4A373;
+    color: var(--accent-dark);
+    padding: 3px 6px;
+    border-radius: 16px;
+    font-size: 0.76rem;
+    font-weight: 800;
+}
+.btn-portion-step {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1px solid #D4A373;
+    background: #FFFDF8;
+    color: #A06A42;
+    font-weight: 900;
+    font-size: 0.9rem;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: transform 0.12s ease, background 0.15s ease;
+}
+.btn-portion-step:active {
+    transform: scale(0.9);
+    background: #D4A373;
+    color: #FFFFFF;
+}
+.btn-portion-step:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
@@ -2217,7 +2259,7 @@ body.dark-mode .course-item-row .course-item-sub {
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v18.70</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v19.00</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -3382,7 +3424,7 @@ body.dark-mode .course-item-row .course-item-sub {
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "18.70";
+    const APP_VERSION = "19.00";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -7810,7 +7852,28 @@ function enregistrerRecetteTheMealDB() {
         url: recetteTheMealDBEnCours.sourceUrl || recetteTheMealDBEnCours.strSource || recetteTheMealDBEnCours.strYoutube || (recetteTheMealDBEnCours.idMeal ? `https://www.themealdb.com/meal/${recetteTheMealDBEnCours.idMeal}` : ""),
         idMeal: recetteTheMealDBEnCours.idMeal || "",
         thumb: recetteTheMealDBEnCours.image || recetteTheMealDBEnCours.strMealThumb || "",
-        ingredients: document.getElementById('rec-ingredients-detail')?.innerHTML || '',
+        ingredients: (() => {
+            const ul = document.getElementById('rec-ingredients-detail');
+            if (!ul) return '';
+            const clone = ul.cloneNode(true);
+            clone.querySelectorAll('li').forEach(li => {
+                const wrapper = li.querySelector('.ing-texte-traduisible');
+                if (wrapper) {
+                    const baseTxt = wrapper.getAttribute('data-base-ing-text');
+                    const puce = wrapper.getAttribute('data-puce') || '🟢';
+                    const conseilHtml = wrapper.getAttribute('data-conseil-html') || '';
+                    if (baseTxt) {
+                        li.innerHTML = `${puce} ${baseTxt} ${conseilHtml}`.trim();
+                    } else {
+                        li.innerHTML = wrapper.innerHTML;
+                    }
+                }
+                li.querySelectorAll('button, .btn-ing-course, .btn-ing-frigo, .badge-au-frigo').forEach(el => el.remove());
+                li.removeAttribute('style');
+                li.className = '';
+            });
+            return clone.innerHTML;
+        })(),
         instructions: recetteTheMealDBEnCours.instructions || recetteTheMealDBEnCours.strInstructions || "",
         statut: recetteTheMealDBEnCours.statut || analyse.statut || '🟢'
     };
@@ -8990,7 +9053,118 @@ async function traduireTexteLong(texte) {
     return await traduireTexteEnFrancais(texte.slice(0, 1500));
 }
 
-// Traduction complète en 3 requêtes légères (Titre + Ingrédients groupés + Étapes)
+// Convertisseur automatique des unités anglo-saxonnes (lbs, oz, cups, pint, inch, °F) en système métrique (g, ml, cm, °C)
+function convertirMesuresAnglaisesEnMetrique(texte) {
+    if (!texte) return "";
+    let str = texte
+        .replace(/½/g, ' 1/2')
+        .replace(/¼/g, ' 1/4')
+        .replace(/¾/g, ' 3/4')
+        .replace(/⅓/g, ' 1/3')
+        .replace(/⅔/g, ' 2/3')
+        .replace(/\s+/g, ' ');
+
+    const lireValeur = (qteStr) => {
+        qteStr = qteStr.trim();
+        const mixMatch = qteStr.match(/^(\d+)\s+(\d+)\/(\d+)$/);
+        if (mixMatch) return parseFloat(mixMatch[1]) + (parseFloat(mixMatch[2]) / parseFloat(mixMatch[3]));
+        const fracMatch = qteStr.match(/^(\d+)\/(\d+)$/);
+        if (fracMatch) return parseFloat(fracMatch[1]) / parseFloat(fracMatch[2]);
+        const rangeMatch = qteStr.match(/^(\d+)\s*-\s*(\d+)$/);
+        if (rangeMatch) return (parseFloat(rangeMatch[1]) + parseFloat(rangeMatch[2])) / 2;
+        return parseFloat(qteStr.replace(',', '.')) || 1;
+    };
+
+    const arrondirCuisine = (val) => {
+        if (val >= 100) return Math.round(val / 10) * 10;
+        if (val >= 10) return Math.round(val / 5) * 5;
+        return Math.round(val);
+    };
+
+    const lower = str.toLowerCase();
+
+    // 1. Températures du four : Fahrenheit (°F) -> Celsius (°C)
+    str = str.replace(/\b(\d{3})\s*(?:°\s*F|degrees?\s*F(?:ahrenheit)?|F\b)/gi, (m, deg) => {
+        const f = parseInt(deg, 10);
+        if (f >= 200 && f <= 550) {
+            const c = Math.round(((f - 32) * 5 / 9) / 5) * 5;
+            return `${c}°C`;
+        }
+        return m;
+    });
+
+    const qtePattern = "(\\d+\\s+\\d+\\/\\d+|\\d+\\/\\d+|\\d+[\\.,]?\\d*)";
+
+    // 2. Fluid Ounces (fl oz) -> ml
+    str = str.replace(new RegExp(`\\b${qtePattern}\\s*(?:fl\\.?\\s*oz\\.?|fluid\\s+ounces?)\\b`, 'gi'), (m, q) => {
+        return `${arrondirCuisine(lireValeur(q) * 30)} ml`;
+    });
+
+    // 3. Livres / Pounds (lb, lbs, pound, pounds) -> g ou kg
+    str = str.replace(new RegExp(`\\b${qtePattern}\\s*(?:lbs?\\.?|pounds?)\\b`, 'gi'), (m, q) => {
+        const g = arrondirCuisine(lireValeur(q) * 450);
+        return g >= 1000 && g % 100 === 0 ? `${g / 1000} kg` : `${g} g`;
+    });
+
+    // 4. Onces / Ounces (oz, ounce, ounces) -> g
+    str = str.replace(new RegExp(`\\b${qtePattern}\\s*(?:oz\\.?|ounces?)\\b`, 'gi'), (m, q) => {
+        return `${arrondirCuisine(lireValeur(q) * 30)} g`;
+    });
+
+    // 5. Tasses / Cups -> ml UNIQUEMENT pour les liquides, et g (grammes) pour tous les solides/légumes !
+    str = str.replace(new RegExp(`\\b${qtePattern}\\s*cups?\\b`, 'gi'), (m, q) => {
+        const val = lireValeur(q);
+        // A. Vrais liquides -> en ml (240 ml par tasse)
+        if (/\b(water|eau|milk|lait|broth|stock|bouillon|cream|creme|oil|huile|juice|jus|wine|vin|vinegar|vinaigre|sauce|syrup|sirop|beer|biere|coffee|cafe|tea|the|buttermilk)\b/i.test(lower)) {
+            return `${arrondirCuisine(val * 240)} ml`;
+        }
+        // B. Légumes feuilles, choux, salades, champignons, herbes -> 80 g par tasse
+        if (/\b(cabbage|chou|spinach|epinard|kale|lettuce|salade|arugula|roquette|mushroom|champignon|broccoli|brocoli|cauliflower|parsley|coriander|cilantro|basil)\b/i.test(lower)) {
+            return `${arrondirCuisine(val * 80)} g`;
+        }
+        // C. Farines, fécules, cacao -> 120 g par tasse
+        if (/\b(flour|farine|cornstarch|starch|icing sugar|powdered sugar|cocoa|cacao)\b/i.test(lower)) return `${arrondirCuisine(val * 120)} g`;
+        // D. Sucres -> 200 g par tasse
+        if (/\b(sugar|sucre|caster sugar|brown sugar|honey|miel)\b/i.test(lower)) return `${arrondirCuisine(val * 200)} g`;
+        // E. Beurre et matières grasses solides -> 225 g par tasse
+        if (/\b(butter|beurre|margarine|ghee)\b/i.test(lower)) return `${arrondirCuisine(val * 225)} g`;
+        // F. Grains secs (riz, quinoa, lentilles) -> 180 g par tasse
+        if (/\b(rice|riz|quinoa|couscous|bulgur|lentils|lentille)\b/i.test(lower)) return `${arrondirCuisine(val * 180)} g`;
+        // G. Flocons, chapelure, fromage râpé -> 100 g par tasse
+        if (/\b(oats|avoine|breadcrumbs|chapelure|cheese|cheddar|parmesan|mozzarella)\b/i.test(lower)) return `${arrondirCuisine(val * 100)} g`;
+        // H. Tous les autres solides (légumes coupés, fruits, viandes, noix, haricots...) -> 150 g par tasse par défaut !
+        return `${arrondirCuisine(val * 150)} g`;
+    });
+
+    // 6. Pintes & Quarts -> ml
+    str = str.replace(new RegExp(`\\b${qtePattern}\\s*(?:pints?|pts?\\.?)\\b`, 'gi'), (m, q) => {
+        return `${arrondirCuisine(lireValeur(q) * 480)} ml`;
+    });
+    str = str.replace(new RegExp(`\\b${qtePattern}\\s*(?:quarts?|qts?\\.?)\\b`, 'gi'), (m, q) => {
+        return `${arrondirCuisine(lireValeur(q) * 950)} ml`;
+    });
+
+    // 7. Pouces / Inches -> cm
+    str = str.replace(new RegExp(`\\b${qtePattern}\\s*(?:inch(?:es)?|in\\.)\\b`, 'gi'), (m, q) => {
+        return `${Math.round(lireValeur(q) * 2.5 * 2) / 2} cm`;
+    });
+
+    // 8. Expressions culinaires sans chiffre ("To glaze Egg", "For brushing Oil"...) remises dans le bon sens !
+    str = str.replace(/^(?:to\s+glaze|for\s+glazing)\s+(.+)$/i, '$1 (pour dorer)');
+    str = str.replace(/^(?:to\s+brush|for\s+brushing)\s+(.+)$/i, '$1 (pour badigeonner)');
+    str = str.replace(/^(?:to\s+dust|for\s+dusting)\s+(.+)$/i, '$1 (pour fariner)');
+    str = str.replace(/^(?:to\s+grease|for\s+greasing)\s+(.+)$/i, '$1 (pour beurrer le moule)');
+    str = str.replace(/^(?:to\s+fry|for\s+frying|for\s+cooking)\s+(.+)$/i, '$1 (pour la cuisson)');
+    str = str.replace(/^(?:to\s+serve|for\s+serving)\s+(.+)$/i, '$1 (pour servir)');
+    str = str.replace(/^to\s+taste\s+(.+)$/i, '$1 (selon le goût)');
+    str = str.replace(/^(?:to\s+garnish|for\s+garnish(?:ing)?|garnish(?:\s+with)?)\s+(.+)$/i, '$1 (en garniture)');
+    // Règle universelle : tout autre "To [verbe] [Ingrédient]" ou "For [verbe] [Ingrédient]" est remis à l'endroit !
+    str = str.replace(/^(to\s+[a-z]+|for\s+[a-z]+)\s+(.+)$/i, '$2 ($1)');
+
+    return str;
+}
+
+// Traduction complète en 3 requêtes légères + Conversion Métrique automatique !
 async function traduireRecetteActuelle() {
     if (!recetteTheMealDBEnCours) return;
 
@@ -9012,7 +9186,7 @@ async function traduireRecetteActuelle() {
         recetteTheMealDBEnCours.nom = titreTraduit;
     }
 
-    // 2. Ingrédients (Traduction chirurgicale sans détruire les boutons Frigo/Panier)
+    // 2. Ingrédients (Conversion métrique + Traduction chirurgicale + Portions préservées)
     if (ingredientsEl) {
         const items = ingredientsEl.querySelectorAll('li');
         if (items.length > 0) {
@@ -9020,26 +9194,27 @@ async function traduireRecetteActuelle() {
             let sauvegardesDOM = [];
 
             items.forEach(li => {
-                // On cible uniquement le texte (créé par le système de courses)
                 let wrapper = li.querySelector('.ing-texte-traduisible');
-                if (!wrapper) wrapper = li; // Sécurité si les boutons n'étaient pas encore là
+                if (!wrapper) wrapper = li;
 
-                let conseilHTML = "";
-                const spanConseil = wrapper.querySelector('span[style*="#B5603F"]'); // Conseil clinique
-                if (spanConseil) { conseilHTML = spanConseil.outerHTML; spanConseil.remove(); }
+                let baseTexte = wrapper.getAttribute('data-base-ing-text');
+                let puce = wrapper.getAttribute('data-puce') || "🟢";
+                let conseilHTML = wrapper.getAttribute('data-conseil-html') || "";
 
-                let frigoHTML = "";
-                const spanFrigo = wrapper.querySelector('.badge-au-frigo'); // Badge "Au frigo"
-                if (spanFrigo) { frigoHTML = spanFrigo.outerHTML; spanFrigo.remove(); }
+                if (!baseTexte) {
+                    const clone = wrapper.cloneNode(true);
+                    const spanConseil = clone.querySelector('span[style*="#B5603F"]');
+                    if (spanConseil) { conseilHTML = spanConseil.outerHTML; spanConseil.remove(); }
+                    const spanFrigo = clone.querySelector('.badge-au-frigo');
+                    if (spanFrigo) spanFrigo.remove();
+                    const match = clone.textContent.match(/(🟢|🟡|🟠|🔴|⚪)/);
+                    if (match) puce = match[1];
+                    baseTexte = clone.textContent.replace(/(🟢|🟡|🟠|🔴|⚪)/g, '').trim();
+                }
 
-                let puce = "🟢";
-                const match = wrapper.textContent.match(/(🟢|🟡|🟠|🔴|⚪)/);
-                if (match) puce = match[1];
-
-                let phraseAnglaise = wrapper.textContent.replace(/(🟢|🟡|🟠|🔴|⚪)/g, '').trim();
-
+                let phraseAnglaise = convertirMesuresAnglaisesEnMetrique(baseTexte);
                 lignesAtraduire.push(phraseAnglaise);
-                sauvegardesDOM.push({ wrapper: wrapper, puce: puce, conseil: conseilHTML, frigo: frigoHTML });
+                sauvegardesDOM.push({ wrapper, puce, conseil: conseilHTML });
             });
 
             const texteGroup = lignesAtraduire.join('\n');
@@ -9051,19 +9226,20 @@ async function traduireRecetteActuelle() {
                     if (lignesTraduites[idx]) {
                         const sav = sauvegardesDOM[idx];
                         let texteTraduit = lignesTraduites[idx].trim();
-                        texteTraduit = texteTraduit.replace(/^([\d\/\.,]+\s*[a-zA-ZÀ-ÿ]*)/, '<strong>$1</strong>');
-                        
-                        // NOUVEAU : On injecte le texte traduit UNIQUEMENT dans le wrapper (les boutons restent intacts !)
-                        sav.wrapper.innerHTML = `${sav.puce} ${texteTraduit} ${sav.conseil} ${sav.frigo}`;
+                        sav.wrapper.setAttribute('data-base-ing-text', texteTraduit);
+                        sav.wrapper.setAttribute('data-puce', sav.puce);
+                        sav.wrapper.setAttribute('data-conseil-html', sav.conseil);
                     }
                 });
+                appliquerPortionsRecette();
             }
         }
     }
 
-    // 3. Instructions complètes
-    const texteInstructions = recetteTheMealDBEnCours.strInstructions || recetteTheMealDBEnCours.instructions;
+    // 3. Instructions complètes (avec conversion des °F en °C et des mesures en métrique !)
+    let texteInstructions = recetteTheMealDBEnCours.strInstructions || recetteTheMealDBEnCours.instructions;
     if (instructionsEl && texteInstructions) {
+        texteInstructions = convertirMesuresAnglaisesEnMetrique(texteInstructions);
         const instructionsTraduites = await traduireTexteLong(texteInstructions);
         if (instructionsTraduites) {
             instructionsEl.innerText = instructionsTraduites;
@@ -9180,8 +9356,10 @@ function ouvrirLecteurRecetteInApp(alimentId, indexRecette) {
 
                 if (items.length > 0) {
                     items.forEach(li => {
+                        const liClean = li.cloneNode(true);
+                        liClean.querySelectorAll('button, .btn-ing-course, .btn-ing-frigo, .badge-au-frigo').forEach(el => el.remove());
                         // Nettoyage du texte pour l'analyse
-                        let rawText = li.textContent.replace(/(🟢|🟡|🟠|🔴|⚪)/g, '').trim();
+                        let rawText = liClean.textContent.replace(/(🟢|🟡|🟠|🔴|⚪)/g, '').trim();
                         rawText = rawText.replace(/\(💡.*?\)/g, '').trim();
                         const texteClean = removeAccents(rawText.toLowerCase());
                         
@@ -9206,7 +9384,7 @@ function ouvrirLecteurRecetteInApp(alimentId, indexRecette) {
                         }
 
                         // Reconstruction de la ligne HTML en gardant le formatage (ex: <strong>)
-                        let inner = li.innerHTML;
+                        let inner = liClean.innerHTML;
                         inner = inner.replace(/(🟢|🟡|🟠|🔴|⚪)/g, '').trim();
                         inner = inner.replace(/<span[^>]*>\(💡.*?<\/span>/g, '').trim();
 
@@ -10983,11 +11161,423 @@ function ouvrirRecetteDepuisFrigo(index) {
 }
 
 // =========================================================================
-// 🛒 MOTEUR DE LA LISTE DE COURSES INTELLIGENTE & SURBRILLANCE FRIGO
+// 🍽️ CALCULATEUR DE PORTIONS DYNAMIQUE (PAS DE 1 PERSONNE)
 // =========================================================================
+let portionsBaseRecette = 4;
+let portionsActuellesRecette = 4;
+let unitePortionRecette = "pers.";
+
+function normaliserFractionsUnicode(str) {
+    return (str || '')
+        .replace(/½/g, ' 1/2')
+        .replace(/¼/g, ' 1/4')
+        .replace(/¾/g, ' 3/4')
+        .replace(/⅓/g, ' 1/3')
+        .replace(/⅔/g, ' 2/3')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function lireNombreCuisine(str) {
+    str = normaliserFractionsUnicode(str);
+    const mix = str.match(/^(\d+)\s+(\d+)\/(\d+)$/);
+    if (mix) return parseFloat(mix[1]) + parseFloat(mix[2]) / parseFloat(mix[3]);
+    const frac = str.match(/^(\d+)\/(\d+)$/);
+    if (frac) return parseFloat(frac[1]) / parseFloat(frac[2]);
+    return parseFloat(str.replace(',', '.')) || 0;
+}
+
+function formaterQuantiteCuisine(val, estMetrique = false) {
+    if (val <= 0) return "0";
+    if (Math.abs(val - Math.round(val)) < 0.04) {
+        return String(Math.round(val));
+    }
+
+    if (estMetrique) {
+        if (val >= 20) return String(Math.round(val));
+        return String(parseFloat(val.toFixed(1)));
+    }
+
+    if (val < 4) {
+        const entier = Math.floor(val);
+        const frac = val - entier;
+        const fractions = [
+            { v: 0.25, t: "1/4" },
+            { v: 0.333, t: "1/3" },
+            { v: 0.5, t: "1/2" },
+            { v: 0.666, t: "2/3" },
+            { v: 0.75, t: "3/4" }
+        ];
+        for (let f of fractions) {
+            if (Math.abs(frac - f.v) < 0.045) {
+                return entier > 0 ? `${entier} ${f.t}` : f.t;
+            }
+        }
+    }
+    return String(parseFloat(val.toFixed(1)));
+}
+
+function recalculerTexteIngredient(texteBase, ratio) {
+    if (!texteBase || Math.abs(ratio - 1) < 0.001) return texteBase;
+    const propre = normaliserFractionsUnicode(texteBase);
+
+    const match = propre.match(/^((?:env\.?|environ|~)\s*)?(\d+\s+\d+\/\d+|\d+\/\d+|\d+(?:[\.,]\d+)?)(?:\s*(?:-|à|au)\s*(\d+\s+\d+\/\d+|\d+\/\d+|\d+(?:[\.,]\d+)?))?(.*)$/i);
+    if (!match) return texteBase;
+
+    const prefixeEnv = match[1] || '';
+    const q1Str = match[2];
+    const q2Str = match[3] || '';
+    const reste = match[4] || '';
+
+    // Ne jamais toucher aux pourcentages (ex: 70%) ni températures (ex: 180°C)
+    if (/^\s*[%°]/.test(reste)) return texteBase;
+
+    const estMetrique = /^\s*(?:kg|kilos?|g|gr|grammes?|ml|cl|dl|l|litres?)\b/i.test(reste);
+    const v1 = lireNombreCuisine(q1Str) * ratio;
+    const f1 = formaterQuantiteCuisine(v1, estMetrique);
+
+    if (q2Str) {
+        const v2 = lireNombreCuisine(q2Str) * ratio;
+        const f2 = formaterQuantiteCuisine(v2, estMetrique);
+        return `${prefixeEnv}${f1} à ${f2}${reste}`;
+    }
+    return `${prefixeEnv}${f1}${reste}`;
+}
+
+function initialiserCalculateurPortions() {
+    const detailZone = document.getElementById('rec-detail-contenu');
+    if (!detailZone) return;
+
+    const spans = detailZone.querySelectorAll('span');
+    let spanPortion = null;
+    for (let sp of spans) {
+        if (sp.textContent.includes('🍽️') && !sp.classList.contains('portion-label-val')) {
+            spanPortion = sp;
+            break;
+        }
+    }
+    if (!spanPortion || spanPortion.getAttribute('data-portions-ready') === 'true') return;
+    spanPortion.setAttribute('data-portions-ready', 'true');
+
+    const txt = spanPortion.textContent.trim();
+    const matchNb = txt.match(/(\d+)/);
+    portionsBaseRecette = matchNb ? Math.max(1, parseInt(matchNb[1], 10)) : 4;
+    portionsActuellesRecette = portionsBaseRecette;
+
+    // Conserve l'unité si ce n'est pas "personnes" (ex: "galettes", "pièces"), sinon affiche "pers."
+    const resteUnite = txt.replace(/🍽️/g, '').replace(/~/g, '').replace(/\d+/g, '').trim();
+    if (!resteUnite || /^pers/i.test(resteUnite)) {
+        unitePortionRecette = "pers.";
+    } else {
+        unitePortionRecette = resteUnite;
+    }
+
+    spanPortion.className = 'portion-stepper';
+    spanPortion.removeAttribute('style');
+    dessinerStepperPortions(spanPortion);
+}
+
+function dessinerStepperPortions(containerSpan) {
+    const span = containerSpan || document.querySelector('#rec-detail-contenu .portion-stepper');
+    if (!span) return;
+
+    span.innerHTML = `
+        <button type="button" class="btn-portion-step" onclick="changerPortionsRecette(-1)" ${portionsActuellesRecette <= 1 ? 'disabled' : ''} aria-label="Retirer 1 portion">−</button>
+        <span class="portion-label-val">🍽️ ${portionsActuellesRecette} ${unitePortionRecette}</span>
+        <button type="button" class="btn-portion-step" onclick="changerPortionsRecette(1)" ${portionsActuellesRecette >= 24 ? 'disabled' : ''} aria-label="Ajouter 1 portion">+</button>
+    `;
+}
+
+function changerPortionsRecette(delta) {
+    const nouvelleValeur = Math.max(1, Math.min(24, portionsActuellesRecette + delta));
+    if (nouvelleValeur === portionsActuellesRecette) return;
+
+    portionsActuellesRecette = nouvelleValeur;
+    dessinerStepperPortions();
+    appliquerPortionsRecette();
+
+    // Synchronise en direct les ingrédients déjà ajoutés aux courses (✅)
+    const ul = document.getElementById('rec-ingredients-detail');
+    if (ul) {
+        ul.querySelectorAll('li').forEach(li => {
+            if (typeof li._syncCourseSiAjoute === 'function') {
+                li._syncCourseSiAjoute();
+            }
+        });
+    }
+}
+
+function appliquerPortionsRecette() {
+    const ul = document.getElementById('rec-ingredients-detail');
+    if (!ul) return;
+
+    const ratio = portionsActuellesRecette / portionsBaseRecette;
+    ul.querySelectorAll('li').forEach(li => {
+        const wrapper = li.querySelector('.ing-texte-traduisible');
+        if (!wrapper) return;
+
+        const texteBase = wrapper.getAttribute('data-base-ing-text');
+        const puce = wrapper.getAttribute('data-puce') || '🟢';
+        const conseilHtml = wrapper.getAttribute('data-conseil-html') || '';
+        if (!texteBase) return;
+
+        const texteRecalcule = recalculerTexteIngredient(texteBase, ratio);
+        // Met en gras la quantité recalculée au début de la ligne
+        const texteMisEnForme = texteRecalcule.replace(
+            /^((?:env\.?|environ|~)?\s*(?:\d+\s+\d+\/\d+|\d+\/\d+|\d+(?:[\.,]\d+)?(?:\s*(?:-|à|au)\s*(?:\d+\s+\d+\/\d+|\d+\/\d+|\d+(?:[\.,]\d+)?))?)\s*(?:kg|kilos?|g|gr|grammes?|ml|cl|dl|l|litres?|c\.\s*à\s*(?:soupe|café)|cas|cac|tbsp|tsp|cups?|tasses?|pincées?|gousses?|tranches?|boîtes?|boites?|branches?|brins?|bottes?|filets?|feuilles?|pots?|verres?)?)/i,
+            '<strong>$1</strong>'
+        );
+
+        wrapper.innerHTML = `${puce} ${texteMisEnForme} ${conseilHtml}`.trim();
+    });
+}
+
+// =========================================================================
+// 🛒 MOTEUR DE LA LISTE DE COURSES INTELLIGENTE (FUSION ILLIMITÉE)
+// =========================================================================
+function genererCleFusion(nom) {
+    let clean = removeAccents((nom || '').toLowerCase())
+        .replace(/œ/g, 'oe')
+        .replace(/\s*\(.*?\)/g, '')
+        .replace(/\b(en\s+(?:fines?|petites?|grosses?)?\s*(?:julienne|rondelles?|d[eé]s|cubes?|morceaux|lani[eè]res?|lamelles?|quartiers?|brunoise|pur[eé]e|poudre|branches?|feuilles?|pousses?))\b/g, '')
+        .replace(/[^a-z0-9\s]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    const motsPreparation = [
+        'de', 'du', 'des', 'd', 'la', 'le', 'les', 'l', 'et', 'a', 'au', 'aux', 'en', 'pour',
+        'pelee', 'pelees', 'pele', 'peles', 'epluchee', 'epluchees', 'epluche', 'epluches',
+        'rapee', 'rapees', 'rape', 'rapes', 'taillee', 'taille', 'taillees', 'tailles',
+        'coupee', 'coupees', 'coupe', 'coupes', 'emincee', 'emincees', 'emince', 'eminces',
+        'hachee', 'hachees', 'hache', 'haches', 'ciselee', 'ciselees', 'cisele', 'ciseles',
+        'effeuillee', 'effeuillees', 'effeuille', 'effeuilles', 'ecrasee', 'ecrasees', 'ecrase', 'ecrases',
+        'epepinee', 'epepinees', 'epepine', 'epepines', 'denoyautee', 'denoyautees', 'egouttee', 'egouttees',
+        'rincee', 'rincees', 'lavee', 'lavees', 'mixee', 'mixees', 'fondue', 'fondues', 'fondante', 'fondantes',
+        'cuite', 'cuites', 'cuit', 'cuits', 'crue', 'crues', 'cru', 'fraiche', 'fraiches', 'frais',
+        'petit', 'petite', 'petits', 'petites', 'gros', 'grosse', 'grosses', 'moyen', 'moyenne', 'moyens', 'moyennes',
+        'fin', 'fine', 'fins', 'fines'
+    ];
+
+    const invariables = ['mais', 'radis', 'ananas', 'jus', 'couscous', 'persil', 'pois', 'noix', 'roux', 'doux', 'frais', 'epais', 'brebis', 'riz', 'salsifis'];
+    return clean.split(' ')
+        .filter(m => m && !motsPreparation.includes(m))
+        .map(m => {
+            if (invariables.includes(m) || m.length <= 3) return m;
+            return m.replace(/[sx]$/, '');
+        })
+        .join(' ');
+}
+
+function parserQuantiteIngredient(texteBrut) {
+    const propre = normaliserFractionsUnicode(texteBrut).replace(/^(?:env\.?|environ|~)\s*/i, '').trim();
+    const matchQte = propre.match(/^(\d+\s+\d+\/\d+|\d+\/\d+|\d+(?:[\.,]\d+)?)\s*(.*)$/);
+
+    if (!matchQte) {
+        return {
+            qte: null,
+            unite: '',
+            uniteAffichee: '',
+            groupe: 'sans_qte',
+            prefixeDe: '',
+            nom: propre,
+            cleFusion: genererCleFusion(propre)
+        };
+    }
+
+    const qte = lireNombreCuisine(matchQte[1]);
+    let reste = (matchQte[2] || '').trim();
+
+    // Si c'est un pourcentage ou température en début (rare), on considère sans quantité
+    if (/^[%°]/.test(reste)) {
+        return { qte: null, unite: '', uniteAffichee: '', groupe: 'sans_qte', prefixeDe: '', nom: propre, cleFusion: genererCleFusion(propre) };
+    }
+
+    let unite = '';
+    let uniteAffichee = '';
+    let groupe = 'piece';
+
+    const tableUnites = [
+        { regex: /^(kg|kilos?)\b/i, unite: 'kg', affichee: 'kg', groupe: 'poids' },
+        { regex: /^(grammes?|gr|g)\b/i, unite: 'g', affichee: 'g', groupe: 'poids' },
+        { regex: /^(litres?|l)\b/i, unite: 'l', affichee: 'l', groupe: 'volume' },
+        { regex: /^(dl)\b/i, unite: 'dl', affichee: 'dl', groupe: 'volume' },
+        { regex: /^(cl)\b/i, unite: 'cl', affichee: 'cl', groupe: 'volume' },
+        { regex: /^(ml)\b/i, unite: 'ml', affichee: 'ml', groupe: 'volume' },
+        { regex: /^(cuill[eè]res?\s*[àa]\s*soupe|c\.\s*[àa]\s*soupe|c\.?\s*s\.?|cas|tbsp|tblsp|tbs)\b/i, unite: 'cas', affichee: 'c. à soupe', groupe: 'cas' },
+        { regex: /^(cuill[eè]res?\s*[àa]\s*caf[ée]|c\.\s*[àa]\s*caf[ée]|c\.?\s*c\.?|cac|tsp)\b/i, unite: 'cac', affichee: 'c. à café', groupe: 'cac' },
+        { regex: /^(pinc[ée]es?)\b/i, unite: 'pincee', affichee: 'pincée', groupe: 'pincee' },
+        { regex: /^(gousses?)\b/i, unite: 'gousse', affichee: 'gousse', groupe: 'gousse' },
+        { regex: /^(tranches?)\b/i, unite: 'tranche', affichee: 'tranche', groupe: 'tranche' },
+        { regex: /^(bo[îi]tes?)\b/i, unite: 'boite', affichee: 'boîte', groupe: 'boite' },
+        { regex: /^(branches?|brins?)\b/i, unite: 'branche', affichee: 'branche', groupe: 'branche' },
+        { regex: /^(bottes?)\b/i, unite: 'botte', affichee: 'botte', groupe: 'botte' },
+		{ regex: /^(bouquets?)\b/i, unite: 'bouquet', affichee: 'bouquet', groupe: 'bouquet' },
+        { regex: /^(tasses?|cups?)\b/i, unite: 'tasse', affichee: 'tasse', groupe: 'tasse' },
+        { regex: /^(filets?)\b/i, unite: 'filet', affichee: 'filet', groupe: 'filet' },
+        { regex: /^(poign[ée]es?)\b/i, unite: 'poignee', affichee: 'poignée', groupe: 'poignee' },
+        { regex: /^(sachets?)\b/i, unite: 'sachet', affichee: 'sachet', groupe: 'sachet' },
+        { regex: /^(pots?)\b/i, unite: 'pot', affichee: 'pot', groupe: 'pot' }
+    ];
+
+    for (let u of tableUnites) {
+        const m = reste.match(u.regex);
+        if (m) {
+            unite = u.unite;
+            uniteAffichee = u.affichee;
+            groupe = u.groupe;
+            reste = reste.slice(m[0].length).trim();
+            break;
+        }
+    }
+
+    let prefixeDe = '';
+    const mDe = reste.match(/^(de\s+la\s+|de\s+l'|des\s+|du\s+|de\s+|d'|of\s+)/i);
+    if (mDe) {
+        prefixeDe = mDe[1].toLowerCase() === 'of ' ? 'de ' : mDe[1];
+        reste = reste.slice(mDe[0].length).trim();
+    }
+
+    const nomFinal = reste || propre;
+    return {
+        qte,
+        unite,
+        uniteAffichee,
+        groupe,
+        prefixeDe,
+        nom: nomFinal,
+        cleFusion: genererCleFusion(nomFinal)
+    };
+}
+
+function pluraliserUniteCourse(uniteAffichee, qte) {
+    if (!uniteAffichee || qte <= 1) return uniteAffichee;
+    if (['g', 'kg', 'ml', 'cl', 'dl', 'l', 'c. à soupe', 'c. à café'].includes(uniteAffichee)) {
+        return uniteAffichee;
+    }
+    return uniteAffichee.endsWith('s') ? uniteAffichee : uniteAffichee + 's';
+}
+
+function formaterNomAvecQuantite(nom, qte) {
+    if (!nom || qte <= 1) return nom;
+    const mots = nom.split(' ');
+    const premier = mots[0];
+    const invariables = ['mais', 'maïs', 'radis', 'ananas', 'jus', 'couscous', 'persil', 'pois', 'noix', 'roux', 'doux', 'frais', 'epais', 'épais', 'brebis', 'riz'];
+    if (premier.length > 2 && !/[sxz]$/i.test(premier) && !invariables.includes(removeAccents(premier.toLowerCase()))) {
+        mots[0] = premier + 's';
+    }
+    return mots.join(' ');
+}
+
+function recalculerItemCourses(item) {
+    const contribs = item.contributions || [];
+    if (contribs.length === 0) return;
+
+    // 1. Liste des recettes uniques
+    const recettesUniques = [];
+    contribs.forEach(c => {
+        if (c.recette && !recettesUniques.includes(c.recette)) {
+            recettesUniques.push(c.recette);
+        }
+    });
+    item.recettes = recettesUniques;
+    item.recette = recettesUniques.join(' • ');
+
+    // 2. Fusion par groupe d'unités compatibles
+    const groupes = {};
+    let aQuantite = false;
+
+    contribs.forEach(c => {
+        if (c.qte !== null && c.qte !== undefined) {
+            aQuantite = true;
+            const g = c.groupe || 'piece';
+            if (!groupes[g]) {
+                groupes[g] = { totalBase: 0, uniteAffichee: c.uniteAffichee || '', prefixeDe: c.prefixeDe || '' };
+            }
+            if (g === 'poids') {
+                groupes[g].totalBase += (c.unite === 'kg') ? c.qte * 1000 : c.qte;
+            } else if (g === 'volume') {
+                let mult = 1;
+                if (c.unite === 'l') mult = 1000;
+                else if (c.unite === 'dl') mult = 100;
+                else if (c.unite === 'cl') mult = 10;
+                groupes[g].totalBase += c.qte * mult;
+            } else {
+                groupes[g].totalBase += c.qte;
+            }
+            if (!groupes[g].prefixeDe && c.prefixeDe) groupes[g].prefixeDe = c.prefixeDe;
+        }
+    });
+
+    // Choisir la plus belle version du nom (plurielle si disponible)
+    let nomAffiche = item.nomBase || contribs[0].nom || item.texte;
+    const nomsDispos = contribs.map(c => c.nom).filter(Boolean);
+    if (nomsDispos.length > 0) {
+        nomAffiche = nomsDispos.sort((a, b) => b.length - a.length)[0];
+    }
+
+    if (!aQuantite) {
+        item.texte = nomAffiche;
+        return;
+    }
+
+    const clesGroupes = Object.keys(groupes);
+    const partiesQuantites = clesGroupes.map(g => {
+        const info = groupes[g];
+        if (g === 'poids') {
+            if (info.totalBase >= 1000) {
+                return { qteStr: `${parseFloat((info.totalBase / 1000).toFixed(2))} kg`, prefixeDe: info.prefixeDe || 'de ', qteNum: info.totalBase };
+            }
+            return { qteStr: `${Math.round(info.totalBase)} g`, prefixeDe: info.prefixeDe || 'de ', qteNum: info.totalBase };
+        }
+        if (g === 'volume') {
+            if (info.totalBase >= 1000) {
+                return { qteStr: `${parseFloat((info.totalBase / 1000).toFixed(2))} l`, prefixeDe: info.prefixeDe || 'de ', qteNum: info.totalBase };
+            }
+            return { qteStr: `${Math.round(info.totalBase)} ml`, prefixeDe: info.prefixeDe || 'de ', qteNum: info.totalBase };
+        }
+        const qteFormatee = formaterQuantiteCuisine(info.totalBase, false);
+        const uStr = pluraliserUniteCourse(info.uniteAffichee, info.totalBase);
+        return {
+            qteStr: uStr ? `${qteFormatee} ${uStr}` : qteFormatee,
+            prefixeDe: info.prefixeDe || '',
+            qteNum: info.totalBase
+        };
+    });
+
+    if (partiesQuantites.length === 1) {
+        const p = partiesQuantites[0];
+        const nomFinal = (p.prefixeDe === '' && p.qteNum > 1) ? formaterNomAvecQuantite(nomAffiche, p.qteNum) : nomAffiche;
+        item.texte = `${p.qteStr} ${p.prefixeDe}${nomFinal}`.replace(/\s+/g, ' ').trim();
+    } else {
+        // Unités incompatibles (ex: 2 carottes + 150 g)
+        const nomCap = nomAffiche.charAt(0).toUpperCase() + nomAffiche.slice(1);
+        item.texte = `${nomCap} (${partiesQuantites.map(p => p.qteStr).join(' + ')})`;
+    }
+}
+
+function normaliserItemExistant(item) {
+    if (!item.contributions) {
+        const parsed = parserQuantiteIngredient(item.texte || '');
+        item.cleFusion = item.cleFusion || parsed.cleFusion;
+        item.nomBase = item.nomBase || parsed.nom;
+        item.contributions = [{
+            recette: item.recette || '',
+            qte: parsed.qte,
+            unite: parsed.unite,
+            uniteAffichee: parsed.uniteAffichee,
+            groupe: parsed.groupe,
+            prefixeDe: parsed.prefixeDe,
+            nom: parsed.nom,
+            texteBrut: item.texte
+        }];
+    }
+    return item;
+}
+
 function getListeCourses() {
     const saved = localStorage.getItem('marche_saison_courses');
-    return saved ? JSON.parse(saved) : [];
+    const liste = saved ? JSON.parse(saved) : [];
+    return liste.map(normaliserItemExistant);
 }
 
 function saveListeCourses(liste) {
@@ -11009,29 +11599,25 @@ function mettreAJourCompteurCourses() {
 
 // Détecte automatiquement le rayon de supermarché d'un ingrédient
 function detecterRayonSupermarche(texteIngredient) {
-    // 1. Nettoyage absolu : accents, minuscules, unités parasites et conversion "œ" -> "oe"
     let clean = removeAccents(texteIngredient.toLowerCase())
         .replace(/œ/g, 'oe')
         .replace(/c\.\s*a\s*cafe/g, '').replace(/c\.\s*a\s*soupe/g, '')
         .replace(/cuilleres?\s*a\s*(cafe|soupe)/g, '')
         .replace(/\b(g|ml|cl|l|kg|pincees?|tasses?|tranches?|filets?)\b/g, '')
-        .replace(/s\b/g, ''); // Enlève les "s" finaux
+        .replace(/s\b/g, '');
 
-    // 2. Le secret : on ignore tout ce qui est entre parenthèses
     const textPrincipal = clean.replace(/\s*\(.*?\)/g, '').replace(/s\b/g, '').trim();
 
-    // 3. MOTS-CLÉS DE FORCE MAJEURE (Avant toute autre détection !)
     if (/\b(oignon|ail|echalote|poireau|carotte|chou|salade|tomate|concombre)\b/i.test(textPrincipal)) {
         return "🥦 Fruits & Légumes";
     }
     if (/\b(miel|sucre|sirop|cacao|chocolat|eau|vin|biere|rhum|kirsch|the|cafe)\b/i.test(textPrincipal)) {
         return "☕ Boissons & Douceurs";
     }
-    if (/\b(spatzli|spaetzli|spatzle|spaetzle|poudre a lever|levure|bicarbonate|farine|fecule|chapelure|pate|nouille|riz|quinoa|boulgour|semoule|avoine)\b/i.test(textPrincipal)) {
+    if (/\b(spatzli|spaetzli|spatzle|poudre a lever|levure|bicarbonate|farine|fecule|chapelure|pate|nouille|vermicelle|riz|quinoa|boulgour|semoule|avoine)\b/i.test(textPrincipal)) {
         return "🍝 Épicerie, Pains & Féculents";
     }
-    // Ajout massif d'épices, noix, sauces et mélanges étrangers (cajun, salsa, etc.)
-    if (/\b(bouillon|sel|poivre|paprika|curry|safran|vinaigre|moutarde|huile|garam masala|epice|coriandre|basilic|thym|persil|cajun|salsa|sauce|piment|cumin|cannelle|vanille|gingembre|noix|amande|cacahuete|sesame)\b/i.test(textPrincipal)) {
+    if (/\b(bouillon|sel|poivre|paprika|curry|safran|vinaigre|moutarde|huile|garam masala|epice|coriandre|basilic|thym|persil|menthe|ciboulette|estragon|aneth|cerfeuil|origan|romarin|sauge|laurier|citronnelle|cajun|salsa|sauce|piment|cumin|cannelle|vanille|gingembre|noix|amande|cacahuete|sesame)\b/i.test(textPrincipal)) {
         return "🌿 Condiments, Huiles & Épices";
     }
     if (/\b(oeuf|lait|creme|beurre|yaourt|fromage)\b/i.test(textPrincipal)) {
@@ -11050,53 +11636,105 @@ function detecterRayonSupermarche(texteIngredient) {
 
     const legumesTries = [...legumes].sort((a, b) => b.nom.length - a.nom.length);
 
-    // 4. Recherche précise dans les noms des fiches (en coupant sur "&")
     for (let alim of legumesTries) {
         if (!alim || !alim.nom) continue;
         const partiesNom = removeAccents(alim.nom.toLowerCase()).split('&').map(p => p.trim().replace(/s\b/g, ''));
         for (let partie of partiesNom) {
-            if (partie.length >= 3) {
-                if (textPrincipal.includes(partie)) return donnerNomRayon(alim.saison);
-            }
+            if (partie.length >= 3 && textPrincipal.includes(partie)) return donnerNomRayon(alim.saison);
         }
     }
 
-    // 5. Recherche large dans les sous-titres
     for (let alim of legumes) {
         if (!alim || !alim.soustitre) continue;
         const synonymes = removeAccents(alim.soustitre.toLowerCase()).split(/[,\/]+/).map(s => s.trim().replace(/s\b/g, ''));
         for (let syn of synonymes) {
-            if (syn.length >= 4 && textPrincipal.includes(syn)) {
-                return donnerNomRayon(alim.saison);
-            }
+            if (syn.length >= 4 && textPrincipal.includes(syn)) return donnerNomRayon(alim.saison);
         }
     }
 
-    // 6. Sauvetages ultimes pour la viande
     if (/\b(poitrine|poulet|boeuf|porc|veau|viande|steack|steak|dinde|canard|agneau|saumon|thon|crevette|poisson)\b/i.test(textPrincipal)) return "🥩 Viandes & Poissons";
 
     return "🛍️ Autres articles";
 }
 
 function ajouterArticleCourse(texteBrut, conseilClinique = "", nomRecette = "") {
-    const texte = texteBrut.trim();
+    const texte = (texteBrut || '').trim();
     if (!texte) return false;
 
+    const parsed = parserQuantiteIngredient(texte);
     let liste = getListeCourses();
-    const existeDeja = liste.some(item => removeAccents(item.texte.toLowerCase()) === removeAccents(texte.toLowerCase()));
-    if (existeDeja) return false;
 
-    const rayon = detecterRayonSupermarche(texte);
-    liste.push({
+    // Cherche un article NON COCHÉ identique (même cleFusion) pour fusionner sur N recettes
+    const idxExistant = liste.findIndex(item => !item.checked && item.cleFusion === parsed.cleFusion);
+
+    const nouvelleContrib = {
+        recette: nomRecette || '',
+        qte: parsed.qte,
+        unite: parsed.unite,
+        uniteAffichee: parsed.uniteAffichee,
+        groupe: parsed.groupe,
+        prefixeDe: parsed.prefixeDe,
+        nom: parsed.nom,
+        texteBrut: texte
+    };
+
+    if (idxExistant > -1) {
+        const item = liste[idxExistant];
+        // Si cette recette a déjà ajouté cet ingrédient, on met à jour sa quantité sans doublonner
+        if (nomRecette) {
+            const idxContrib = item.contributions.findIndex(c => c.recette === nomRecette);
+            if (idxContrib > -1) {
+                item.contributions[idxContrib] = nouvelleContrib;
+            } else {
+                item.contributions.push(nouvelleContrib);
+            }
+        } else {
+            item.contributions.push(nouvelleContrib);
+        }
+
+        if (conseilClinique && !item.conseil) item.conseil = conseilClinique;
+        recalculerItemCourses(item);
+        saveListeCourses(liste);
+        return true;
+    }
+
+    const rayon = detecterRayonSupermarche(parsed.nom || texte);
+    const nouvelItem = {
         id: Date.now() + Math.floor(Math.random() * 1000),
+        cleFusion: parsed.cleFusion,
+        nomBase: parsed.nom,
         texte: texte,
         conseil: conseilClinique,
         recette: nomRecette,
+        recettes: nomRecette ? [nomRecette] : [],
         rayon: rayon,
-        checked: false
-    });
+        checked: false,
+        contributions: [nouvelleContrib]
+    };
+    recalculerItemCourses(nouvelItem);
+    liste.push(nouvelItem);
     saveListeCourses(liste);
     return true;
+}
+
+function retirerContributionCourse(texteBrut, nomRecette = "") {
+    const parsed = parserQuantiteIngredient(texteBrut);
+    let liste = getListeCourses();
+    const idx = liste.findIndex(item => !item.checked && item.cleFusion === parsed.cleFusion);
+    if (idx === -1) return;
+
+    const item = liste[idx];
+    if (nomRecette && item.contributions && item.contributions.length > 1) {
+        item.contributions = item.contributions.filter(c => c.recette !== nomRecette);
+        if (item.contributions.length === 0) {
+            liste.splice(idx, 1);
+        } else {
+            recalculerItemCourses(item);
+        }
+    } else {
+        liste.splice(idx, 1);
+    }
+    saveListeCourses(liste);
 }
 
 function ajouterArticleCourseManuel() {
@@ -11227,15 +11865,18 @@ function afficherListeCourses() {
                 row.className = 'course-item-row' + (item.checked ? ' checked' : '');
                 row.onclick = () => toggleCheckCourse(item.id);
 
-                // Vraie case à cocher visuelle ultra-claire
                 const caseVisuelle = item.checked
                     ? `<span style="width: 22px; height: 22px; border-radius: 6px; background: #2E7D32; border: 2px solid #2E7D32; color: #FFF; display: inline-flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 900; flex-shrink: 0;">✓</span>`
                     : `<span style="width: 22px; height: 22px; border-radius: 6px; background: #FFFDF8; border: 2px solid #D4A373; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;"></span>`;
 
+                const badgeFusion = (item.recettes && item.recettes.length > 1)
+                    ? `<span style="background: rgba(46, 125, 50, 0.14); color: #2E7D32; font-size: 0.64rem; font-weight: 800; padding: 1px 6px; border-radius: 6px; margin-left: 6px;">×${item.recettes.length} recettes</span>`
+                    : '';
+
                 row.innerHTML = `
                     ${caseVisuelle}
                     <div style="flex: 1; min-width: 0;">
-                        <div class="course-item-text" style="font-weight: 800; font-size: 0.88rem; color: var(--text-title); line-height: 1.3;">${item.texte}</div>
+                        <div class="course-item-text" style="font-weight: 800; font-size: 0.88rem; color: var(--text-title); line-height: 1.3;">${item.texte}${badgeFusion}</div>
                         ${item.conseil ? `<div class="course-item-sub" style="font-size: 0.72rem; color: #B5603F; font-weight: 700; margin-top: 2px;">${item.conseil}</div>` : ''}
                         ${item.recette ? `<div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 2px;">🍲 ${item.recette}</div>` : ''}
                     </div>
@@ -11256,7 +11897,7 @@ function estIngredientDansMonFrigo(texteLigne) {
         let rac = removeAccents((alim.nom || '').toLowerCase().trim())
             .replace(/\s*\(.*?\)/g, '')
             .replace(/^(filets?|cuisses?|escalopes?|tranches?|eminces?|rotis?|cotelettes?|gigots?|steaks?|blancs?|cotes?|pointes?)\s+(de\s+|d'|du\s+|des\s+)/i, '')
-            .replace(/\s+(maigres?|gras|grasses?|nouvelles?|nouveaux|frais|fraiches?|nature|entiers?|uht|aop|doux)\b.*$/i, '')
+            .replace(/\s+(maigres?|gras|grasses?|nouvelles?|nouveaux|frais|fraiches?|nature|entiers?|uht|past|aop|doux)\b.*$/i, '')
             .trim().replace(/s\b/g, '');
         if (rac.length >= 3 && cleanLigne.includes(rac)) return true;
         if (rac.includes("nouille") && cleanLigne.includes("vermicelle")) return true;
@@ -11264,28 +11905,29 @@ function estIngredientDansMonFrigo(texteLigne) {
     });
 }
 
-// Enrichit automatiquement toute recette ouverte avec le bouton 🧊 Frigo et le bouton +🛒 Panier
+// Enrichit automatiquement toute recette ouverte avec le calculateur de portions, 🧊 Frigo et +🛒 Panier
 function enrichirIngredientsRecetteActive() {
     const ul = document.getElementById('rec-ingredients-detail');
     if (!ul || ul.getAttribute('data-courses-ready') === 'true') return;
     ul.setAttribute('data-courses-ready', 'true');
 
+    initialiserCalculateurPortions();
+
     const titreRecette = document.getElementById('rec-titre-detail')?.innerText || "";
     const listeCoursesActuelle = getListeCourses();
 
-    // 1. Ajoute le bouton "+ 🛒 Tout ajouter aux courses" à côté du titre "INGRÉDIENTS"
     const labelIng = ul.previousElementSibling;
     if (labelIng && !labelIng.querySelector('.btn-tout-courses')) {
-        labelIng.style.cssText = "display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.72rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase;";
+        labelIng.style.cssText = "display: flex; justify-content: space-between; align-items: center; gap: 6px; margin-bottom: 8px; font-size: 0.68rem; color: var(--text-muted); font-weight: 800; text-transform: uppercase; white-space: nowrap;";
         const btnTout = document.createElement('button');
         btnTout.type = 'button';
         btnTout.className = 'btn-tout-courses';
-        btnTout.style.cssText = "background: #FFFDF8; border: 1.5px solid var(--accent); color: var(--accent-dark); border-radius: 10px; padding: 4px 10px; font-size: 0.7rem; font-weight: 800; cursor: pointer;";
+        btnTout.style.cssText = "background: #FFFDF8; border: 1.5px solid var(--accent); color: var(--accent-dark); border-radius: 10px; padding: 4px 9px; font-size: 0.68rem; font-weight: 800; cursor: pointer; white-space: nowrap; flex-shrink: 0;";
         btnTout.innerHTML = "+ 🛒 Ajouter les manquants";
         btnTout.onclick = () => {
             let ajoutes = 0;
             ul.querySelectorAll('li').forEach(li => {
-                if (li.classList.contains('ing-au-frigo')) return; // Ignore tout ce qui est coché 🧊 Au frigo !
+                if (li.classList.contains('ing-au-frigo')) return;
                 const btn = li.querySelector('.btn-ing-course');
                 if (btn && !btn.classList.contains('added') && btn.style.display !== 'none') {
                     btn.click();
@@ -11304,10 +11946,8 @@ function enrichirIngredientsRecetteActive() {
         labelIng.appendChild(btnTout);
     }
 
-    // 2. Parcourt chaque ligne d'ingrédient
     ul.querySelectorAll('li').forEach(li => {
         const clone = li.cloneNode(true);
-
         clone.querySelectorAll('.btn-ing-course, .btn-ing-frigo, .badge-au-frigo, button').forEach(el => el.remove());
 
         let texteConseil = "";
@@ -11334,17 +11974,26 @@ function enrichirIngredientsRecetteActive() {
         li.className = '';
         li.style.cssText = "display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; transition: all 0.2s ease;";
 
-        // NOUVEAU : On donne une classe spécifique à la zone de texte pour la traduction
         const wrapperTexte = document.createElement('div');
         wrapperTexte.className = 'ing-texte-traduisible';
         wrapperTexte.style.cssText = "flex: 1; line-height: 1.4;";
+        wrapperTexte.setAttribute('data-base-ing-text', textePropre);
+        wrapperTexte.setAttribute('data-puce', puce);
+        wrapperTexte.setAttribute('data-conseil-html', htmlConseil);
         wrapperTexte.innerHTML = `${puce} ${textePropre} ${htmlConseil}`;
 
         const actionsRight = document.createElement('div');
         actionsRight.style.cssText = "display: flex; align-items: center; gap: 5px; flex-shrink: 0;";
 
+        const parsedIng = parserQuantiteIngredient(textePropre);
         let auFrigoActif = estIngredientDansMonFrigo(textePropre);
-        const dejaDansCourses = listeCoursesActuelle.some(c => removeAccents(c.texte.toLowerCase()) === removeAccents(textePropre.toLowerCase()));
+
+        // Vérifie si CETTE recette a déjà ajouté cet ingrédient aux courses non cochées
+        const dejaDansCourses = listeCoursesActuelle.some(c =>
+            !c.checked &&
+            c.cleFusion === parsedIng.cleFusion &&
+            c.recettes && c.recettes.includes(titreRecette)
+        );
 
         const btnFrigo = document.createElement('button');
         btnFrigo.type = 'button';
@@ -11371,14 +12020,19 @@ function enrichirIngredientsRecetteActive() {
             }
         };
 
+        const lireTexteActuelIngredient = () => {
+            const tmp = wrapperTexte.cloneNode(true);
+            tmp.querySelectorAll('span').forEach(sp => {
+                if (sp.textContent.includes('💡')) sp.remove();
+            });
+            return tmp.textContent.replace(/(🟢|🟡|🟠|🔴|⚪|🧊 Au frigo)/g, '').replace(/\s+/g, ' ').trim();
+        };
+
         btnFrigo.onclick = (e) => {
             e.stopPropagation();
             auFrigoActif = !auFrigoActif;
             if (auFrigoActif) {
-                // Lecture EN DIRECT du texte actuel (anglais ou français)
-                let currentText = wrapperTexte.textContent.replace(/(🟢|🟡|🟠|🔴|⚪|🧊 Au frigo)/g, '').replace(/\(\s*💡.*?\)/g, '').trim();
-                let liste = getListeCourses().filter(c => removeAccents(c.texte.toLowerCase()) !== removeAccents(currentText.toLowerCase()));
-                saveListeCourses(liste);
+                retirerContributionCourse(lireTexteActuelIngredient(), titreRecette);
                 btnAdd.classList.remove('added');
                 btnAdd.innerHTML = '+ 🛒';
             }
@@ -11387,18 +12041,25 @@ function enrichirIngredientsRecetteActive() {
 
         btnAdd.onclick = (e) => {
             e.stopPropagation();
-            // NOUVEAU : Lecture EN DIRECT du texte actuel (si traduit, il prendra le français !)
-            let currentText = wrapperTexte.textContent.replace(/(🟢|🟡|🟠|🔴|⚪|🧊 Au frigo)/g, '').replace(/\(\s*💡.*?\)/g, '').trim();
-            
+            const currentText = lireTexteActuelIngredient();
+            const currentTitre = document.getElementById('rec-titre-detail')?.innerText || titreRecette;
+
             if (!btnAdd.classList.contains('added')) {
-                ajouterArticleCourse(currentText, texteConseil, titreRecette);
+                ajouterArticleCourse(currentText, texteConseil, currentTitre);
                 btnAdd.classList.add('added');
                 btnAdd.innerHTML = '✅';
             } else {
-                let liste = getListeCourses().filter(c => removeAccents(c.texte.toLowerCase()) !== removeAccents(currentText.toLowerCase()));
-                saveListeCourses(liste);
+                retirerContributionCourse(currentText, currentTitre);
                 btnAdd.classList.remove('added');
                 btnAdd.innerHTML = '+ 🛒';
+            }
+        };
+
+		li._syncCourseSiAjoute = () => {
+            if (!auFrigoActif && btnAdd.classList.contains('added')) {
+                const currentText = lireTexteActuelIngredient();
+                const currentTitre = document.getElementById('rec-titre-detail')?.innerText || titreRecette;
+                ajouterArticleCourse(currentText, texteConseil, currentTitre);
             }
         };
 
