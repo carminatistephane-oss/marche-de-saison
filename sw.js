@@ -1,9 +1,9 @@
 // ========================================================
 // SERVICE WORKER - LE PETIT MARCHÉ DE MON ESTOMAC
-// VERSION DU CACHE : v18.50 (Mise à jour auto des Recettes Maison)
+// VERSION DU CACHE : v18.70 (Mise à jour auto des Recettes Maison)
 // ========================================================
 
-const CACHE_NAME = 'marche-cache-v18.60';
+const CACHE_NAME = 'marche-cache-v18.70';
 
 // Fichiers vitaux à stocker pour le fonctionnement 100% hors-ligne
 const urlsToCache = [

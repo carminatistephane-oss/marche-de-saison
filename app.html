@@ -1,5 +1,5 @@
 <!-- ================================================================================================================= -->
-<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 18.60 -->
+<!-- APPLICATION LE PETIT MARCHÉ DE MON ESTOMAC - VERSION 18.70 -->
 <!-- INCLUT : AJOUT SAUVEGARDE - IMPORT - TRANSFERT - A PROPOS DE  -->
 <!-- AIDE - PARAMETRE - ALIMENTS MASQUES - FAVORIS -->
 <!-- BOUTON REINITIALISATION - MODE SOMBRE - METHODE GENIE -->
@@ -2217,7 +2217,7 @@ body.dark-mode .course-item-row .course-item-sub {
             <p>Harmonie & Digestion</p>
             
             <!-- NOUVEL EMPLACEMENT DE LA VERSION ICI -->
-            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v18.60</div>
+            <div class="version-badge" onclick="activerModeAdmin()" style="cursor: pointer; user-select: none;">v18.70</div>
             
             <div class="profils-section" onclick="ouvrirModalChangerProfil()" style="cursor: pointer; margin: 8px 0 1px 0;">
                 <div class="profils-header" style="cursor: pointer; gap: 2px;">
@@ -2699,7 +2699,7 @@ body.dark-mode .course-item-row .course-item-sub {
 
         <!-- 7. LE MOTEUR DE RECETTES & LE CARNET GLOBAL -->
         <div style="background: #E3F2FD; border-left: 4px solid #1976D2; padding: 12px; margin-bottom: 12px; border-radius: 0 8px 8px 0;">
-            <p style="color: #1565C0; font-weight: 800; font-size: 0.95rem; margin: 0 0 10px 0;">7. Moteur de Recettes & Carnet Global 🍲</p>
+            <p style="color: #1565C0; font-weight: 800; font-size: 0.95rem; margin: 0 0 10px 0;">7. Moteur de Recettes, Frigo & Courses 🍲</p>
             
             <p style="margin: 0 0 4px 0; color: #1565C0; font-weight: 800; font-size: 0.85rem;">🔍 1. Chercher depuis un aliment :</p>
             <p style="margin: 0 0 6px 0; color: #555; line-height: 1.45; font-size: 0.85rem;">
@@ -2713,17 +2713,21 @@ body.dark-mode .course-item-row .course-item-sub {
             <p style="margin: 0 0 4px 0; color: #1565C0; font-weight: 800; font-size: 0.85rem;">💾 2. Comment enregistrer une recette ?</p>
             <p style="margin: 0 0 10px 0; color: #555; line-height: 1.45; font-size: 0.85rem;">
                 Lorsque vous lisez une recette dans l'application, allez tout en bas et cliquez sur <strong>"💾 Enregistrer sur la fiche"</strong>. <br>
-                Une petite fenêtre apparaît : vous pouvez y <strong>renommer la recette</strong> comme bon vous semble ! Une fois validée, elle s'accroche automatiquement à l'aliment que vous étiez en train de consulter, et se range aussi dans <em>Mon Carnet</em>.
+                Une petite fenêtre apparaît : vous pouvez y <strong>renommer la recette</strong> comme bon vous semble ! Une fois validée, elle s'accroche automatiquement à l'aliment que vous étiez en train de consulter, et se range aussi dans l'onglet <em>Recettes</em>.
             </p>
 
             <p style="margin: 0 0 4px 0; color: #1565C0; font-weight: 800; font-size: 0.85rem;">📖 3. Le bouton "Mes Recettes" (Accueil) :</p>
             <p style="margin: 0 0 6px 0; color: #555; line-height: 1.45; font-size: 0.85rem;">
-                C'est votre grand marché gourmand, séparé en <strong>3 onglets</strong> :
+                C'est votre grand marché gourmand, séparé en <strong>4 onglets interconnectés</strong> :
             </p>
             <ul style="margin: 0 0 5px 0; padding-left: 15px; color: #555; line-height: 1.45; font-size: 0.85rem;">
-                <li style="margin-bottom: 6px;"><strong>📖 Carnet :</strong> Regroupe vos recettes enregistrées. Vous pouvez les filtrer par tolérance (🟢, 🟡, 🟠), les renommer ✏️, les relire 👁️, les <strong>déplacer 🔄</strong> vers un autre aliment ou les supprimer 🗑️.</li>
-                <li style="margin-bottom: 6px;"><strong>🧊 Frigo Anti-Gaspi :</strong> Ajoutez jusqu'à 4 restes de votre cuisine (saisie semi-automatique). L'application trouve instantanément les plats combinant au mieux vos ingrédients !</li>
-                <li style="margin-bottom: 0;"><strong>🔍 Explorer :</strong> Recherche libre mondiale (tapez "Poulet", "Curry"...). C'est aussi ici que se trouvent les liens directs vers les grands sites culinaires <strong>Suisses 🇨🇭 et Français 🇫🇷</strong> (Migusto, Fooby, Marmiton...).</li>
+                <li style="margin-bottom: 6px;"><strong>📖 Recettes :</strong> Regroupe vos recettes enregistrées. Vous pouvez les filtrer par tolérance (🟢, 🟡, 🟠), les renommer ✏️, les relire 👁️, les <strong>déplacer 🔄</strong> vers un autre aliment ou les supprimer 🗑️.</li>
+                
+                <li style="margin-bottom: 6px;"><strong>🧊 Frigo Anti-Gaspi :</strong> Ajoutez jusqu'à 4 restes de votre cuisine (saisie semi-automatique). L'application trouve instantanément les plats combinant au mieux vos ingrédients !<br><em>💡 Astuce : Dans n'importe quelle recette, le bouton <strong>🧊 J'ai</strong> permet d'indiquer que vous possédez déjà un ingrédient dans votre placard (il s'illumine alors en vert).</em></li>
+                
+                <li style="margin-bottom: 6px;"><strong>🛒 Courses :</strong> Votre liste de courses intelligente triée par rayons de supermarché ! Dans une recette lue, cliquez sur <strong>+ 🛒</strong> pour ajouter un ingrédient. Le bouton magique <em>"Ajouter les manquants"</em> envoie toute la liste <strong>sauf</strong> ce que vous avez déjà indiqué avoir au frigo !<br><em>💡 En magasin : touchez un article pour le cocher (✓). Vos astuces cliniques de remplacement vous y suivent pour ne pas vous tromper de produit !</em></li>
+                
+                <li style="margin-bottom: 0;"><strong>🔍 Recherches :</strong> Recherche libre mondiale (tapez "Poulet", "Curry"...). C'est aussi ici que se trouvent notre <strong>Catalogue Maison</strong> complet et les liens directs vers les grands sites culinaires <strong>Suisses 🇨🇭 et Français 🇫🇷</strong>.</li>
             </ul>
         </div>
 
@@ -3378,7 +3382,7 @@ body.dark-mode .course-item-row .course-item-sub {
         console.error("Erreur connexion Firebase :", err);
     }
 	
-    const APP_VERSION = "18.60";
+    const APP_VERSION = "18.70";
     document.querySelector('.version-badge').textContent = "v" + APP_VERSION;
     let dateDerniereSync = localStorage.getItem('marche_derniere_sync') || 0;
 	
@@ -9008,37 +9012,36 @@ async function traduireRecetteActuelle() {
         recetteTheMealDBEnCours.nom = titreTraduit;
     }
 
-    // 2. Ingrédients (Traduction intégrale 100% propre)
+    // 2. Ingrédients (Traduction chirurgicale sans détruire les boutons Frigo/Panier)
     if (ingredientsEl) {
         const items = ingredientsEl.querySelectorAll('li');
         if (items.length > 0) {
             let lignesAtraduire = [];
-            let sauvegardesLi = [];
+            let sauvegardesDOM = [];
 
             items.forEach(li => {
-                const clone = li.cloneNode(true);
-                
-                // A. On isole et on retire le conseil clinique en français (le <span> orange)
-                let conseilHTML = "";
-                const spanEl = clone.querySelector('span');
-                if (spanEl) {
-                    conseilHTML = spanEl.outerHTML;
-                    spanEl.remove();
-                }
+                // On cible uniquement le texte (créé par le système de courses)
+                let wrapper = li.querySelector('.ing-texte-traduisible');
+                if (!wrapper) wrapper = li; // Sécurité si les boutons n'étaient pas encore là
 
-                // B. On isole la pastille (🟢, 🟡, 🟠...)
+                let conseilHTML = "";
+                const spanConseil = wrapper.querySelector('span[style*="#B5603F"]'); // Conseil clinique
+                if (spanConseil) { conseilHTML = spanConseil.outerHTML; spanConseil.remove(); }
+
+                let frigoHTML = "";
+                const spanFrigo = wrapper.querySelector('.badge-au-frigo'); // Badge "Au frigo"
+                if (spanFrigo) { frigoHTML = spanFrigo.outerHTML; spanFrigo.remove(); }
+
                 let puce = "🟢";
-                const match = clone.textContent.match(/(🟢|🟡|🟠|🔴|⚪)/);
+                const match = wrapper.textContent.match(/(🟢|🟡|🟠|🔴|⚪)/);
                 if (match) puce = match[1];
 
-                // C. On extrait TOUTE la phrase anglaise (Quantité + Ingrédient) en texte pur
-                let phraseAnglaise = clone.textContent.replace(/(🟢|🟡|🟠|🔴|⚪)/g, '').trim();
+                let phraseAnglaise = wrapper.textContent.replace(/(🟢|🟡|🟠|🔴|⚪)/g, '').trim();
 
                 lignesAtraduire.push(phraseAnglaise);
-                sauvegardesLi.push({ puce: puce, conseil: conseilHTML });
+                sauvegardesDOM.push({ wrapper: wrapper, puce: puce, conseil: conseilHTML, frigo: frigoHTML });
             });
 
-            // D. On envoie les phrases complètes à Google
             const texteGroup = lignesAtraduire.join('\n');
             const tradGroup = await traduireTexteEnFrancais(texteGroup);
 
@@ -9046,14 +9049,12 @@ async function traduireRecetteActuelle() {
                 const lignesTraduites = tradGroup.split('\n');
                 items.forEach((li, idx) => {
                     if (lignesTraduites[idx]) {
-                        const sav = sauvegardesLi[idx];
+                        const sav = sauvegardesDOM[idx];
                         let texteTraduit = lignesTraduites[idx].trim();
-                        
-                        // Remet élégamment le premier chiffre ou mesure en gras (ex: "300g")
                         texteTraduit = texteTraduit.replace(/^([\d\/\.,]+\s*[a-zA-ZÀ-ÿ]*)/, '<strong>$1</strong>');
-
-                        // E. On reconstruit la ligne : 1 pastille + Phrase 100% française + Conseil
-                        li.innerHTML = `${sav.puce} ${texteTraduit} ${sav.conseil}`;
+                        
+                        // NOUVEAU : On injecte le texte traduit UNIQUEMENT dans le wrapper (les boutons restent intacts !)
+                        sav.wrapper.innerHTML = `${sav.puce} ${texteTraduit} ${sav.conseil} ${sav.frigo}`;
                     }
                 });
             }
@@ -11008,25 +11009,33 @@ function mettreAJourCompteurCourses() {
 
 // Détecte automatiquement le rayon de supermarché d'un ingrédient
 function detecterRayonSupermarche(texteIngredient) {
-    // 1. Enlever les accents et mettre en minuscules
-    let clean = removeAccents(texteIngredient.toLowerCase());
+    // 1. Nettoyage absolu : accents, minuscules, unités parasites et conversion "œ" -> "oe"
+    let clean = removeAccents(texteIngredient.toLowerCase())
+        .replace(/œ/g, 'oe')
+        .replace(/c\.\s*a\s*cafe/g, '').replace(/c\.\s*a\s*soupe/g, '')
+        .replace(/cuilleres?\s*a\s*(cafe|soupe)/g, '')
+        .replace(/\b(g|ml|cl|l|kg|pincees?|tasses?|tranches?|filets?)\b/g, '')
+        .replace(/s\b/g, ''); // Enlève les "s" finaux
 
-    // 2. Retirer "c. à café" pour ne pas confondre avec la boisson "café"
-    clean = clean.replace(/c\.\s*a\s*cafe/g, '').replace(/cuilleres?\s*a\s*cafe/g, '');
+    // 2. Le secret : on ignore tout ce qui est entre parenthèses
+    const textPrincipal = clean.replace(/\s*\(.*?\)/g, '').replace(/s\b/g, '').trim();
 
-    // 3. Le secret : on ignore ce qui est entre parenthèses pour classer (ex: le "ou bouillon" du vin)
-    // et on enlève les "s" du pluriel pour l'analyse.
-    const textPrincipal = clean.replace(/\s*\(.*?\)/g, '').replace(/s\b/g, '');
-
-    // 4. Mots-clés stricts (le "\b" oblige l'ordinateur à chercher le mot EXACT, donc "poireau" ne déclenche pas "eau")
-    if (/\b(spatzli|spaetzli|spatzle|spaetzle|poudre a lever|levure|bicarbonate|farine|fecule)\b/i.test(textPrincipal)) {
+    // 3. MOTS-CLÉS DE FORCE MAJEURE (Avant toute autre détection !)
+    if (/\b(oignon|ail|echalote|poireau|carotte|chou|salade|tomate|concombre)\b/i.test(textPrincipal)) {
+        return "🥦 Fruits & Légumes";
+    }
+    if (/\b(miel|sucre|sirop|cacao|chocolat|eau|vin|biere|rhum|kirsch|the|cafe)\b/i.test(textPrincipal)) {
+        return "☕ Boissons & Douceurs";
+    }
+    if (/\b(spatzli|spaetzli|spatzle|spaetzle|poudre a lever|levure|bicarbonate|farine|fecule|chapelure|pate|nouille|riz|quinoa|boulgour|semoule|avoine)\b/i.test(textPrincipal)) {
         return "🍝 Épicerie, Pains & Féculents";
     }
-    if (/\b(bouillon|sel|poivre|paprika|curry|safran|vinaigre|moutarde|huile)\b/i.test(textPrincipal)) {
+    // Ajout massif d'épices, noix, sauces et mélanges étrangers (cajun, salsa, etc.)
+    if (/\b(bouillon|sel|poivre|paprika|curry|safran|vinaigre|moutarde|huile|garam masala|epice|coriandre|basilic|thym|persil|cajun|salsa|sauce|piment|cumin|cannelle|vanille|gingembre|noix|amande|cacahuete|sesame)\b/i.test(textPrincipal)) {
         return "🌿 Condiments, Huiles & Épices";
     }
-    if (/\b(eau|vin|biere|rhum|kirsch)\b/i.test(textPrincipal)) {
-        return "☕ Boissons & Douceurs";
+    if (/\b(oeuf|lait|creme|beurre|yaourt|fromage)\b/i.test(textPrincipal)) {
+        return "🧀 Frais, Laitages & Œufs";
     }
 
     const donnerNomRayon = (saison) => {
@@ -11041,19 +11050,18 @@ function detecterRayonSupermarche(texteIngredient) {
 
     const legumesTries = [...legumes].sort((a, b) => b.nom.length - a.nom.length);
 
-    // 5. Recherche dans les noms des fiches (en coupant sur "&")
+    // 4. Recherche précise dans les noms des fiches (en coupant sur "&")
     for (let alim of legumesTries) {
         if (!alim || !alim.nom) continue;
         const partiesNom = removeAccents(alim.nom.toLowerCase()).split('&').map(p => p.trim().replace(/s\b/g, ''));
         for (let partie of partiesNom) {
             if (partie.length >= 3) {
-                const regex = new RegExp(`(^|[^a-z])${partie}([^a-z]|$)`, 'i');
-                if (regex.test(textPrincipal)) return donnerNomRayon(alim.saison);
+                if (textPrincipal.includes(partie)) return donnerNomRayon(alim.saison);
             }
         }
     }
 
-    // 6. Recherche dans les sous-titres
+    // 5. Recherche large dans les sous-titres
     for (let alim of legumes) {
         if (!alim || !alim.soustitre) continue;
         const synonymes = removeAccents(alim.soustitre.toLowerCase()).split(/[,\/]+/).map(s => s.trim().replace(/s\b/g, ''));
@@ -11063,6 +11071,9 @@ function detecterRayonSupermarche(texteIngredient) {
             }
         }
     }
+
+    // 6. Sauvetages ultimes pour la viande
+    if (/\b(poitrine|poulet|boeuf|porc|veau|viande|steack|steak|dinde|canard|agneau|saumon|thon|crevette|poisson)\b/i.test(textPrincipal)) return "🥩 Viandes & Poissons";
 
     return "🛍️ Autres articles";
 }
@@ -11297,10 +11308,8 @@ function enrichirIngredientsRecetteActive() {
     ul.querySelectorAll('li').forEach(li => {
         const clone = li.cloneNode(true);
 
-        // Nettoie les anciens boutons s'ils avaient été sauvegardés
         clone.querySelectorAll('.btn-ing-course, .btn-ing-frigo, .badge-au-frigo, button').forEach(el => el.remove());
 
-        // Récupère le conseil clinique éventuel (💡 Remplacer par...)
         let texteConseil = "";
         let htmlConseil = "";
         clone.querySelectorAll('span').forEach(sp => {
@@ -11325,51 +11334,50 @@ function enrichirIngredientsRecetteActive() {
         li.className = '';
         li.style.cssText = "display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; transition: all 0.2s ease;";
 
+        // NOUVEAU : On donne une classe spécifique à la zone de texte pour la traduction
         const wrapperTexte = document.createElement('div');
+        wrapperTexte.className = 'ing-texte-traduisible';
         wrapperTexte.style.cssText = "flex: 1; line-height: 1.4;";
         wrapperTexte.innerHTML = `${puce} ${textePropre} ${htmlConseil}`;
 
-        // Conteneur des 2 boutons à droite (🧊 Frigo + 🛒 Panier)
         const actionsRight = document.createElement('div');
         actionsRight.style.cssText = "display: flex; align-items: center; gap: 5px; flex-shrink: 0;";
 
         let auFrigoActif = estIngredientDansMonFrigo(textePropre);
         const dejaDansCourses = listeCoursesActuelle.some(c => removeAccents(c.texte.toLowerCase()) === removeAccents(textePropre.toLowerCase()));
 
-        // Bouton 🧊 Frigo (Bascule On/Off)
         const btnFrigo = document.createElement('button');
         btnFrigo.type = 'button';
         btnFrigo.className = 'btn-ing-frigo';
         btnFrigo.title = "J'ai déjà cet ingrédient dans mon frigo / placard";
 
-        // Bouton + 🛒 Panier
         const btnAdd = document.createElement('button');
         btnAdd.type = 'button';
         btnAdd.className = 'btn-ing-course' + (dejaDansCourses ? ' added' : '');
         btnAdd.innerHTML = dejaDansCourses ? '✅' : '+ 🛒';
         btnAdd.title = "Ajouter à ma liste de courses";
 
-        // Fonction qui met à jour l'état visuel de la ligne selon si 🧊 est actif ou non
         const actualiserVisuelLigne = () => {
             if (auFrigoActif) {
                 li.classList.add('ing-au-frigo');
                 btnFrigo.style.cssText = "background: #2E7D32; border: 1px solid #1B5E20; color: #FFFFFF; border-radius: 8px; padding: 2px 7px; font-size: 0.68rem; font-weight: 800; cursor: pointer; white-space: nowrap;";
                 btnFrigo.innerHTML = "🧊 J'ai";
-                btnAdd.style.display = "none"; // Cache le bouton panier !
+                btnAdd.style.display = "none";
             } else {
                 li.classList.remove('ing-au-frigo');
                 btnFrigo.style.cssText = "background: #FFFDF8; border: 1px solid #90CAF9; color: #1565C0; border-radius: 8px; padding: 2px 6px; font-size: 0.7rem; font-weight: 800; cursor: pointer; opacity: 0.85;";
                 btnFrigo.innerHTML = "🧊";
-                btnAdd.style.display = "inline-block"; // Réaffiche le bouton panier !
+                btnAdd.style.display = "inline-block";
             }
         };
 
         btnFrigo.onclick = (e) => {
             e.stopPropagation();
             auFrigoActif = !auFrigoActif;
-            // Si on marque "J'ai au frigo" et qu'il était dans les courses, on le retire des courses
             if (auFrigoActif) {
-                let liste = getListeCourses().filter(c => removeAccents(c.texte.toLowerCase()) !== removeAccents(textePropre.toLowerCase()));
+                // Lecture EN DIRECT du texte actuel (anglais ou français)
+                let currentText = wrapperTexte.textContent.replace(/(🟢|🟡|🟠|🔴|⚪|🧊 Au frigo)/g, '').replace(/\(\s*💡.*?\)/g, '').trim();
+                let liste = getListeCourses().filter(c => removeAccents(c.texte.toLowerCase()) !== removeAccents(currentText.toLowerCase()));
                 saveListeCourses(liste);
                 btnAdd.classList.remove('added');
                 btnAdd.innerHTML = '+ 🛒';
@@ -11379,13 +11387,15 @@ function enrichirIngredientsRecetteActive() {
 
         btnAdd.onclick = (e) => {
             e.stopPropagation();
+            // NOUVEAU : Lecture EN DIRECT du texte actuel (si traduit, il prendra le français !)
+            let currentText = wrapperTexte.textContent.replace(/(🟢|🟡|🟠|🔴|⚪|🧊 Au frigo)/g, '').replace(/\(\s*💡.*?\)/g, '').trim();
+            
             if (!btnAdd.classList.contains('added')) {
-                ajouterArticleCourse(textePropre, texteConseil, titreRecette);
+                ajouterArticleCourse(currentText, texteConseil, titreRecette);
                 btnAdd.classList.add('added');
                 btnAdd.innerHTML = '✅';
             } else {
-                // Si on reclique sur ✅, on peut même le retirer du panier !
-                let liste = getListeCourses().filter(c => removeAccents(c.texte.toLowerCase()) !== removeAccents(textePropre.toLowerCase()));
+                let liste = getListeCourses().filter(c => removeAccents(c.texte.toLowerCase()) !== removeAccents(currentText.toLowerCase()));
                 saveListeCourses(liste);
                 btnAdd.classList.remove('added');
                 btnAdd.innerHTML = '+ 🛒';
@@ -11393,10 +11403,8 @@ function enrichirIngredientsRecetteActive() {
         };
 
         actualiserVisuelLigne();
-
         actionsRight.appendChild(btnFrigo);
         actionsRight.appendChild(btnAdd);
-
         li.innerHTML = '';
         li.appendChild(wrapperTexte);
         li.appendChild(actionsRight);
